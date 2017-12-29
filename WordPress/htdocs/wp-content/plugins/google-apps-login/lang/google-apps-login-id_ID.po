@@ -1,0 +1,286 @@
+# Copyright (C) 2014 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/googleappslogin\n"
+"POT-Creation-Date: 2014-02-03 15:02:47+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-04-10 17:28-0000\n"
+"Last-Translator: Jordan Silaen <jordan.silaen@chameleonjohn.com>\n"
+"Language-Team: ChameleonJohn.com <jordan.silaen@chameleonjohn.com>\n"
+"X-Generator: Poedit 1.6.4\n"
+"Language: id_ID\n"
+
+#: basic_google_apps_login.php:34
+msgid ""
+"For full support, and premium features that greatly simplify WordPress user "
+"management for admins, please visit:"
+msgstr ""
+"Untuk dukungan penuh, dan fitur-fitur premium yang sangat menyederhanakan "
+"manajemen pengguna WordPress untuk admin, silahkan kunjungi:"
+
+#: core/core_google_apps_login.php:128
+msgid "Redirecting to <a href=\"%s\">Login via Google</a>..."
+msgstr "Mengarahkan <a href=\" %s \"> Login via Google </a> ..."
+
+#: core/core_google_apps_login.php:138
+msgid "Login with Google"
+msgstr "Masuk dengan Google"
+
+#: core/core_google_apps_login.php:146
+msgid "or"
+msgstr "atau"
+
+#: core/core_google_apps_login.php:169
+msgid "You did not grant access"
+msgstr "Anda tidak memberikan akses"
+
+#: core/core_google_apps_login.php:191
+msgid ""
+"Session mismatch - try again, but there could be a problem setting state"
+msgstr "Sesi mismatch - coba lagi, tapi mungkin ada keadaan masalah pengaturan"
+
+#: core/core_google_apps_login.php:197
+msgid ""
+"Session mismatch - try again, but there could be a problem passing state"
+msgstr "Sesi mismatch - coba lagi, tapi mungkin ada keadaan masalah yang lewat"
+
+#: core/core_google_apps_login.php:204
+msgid ""
+"Session mismatch - try again, but there could be a problem setting cookies"
+msgstr "Sesi mismatch - coba lagi, tapi mungkin ada masalah pengaturan cookie"
+
+#: core/core_google_apps_login.php:232
+msgid "Email needs to be verified on your Google Account"
+msgstr "Email perlu diverifikasi di Akun Google"
+
+#: core/core_google_apps_login.php:249
+msgid "User authenticated OK, but error fetching user details from Google"
+msgstr ""
+"Pengguna dikonfirmasi OK, tapi kesalahan saat mengambil rincian pengguna "
+"dari Google"
+
+#: core/core_google_apps_login.php:268
+msgid "User %s not registered in Wordpress"
+msgstr "Pengguna %s tidak terdaftar di Wordpress"
+
+#: core/core_google_apps_login.php:380
+msgid "Main Settings"
+msgstr "Pengaturan utama"
+
+#: core/core_google_apps_login.php:383
+msgid "Client ID"
+msgstr "ID klien"
+
+#: core/core_google_apps_login.php:385
+msgid "Client Secret"
+msgstr "klien Rahasia"
+
+#: core/core_google_apps_login.php:394
+msgid "Multisite Options"
+msgstr "Pilihan multisite"
+
+#: core/core_google_apps_login.php:397
+msgid "Use sub-site specific callback from Google"
+msgstr "Gunakan sub-situs panggilan balik dari Google"
+
+#: core/core_google_apps_login.php:403
+msgid "Advanced Options"
+msgstr "advanced Options"
+
+#: core/core_google_apps_login.php:406
+msgid "Force user to confirm Google permissions every time"
+msgstr "Memaksa pengguna untuk mengkonfirmasi izin Google setiap kali"
+
+#: core/core_google_apps_login.php:409
+msgid "Automatically redirect to Google from login page"
+msgstr "redirect ke Google secara otomatis dari halaman login"
+
+#: core/core_google_apps_login.php:415 core/core_google_apps_login.php:420
+msgid "Google Apps Login settings"
+msgstr "setelan Google Apps Login"
+
+#: core/core_google_apps_login.php:415 core/core_google_apps_login.php:420
+msgid "Google Apps Login"
+msgstr "Google Apps Login"
+
+#: core/core_google_apps_login.php:435
+msgid "Google Apps Login setup"
+msgstr "Setup Google Apps Login"
+
+#: core/core_google_apps_login.php:437
+msgid ""
+"To set up your website to enable Google logins, you will need to follow "
+"instructions specific to your website."
+msgstr ""
+"Untuk membuat situs untuk mengaktifkan login Google, Anda harus mengikuti "
+"petunjuk khusus untuk situs web Anda."
+
+#: core/core_google_apps_login.php:440
+msgid "Click here to open your personalized instructions in a new window"
+msgstr "Klik di sini untuk membuka petunjuk pribadi Anda di jendela baru"
+
+#: core/core_google_apps_login.php:450
+msgid "Save Changes"
+msgstr "Simpan perubahan"
+
+#: core/core_google_apps_login.php:459
+msgid "Settings saved."
+msgstr "Pengaturan disimpan."
+
+#: core/core_google_apps_login.php:487 core/core_google_apps_login.php:495
+msgid "Normally something like %s"
+msgstr "Biasanya sesuatu seperti %s"
+
+#: core/core_google_apps_login.php:501
+msgid ""
+"The instructions above will guide you to Google's Cloud Console where you "
+"will enter two URLs, and also obtain two codes (Client ID and Client Secret) "
+"which you will need to enter in the boxes below."
+msgstr ""
+"Petunjuk di atas akan memandu Anda untuk Google Cloud Console di mana Anda "
+"akan memasukkan dua URL, dan juga memperoleh dua kode (Client ID dan Client "
+"Rahasia) yang Anda akan perlu untuk memasukkan di kotak di bawah."
+
+#: core/core_google_apps_login.php:511
+msgid ""
+"This setting is for multisite admins only. See <a href=\"%s\" target="
+"\"gainstr\">instructions here</a>."
+msgstr ""
+"Pengaturan ini untuk admin multisite saja. Lihat <a href=\" %s \" target="
+"\"gainstr\"> petunjuk di sini </a>."
+
+#: core/core_google_apps_login.php:520
+msgid "Leave unchecked if in doubt"
+msgstr "Tinggalkan dicentang jika ragu-ragu"
+
+#: core/core_google_apps_login.php:526
+msgid ""
+"Once you have the plugin working, you can try these settings to customize "
+"the login flow for your users."
+msgstr ""
+"Setelah Anda memiliki kerja Plugin, Anda dapat mencoba pengaturan ini untuk "
+"menyesuaikan aliran masuk bagi pengguna Anda."
+
+#: core/core_google_apps_login.php:527
+msgid "See <a href=\"%s\" target=\"gainstr\">instructions here</a>."
+msgstr "Lihat <a href=\" %s \" target=\"gainstr\"> petunjuk di sini </a>."
+
+#: core/core_google_apps_login.php:571
+msgid "The Client ID should be longer than that"
+msgstr "ID Klien harus lebih lama dari itu"
+
+#: core/core_google_apps_login.php:572
+msgid "The Client Secret should be longer than that"
+msgstr "Klien Rahasia harus lebih lama dari itu"
+
+#: core/core_google_apps_login.php:577
+msgid "Unspecified error"
+msgstr "Kesalahan yang tidak spesifik"
+
+#: core/core_google_apps_login.php:673
+msgid "Settings"
+msgstr "pengaturan"
+
+#: premium_google_apps_login.php:87
+msgid "User with email address %s must use Login with Google"
+msgstr "Pengguna dengan alamat email %s harus menggunakan Login dengan Google"
+
+#: premium_google_apps_login.php:115
+msgid "User %s does not exist"
+msgstr "Pengguna %s tidak ada"
+
+#: premium_google_apps_login.php:124
+msgid "Invalid email address"
+msgstr "alamat email salah"
+
+#: premium_google_apps_login.php:132
+msgid "Email address needs to be in %s"
+msgstr "Alamat email harus di %s"
+
+#: premium_google_apps_login.php:135
+msgid "%s not authorized"
+msgstr "%s tidak berwenang"
+
+#: premium_google_apps_login.php:180
+msgid "Domain Control"
+msgstr "Kontrol domain"
+
+#: premium_google_apps_login.php:183
+msgid "My Google Apps domain"
+msgstr "domain Google Apps saya"
+
+#: premium_google_apps_login.php:185
+msgid "Auto-create new users on my domain"
+msgstr "Otomatis membuat pengguna baru di domain saya"
+
+#: premium_google_apps_login.php:187
+msgid "Disable WordPress username/password login for my domain"
+msgstr "Nonaktifkan WordPress username / password login untuk domain saya"
+
+#: premium_google_apps_login.php:189
+msgid "Default role for new Google users"
+msgstr "Peran default untuk pengguna Google baru"
+
+#: premium_google_apps_login.php:195
+msgid ""
+"By default, any existing account can authenticate either via Google (if a "
+"Gmail/Google Apps account), or by WordPress username/password."
+msgstr ""
+"Secara default, setiap akun yang ada dapat mengotentikasi baik melalui "
+"Google (jika / Google akun Gmail Apps), atau dengan WordPress username / "
+"password."
+
+#: premium_google_apps_login.php:197
+msgid ""
+"To allow special behaviour on your Google Apps domain (auto-create users who "
+"don't yet exist, or disable regular WordPress username/password access for "
+"your users), fill in the following section."
+msgstr ""
+"Untuk membiarkan perilaku khusus pada domain Google Apps Anda (otomatis "
+"membuat pengguna yang belum ada, atau menonaktifkan akses username / "
+"password WordPress reguler untuk pengguna Anda), mengisi bagian berikut."
+
+#: premium_google_apps_login.php:199
+msgid ""
+"Please read the <a href=\"%s\" target=\"gainstr\">instructions here</a> "
+"first."
+msgstr ""
+"Silakan baca <a href=\" %s \" target=\"gainstr\"> petunjuk di sini </a> "
+"pertama."
+
+#: premium_google_apps_login.php:217
+msgid ""
+"Tick with caution - leave unchecked until you are confident Google Login is "
+"working for your own admin account"
+msgstr ""
+"Centang dengan hati-hati - jangan dicentang sampai Anda yakin Google Login "
+"bekerja untuk akun admin Anda sendiri"
+
+#: premium_google_apps_login.php:252
+msgid ""
+"Domain name should be a space-separated list of valid domains, in lowercase "
+"letters (or blank)"
+msgstr ""
+"Nama domain harus daftar dipisahkan dengan spasi dari domain yang valid, "
+"dalam huruf kecil (atau kosong)"
+
+msgid ""
+"Simple secure login for Wordpress through users' Google Apps accounts (uses "
+"secure OAuth2, and MFA if enabled)"
+msgstr ""
+"login yang aman sederhana untuk Wordpress melalui rekening pengguna Google "
+"Apps (menggunakan OAuth2 aman, dan MFA jika diaktifkan)"
+
+msgid ""
+"Simple secure login and user management for Wordpress through your Google "
+"Apps domain (uses secure OAuth2, and MFA if enabled)"
+msgstr ""
+"Sederhana login yang aman dan manajemen pengguna untuk Wordpress melalui "
+"domain Google Apps Anda (menggunakan OAuth2 aman, dan MFA jika diaktifkan)"
+
+msgid "Google Apps Login Premium"
+msgstr "Google Apps Login Premium"

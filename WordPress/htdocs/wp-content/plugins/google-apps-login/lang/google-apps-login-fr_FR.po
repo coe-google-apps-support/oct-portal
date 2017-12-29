@@ -1,0 +1,254 @@
+# Copyright (C) 2014 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Google Apps Login\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/googleappslogin\n"
+"POT-Creation-Date: 2014-07-16 12:23+0100\n"
+"PO-Revision-Date: 2014-07-16 15:27+0100\n"
+"Last-Translator: Lucien Ntumba <lntumba@gpcsolutions.fr>\n"
+"Language-Team: FR <FR@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.5\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-Basepath: /home/lucien/src/google-apps-login\n"
+"X-Poedit-KeywordsList: _e;__;_\n"
+"X-Poedit-SearchPath-0: /home/lucien/src/google-apps-login\n"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:172
+#, php-format
+msgid "Redirecting to <a href=\"%s\">Login via Google</a>..."
+msgstr "Redirection vers la <a href=\"%s\"> connexion via Google</a>"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:220
+msgid "Login with Google"
+msgstr "Connexion avec Google"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:243
+msgid "You did not grant access"
+msgstr "Vous n'avez pas d'autorisation d'accès"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:246
+msgid ""
+"The admin needs to configure Google Apps Login plugin - please follow <a "
+"href=\"http://wp-glogin.com/installing-google-apps-login/#main-settings\" "
+"target=\"_blank\">instructions here</a>"
+msgstr ""
+"L'administrateur doit configurer le module d'extension de connexion Google "
+"Apps  - veuillez suivre <a href=\"http://wp-glogin.com/installing-google-"
+"apps-login/#main-settings\" target=\"_blank\"> instructions ici</a>"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:262
+msgid ""
+"Session mismatch - try again, but there could be a problem setting state"
+msgstr ""
+"Incompatibilité de session - essayez à nouveau, mais il pourrait y avoir un "
+"mode de réglage du problème"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:268
+msgid ""
+"Session mismatch - try again, but there could be a problem passing state"
+msgstr ""
+"Incompatibilité de session - essayez à nouveau, mais il pourrait y avoir un "
+"état de passage du problème"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:275
+msgid ""
+"Session mismatch - try again, but there could be a problem setting cookies"
+msgstr ""
+"Incompatibilité de session - essayez à nouveau,mais il pourrait y avoir un "
+"problème affectant les cookies "
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:308
+msgid "Email needs to be verified on your Google Account"
+msgstr "E-mail doit être vérifiée sur votre compte Google"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:332
+msgid "User authenticated OK, but error fetching user details from Google"
+msgstr ""
+"Utilisateur authentifié OK, mais erreur, aller chercher les informations "
+"detaillées des utilisateurs de Google"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:351
+#, php-format
+msgid "User %s not registered in Wordpress"
+msgstr "Utilisateur %s ne pas enregistré dans Wordpress"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:436
+#, php-format
+msgid ""
+"You will need to complete Google Apps Login <a href=\"%s\">Settings</a> in "
+"order for the plugin to work"
+msgstr ""
+"Vous devrez remplir les champs de connexion Google Apps <a href=\"%s"
+"\">Settings</a> afin que le module d'extension fonctionne"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:488
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:493
+msgid "Google Apps Login settings"
+msgstr "Paramètres de connexion Google Apps"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:488
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:493
+msgid "Google Apps Login"
+msgstr "Google Apps Connexion"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:513
+msgid "Google Apps Login setup"
+msgstr "Google Apps configuration de connexion"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:519
+msgid ""
+"To set up your website to enable Google logins, you will need to follow "
+"instructions specific to your website."
+msgstr ""
+"Pour configurer votre site Web afin de permettre les connexions de Google, "
+"vous devrez suivre les instructions spécifiques à votre site Web."
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:522
+msgid "Click here to open your personalized instructions in a new window"
+msgstr ""
+"Cliquez ici pour ouvrir vos instructions personnalisées dans une nouvelle "
+"fenêtre"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:577
+msgid "Settings saved."
+msgstr "Paramètres enregistrés"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:604
+#, php-format
+msgid ""
+"The <a href='%s'>instructions</a> above will guide you to Google's Cloud "
+"Console where you will enter two URLs, and also obtain two codes (Client ID "
+"and Client Secret) which you will need to enter in the boxes below."
+msgstr ""
+"Le lien <a href='%s'>instructions</a> ci-dessus vous guidera vers le Cloud "
+"de la Console Google où vous entrerez  deux URLs, et vous obtiendrez "
+"également deux codes (ID Client et le code Secret du client) dont vous aurez "
+"besoin d'entrer dans les cases ci-dessous."
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:609
+msgid "Client ID"
+msgstr "ID du client"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:612
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:618
+#, php-format
+msgid "Normally something like %s"
+msgstr "Normalement, quelque chose comme %s"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:615
+msgid "Client Secret"
+msgstr "Code secret du client"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:635
+msgid ""
+"Once you have the plugin working, you can try these settings to customize "
+"the login flow for your users."
+msgstr ""
+"Une fois que vous avez le module d'extension fonctionnant, vous pouvez "
+"essayer ces paramètres pour personnaliser le flux de connexion pour vos "
+"utilisateurs."
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:636
+#, php-format
+msgid "See <a href=\"%s\" target=\"gainstr\">instructions here</a>."
+msgstr "Voir <a href=\"%s\" target=\"gainstr\">instructions here</a>."
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:644
+msgid "Force user to confirm Google permissions every time"
+msgstr ""
+"Forcer l'utilisateur à confirmer les autorisations de Google chaque fois"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:652
+msgid "Automatically redirect to Google from login page"
+msgstr "Rediriger automatiquement à la page de connexion de Google  "
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:660
+msgid "Display 'Powered By wp-glogin.com' on Login form"
+msgstr "Affichage 'Powered By wp-glogin.com' sur le formulaire de connexion"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:668
+msgid "Multisite Options"
+msgstr "Options multisites"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:669
+#, php-format
+msgid ""
+"This setting is for multisite admins only. See <a href=\"%s\" target="
+"\"gainstr\">instructions here</a>."
+msgstr ""
+"Ce réglage concerne seulement les administrateurs multisite. Voir <a href="
+"\"%s\" target=\"gainstr\">instructions here</a>."
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:674
+msgid "Use sub-site specific callback from Google"
+msgstr "Utilisez des sous-sites rappel spécifique de Google"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:678
+msgid "Leave unchecked if in doubt"
+msgstr "Laissez désactivé en cas de doute"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:719
+msgid "The Client ID should be longer than that"
+msgstr "Le numéro de client devrait être plus longue à celle"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:720
+msgid "The Client Secret should be longer than that"
+msgstr "Le code secrert du client devrait être supérieur à celle"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:725
+msgid "Unspecified error"
+msgstr "Erreur non spécifiée"
+
+#: /home/lucien/src/google-apps-login/core/core_google_apps_login.php:822
+msgid "Settings"
+msgstr "Paramètres"
+
+#: /home/lucien/src/google-apps-login/google_apps_login.php:47
+msgid ""
+"For full support, and premium features that greatly simplify WordPress user "
+"management for admins, please visit:"
+msgstr ""
+"Pour un support complet et les fonctionnalités premium qui simplifient "
+"considérablement la gestion utilisateur WordPress pour les administrateurs, "
+"veuillez visiter :"
+
+#: /home/lucien/src/google-apps-login/google_apps_login.php:96
+msgid ""
+"The Domain Control section is only applicable to the premium version of this "
+"plugin."
+msgstr ""
+"La section de contrôle de domaine est uniquement applicable à la version "
+"premium de ce module d'extension"
+
+#: /home/lucien/src/google-apps-login/google_apps_login.php:98
+msgid ""
+"In this basic version of the plugin, any <i>existing</i> WordPress account "
+"corresponding to a Google email address can authenticate via Google."
+msgstr ""
+"Dans cette version de base du module d'extension, tout <i>existing</i> le "
+"compte WordPress correspondant à une adresse email Google peut "
+"s'authentifier via Google."
+
+#: /home/lucien/src/google-apps-login/google_apps_login.php:148
+#, php-format
+msgid ""
+"Completely forget about WordPress user management - upgrade to <a href=\"%s"
+"\">Google Apps Login premium</a> to automatically sync users from your "
+"Google Apps domain"
+msgstr ""
+"Oublier complètement la gestion des utilisateurs WordPress - mise à niveau "
+"vers <a href=\"%s\">Google Apps Login premium</a>pour synchroniser "
+"automatiquement les utilisateurs de votre domaine Google Apps "
+
+#: /home/lucien/src/google-apps-login/google_apps_login.php:150
+msgid "Find out more"
+msgstr "En savoir plus"
+
+#: /home/lucien/src/google-apps-login/google_apps_login.php:151
+msgid "No Thanks"
+msgstr "Non merci"

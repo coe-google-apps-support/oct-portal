@@ -1,0 +1,184 @@
+#gal-tabs {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0;
+    padding-left: 10px;
+}
+
+.galtab.active {
+    display: block;
+}
+
+.galtab {
+    display: none;
+}
+
+label {
+    float: left;
+    margin-left: 6px;
+}
+
+input.textinput, textarea.textinput, select.select, input.checkbox {
+    float: left;
+    margin: 12px 3px 0 0;
+    padding: 5px;
+}
+
+select.select {
+	padding: 2px 5px;
+}
+
+input.checkbox.double {
+    margin-top: 2px;
+}
+
+label.textinput, label.select, label.checkbox {
+    background-color: rgba(0, 0, 0, 0);
+    margin: 10px 0 5px;
+    width: 180px;
+    font-weight: bold;
+}
+
+label.checkbox.plain {
+    font-weight: normal;
+    width: 400px;
+}
+
+label.big {
+	font-size: 1.3em;
+	padding-top: 8px;
+}
+
+p.desc {
+	font-style: italic;
+    margin: 6px 0 10px;
+    padding: 0 0 8px 22px;   
+}
+
+p.desc.big {
+	padding-left: 180px;
+}
+
+a#gal-personalinstrlink { 
+	color: #0074A2;
+	text-decoration: underline;
+}
+
+#gal-tablewrapper {
+	display: table;
+    width: 100%;
+}
+
+#gal-tableleft {
+
+}
+
+#gal-tableright {
+	padding: 0 0 0 40px;
+    width: 281px;
+}
+
+#gal-tableright div {
+    width: 235px;
+    padding: 5px;
+    background-color: #E4E4E4;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#gal-tableright div span {
+    padding: 5px;
+}
+
+.gal-tablecell {
+	display: table-cell;
+    height: 500px;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+}
+
+div#logs-section table tr td {
+	padding-right: 15px;
+	min-width: 150px;
+}
+
+div#logs-section table tr.gal_log_level6 {
+	color: blue;
+}
+
+div#logs-section table tr.gal_log_level4 {
+	color: orange;
+}
+
+div#logs-section table tr.gal_log_level3 {
+	color: red;
+}
+
+.gal-lowerinput {
+	margin-top: 12px;	
+}
+
+.gal-admin-scopes-list {
+    background-color: lightyellow;
+    border: 1px solid gray;
+    border-radius: 3px;
+    max-width: 600px;
+    overflow: hidden;
+    overflow-x: scroll;
+    padding: 0 2px;	
+    cursor: text;
+    white-space: nowrap;
+}
+
+table.gal-admin-service-scopes {
+	border: 1px solid;
+}
+
+table.gal-admin-service-scopes td {
+	padding: 4px;
+	vertical-align: top;
+}
+
+table.gal-admin-service-scopes thead {
+	background-color: white;
+	font-style: italic;
+}
+
+a.gal_jsonkeytext {
+	vertical-align: top;
+	margin-left: 12px;
+}
+
+#license-section table td {
+	padding-right: 8px;	
+}
+
+/* Drip signup form in basic version */
+
+#gal-drip-signup-form {
+    padding: 5px;
+}
+
+#gal-drip-signup-form div {
+    width: inherit;
+}
+
+#gal-drip-signup-form div label {
+    float: none;
+    font-weight: bold;
+}
+
+#gal-drip-signup-form div input[type=submit] {
+    float: none;
+    font-size: 120%;
+    width: 80px;
+}
+
+#gal-drip-signup-form div input[type=email] {
+    float: none;
+    width: 90%;
+}
+
+#gal-drip-signup-form p.gal-drip-unsubscribe {
+    font-size: 80%;
+}

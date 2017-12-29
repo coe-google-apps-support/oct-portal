@@ -1,0 +1,382 @@
+# Copyright (C) 2014 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/googleappslogin\n"
+"POT-Creation-Date: 2015-10-27 22:58+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-10-31 12:48+0100\n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.6\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: sv_SE\n"
+
+#: basic_google_apps_login.php:47
+msgid ""
+"For full support, and premium features that greatly simplify WordPress user "
+"management for admins, please visit:"
+msgstr ""
+"För full support och utökad funktion av hantering av användarkonton besök: "
+
+#: basic_google_apps_login.php:80
+msgid ""
+"The Domain Control section is only applicable to the premium version of this "
+"plugin."
+msgstr ""
+"Domänkontrollen är endast tillgänglig i premiumversionen av detta tillägg."
+
+#: basic_google_apps_login.php:82
+msgid ""
+"In this basic version of the plugin, any <i>existing</i> WordPress account "
+"corresponding to a Google email address can authenticate via Google."
+msgstr ""
+"I denna grundversion av Glogin kan alla <i>existerande</i> Wordpresskonton "
+"med matchande Google-mejl autentisera sig via Google"
+
+#: basic_google_apps_login.php:132
+msgid ""
+"Completely forget about WordPress user management - upgrade to <a href=\"%s"
+"\">Google Apps Login premium</a> to automatically sync users from your "
+"Google Apps domain"
+msgstr ""
+"Strunta helt i Wordpressanvändarhantering - uppgradera till <a href=\"%s"
+"\">Google Apps Login premium</a> för att automatiskt synkronisera användare "
+"från din Google Apps domän "
+
+#: basic_google_apps_login.php:134
+msgid "Purchase"
+msgstr "Köp"
+
+#: basic_google_apps_login.php:135
+msgid "No Thanks"
+msgstr "Nej tack"
+
+#: core/commercial_google_apps_login.php:43
+msgid "User with email address %s must use Login with Google"
+msgstr "Användare med e-postadress %s måste använda Google-inloggning"
+
+#: core/commercial_google_apps_login.php:71
+msgid "User %s does not exist"
+msgstr "Användare %s finns inte"
+
+#: core/commercial_google_apps_login.php:80
+msgid "Invalid email address"
+msgstr "Ogiltig e-postadress"
+
+#: core/commercial_google_apps_login.php:88
+msgid "Email address needs to be in %s."
+msgstr "E-postadressen måste vara i %s."
+
+#: core/commercial_google_apps_login.php:91
+msgid ""
+"%s not authorized -  <a href=\"https://accounts.google.com/Logout\" target="
+"\"_blank\">Sign out of Google</a> to switch accounts"
+msgstr ""
+"%s är inte gilltigt -  <a href=\"https://accounts.google.com/Logout\" target="
+"\"_blank\">Logga ut från Google</a> för att byta konto"
+
+#: core/commercial_google_apps_login.php:149
+msgid ""
+"By default, any existing account can authenticate either via Google (if a "
+"Gmail/Google Apps account), or by WordPress username/password."
+msgstr ""
+"Som standard kan alla konton autentiseras antingen via Google (Gmail/Google "
+"Apps konto) eller med ett Wordpresskonto"
+
+#: core/commercial_google_apps_login.php:151
+msgid ""
+"To allow special behaviour on your Google Apps domain (auto-create users who "
+"don't yet exist, or disable regular WordPress username/password access for "
+"your users), fill in the following section."
+msgstr ""
+"För att tillåta särskilda egenskaper på din Google Apps domän (autoskapa "
+"användare som ännu inte finns, eller inaktivera inloggning med Wordpress "
+"konton), fyll i följande avsnitt."
+
+#: core/commercial_google_apps_login.php:153
+msgid ""
+"Please read the <a href=\"%s\" target=\"gainstr\">instructions here</a> "
+"first."
+msgstr "Läs <a href=\"%s\" target=\"gainstr\">instruktionerna här</a> först."
+
+#: core/commercial_google_apps_login.php:158
+msgid "My Google Apps domain"
+msgstr "Min Google Apps domän"
+
+#: core/commercial_google_apps_login.php:163
+msgid "Auto-create new users on my domain"
+msgstr "Skapa användare automatiskt i min domän"
+
+#: core/commercial_google_apps_login.php:167
+msgid "Default role for new users"
+msgstr "Standardroll för nya användare"
+
+#: core/commercial_google_apps_login.php:175
+msgid "Disable WordPress username/password login for my domain"
+msgstr "Inaktivera inloggning av Wordpresskonton för min domän"
+
+#: core/commercial_google_apps_login.php:180
+msgid "Completely hide WordPress username and password boxes"
+msgstr "Dölj Wordpressinloggningen"
+
+#: core/commercial_google_apps_login.php:185
+msgid ""
+"Tick the last two with caution - leave unchecked until you are confident "
+"Google Login is working for your own admin account"
+msgstr ""
+"Innan du kryssar i de två sista rutorna måste du vara helt säker på att "
+"Googleinloggningen fungerar för ditt administratörskonto"
+
+#: core/commercial_google_apps_login.php:207
+msgid ""
+"You should have received a license key when you purchased the premium "
+"version of Google Apps Login."
+msgstr ""
+"Du bör ha fått en licensnyckel när du köpte premiumversionen av Google Apps "
+"Login"
+
+#: core/commercial_google_apps_login.php:209
+msgid ""
+"Please enter it below to enable automatic updates, or <a href=\"mailto:"
+"contact@wp-glogin.com\">email us</a> if you do not have one."
+msgstr ""
+"För att aktivera automatiskuppdatering fyll i det nedan eller <a href="
+"\"mailto:contact@wp-glogin.com\"> mejla oss </a> om du inte har något."
+
+#: core/commercial_google_apps_login.php:213
+msgid "License Key"
+msgstr "Licensenyckel"
+
+#: core/commercial_google_apps_login.php:272
+msgid ""
+"Domain name should be a space-separated list of valid domains, in lowercase "
+"letters (or blank)"
+msgstr ""
+"Domännamnen måste vara i en mellanslagsseparerad lista innehållande giltiga "
+"domäner skrivna med gemener. Kan även vara blankt"
+
+#: core/commercial_google_apps_login.php:273
+msgid "License key is too short"
+msgstr "Licensnyckeln är för kort"
+
+#: core/commercial_google_apps_login.php:274
+msgid "License key failed to activate"
+msgstr "Aktiveringen av licensnyckeln misslyckades"
+
+#: core/commercial_google_apps_login.php:275
+msgid "Group names must be valid email addresses"
+msgstr "Gruppnamn måste vara en giltiga e-postadresser"
+
+#: core/core_google_apps_login.php:163
+msgid "Redirecting to <a href=\"%s\">Login via Google</a>..."
+msgstr "Peka om till <a href=\"%s\">Logga in via Google</a>..."
+
+#: core/core_google_apps_login.php:173
+msgid "Login with Google"
+msgstr "Logga in med Google"
+
+#: core/core_google_apps_login.php:177
+msgid "Powered by "
+msgstr "Drivs av"
+
+#: core/core_google_apps_login.php:191
+msgid "or"
+msgstr "eller"
+
+#: core/core_google_apps_login.php:223
+msgid "You did not grant access"
+msgstr "Du har inte godkänt åtkomsten"
+
+#: core/core_google_apps_login.php:245
+msgid ""
+"Session mismatch - try again, but there could be a problem setting state"
+msgstr ""
+"Sessionsfel (session mismatch) - försök igen men det kan vara problem med "
+"inställningarna i \"setting state\""
+
+#: core/core_google_apps_login.php:251
+msgid ""
+"Session mismatch - try again, but there could be a problem passing state"
+msgstr ""
+"Sessionsfel (session mismatch) - försök igen men det kan vara problem med "
+"inställningarna i \"passing state\""
+
+#: core/core_google_apps_login.php:258
+msgid ""
+"Session mismatch - try again, but there could be a problem setting cookies"
+msgstr ""
+"Sessionsfel (session mismatch) - försök igen men det kan vara problem med "
+"cookies inställningarna"
+
+#: core/core_google_apps_login.php:287
+msgid "Email needs to be verified on your Google Account"
+msgstr "Mejlet måste verifieras på ditt Googlekonto"
+
+#: core/core_google_apps_login.php:308
+msgid "User authenticated OK, but error fetching user details from Google"
+msgstr ""
+"Användarautentisering lyckades, men hämtningen av användaruppgifter från "
+"Google misslyckades"
+
+#: core/core_google_apps_login.php:327
+msgid "User %s not registered in Wordpress"
+msgstr "Användaren %s är inte registrerad i Wordpress"
+
+#: core/core_google_apps_login.php:412
+msgid ""
+"You will need to complete Google Apps Login <a href=\"%s\">Settings</a> in "
+"order for the plugin to work"
+msgstr ""
+"Du måste  göra klart konfigurationen  av Google Apps Login <a href=\"%s"
+"\">Inställningar</a> för att applikationen ska fungera"
+
+#: core/core_google_apps_login.php:444 core/core_google_apps_login.php:449
+msgid "Google Apps Login settings"
+msgstr "Inställningar Google Apps Login"
+
+#: core/core_google_apps_login.php:444 core/core_google_apps_login.php:449
+msgid "Google Apps Login"
+msgstr "Google Apps Login"
+
+#: core/core_google_apps_login.php:469
+msgid "Google Apps Login setup"
+msgstr "Konfiguration av Google Apps Login"
+
+#: core/core_google_apps_login.php:475
+msgid ""
+"To set up your website to enable Google logins, you will need to follow "
+"instructions specific to your website."
+msgstr ""
+"För att förbereda din hemsida för aktivering av Google-inloggning måste du "
+"följa dina hemsidespecifika instruktioner."
+
+#: core/core_google_apps_login.php:478
+msgid "Click here to open your personalized instructions in a new window"
+msgstr ""
+"Klicka här för att öppna dina personliga instruktioner i ett nytt fönster"
+
+#: core/core_google_apps_login.php:504
+msgid "Save Changes"
+msgstr "Spara ändringar"
+
+#: core/core_google_apps_login.php:533
+msgid "Settings saved."
+msgstr "Inställningar sparade"
+
+#: core/core_google_apps_login.php:560
+msgid ""
+"The <a href='%s'>instructions</a> above will guide you to Google's Cloud "
+"Console where you will enter two URLs, and also obtain two codes (Client ID "
+"and Client Secret) which you will need to enter in the boxes below."
+msgstr ""
+"Ovanstående <a href='%s'>instruktioner</a>tar dig till Google's molnkonsol "
+"\"Cloud Console\" där du ska fylla i 2 st URL:er och få 2 st koder (Klient-"
+"ID (Client ID och Klienthemlighet (Client Secret) som fylls i nedan."
+
+#: core/core_google_apps_login.php:565
+msgid "Client ID"
+msgstr "Klient-ID \"Client ID\""
+
+#: core/core_google_apps_login.php:568 core/core_google_apps_login.php:574
+msgid "Normally something like %s"
+msgstr "Liknar normalt %s"
+
+#: core/core_google_apps_login.php:571
+msgid "Client Secret"
+msgstr "Klienthemlighet \"Client Secret\""
+
+#: core/core_google_apps_login.php:591
+msgid ""
+"Once you have the plugin working, you can try these settings to customize "
+"the login flow for your users."
+msgstr ""
+"När Glogin är aktiverad och fungerande, kan du pröva dessa inställningar för "
+"att anpassa inloggningen för dina användare"
+
+#: core/core_google_apps_login.php:592
+msgid "See <a href=\"%s\" target=\"gainstr\">instructions here</a>."
+msgstr "Se <a href=\"%s\" target=\"gainstr\">instruktioner här</a>."
+
+#: core/core_google_apps_login.php:600
+msgid "Force user to confirm Google permissions every time"
+msgstr "Tvinga användarna att godkänna Google's åtkomst  varje gång"
+
+#: core/core_google_apps_login.php:608
+msgid "Automatically redirect to Google from login page"
+msgstr "Från inloggningssidan peka om till Google automatiskt"
+
+#: core/core_google_apps_login.php:616
+msgid "Display 'Powered By wp-glogin.com' on Login form"
+msgstr "Visa 'Drivs av wp-glogin.com' på inloggningssidan"
+
+#: core/core_google_apps_login.php:622
+msgid "Multisite Options"
+msgstr "Inställningar för multisite"
+
+#: core/core_google_apps_login.php:623
+msgid ""
+"This setting is for multisite admins only. See <a href=\"%s\" target="
+"\"gainstr\">instructions here</a>."
+msgstr ""
+"Dessa inställningar är endast för multisitesadministratörer. Se <a href=\"%s"
+"\" target=\"gainstr\">instruktioner här</a>."
+
+#: core/core_google_apps_login.php:628
+msgid "Use sub-site specific callback from Google"
+msgstr "Använd subdomänspecifik tillbakaringning \"callback\" från Google"
+
+#: core/core_google_apps_login.php:632
+msgid "Leave unchecked if in doubt"
+msgstr "Kryssa ej i om du är osäker"
+
+#: core/core_google_apps_login.php:669
+msgid "The Client ID should be longer than that"
+msgstr "Klient-ID bör vara längre än så"
+
+#: core/core_google_apps_login.php:670
+msgid "The Client Secret should be longer than that"
+msgstr "Klienthemligheten bör vara längre än så"
+
+#: core/core_google_apps_login.php:675
+msgid "Unspecified error"
+msgstr "Ospecificerat fel"
+
+#: core/core_google_apps_login.php:772
+msgid "Settings"
+msgstr "Inställningar"
+
+#: enterprise_google_apps_login.php:211
+msgid "Default role"
+msgstr "Standardroll"
+
+#: enterprise_google_apps_login.php:219
+msgid "Check and reset roles on every login"
+msgstr "Kontrollera och återställ roller vid varje inloggning"
+
+#: enterprise_google_apps_login.php:318
+msgid "There are no logs to view."
+msgstr "Det finns inga loggar att visa."
+
+# wordpress plugin description
+msgid ""
+"Simple secure login for Wordpress through users' Google Apps accounts (uses "
+"secure OAuth2, and MFA if enabled)"
+msgstr ""
+"Enkel och säker inloggning för Wordpress med användarnas Google Apps "
+"(använder säker OAuth2 och MFA om aktiverat)"
+
+# wordpress plugin description
+msgid ""
+"Simple secure login and user management for Wordpress through your Google "
+"Apps domain (uses secure OAuth2, and MFA if enabled)"
+msgstr ""
+"Enkel och säker inloggning samt användarhantering för Wordpress med din "
+"Google Apps domän (använder säker OAuth2 och MFA om aktiverat)"
+
+# wordpress plugin description
+msgid "Google Apps Login Premium"
+msgstr "Google Apps Login premium"

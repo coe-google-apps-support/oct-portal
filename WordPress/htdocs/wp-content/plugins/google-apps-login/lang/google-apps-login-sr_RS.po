@@ -1,0 +1,290 @@
+# Copyright (C) 2014 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/googleappslogin\n"
+"POT-Creation-Date: 2014-02-03 15:02:47+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-02-11 13:41+0100\n"
+"Last-Translator: Borisa Djuraskovic <borisad@webhostinghub.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: basic_google_apps_login.php:34
+msgid ""
+"For full support, and premium features that greatly simplify WordPress user "
+"management for admins, please visit:"
+msgstr ""
+"Za punu podršku, i vrhunske karakteristike koje u velikoj meri "
+"pojednostavljuju upravljanje WordPress uputstvo za administratora , molimo "
+"vas da posetite :"
+
+#: core/core_google_apps_login.php:128
+msgid "Redirecting to <a href=\"%s\">Login via Google</a>..."
+msgstr "Redirektovanje na<a href=\"%s\">Login via Google</a>..."
+
+#: core/core_google_apps_login.php:138
+msgid "Login with Google"
+msgstr "Login sa Google"
+
+#: core/core_google_apps_login.php:146
+msgid "or"
+msgstr "ili"
+
+#: core/core_google_apps_login.php:169
+msgid "You did not grant access"
+msgstr "Niste odobrili pristup"
+
+#: core/core_google_apps_login.php:191
+msgid ""
+"Session mismatch - try again, but there could be a problem setting state"
+msgstr ""
+"Sesija neusklađenost - pokušajte ponovo , ali bi moglo da bude problem "
+"postavljanja "
+
+#: core/core_google_apps_login.php:197
+msgid ""
+"Session mismatch - try again, but there could be a problem passing state"
+msgstr ""
+"Sesija neusklađenost - pokušajte ponovo , ali bi moglo da bude problem "
+"prolazno stanje"
+
+#: core/core_google_apps_login.php:204
+msgid ""
+"Session mismatch - try again, but there could be a problem setting cookies"
+msgstr ""
+"Sesija neusklađenost - pokušajte ponovo , ali bi moglo da bude problem "
+"postavljanja cookies"
+
+#: core/core_google_apps_login.php:232
+msgid "Email needs to be verified on your Google Account"
+msgstr "Email treba da bude na vašen Google Account"
+
+#: core/core_google_apps_login.php:249
+msgid "User authenticated OK, but error fetching user details from Google"
+msgstr "Korisnik autentifikovan OK, ali hvata detalje sa Google"
+
+#: core/core_google_apps_login.php:268
+msgid "User %s not registered in Wordpress"
+msgstr "Korisnik %s nije registrovan u Wordpress-u"
+
+#: core/core_google_apps_login.php:380
+msgid "Main Settings"
+msgstr "Glavne postavke"
+
+#: core/core_google_apps_login.php:383
+msgid "Client ID"
+msgstr " ID klijenta"
+
+#: core/core_google_apps_login.php:385
+msgid "Client Secret"
+msgstr "Tajni klijent"
+
+#: core/core_google_apps_login.php:394
+msgid "Multisite Options"
+msgstr "Multisite Opcije"
+
+#: core/core_google_apps_login.php:397
+msgid "Use sub-site specific callback from Google"
+msgstr "Koristite podsajt odredjen za callback sa Google"
+
+#: core/core_google_apps_login.php:403
+msgid "Advanced Options"
+msgstr "Unapredjene opcije"
+
+#: core/core_google_apps_login.php:406
+msgid "Force user to confirm Google permissions every time"
+msgstr "naterajte korisnike da koriste Google dozvole stalno"
+
+#: core/core_google_apps_login.php:409
+msgid "Automatically redirect to Google from login page"
+msgstr "Automatski redirektovano na Google sa login stranice"
+
+#: core/core_google_apps_login.php:415 core/core_google_apps_login.php:420
+msgid "Google Apps Login settings"
+msgstr "Google Apps Login postavke"
+
+#: core/core_google_apps_login.php:415 core/core_google_apps_login.php:420
+msgid "Google Apps Login"
+msgstr "Google Apps Login"
+
+#: core/core_google_apps_login.php:435
+msgid "Google Apps Login setup"
+msgstr "Google Apps Login postavke"
+
+#: core/core_google_apps_login.php:437
+msgid ""
+"To set up your website to enable Google logins, you will need to follow "
+"instructions specific to your website."
+msgstr ""
+"Da biste podesili svoj sajt da omogući Google logins , moraćete da sledite "
+"uputstva specifične za vaš sajt ."
+
+#: core/core_google_apps_login.php:440
+msgid "Click here to open your personalized instructions in a new window"
+msgstr ""
+"Kliknite ovde da otvorite svoje personalizovane uputstva u novom prozoru"
+
+#: core/core_google_apps_login.php:450
+msgid "Save Changes"
+msgstr "Sačuvaj promene"
+
+#: core/core_google_apps_login.php:459
+msgid "Settings saved."
+msgstr "Postavke su sačuvane."
+
+#: core/core_google_apps_login.php:487 core/core_google_apps_login.php:495
+msgid "Normally something like %s"
+msgstr "Normalno nešto kao %s"
+
+#: core/core_google_apps_login.php:501
+msgid ""
+"The instructions above will guide you to Google's Cloud Console where you "
+"will enter two URLs, and also obtain two codes (Client ID and Client Secret) "
+"which you will need to enter in the boxes below."
+msgstr ""
+"Instrukcije iznad će vas voditi na Google Cloud Console gde ćete ući na dve "
+"URL adrese , a takođe dobiti dva koda ( klient i klijent tajna) koja ćete "
+"morati da unesete u polja ispod ."
+
+#: core/core_google_apps_login.php:511
+msgid ""
+"This setting is for multisite admins only. See <a href=\"%s\" target="
+"\"gainstr\">instructions here</a>."
+msgstr ""
+"Ova postavka je samo za MultiSite administratore. Pogledajte <a href=\"%s\" "
+"target=\"gainstr\">uputstva ovde</a>."
+
+#: core/core_google_apps_login.php:520
+msgid "Leave unchecked if in doubt"
+msgstr "Nemojte da čekirate ako niste sigurni"
+
+#: core/core_google_apps_login.php:526
+msgid ""
+"Once you have the plugin working, you can try these settings to customize "
+"the login flow for your users."
+msgstr ""
+"Kada vam plugin radi , možete da pokušate da prilagodite ova podešavanja za "
+"svoje korisnike ."
+
+#: core/core_google_apps_login.php:527
+msgid "See <a href=\"%s\" target=\"gainstr\">instructions here</a>."
+msgstr "pogledajte<a href=\"%s\" target=\"gainstr\"> uputstva ovde</a>."
+
+#: core/core_google_apps_login.php:571
+msgid "The Client ID should be longer than that"
+msgstr "ID klijenta treba da bude duži od ovoga"
+
+#: core/core_google_apps_login.php:572
+msgid "The Client Secret should be longer than that"
+msgstr "Tajni klijent trda da bude duži od toga"
+
+#: core/core_google_apps_login.php:577
+msgid "Unspecified error"
+msgstr "Nespecifikovana greška"
+
+#: core/core_google_apps_login.php:673
+msgid "Settings"
+msgstr "Postavke"
+
+#: premium_google_apps_login.php:87
+msgid "User with email address %s must use Login with Google"
+msgstr "Korisnik sa  email adresom %s moa da koristi Login sa Google"
+
+#: premium_google_apps_login.php:115
+msgid "User %s does not exist"
+msgstr "Korisnik %s ne postoji"
+
+#: premium_google_apps_login.php:124
+msgid "Invalid email address"
+msgstr "Nepostojeća email adresa"
+
+#: premium_google_apps_login.php:132
+msgid "Email address needs to be in %s"
+msgstr "Email adresa treba da bude %s"
+
+#: premium_google_apps_login.php:135
+msgid "%s not authorized"
+msgstr "%s nije autorizovano"
+
+#: premium_google_apps_login.php:180
+msgid "Domain Control"
+msgstr "Domain kontrola"
+
+#: premium_google_apps_login.php:183
+msgid "My Google Apps domain"
+msgstr "Moj Google Apps domain"
+
+#: premium_google_apps_login.php:185
+msgid "Auto-create new users on my domain"
+msgstr "Automatsko stvaranje novih korisnika na vašem domain-u"
+
+#: premium_google_apps_login.php:187
+msgid "Disable WordPress username/password login for my domain"
+msgstr "Onemogući WordPress korisničko ime/šifra login za moj domain"
+
+#: premium_google_apps_login.php:189
+msgid "Default role for new Google users"
+msgstr "Default uloga za nove Google korisnike"
+
+#: premium_google_apps_login.php:195
+msgid ""
+"By default, any existing account can authenticate either via Google (if a "
+"Gmail/Google Apps account), or by WordPress username/password."
+msgstr ""
+"Podrazumevano , svaki postojeći nalog može da potvrdi autentičnost bilo "
+"preko Google ( ako Gmail / Google Apps nalog ) , ili od strane WordPress "
+"korisnik / lozinka ."
+
+#: premium_google_apps_login.php:197
+msgid ""
+"To allow special behaviour on your Google Apps domain (auto-create users who "
+"don't yet exist, or disable regular WordPress username/password access for "
+"your users), fill in the following section."
+msgstr ""
+"Da biste dozvolili posebno ponašanje na Google Apps domenu ( automatsko "
+"kreiranje korisnika koji još uvek ne postoji , ili onemogućite redovan "
+"pristup WordPress korisničko ime / lozinku za svoje korisnike ) , popunite u "
+"sledećem odeljku ."
+
+#: premium_google_apps_login.php:199
+msgid ""
+"Please read the <a href=\"%s\" target=\"gainstr\">instructions here</a> "
+"first."
+msgstr "Pročitajte prvo <a href=\"%s\" target=\"gainstr\">uputstva ovde</a>."
+
+#: premium_google_apps_login.php:217
+msgid ""
+"Tick with caution - leave unchecked until you are confident Google Login is "
+"working for your own admin account"
+msgstr ""
+"Ophodite se sa oprezom - ostaviti neobeleženo dok se ne uverite da Google "
+"Login radi za vaš nalog  admin"
+
+#: premium_google_apps_login.php:252
+msgid ""
+"Domain name should be a space-separated list of valid domains, in lowercase "
+"letters (or blank)"
+msgstr ""
+"Domain imena bi trebala da budu lista validnih domena odvojena prostorom "
+"napisano malim slovima (ili prazno)"
+
+msgid ""
+"Simple secure login for Wordpress through users' Google Apps accounts (uses "
+"secure OAuth2, and MFA if enabled)"
+msgstr ""
+"Simple secure login za Wordpress kroz korisnike Google Apps naloga (ukoriste "
+"sigurni OAuth2, i MFA ako je omogućeno)"
+
+msgid ""
+"Simple secure login and user management for Wordpress through your Google "
+"Apps domain (uses secure OAuth2, and MFA if enabled)"
+msgstr ""
+"Simple secure login upravljanje korisnika za  Wordpress kroz vaš Google Apps "
+"domain (koristi sigurne OAuth2, i MFA ako je omogućeno)"
+
+msgid "Google Apps Login Premium"
+msgstr "Google Apps Login Premium"

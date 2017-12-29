@@ -1,0 +1,1437 @@
+# Translation of Development (trunk) in Belarusian
+# This file is distributed under the same license as the Development (trunk) package.
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2016-05-17 10:16-0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.6.4\n"
+"Project-Id-Version: Development (trunk)\n"
+"POT-Creation-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: be_BE\n"
+
+#: core/core_google_apps_login.php:870
+msgid "Remember Me - do not log users out at end of browser session"
+msgstr ""
+"Запомніць мяне - не ўвайшлі ў сістэму карыстальнікаў на прыыканцы сесіі "
+"браўзэра"
+
+#: core/core_google_apps_login.php:292
+msgid "The user must use <i>%s</i> to access the site"
+msgstr ""
+"Карыстальнік павінен выкарыстоўваць <i>%s</i>, каб атрымаць доступ да сайта"
+
+#: core/core_google_apps_login.php:296
+msgid "Unrecognized error message"
+msgstr "Невядомае паведамленне пра памылку"
+
+#: core/core_google_apps_login.php:987
+msgid "Error with file upload on the server - no temp directory exists"
+msgstr "Памылка пры загрузцы файла на серверы - часовы каталог не існуе"
+
+#: core/core_google_apps_login.php:988
+msgid "Error with file upload on the server - failed to write to disk"
+msgstr "Памылка пры загрузцы файла на серверы - не атрымалася запісаць на дыск"
+
+#: core/core_google_apps_login.php:989
+msgid "JSON key file was empty"
+msgstr "Ключавы файл у фармаце JSON быў пусты"
+
+#: core/core_google_apps_login.php:990
+msgid "JSON key file could not be decoded correctly"
+msgstr "Ключавы файл у фармаце JSON не можа быць правільна дэкадаваны"
+
+#: core/core_google_apps_login.php:991
+msgid ""
+"JSON key file does not contain all of client_email, client_id, private_key, "
+"and type"
+msgstr ""
+"Ключавы файл у фармаце JSON не ўтрымлівае ўсіх: кліента электроннай пошты, "
+"ідэнтыфікатара кліента, закрытага ключа, і тыпу"
+
+#: core/core_google_apps_login.php:992
+msgid "JSON key file does not represent a Service Account"
+msgstr "Ключавы файл у фармаце JSON не з'яўляецца ўліковай запісю службы"
+
+#: core/core_google_apps_login.php:993
+msgid ""
+"Key cannot be coerced into a PEM key - invalid format in private_key of JSON "
+"key file"
+msgstr ""
+"Ключ не можа быць прыведзены ў ключ PEM - недапушчальны фармат у private_key "
+"ключавым файле JSON"
+
+#: core/core_google_apps_login.php:998
+msgid "Unspecified error"
+msgstr "Невядомая памылка"
+
+#: core/core_google_apps_login.php:1185
+msgid "Settings"
+msgstr "Налады"
+
+#: google_apps_login.php:58
+msgid ""
+"For full support, and premium features that greatly simplify WordPress user "
+"management for admins, please visit:"
+msgstr ""
+"Для атрымання поўнай падтрымкі, дадатковых магчымасцей, якія значна "
+"спрасцяць кіраванне карыстальнікамі WordPress, калі ласка, наведайце:"
+
+#: google_apps_login.php:160
+msgid ""
+"The Domain Control section is only applicable to the premium and enterprise "
+"versions of this plugin."
+msgstr ""
+"Секцыя кіравання дамена дастасавальна толькі да прэміум і карпаратыўных "
+"версій гэтага плагіна."
+
+#: google_apps_login.php:162
+msgid ""
+"In this basic version of the plugin, any <i>existing</i> WordPress account "
+"corresponding to a Google email address can authenticate via Google."
+msgstr ""
+"У гэтай базавай версіі плагіна, любы <i>existing</i> WordPress карыстальнік "
+"мае  адпаведны адрас электроннай пошты Google, сапраўднасць якой можна "
+"праверыць з дапамогай Google."
+
+#: google_apps_login.php:212
+msgid ""
+"Completely forget about WordPress user management - upgrade to <a href=\"%s"
+"\">Google Apps Login Premium or Enterprise</a> to automatically sync users "
+"from your Google Apps domain"
+msgstr ""
+"Цалкам забудзьцеся пра кіравання карыстальнікамі ў WordPress  - абнавіце <a "
+"href=\"%s\">Google Apps Login Premium or Enterprise</a>, каб аўтаматычна "
+"сінхранізаваць карыстальнікаў з вашага дамена Google Apps "
+
+#: google_apps_login.php:214
+msgid "Find out more"
+msgstr "Даведайцеся больш"
+
+#: google_apps_login.php:215
+msgid "No Thanks"
+msgstr "Не, дзякуй"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "http://wp-glogin.com/"
+msgstr "http://wp-glogin.com/"
+
+#. Description of the plugin/theme
+msgid ""
+"Simple secure login for Wordpress through users' Google Apps accounts (uses "
+"secure OAuth2, and MFA if enabled)"
+msgstr ""
+"Просты бяспечны ўваход у Wordpress праз Google Apps акаўнты(выкарыстоўвае "
+"бяспечны OAuth2, і MFA, калі яны ўключаны)"
+
+#. Author of the plugin/theme
+msgid "Dan Lester"
+msgstr "Дэн Лестэр"
+
+#: core/core_google_apps_login.php:212
+msgid "Redirecting to <a href=\"%s\">Login via Google</a>..."
+msgstr "Перанакіраванне на <a href=\"%s\"> Увайсці праз Google </a> "
+
+#: core/core_google_apps_login.php:226
+msgid "Powered by "
+msgstr "Працуе на"
+
+#: core/core_google_apps_login.php:242
+msgid "or"
+msgstr "або"
+
+#: core/core_google_apps_login.php:260
+msgid "Login with Google"
+msgstr "Увайсці з дапамогай Google"
+
+#: core/core_google_apps_login.php:284
+msgid "You did not grant access"
+msgstr "Вы не прадставілі доступ"
+
+#: core/core_google_apps_login.php:307
+msgid ""
+"Session mismatch - try again, but there could be a problem setting state"
+msgstr ""
+"Несупадзенне сесіі - паспрабуйце яшчэ раз, але можа быць праблема ў наладах "
+"стану"
+
+#: core/core_google_apps_login.php:313
+msgid ""
+"Session mismatch - try again, but there could be a problem passing state"
+msgstr ""
+"Несупадзенне сесіі - паспрабуйце яшчэ раз, але можа быць праблема ў "
+"перасылке стану"
+
+#: core/core_google_apps_login.php:320
+msgid ""
+"Session mismatch - try again, but there could be a problem setting cookies"
+msgstr ""
+"Несупадзенне сесіі - паспрабуйце яшчэ раз, але можа быць праблема ў наладах "
+"cookies"
+
+#: core/core_google_apps_login.php:354
+msgid "Email needs to be verified on your Google Account"
+msgstr "Электронная пошта павінна быць праверана ў Вашым акаўнце Google"
+
+#: core/core_google_apps_login.php:378
+msgid "User authenticated OK, but error fetching user details from Google"
+msgstr ""
+"Аутэфікацыя карыстальніка паспяхова, але памылка дадзеных карыстальніка  з "
+"Google"
+
+#: core/core_google_apps_login.php:396
+msgid "User %s not registered in Wordpress"
+msgstr "Карыстальнік не зарэгістраваны ў Wordpress: %s"
+
+#: core/core_google_apps_login.php:524
+msgid ""
+"You will need to complete Google Apps Login <a href=\"%s\">Settings</a> in "
+"order for the plugin to work"
+msgstr ""
+"Вам трэба будзе ўсе запоўніць  пры ўваход у Google Apps<a href=\"%s"
+"\">Settings</a> для таго, каб убудова працавала"
+
+#: core/core_google_apps_login.php:576 core/core_google_apps_login.php:581
+msgid "Google Apps Login settings"
+msgstr "налады ўваходу ў Google Apps"
+
+#. Plugin Name of the plugin/theme
+#: core/core_google_apps_login.php:576 core/core_google_apps_login.php:581
+msgid "Google Apps Login"
+msgstr "Уваход у Google Apps"
+
+#: core/core_google_apps_login.php:604
+msgid "Google Apps Login setup"
+msgstr "Настройка ўваходу у Google Apps"
+
+#: core/core_google_apps_login.php:610
+msgid ""
+"To set up your website to enable Google logins, you will need to follow "
+"instructions specific to your website."
+msgstr ""
+"Для таго, каб у свой вэб-сайт устроіць лагіны Google, вам трэба будзе "
+"прытрымлівацца спецыфічных інструкцый да вашага сайта."
+
+#: core/core_google_apps_login.php:613
+msgid "Click here to open your personalized instructions in a new window"
+msgstr "Націсніце тут, каб адкрыць персаналізаваныя інструкцыі ў новым акне"
+
+#: core/core_google_apps_login.php:639
+msgid "Save Changes"
+msgstr "Захаваць змены"
+
+#: core/core_google_apps_login.php:668
+msgid "Settings saved."
+msgstr "Налады захоўваюцца."
+
+#: core/core_google_apps_login.php:695
+msgid ""
+"The <a href='%s'>instructions</a> above will guide you to Google's Cloud "
+"Console where you will enter two URLs, and also obtain two codes (Client ID "
+"and Client Secret) which you will need to enter in the boxes below."
+msgstr ""
+"<a href='%s'>Інструкцыі</a>  направяць вас у  Google's Cloud Console, дзе вы "
+"можаце ўвесці два URL-адрасы, а таксама атрымаць два кода (ідэнтыфікатар "
+"кліента і кліента сакрэт), які вам трэба будзе ўвесці ў скрыні ніжэй."
+
+#: core/core_google_apps_login.php:702
+msgid "Client ID"
+msgstr "Ідэнтыфікатар кліента"
+
+#: core/core_google_apps_login.php:705 core/core_google_apps_login.php:711
+msgid "Normally something like %s"
+msgstr "Звычайна нешта накшталт %s"
+
+#: core/core_google_apps_login.php:708
+msgid "Client Secret"
+msgstr "Сакрэт кліента"
+
+#: core/core_google_apps_login.php:743
+msgid "Service Account Client ID / Name"
+msgstr "Уліковы запіс службы Ідэнтыфікацыйны нумар кліента / Імя"
+
+#: core/core_google_apps_login.php:751
+msgid "Service Account email address"
+msgstr "Уліковы запіс службы электроннай пошты"
+
+#: core/core_google_apps_login.php:758
+msgid "Private key fingerprint"
+msgstr "Сакрэтны ключ адбіткаў пальцаў"
+
+#: core/core_google_apps_login.php:766
+msgid "Upload a new Service Account JSON file"
+msgstr "Загрузіць новы файл службы ўліковага запісу  ў фармаце JSON"
+
+#: core/core_google_apps_login.php:767
+msgid "Paste contents of JSON file"
+msgstr "Ўставіць кантэнт файла JSON"
+
+#: core/core_google_apps_login.php:778
+msgid "A Google Apps Domain admin's email"
+msgstr "Адміністратара электроннай пошты дамена Google Apps"
+
+#: core/core_google_apps_login.php:845
+msgid ""
+"Once you have the plugin working, you can try these settings to customize "
+"the login flow for your users."
+msgstr ""
+"Калі ўбудова працуе, вы можаце паспрабаваць наладзіць уваход ў сістэму для "
+"карыстальнікаў."
+
+#: core/core_google_apps_login.php:846
+msgid "See <a href=\"%s\" target=\"gainstr\">instructions here</a>."
+msgstr "Глядзіце <a href=\"%s\" target=\"gainstr\"> інструкцыі тут</a>."
+
+#: core/core_google_apps_login.php:854
+msgid "Force user to confirm Google permissions every time"
+msgstr "Прымушаць карыстача прасіць дазвол у Google кожны раз"
+
+#: core/core_google_apps_login.php:862
+msgid "Automatically redirect to Google from login page"
+msgstr "Аўтаматычнае перанакіраванне  ў Google ад старонкі ўваходу"
+
+#: core/core_google_apps_login.php:878
+msgid "Display 'Powered By wp-glogin.com' on Login form"
+msgstr "Дысплей \"Powered By wp-glogin.com 'на рэгістрацыйнай форме"
+
+#: core/core_google_apps_login.php:886
+msgid "Multisite Options"
+msgstr "Многаузлавыя опцыі"
+
+#: core/core_google_apps_login.php:887
+msgid ""
+"This setting is for multisite admins only. See <a href=\"%s\" target="
+"\"gainstr\">instructions here</a>."
+msgstr ""
+"Гэтая налада прызначана толькі для адміністратараў некалькіх сайтаў.  "
+"Глядзіце <a href=\"%s\" target=\"gainstr\"> інструкцыі тут </a>."
+
+#: core/core_google_apps_login.php:892
+msgid "Use sub-site specific callback from Google"
+msgstr "Выкарыстоўвайце  канкрэтны зваротны выклік субсайт ад Google"
+
+#: core/core_google_apps_login.php:896
+msgid "Leave unchecked if in doubt"
+msgstr "Пакіньце без кантролю, калі ў вас узніклі сумненні"
+
+#: core/core_google_apps_login.php:981
+msgid "The Client ID should be longer than that"
+msgstr "Ідэнтыфікатар кліента павінен быць больш, чым"
+
+#: core/core_google_apps_login.php:982
+msgid "The Client Secret should be longer than that"
+msgstr "Сакрэт Кліента павінен быць больш, чым"
+
+#: core/core_google_apps_login.php:983
+msgid "Service Account email must be a valid email addresses"
+msgstr ""
+"Уліковы запіс службы электроннай пошты павінен быць сапраўдным адрасам "
+"электроннай пошты"
+
+#: core/core_google_apps_login.php:984
+msgid ""
+"Google Apps domain admin must be a valid email address of one of your Google "
+"Apps admins"
+msgstr ""
+"Google Apps адміністратар дамена павінен быць сапраўдным адрас электроннай "
+"пошты аднаго з вашых адміністратараў Google Apps"
+
+#: core/core_google_apps_login.php:985
+msgid "Error with file upload on the server"
+msgstr "Памылка пры загрузцы файла на сервер"
+
+#: core/core_google_apps_login.php:986
+msgid "Error with file upload on the server - file was too large"
+msgstr "Памылка пры загрузцы файла на серверы- Файл быў занадта вялікім"
+
+#. Short description.
+msgid ""
+"Simple secure login and user management for Wordpress through your Google "
+"Apps domain \n"
+"(uses secure OAuth2, and MFA if enabled)"
+msgstr ""
+"Просты бяспечны ўваход у Wordpress праз Google Apps акаўнты(выкарыстоўвае "
+"бяспечны OAuth2, і MFA, калі яны ўключаны)"
+
+#. Found in faq list item.
+msgid ""
+"<p>Other plugins: Users' passwords may be handled by your blog's server, "
+"potentially unencrypted. If these are compromised,\n"
+"hackers would be able to gain access to your Google email accounts! This "
+"includes all \n"
+"<a href=\"http://www.google.com/enterprise/apps/business/products.html"
+"\">Google Apps</a> (Gmail, Drive, Calendar \n"
+"etc), and any other services which use your Google account to login.</p>"
+msgstr ""
+"<p> Іншыя убудовы: паролі карыстальнікаў могуць быць апрацаваны серверам "
+"вашага блога, патэнцыйна ў незашыфраваным выглядзе. Калі яны "
+"скампраметаваныя,\n"
+"\n"
+"хакеры змогуць атрымаць доступ да Вашых рахунках электроннай пошты Google! "
+"Гэта ўключае ў сябе ўсе<a href=\"http://www.google.com/enterprise/apps/"
+"business/products.html\">Google Apps</a> (Gmail, Drive, Calendar \n"
+"etc),, а таксама любыя іншыя паслугі, якія выкарыстоўваюць для ўваходу "
+"ўліковы запіс Google. </ p>"
+
+#. Found in faq list item.
+msgid ""
+"<p>This plugin: Users' passwords are only ever submitted to Google itself, "
+"then Google is asked to authenticate the user to\n"
+"your WordPress site. This means Multi-factor Authentication can still be "
+"used (if set up on your Google account). \n"
+"Your website only requires permission to authenticate the user and obtain "
+"basic profile data - it can never have access to \n"
+"your emails and other data.</p>"
+msgstr ""
+"<P> Гэты убудова: просіць паролі карыстальнікаў толькі калі ўваходзе ў сам "
+"Google, тады Google спросіць аўтэнтыфікацыі карыстальніка\n"
+"ад вашага WordPress сайт. Гэта азначае, што можа быць выкарыстана "
+"шматразовая аўтэнтыфікацыя(калі ён усталяваны на вашым уліковым запісе "
+"Google).\n"
+"Ваш вэб-сайт патрабуецца толькі дазвол для аўтэнтыфікацыі карыстальніка і "
+"атрымаць базавыя дадзеныя профілю - яна ніколі не зможа мець доступ да\n"
+"вашы паведамленні электроннай пошты і іншых дадзеных. </ p>"
+
+#. Found in faq paragraph.
+msgid ""
+"Jonradio Private Site - Try setting the Jonradio  option \"Omit ?"
+"redirect_to= from URL (this option is recommended for Custom Login pages)\"."
+msgstr ""
+"Прыватны сайт Jonradio - Паспрабуйце ўсталяваць опцыю \"Omit ?redirect_to= "
+"from URL  (гэты варыянт рэкамендуецца для карыстацкіх старонак уваходу)\"."
+
+#. Found in installation list item.
+msgid ""
+"Upload <code>googleappslogin</code> directory and contents to the <code>/wp-"
+"content/plugins/</code> directory, or upload the ZIP file directly in\n"
+"the Plugins section of your Wordpress admin"
+msgstr ""
+"Загрузіце <code>googleappslogin</code> каталог і кантэнт ў <code>/wp-content/"
+"plugins/</code> каталог або загрузіце файл ZIP непасрэдна ў\n"
+"раздзел Убудовы  Wordpress admin"
+
+#. Found in description list item.
+msgid ""
+"Persian (fa_IR) - translated by <a href=\"https://profiles.wordpress.org/"
+"saeed1000/\">Saeed1000</a>"
+msgstr ""
+"Фарсі (fa_IR) - перакладзеная на <a href=\"https://profiles.wordpress.org/"
+"saeed1000/\"> Saeed1000 </a>"
+
+#. Found in description paragraph.
+msgid ""
+"The <a href=\"http://wp-glogin.com/glogin/?utm_source=Login%20Readme"
+"%20PremEnt&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">Premium and "
+"Enterprise versions</a> eliminate the need to manage user accounts in your "
+"WordPress site - everything is synced from Google Apps instead."
+msgstr ""
+"<a href=\"http://wp-glogin.com/glogin/?utm_source=Login%20Readme"
+"%20PremEnt&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">Premium and "
+"Enterprise versions</a> ліквідаваць неабходнасць кіравання ўліковымі "
+"запісамі карыстальнікаў на вашым сайце WordPress -замест гэтага усё "
+"сінхранізуецца з Службаў Google."
+
+#. Found in description paragraph.
+msgid ""
+"<strong>See <a href=\"http://wp-glogin.com/glogin/?utm_source=Login%20Readme"
+"%20Top&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">our website at wp-"
+"glogin.com</a> for more details.</strong>"
+msgstr ""
+"<strong>Глядзіце<a href=\"http://wp-glogin.com/glogin/?utm_source=Login"
+"%20Readme%20Top&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">our "
+"website at wp-glogin.com</a> для больш падрабязнай інфармацыі.</strong>"
+
+#. Found in description paragraph.
+msgid ""
+"The Premium version allows everyone in your Google Apps domain to login to "
+"WordPress - an account will be automatically created in WordPress if one "
+"doesn't already exist."
+msgstr ""
+"Прэміум версія дазваляе кожнаму ў дамене Службаў Google ўваходдзіць  "
+"WordPress - уліковы запіс будзе створана аўтаматычна ў WordPress, калі яшчэ "
+"не існуе."
+
+#. Found in description paragraph.
+msgid ""
+"Our Enterprise version goes further, allowing you to specify granular access "
+"and role controls based on Google Group membership.\n"
+"You can also see logs of accounts created and roles changed by the plugin."
+msgstr ""
+"Наша карпаратыўная версія ідзе далей, дазваляючы вам ўказаць дэталізаваны "
+"доступ і ролі кіравання, заснаваныя на членстве Google Group.\n"
+"Вы таксама можаце ўбачыць дадзеные ўліковых запісаў, створаць і змяняць ролі "
+"з дапамогай плагіна."
+
+#. Found in description paragraph.
+msgid ""
+"We are looking for volunteers to translate into their own language. If you "
+"would like to contribute a translation, please \n"
+"get in touch: contact@wp-glogin.com."
+msgstr ""
+"Мы шукаем добраахвотнікаў для пераводу на іх родную мову. Калі вы хочаце "
+"ўнесці свой уклад у пераклад, калі ласка,\n"
+"напішыце мне: contact@wp-glogin.com."
+
+#. Found in description header.
+msgid "Website and Upgrades"
+msgstr "Вэб-сайт і абнаўленні"
+
+#. Found in description list item.
+msgid ""
+"Swedish (sv_SE) - translated by Johan Linde of <a href=\"http://syellen.se/"
+"\">S/Y ELLEN</a>"
+msgstr ""
+"Шведскі (sv_SE) - у перакладзе Йохан Ліндзе з  <a href=\"http://syellen.se/"
+"\">S/Y ELLEN</a>"
+
+#. Found in description list item.
+msgid ""
+"Italian (it_IT) - translated by Giorgio Draghetti of <a href=\"http://"
+"tipinoncomuni.it/\">tipinoncomuni</a>"
+msgstr ""
+"Італьянская мова (it_IT) - у перакладзе Джорджыа Draghetti з <a href="
+"\"http://tipinoncomuni.it/\"> tipinoncomuni </a>"
+
+#. Found in description paragraph.
+msgid ""
+"Eliminate the need for Google Apps domain admins to separately manage "
+"WordPress user accounts, and get peace\n"
+"of mind that only authorized employees have access to your organizations's "
+"websites and intranet."
+msgstr ""
+"Ліквідаваць неабходнасць асобнага кіравання ўліковымі запісамі "
+"карыстальнікаў WordPress даменнымі адміністратарамі Google Apps, і быць "
+"упэўненым, што толькі аўтарызаваныя супрацоўнікі маюць доступ да вэб-сайтаў "
+"і інтранэт вашай арганізацыі."
+
+#. Found in description paragraph.
+msgid ""
+"Google Apps Login allows you to centralize your site's Google functionality "
+"and build your own extensions, or use\n"
+"third-party extensions, which require no configuration themselves and share "
+"the same user authentication and \n"
+"permissions that users already allowed for Google Apps Login itself."
+msgstr ""
+"Google Apps ўваход дазваляе цэнтралізаваць функцыянальнасць вашага сайта ў "
+"Google і ствараць свае ўласныя пашырэння, або выкарыстоўваць\n"
+"іншыя пашырэння, якія не патрабуюць налады і праходзяць тую ж аўтарызацыю і "
+"праверку\n"
+"дазволаў, якія ўжо былі прадугледжаны для самога ўваходу ў сістэму Google "
+"Apps."
+
+#. Found in description paragraph.
+msgid ""
+"Using our platform, your website appears to Google accounts as one unified "
+"'web application', making it more secure \n"
+"and easier to manage."
+msgstr ""
+"Выкарыстоўваючы нашу платформу, ваш сайт з'яўляецца ў акаунце  Google, у "
+"якасці адзінага \"вэб-прыкладання\", якое робіць яго больш бяспечным\n"
+"і прасцей у кіраванні."
+
+#. Found in description paragraph.
+msgid ""
+"<a href=\"http://wp-glogin.com/wpgoogledriveembedder\">Google Drive "
+"Embedder</a> is a free extension plugin allowing \n"
+"users to browse for Google Drive documents to embed directly in their posts "
+"or pages."
+msgstr ""
+"<a href=\"http://wp-glogin.com/wpgoogledriveembedder\">Google Drive "
+"Embedder</a>з'яўляецца свабодным пашырэннем убудовы і  дазваляе\n"
+"карыстальнікам праглядаць на Google Drive дакументы для ўбудавання "
+"непасрэдна ў сваі пасты або старонкі."
+
+#. Found in description paragraph.
+msgid ""
+"<a href=\"http://wp-glogin.com/wpgoogleappsdirectory\">Google Apps "
+"Directory</a> is a free extension plugin allowing \n"
+"logged-in users to search your Google Apps employee directory from a widget "
+"on your intranet or client site."
+msgstr ""
+"<a href=\"http://wp-glogin.com/wpgoogleappsdirectory\">Google Apps "
+"Directory</a> з'яўляецца свабодным пашырэннем убудовы, якое  дазваляе\n"
+"аўтарызаваным карыстальнікам шукаць супрацоўнікаў у  вашым каталоге Google "
+"Apps  праз віджэт у вашай  інтранэце або сайта кліента."
+
+#. Found in description paragraph.
+msgid ""
+"<a href=\"http://wp-glogin.com/avatars/?utm_source=Login%20Readme"
+"%20Avatars&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">Google "
+"Profile Avatars</a> \n"
+"is available on our website. It displays users' Google profile photos in "
+"place of their avatars throughout your site."
+msgstr ""
+"<a href=\"http://wp-glogin.com/avatars/?utm_source=Login%20Readme"
+"%20Avatars&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">Google "
+"Profile Avatars</a>можна знайсці на нашым сайце.  Ён адлюстроўвае ў профілі "
+"карыстальнікаў Google фатаграфіі на месцы сваіх аватараў на сваім сайце."
+
+#. Found in description paragraph.
+msgid ""
+"Google Apps Login uses the latest secure OAuth2 authentication recommended "
+"by Google. Other 3rd party authentication \n"
+"plugins may allow you to use your Google username and password to login, but "
+"they do not do this securely unless \n"
+"they also use OAuth2. This is discussed further in the <a href=\"http://"
+"wordpress.org/plugins/google-apps-login/faq/\">FAQ</a>."
+msgstr ""
+"Google Apps ўваход выкарыстоўвае апошнюю абароненую аўтэнтыфікацыю OAuth2 "
+"рэкамендаваную Google. Праверка сапраўднасці іншых убудоў\n"
+"можа дазволіць вам выкарыстоўваць ваша імя карыстальніка і пароль для "
+"ўваходу ў Google, але дадзеная працэдура не з'яўляецца бяспечнай, калі "
+"толькі\n"
+"яны таксама не выкарыстоўваюць oauth2. Гэта абмяркоўваецца далей у <a href="
+"\"http://wordpress.org/plugins/google-apps-login/faq/\"> FAQ </a>."
+
+#. Found in description paragraph.
+msgid ""
+"Please see our website <a href=\"http://wp-glogin.com/?utm_source=Login"
+"%20Readme%20Website&amp;utm_medium=freemium&amp;utm_campaign=Freemium"
+"\">http://wp-glogin.com/</a> for more information about this free plugin \n"
+"and extra features available in our Premium and Enterprise upgrades, plus "
+"support details, other plugins, and useful guides for admins of\n"
+"WordPress sites and Google Apps."
+msgstr ""
+"Калі ласка, наведайце наш сайт <a href=\"http://wp-glogin.com/?"
+"utm_source=Login%20Readme%20Website&amp;utm_medium=freemium&amp;"
+"utm_campaign=Freemium\">http://wp-glogin.com/</a> для атрымання дадатковай "
+"інфармацыі аб гэтай бясплатнай убудове\n"
+"і дадатковых функцыях, даступных ў нашых Premium і Enterprise абнаўленнях, а "
+"таксама падрабязныя звесткі падтрымкі, іншыя убудовы і карысныя парады "
+"кіраўніцтва для адмінаў\n"
+"для WordPress сайтаў і Google Apps."
+
+#. Found in description paragraph.
+msgid ""
+"If you are building your organization's intranet on WordPress, try out our \n"
+"<a href=\"http://wp-glogin.com/intranet/?utm_source=Login%20Readme"
+"%20AIOI&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">All-In-One "
+"Intranet plugin</a>."
+msgstr ""
+"Калі вы ствараеце інтранэт арганізацыі на WordPress, паспрабуйце наш\n"
+"<a href=\"http://wp-glogin.com/intranet/?utm_source=Login%20Readme"
+"%20AIOI&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">All-In-One "
+"Intranet plugin</a>."
+
+#. Found in installation paragraph.
+msgid ""
+"Personalized instructions to configure the plugin by registering your site "
+"with Google Apps are linked from \n"
+"the WordPress admin panel once you have activated the plugin. For a (non-"
+"personalized) preview of these instructions \n"
+"please <a href=\"http://wp-glogin.com/installing-google-apps-login/basic-"
+"setup/\">click here</a>."
+msgstr ""
+"Персаналізаваныя інструкцыі для налады плагіна па рэгістрацыі вашага сайта з "
+"дапамогай Google Apps становяцца даступныя з\n"
+"панэлі адміністратара WordPress адразу пасля актывацыі плагіна. Для "
+"(неперсанаванага) папярэдняга прагляду дадзенай інструкцыі\n"
+"калі ласка <a href=\"http://wp-glogin.com/installing-google-apps-login/basic-"
+"setup/\"> націсніце тут </a>."
+
+#. Found in faq paragraph.
+msgid ""
+"Full support is available if you purchase the appropriate license from the "
+"author via:\n"
+"<a href=\"http://wp-glogin.com/glogin/?utm_source=Login%20Readme"
+"%20Premium&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">http://wp-"
+"glogin.com/glogin/</a>"
+msgstr ""
+"Поўная падтрымка даступна, калі вы набываеце адпаведную ліцэнзію ад аўтара "
+"праз:\n"
+"<аhref=\"http://wp-glogin.com/glogin/?utm_source=Login%20Readme"
+"%20Premium&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">http://wp-"
+"glogin.com/glogin/</a>"
+
+#. Found in faq paragraph.
+msgid ""
+"Please feel free to email <a href=\"mailto:contact@wp-glogin.com"
+"\">contact@wp-glogin.com</a> with any questions,\n"
+"as we may be able to help, but you may be required to purchase a support "
+"license if the problem\n"
+"is specific to your installation or requirements."
+msgstr ""
+"Калі ласка, не саромейцеся, пішыце <a href=\"mailto:contact@wp-glogin.com\"> "
+"contact@wp-glogin.com </a> з любымі пытаннямі,\n"
+", Мы паспрабуем дапамагчы, але вам можа спатрэбіцца набыць ліцэнзію "
+"падтрымкі, калі праблема\n"
+"з'яўляецца спецыфічным для вашай ўстаноўкі або патрабаванняў."
+
+#. Found in faq paragraph.
+msgid ""
+"We may occasionally be able to respond to support queries posted on the "
+"'Support' forum here on the wordpress.org\n"
+"plugin page, but we recommend sending us an email instead if possible."
+msgstr ""
+"Мы часам будзем адказваць на запыты, размешчаныя на форуме \"Падтрымка\", "
+"тут, на старонцы ўбудовы wordpress.org, але замест гэтага мы б рэкамендавалі "
+"адпраўляць нам лісты па электроннай пошце, калі гэта магчыма."
+
+#. Found in faq paragraph.
+msgid ""
+"No, once you set up the plugin, any WordPress accounts whose email address "
+"corresponds to <em>any</em> Google account, \n"
+"whether on a different Google Apps domain or even a personal gmail.com "
+"account, will be able to use 'Login with \n"
+"Google' to easily connect to your WordPress site."
+msgstr ""
+"Няма, як толькі вы стварылі ўбудова, любы ўліковы запіс WordPress, адрас "
+"электроннай пошты, якой адпавядае <em> any </ em> ўліковага запісу Google,\n"
+"будзь яна на іншым дамене Google Apps ці нават на асабістым акаўнце gmail."
+"com, будзе мець магчымасць выкарыстоўваць \"Уваход з\n"
+"Google \"і з лёгкасцю падлучацца да WordPress сайту."
+
+#. Found in faq paragraph.
+msgid ""
+"However, our <a href=\"http://wp-glogin.com/glogin/?utm_source=Login%20Readme"
+"%20FAQ&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">premium plugin</"
+"a> has features that greatly simplify\n"
+"your WordPress user management if your WordPress users are mostly on the "
+"same Google Apps domain(s)."
+msgstr ""
+"Тым не менш, наш<аhref=\"http://wp-glogin.com/glogin/?utm_source=Login"
+"%20Readme%20FAQ&amp;utm_medium=freemium&amp;utm_campaign=Freemium\">premium "
+"</a> убудова мае асаблівасці, якія значна спрашчаюць\n"
+"ваша карыстацкае кіраванне WordPress, асабліва, калі вашы карыстальнікі "
+"WordPress знаходзяцца ў асноўным на тым жа дамене (ах) прыкладання Google."
+
+#. Found in faq paragraph.
+msgid ""
+"However, you may have configured your site to run so that the login pages \n"
+"can be accessed by <em>either</em> HTTP <em>or</em> HTTPS. In that case, you "
+"may run into problems. \n"
+"We recommend that you set <a href=\"http://codex.wordpress.org/"
+"Administration_Over_SSL\">FORCE_SSL_ADMIN</a> \n"
+"to true. This will ensure that all users are consistently using HTTPS\n"
+"for login."
+msgstr ""
+"Тым не менш, вы маглі наладзіць свой сайт для запуску, так што старонкі "
+"ўваходу\n"
+"могуць быць даступныя <em>альбо</em> HTTP <em>ці</em> HTTPS. У гэтым "
+"выпадку, вы можаце сутыкнуцца з праблемамі.\n"
+"Мы рэкамендуем ўсталяваць <a href=\"http://codex.wordpress.org/"
+"Administration_Over_SSL\"> FORCE_SSL_ADMIN </a>\n"
+" Гэта гарантуе, што ўсе карыстальнікі будуць ужываць для ўваходу ў сістэму "
+"пратакол HTTPS"
+
+#. Found in faq paragraph.
+msgid ""
+"You may then need to ensure the Redirect URL and Web Origin in the Google "
+"Cloud Console are\n"
+"set as HTTPS (this will make sense if you follow the installation "
+"instructions again)."
+msgstr ""
+"Магчыма вам спатрэбіцца забяспечыць Redirect URL і Web Origin ў Google Cloud "
+"Console \n"
+" і ўсталяваць як HTTPS (гэта будзе мець сэнс, калі вы будзеце прытрымлівацца "
+"інструкцыям па ўстаноўцы зноў)."
+
+#. Found in faq paragraph.
+msgid ""
+"If for some reason you cannot set FORCE_SSL_ADMIN, then instead you can add "
+"two URLs to the Google\n"
+"Cloud Console for each entry, e.g. Redirect URL = http://wpexample.com/wp-"
+"login.php, and\n"
+"then add another one for https://wpexample.com/wp-login.php. Same idea for "
+"Web Origin."
+msgstr ""
+"Калі па нейкіх прычынах вы не можаце ўсталяваць FORCE_SSL_ADMIN, то замест "
+"гэтага вы можаце дадаць два URL-адрасы ў Google\n"
+" Cloud Console для кожнага запісу, напрыклад, Перанакіраванне URL = http://"
+"wpexample.com/wp-login.php, і\n"
+"затым дадаць яшчэ адзін для https://wpexample.com/wp-login.php. Тая ж самая "
+"ідэя для Web Origin."
+
+#. Found in faq paragraph.
+msgid ""
+"It is written, tested, and secure for multisite WordPress, both for "
+"subdirectories and subdomains, and <em>must</em> be activated\n"
+"network-wide for security reasons."
+msgstr ""
+"Яна напісана, праверана і бяспечна для усяго WordPress, як для падкаталогаў "
+"і субдоменов, і <em> павінен </ em> актывавацца\n"
+"у маштабах усёй сеткі па меркаваннях бяспекі."
+
+#. Found in faq paragraph.
+msgid ""
+"There are many different possible configurations of multisite WordPress, "
+"however, so you must test carefully if you \n"
+"have any other plugins or special setup."
+msgstr ""
+"Ёсць шмат розных магчымых канфігурацый WordPress, аднак, вы павінны старанна "
+"праверыць,  \n"
+"ёсць якія-небудзь іншыя ўбудовы або адмысловай налады."
+
+#. Found in faq paragraph.
+msgid ""
+"In a multisite setup, you will see an extra option in Settings -&gt; Google "
+"Apps Login, named 'Use sub-site specific callback \n"
+"from Google'. Read details in the configuration instructions (linked from "
+"the Settings page). This setting will need to be \n"
+"ON if you are using any domain mapping plugin, and extra Redirect URIs will "
+"need to be registered in Google Cloud Console."
+msgstr ""
+"Пры мультысайтавай ўсталёўцы вы ўбачыце дадатковую опцыю ў Наладах - & GT; "
+"Google Apps ўваход, названую \"Выкарыстоўваць суб-сайт ўчастка зваротнага "
+"выкліку\n"
+"ад Google \". Чытайце падрабязнасці ў інструкцыі па наладжванні (спасылка на "
+"старонцы Налады). Гэты параметр павінен быць уключаны, асабліва калі вы "
+"выкарыстоўваеце якую-небудзь убудова для адлюстравання дамена і дадатковыя "
+"Уніфікаваныя Ідэнтыфікатары Перасылкі павінны быць зарэгістраваныя ў Google "
+"Cloud Console."
+
+#. Found in faq paragraph.
+msgid ""
+"Yes, and depending on your setup, it can be much more secure than just "
+"using\n"
+"WordPress usernames and passwords."
+msgstr ""
+"Да, і ў залежнасці ад вашага выюара, яна можа быць значна больш сякрэтным, "
+"чым толькі ўжываючы\n"
+"WordPress імёны карыстальнікаў і паролі."
+
+#. Found in faq paragraph.
+msgid ""
+"However, the author does not accept liability or offer any guarantee,\n"
+"and it is your responsibility to ensure that your site is secure in the way "
+"you require."
+msgstr ""
+"Тым не менш, аўтар не нясе адказнасці або не прапануе якую-небудзь "
+"гарантыю,\n"
+"і гэта ваша адказнасць, каб пераканацца, што ваш сайт з'яўляецца абароненым, "
+"як вам патрабуецца."
+
+#. Found in faq paragraph.
+msgid ""
+"In particular, other plugins may conflict with each other, and different "
+"WordPress versions and configurations\n"
+"may render your site insecure."
+msgstr ""
+"У прыватнасці, іншыя ўбудовы могуць уступаць у супярэчнасць адзін з адным, а "
+"таксама розныя версіі WordPress і канфігурацыі\n"
+"могуць зрабіць ваш сайт небяспечным."
+
+#. Found in faq paragraph.
+msgid ""
+"Sometimes conflicts can arise. We have built workarounds for some problems, "
+"and would always appreciate your feedback\n"
+"to resolve any issues you might encounter yourself."
+msgstr ""
+"Часам могуць узнікаць канфлікты. Мы пабудавалі абыходныя шляхі для некаторых "
+"праблем, і заўсёды цэнім вашы водгукі\n"
+"для вырашэння любых пытанняў."
+
+#. Found in faq paragraph.
+msgid ""
+"One known issue is with iThemes Security: the settings 'filter suspicious "
+"query strings' and 'filter long URL strings' can \n"
+"both cause intermittent conflicts and should be turned off if you are happy "
+"with the implications."
+msgstr ""
+"Адна вядомая праблема з iThemes бяспекі: Налады  'filter suspicious query "
+"strings' і 'filter long URL strings'  могуць\n"
+"выклікаць канфлікты і павінны быць адключаныя."
+
+#. Found in faq paragraph.
+msgid ""
+"Google Apps Login uses the latest secure OAuth2 authentication recommended "
+"by Google. Other 3rd party authentication plugins \n"
+"may allow you to use your Google username and password to login, but they do "
+"not always do this securely:"
+msgstr ""
+"Уваход Google Apps выкарыстоўвае апошнюю абароненую аўтэнтыфікацыю OAuth2, "
+"якая рэкамендавана Google. Іншыя ўбудовы, дзе выкарыстоўваецца "
+"аўтэнтыфікацыі ад 3-га ўдзельніка,\n"
+"дазволіць вам выкарыстоўваць ваша імя карыстальніка і пароль для ўваходу ў "
+"Google, але гэта не заўсёды надзейна:"
+
+#. Found in faq paragraph.
+msgid ""
+"Other plugins: Users' passwords may be handled by your blog's server, "
+"potentially unencrypted. If these are compromised,\n"
+"hackers would be able to gain access to your Google email accounts! This "
+"includes all \n"
+"<a href=\"http://www.google.com/enterprise/apps/business/products.html"
+"\">Google Apps</a> (Gmail, Drive, Calendar \n"
+"etc), and any other services which use your Google account to login."
+msgstr ""
+"Іншыя убудовы: паролі карыстальнікаў могуць быць апрацаваны серверам вашага "
+"блога, патэнцыйна ў незашыфраваным выглядзе. Калі яны скампраметаваныя,\n"
+"хакеры змогуць атрымаць доступ да акаунтаў электроннай пошты Google! Гэта "
+"ўключае ў сябе ўсе\n"
+"<a href=\"http://www.google.com/enterprise/apps/business/products.html"
+"\">Google Apps</a> (Gmail, Drive, Calendar \n"
+"etc), а таксама любыя іншыя паслугі, якія выкарыстоўваюць уліковы запіс "
+"Google для ўваходу."
+
+#. Found in faq paragraph.
+msgid ""
+"This plugin: Users' passwords are only ever submitted to Google itself, then "
+"Google is asked to authenticate the user to\n"
+"your WordPress site. This means Multi-factor Authentication can still be "
+"used (if set up on your Google account). \n"
+"Your website only requires permission to authenticate the user and obtain "
+"basic profile data - it can never have access to \n"
+"your emails and other data."
+msgstr ""
+"Гэты убудова: паролі карыстальнікаў прадстаўляе ў сам Google, то Google "
+"просяць аўтэнтыфікацыі карыстальніка ў\n"
+"ваш WordPress сайт. Гэта азначае, што шматфактарная аўтэнтыфікацыя па-"
+"ранейшаму можа адбыцца(калі ён усталяваны на вашым уліковым запісе Google).\n"
+"Вашаму вэб-сайту патрабуецца толькі дазвол для аўтэнтыфікацыі карыстальніка "
+"і ен атрымвае базавыя дадзеныя профілю - ен ніколі не зможа мець доступ да\n"
+"вашых паведамленняў электроннай пошты і іншых дадзеных."
+
+#. Found in description list item.
+msgid "Google Apps for Work"
+msgstr "Google Apps для працы"
+
+#. Found in description list item.
+msgid "Google Apps for Business"
+msgstr "Google Apps для бізнесу"
+
+#. Found in description list item.
+msgid "Google Apps for Education"
+msgstr "Google Apps для адукацыі"
+
+#. Found in description list item.
+msgid "Google Apps for Non-profits"
+msgstr "Google Apps для некамерцыйных арганізацый"
+
+#. Found in description list item.
+msgid "Personal gmail.com and googlemail.com emails"
+msgstr "Асабістыя gmail.com і googlemail.com электронныя лісты"
+
+#. Found in description list item.
+msgid "English - default"
+msgstr "Англійская - па змаўчанні"
+
+#. Found in description list item.
+msgid ""
+"French (fr_FR) - translated by Lucien Ntumba of <a href=\"http://"
+"gpcsolutions.fr/\">GPC.solutions</a>"
+msgstr ""
+"Французская (fr_FR) - у перакладзе з Люсьенам Нтумба з <a href=\"http://"
+"gpcsolutions.fr/\"> GPC.solutions </a>"
+
+#. Found in description list item.
+msgid ""
+"Spanish (es_ES) - translated by David Perez of <a href=\"https://www."
+"closemarketing.es/\">Closemarketing</a>"
+msgstr ""
+"Іспанскі (es_ES) - пераклад Дэвід Перэс з <a href=\"https://www."
+"closemarketing.es/\"> Closemarketing </a>"
+
+#. Found in description list item.
+msgid ""
+"Danish (da_DK) - translated by Alexander Leo-Hansen of <a href=\"http://"
+"alexanderleohansen.dk/\">alexanderleohansen.dk</a>"
+msgstr ""
+"Дацкая (da_DK) - у перакладзе Аляксандра Лео-Хансен з <a href=\"http://"
+"alexanderleohansen.dk/\"> alexanderleohansen.dk </a>"
+
+#. Found in description list item.
+msgid ""
+"Serbo-Croatian (sr_RS) - translated by Borisa Djuraskovic of <a href="
+"\"http://www.webhostinghub.com/\">Web Hosting Hub</a>"
+msgstr ""
+"Сербахарвацкай (sr_RS) - у перакладзе з Borisa Djuraskovic з <a href="
+"\"http://www.webhostinghub.com/\"> Web Hosting Hub</a>"
+
+#. Found in description list item.
+msgid ""
+"Arabic (ar_SA) - translated by <a href=\"http://profiles.wordpress.org/"
+"jvarn13\">Jeremy Varnham</a>"
+msgstr ""
+"Арабскi (ar_SA) - перакладзеная на <a href=\"http://profiles.wordpress.org/"
+"jvarn13\"> Jeremy Varnham</a>"
+
+#. Found in description list item.
+msgid "Ukrainian (uk_UA) - translated by Serj Kondrashov"
+msgstr "Украінскі (uk_UA) - у перакладзе з Сержам Кандрашовым"
+
+#. Found in description list item.
+msgid ""
+"Dutch (nl_NL) - translated by Noell Taravati of <a href=\"http://www.peppix."
+"nl/\">Peppix</a>"
+msgstr ""
+"Галандскі (nl_NL) - у перакладзе з Noell Taravati з <a href=\"http://www."
+"peppix.nl/\"> Peppix </a>"
+
+#. Found in description paragraph.
+msgid ""
+"Google Apps Login allows existing Wordpress user accounts to login to your "
+"website using Google to securely authenticate their account. This means that "
+"if they are already logged into Gmail for example, they can simply click "
+"their way through the Wordpress login screen - no username or password is "
+"explicitly required!"
+msgstr ""
+"Уваход у Google Apps  дазваляе існуючым карыстальнікам Wordpress  уваход на "
+"свой вэб-сайт з дапамогай Google для абароненай аўтэнтыфікацыі свайго "
+"ўліковага запісу. Гэта азначае, што, калі яны ўжо ўвайшлі ў Gmail, "
+"напрыклад, яны могуць проста  зайвайсці праз экран ўваходу ў Wordpress - не "
+"уводзячы імя карыстальніка або пароль!"
+
+#. Found in description paragraph.
+msgid ""
+"Google Apps Login uses the latest <strong>secure OAuth2 authentication "
+"recommended by Google</strong>, including 2-factor Auth if enabled for your "
+"Google Apps accounts."
+msgstr ""
+"Google Apps Увайсці выкарыстоўвае апошнюю <STRONG> бяспечнай аўтэнтыфікацыі "
+"OAuth2 рэкамендаваны Google </ STRONG>, у тым ліку 2-фактару Auth, калі "
+"гэтая функцыя ўключана для акаўнтаў Google Apps."
+
+#. Found in description paragraph.
+msgid ""
+"Plugin setup requires you to have admin access to any Google Apps domain, or "
+"a regular Gmail account, to register and obtain two simple codes from Google."
+msgstr ""
+"Убудове ўстаноўкі неабходна мець доступ адміністратара да любога дамену "
+"Google Apps або звычайны запіс Gmail, каб зарэгістравацца і атрымаць два "
+"простых кодаў з Google."
+
+#. Found in description paragraph.
+msgid "Full support and premium features are also available for purchase:"
+msgstr "Поўная падтрымка і дадатковыя магчымасці таксама даступныя для куплі:"
+
+#. Found in description paragraph.
+msgid ""
+"Google Apps Login works on single or multisite WordPress websites or private "
+"intranets."
+msgstr ""
+"Уваход Google Apps працуе для аднаго або некалькіх вэб-сайтаў WordPress ці "
+"прыватнага інтранэта."
+
+#. Found in description paragraph.
+msgid "One-click login will work for the following domains and user accounts:"
+msgstr ""
+"Адзін клік увахода будзе працаваць для наступных даменаў і уліковых запісаў "
+"карыстальнікаў:"
+
+#. Found in description paragraph.
+msgid "This plugin currently operates in the following languages:"
+msgstr "Гэты убудова ў цяперашні час працуе на наступных мовах:"
+
+#. Found in installation list item.
+msgid "Go to your WordPress admin control panel's plugin page"
+msgstr "Перайдзіце на старонку панэлі кіравання вашай WordPress ўбудовы"
+
+#. Found in installation list item.
+msgid "Search for 'Google Apps Login'"
+msgstr "Пошук для 'Google Apps Login'"
+
+#. Found in installation list item.
+msgid "Click Install"
+msgstr "Націсніце кнопку ўстанавіць"
+
+#. Found in installation list item.
+msgid "Click Activate on the plugin"
+msgstr "Націсніце кнопку Актываваць на ўбудове"
+
+#. Found in installation list item.
+msgid "Go to 'Google Apps Login' under Settings in your Wordpress admin area"
+msgstr ""
+"Перайсці да 'Google Apps Login' у меню Налады ў вашай вобласці Wordpress "
+"адміністратара"
+
+#. Found in installation list item.
+msgid ""
+"Follow the instructions on that page to obtain two codes from Google, and "
+"also submit two URLs back to Google"
+msgstr ""
+"Выконвайце інструкцыі на гэтай старонцы, каб атрымаць 2 кода ад Google, а "
+"таксама дадайце 2 URL-адрасы ў Google"
+
+#. Found in installation list item.
+msgid "Follow the instructions from step 4 above"
+msgstr "Выконвайце інструкцыі, пачынаючы з кроку 4  і вышэй"
+
+#. Found in installation paragraph.
+msgid ""
+"To set up the plugin, you will need access to a Google Apps domain as an "
+"administrator, or just a regular Gmail account."
+msgstr ""
+"Каб наладзіць убудову, вам спатрэбіцца доступ да дамену Google Apps  у "
+"якасці адміністратара, ці проста звычайны ўліковы запіс Gmail."
+
+#. Found in installation paragraph.
+msgid "Easiest way:"
+msgstr "Самы просты спосаб:"
+
+#. Found in installation paragraph.
+msgid ""
+"If you cannot install from the WordPress plugins directory for any reason, "
+"and need to install from ZIP file:"
+msgstr ""
+"Калі вы не можаце ўсталяваць убудову з каталога WordPress па  якой-небудзь "
+"прычыне, і неабходна ўсталяваць з ZIP-файла:"
+
+#. Found in faq header.
+msgid "How can I obtain support for this product?"
+msgstr "Як я магу атрымаць падтрымку для гэтага прадукта?"
+
+#. Found in faq header.
+msgid ""
+"Is login restricted to the Google Apps domain I use to set up the plugin?"
+msgstr ""
+"Абмяжоўваецца ці ўбудова даменам Google Apps, калі  я выкарыстоўваю ўбудову "
+"для ўстаноўкі?"
+
+#. Found in faq header.
+msgid "Does the plugin work with HTTP or HTTPS login pages?"
+msgstr "Будзе убудова працаваць з HTTP ці HTTPS старонкай ўваходу ў сістэму?"
+
+#. Found in faq header.
+msgid "Does the plugin work on Multisite?"
+msgstr "Ці будзе ўбудова працаваць з шматлікімі сайтамі?"
+
+#. Found in faq header.
+msgid "Is it secure?"
+msgstr "Ці бяспечна гэта?"
+
+#. Found in faq header.
+msgid "Does it conflict with any other plugins?"
+msgstr "Ці можа ўступаць у канфлікт з любымі іншымі ўбудовамі?"
+
+#. Found in faq header.
+msgid "How does it compare to other 3rd party auth plugins?"
+msgstr "Як гэта суадносіцца з іншымі ўбудовамі?"
+
+#. Found in faq header.
+msgid "What are the system requirements?"
+msgstr "Якія сістэмныя патрабаванні?"
+
+#. Found in faq list item.
+msgid "PHP 5.2.x or higher with JSON extensions"
+msgstr "PHP 5.2.x або вышэй з пашырэннямі JSON"
+
+#. Found in faq list item.
+msgid "Wordpress 3.5 or above"
+msgstr "Wordpress 3.5 або вышэй"
+
+#. Found in faq paragraph.
+msgid "The plugin will work whether your site is configured for HTTP or HTTPS."
+msgstr ""
+"Убудова будзе працаваць незалежна ад таго, як  настроены ваш сайт, ці для "
+"HTTP ці HTTPS."
+
+#. Found in faq paragraph.
+msgid "WP Email Login - incompatible with Google Apps Login"
+msgstr "WP E-mail Лагін - несумяшчальны з Уваходам Google Apps"
+
+#. Found in faq paragraph.
+msgid "And you will need a Google account to set up the plugin."
+msgstr "І вам спатрэбіцца уліковы запіс Google, каб наладзіць убудова."
+
+#. Screenshot description.
+msgid ""
+"User login screen can work as normal or via Google's authentication system"
+msgstr ""
+"Карыстальніцкі  login screen можа працаваць у звычайным рэжыме або з "
+"дапамогай сістэмы аўтэнтыфікацыі кампаніі Google"
+
+#. Screenshot description.
+msgid ""
+"Admin obtains two simple codes from Google to set up - easy instructions to "
+"follow"
+msgstr ""
+"Адміністратар атрымлівае два простых кода з Google для  налад  - "
+"прытрымлівацца простых інструкцыі "
+
+#. Found in description header.
+msgid "Support and Premium features"
+msgstr "Падтрымка і Прэміум-функцыі"
+
+#. Found in description header.
+msgid "Extensible Platform"
+msgstr "Пашырэнне платформы"
+
+#. Found in description header.
+msgid "Requirements"
+msgstr "Патрабаванні"
+
+#. Found in description header.
+msgid "Translations"
+msgstr "Пераклады"
+
+#. Found in changelog paragraph.
+msgid ""
+"New 'Remember Me' in advanced options. Check to ensure users are not "
+"automatically logged out at the end of their browser session.\n"
+"This applies to all users using 'Login with Google'. It has the same "
+"functionality as checking the 'Remember Me' checkbox on\n"
+"the login form when using regular WordPress username/password to login."
+msgstr ""
+"Новы параметр «Запомніць мяне» ў дадатковых настройках. Пераканайцеся, што "
+"карыстальнікі аўтаматычна не выходзяць у канцы браўзэр-сесіі.\n"
+"Гэта ставіцца да ўсіх карыстальнікам, якія выкарыстоўваюць \"Уваход з Google"
+"\". Ён мае такую ж функцыянальнасць як праверка наяўнасці сцяжка \"Запомніць "
+"мяне\" пры запаўненні\n"
+"формы ўваходу пры выкарыстанні звычайнага імя карыстальніка / пароль для "
+"ўваходу ў сістэму WordPress."
+
+#. Found in changelog paragraph.
+msgid ""
+"Improved handling of errors when multiple versions of the plugin are "
+"inadvertently activated."
+msgstr ""
+"Палепшаная апрацоўка памылак пры выпадковай актывізацыі шматлікіх версій "
+"гэтага плагіна."
+
+#. Found in changelog paragraph.
+msgid ""
+"Added filter gal_login_button_text so developers can customize the 'Login "
+"with Google' button in all versions (in Premium/Enterprise,\n"
+"it is possible to set the button text in settings, and that will always take "
+"priority if set)."
+msgstr ""
+"Дададзены фільтр gal_login_button_text, для таго, каб распрацоўнікі маглі "
+"наладжваць кнопку \"Уваход з Google\" ва ўсіх версіях (у версіях Прэміум / "
+"Enterprise магчыма ўсталяваць тэкст кнопкі ў наладах, дадзеная настройка "
+"заўсёды будзе прыярытэтнай пры ўмове першапачатковай ўстаноўкі)."
+
+#. Found in changelog paragraph.
+msgid ""
+"Fixed a text injection vulnerability whereby it was possible for a third "
+"party to trick a user into viewing a version of the login page\n"
+"containing an error message entirely of their own choosing - all sites "
+"should upgrade to this plugin version."
+msgstr ""
+"Ўхіленая ўразлівасць, звязаная са з'яўленнем тэкст, пры якой трэці бок мог "
+"падмануць карыстальніка і прымусіць яго перайсці да прагляду версіі старонкі "
+"ўваходу ў сістэму,\n"
+"якая змяшчае паведамленне аб памылцы любога зместу - усе сайты павінны "
+"абнавіцца да дадзенай версіі плагіна."
+
+#. Found in changelog paragraph.
+msgid ""
+"Updated to work correctly alongside some plugins that change the login URL "
+"from /wp-login.php to something else."
+msgstr ""
+"Абнаўлення правільна працуюць  разам з некаторымі ўбудовамі, якія змяняюць "
+"URL ўваходу ад /wp-login.php да чаго-то яшчэ."
+
+#. Found in changelog paragraph.
+msgid ""
+"Removed a WordPress function that is deprecated in WP 4.4 - force_ssl_login\n"
+"This could have resulted in some visible warning messages."
+msgstr ""
+"Прыбрана функцыя WordPress, якая састарэла ў WP 4.4 - force_ssl_login\n"
+"Гэта магло б прывесці да  папераджальных паведамленняў."
+
+#. Found in changelog paragraph.
+msgid ""
+"Updated some URLs pointing to information about Premium/Enterprise "
+"upgrades.\n"
+"Readme updated."
+msgstr ""
+"Абноўлены некаторыя URL-адрасы, якія паказваюць на інфармацыю аб абнаўленні "
+"Premium/Enterprise.\n"
+"Readme абнаўляецца."
+
+#. Found in changelog paragraph.
+msgid ""
+"Ready for WordPress 4.4.\n"
+"New translation strings for languages."
+msgstr ""
+"Гатовы да WordPress 4.4.\n"
+"Новыя радкі перакладу для розных моў."
+
+#. Found in changelog paragraph.
+msgid ""
+"Accepts filter gal_client_config_ini containing filesystem path to an INI "
+"file to supply to Google's client library on instantiation, so you can "
+"override settings.\n"
+"Added substitution version core/Google/IO/DebugVersionOfCurl.php to replace "
+"core/Google/IO/Curl.php temporarily to log communications to Google's server "
+"for debugging purposes."
+msgstr ""
+"Прымае фільтр gal_client_config_ini, які змяшчае шлях файлавай сістэмы да "
+"файла INI, для канкрэтызацыі кліенцкай бібліятэкі Google, такім чынам, можна "
+"перавызначыць налады.\n"
+"Даданнем замяшчальная версія core / Google / IO / DebugVersionOfCurl.php "
+"часова зменіць core / Google / IO / Curl.php ў мэтах адладкі і для дастаўкі "
+"паведамленняў на сервер Google."
+
+#. Found in changelog paragraph.
+msgid ""
+"New design to support multiple languages. Includes Serbo-Croatian. Fixed "
+"some conflicts \n"
+"with other plugins when used in 'auto redirect to Google' mode."
+msgstr ""
+"Новы дызайн падтрымліваецца на  некаторых мовах. Ўключае сербахарвацкую "
+"мову. Выпраўлены некаторыя канфлікты\n"
+"з іншымі ўбудовамі пры выкарыстанні рэжыма  'auto redirect to Google'."
+
+#. Found in changelog paragraph.
+msgid ""
+"Our platform provides centralized setup and management of Google-related "
+"features in your \n"
+"WordPress site and plugins."
+msgstr ""
+"Наша платформа забяспечвае цэнтралізаванае ўстаноўку і кіраванне Google, "
+"звязаных з асаблівасцямі вашага\n"
+"WordPress сайта і ўбудоў."
+
+#. Found in changelog paragraph.
+msgid ""
+"Added clearer instructions, plus new options: automatically redirect users\n"
+"to Login via Google; plus force users to fully approve access to their\n"
+"Google account every time they login (allowing them to switch accounts if "
+"only\n"
+"logged into the wrong one, as well as making the process clearer)."
+msgstr ""
+"Дададзеныя больш дакладныя інструкцыі, плюс новыя магчымасці: аўтаматычна "
+"перанакіроўваць карыстальнікаў\n"
+"для ўваходу праз Google; плюс прымусіць карыстальнікаў пацвярджаць доступ да "
+"іх\n"
+"ўліковага запісу Google кожны раз, калі яны ажыццяўляюць ўваход (што "
+"дазваляе ім перамыкаць аккуантов у выпадку памылковага ўваходу, а гэтак жа "
+"для яснасці працэсу)."
+
+#. Found in changelog paragraph.
+msgid ""
+"Much neater support for redirecting users to most appropriate page post-"
+"login,\n"
+"especially on multisite installations; Better notices guiding admins "
+"through \n"
+"configuration"
+msgstr ""
+"Акуратная падтрымка для перанакіравання карыстальнікаў на найбольш прыдатнай "
+"старонцы пасля ўваходу ў сістэму,\n"
+"асабліва пры шматразовых устаноўках; Лепшае апавяшчэння накіравання адмінаў "
+"праз\n"
+"канфігурацыі"
+
+#. Found in changelog paragraph.
+msgid ""
+"Upgrade to match WordPress 3.8; \n"
+"More extensible code"
+msgstr ""
+"Абнаўленне да адпаведнасці WordPress 3.8;\n"
+"Больш пашыраецца код"
+
+#. Found in changelog paragraph.
+msgid ""
+"Increased security - uses an extra authenticity check; \n"
+"Better support for mal-configured Google credentials; \n"
+"No longer uses PHP-based sessions - will work on even more WordPress "
+"configurations"
+msgstr ""
+"Падвышаная бяспека - выкарыстоўвае дадатковую праверку сапраўднасці;\n"
+"Палепшаная падтрымка непрапарцыйна настроеных уліковых дадзеных Google;\n"
+"Ня доўгае выкарыстоўвае PHP на аснове сеансаў - будзе працаваць на розных "
+"канфігурацыях WordPress"
+
+#. Found in changelog paragraph.
+msgid ""
+"Opportunity to sign up for emails on Google Apps and WordPress, from "
+"settings page."
+msgstr ""
+"есць магчымасць падпісацца на электронную пошту на WordPress Apps і Google "
+"на старонцы налад."
+
+#. Found in changelog paragraph.
+msgid ""
+"Service Account Client ID is imported from JSON key file so user can copy "
+"and paste it into admin.google.com"
+msgstr ""
+"Уліковы запіс службы ID кліента імпартуецца з файла ключа JSON, так што "
+"карыстальнік можа скапіяваць і ўставіць яго ў admin.google.com"
+
+#. Found in changelog paragraph.
+msgid ""
+"Changed name of login cookie from 'google_apps_login' to "
+"'wp_google_apps_login'."
+msgstr ""
+"Змененае імя ўваходу кукіс ад  'google_apps_login' на 'wp_google_apps_login'."
+
+#. Found in changelog paragraph.
+msgid ""
+"Resolved conflict with some other plugins over Google-related function names."
+msgstr ""
+"Вырашаны канфлікт з некаторымі іншымі ўбудовамі над Google, звязаных з "
+"імёнамі функцый."
+
+#. Found in changelog paragraph.
+msgid "'Session mismatch' warning should be much less of a problem now."
+msgstr ""
+"\"Неадпаведнасць сесіі\" - такіх папярэджванняў павінна быць значна менш у "
+"цяперашні час."
+
+#. Found in changelog paragraph.
+msgid ""
+"Session mismatch (could be a problem setting cookies) should now occur less "
+"frequently. Service Account can have no admin email (for gmail.com accounts)."
+msgstr ""
+"Неадпаведнасць сеансу (можа быць праблемай наладкі кукісаў) павінна "
+"адбывацца радзей. Уліковы запіс службы не можа мець адміністратарам "
+"электроннай пошты (для gmail.com карыстальнікаў)"
+
+#. Found in changelog paragraph.
+msgid ""
+"Service Account settings can be uploaded by copy-and-paste of JSON file "
+"contents as well as just uploading the file directly."
+msgstr ""
+"Налады ўліковага запісу службы могуць быць загружаны з дапамогай капіявання "
+"і ўстаўкі кантэнту файла JSON, а таксама проста загрузіць файл."
+
+#. Found in changelog paragraph.
+msgid "Platform extended to provide Service Account settings."
+msgstr "Платформа пашырана, каб забяспечыць налады ўліковага запісу службы."
+
+#. Found in changelog paragraph.
+msgid "Readme updates and tidied settings page."
+msgstr "Важныя абнаўленні і  старонка налад."
+
+#. Found in changelog paragraph.
+msgid "New hooks for profile photos. Updated Google client library."
+msgstr ""
+"Новыя пасткі для фатаграфій профілю. Абноўлены кліент бібліятэкі Google."
+
+#. Found in changelog paragraph.
+msgid ""
+"Fixed conflicts with some other plugins such as Google Analyticator which "
+"use similar Google client libraries."
+msgstr ""
+"Выпраўлены канфлікты з некаторымі іншымі ўбудовамі, такімі як Google "
+"Analyticator, якія выкарыстоўваюць аналагічныя кліенцкія бібліятэкі Google."
+
+#. Found in changelog paragraph.
+msgid "Better organized config pages."
+msgstr "Лепш арганізаваны канфігурацыі старонак."
+
+#. Found in changelog paragraph.
+msgid "Uses latest Google client library."
+msgstr "Выкарыстоўвае апошнюю кліенцкую бібліятэку Google."
+
+#. Found in changelog paragraph.
+msgid "Option to link to wp-glogin.com from login page."
+msgstr "Магчымасць спасылкі на wp-glogin.com ад старонкі ўваходу."
+
+#. Found in changelog paragraph.
+msgid "Fix for an error seen on multisite admin. Added Arabic translation."
+msgstr ""
+"Выпраўленыя памылкі можна ўбачыць на многаабанецкага адміністратара. "
+"Дададзены пераклад на арабскую мову."
+
+#. Found in changelog paragraph.
+msgid ""
+"Other developers can easily extend our Google authentication into their own "
+"plugins."
+msgstr ""
+"Іншыя распрацоўшчыкі могуць лёгка пашырыць аўтэнтыфікацыю Google у свае "
+"ўласныя ўбудовы."
+
+#. Found in changelog paragraph.
+msgid "All existing versions are functionally identical - no need to upgrade."
+msgstr ""
+"Усе існуючыя версіі не функцыянальна ідэнтычныя - няма неабходнасці "
+"абнаўляць."

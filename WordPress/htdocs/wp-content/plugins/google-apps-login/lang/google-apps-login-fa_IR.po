@@ -1,0 +1,383 @@
+# Copyright (C) 2014 
+# This file is distributed under the same license as the  package.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/googleappslogin\n"
+"POT-Creation-Date: 2014-04-28 18:15:50+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-01-21 15:02-1200\n"
+"Last-Translator: Serj Kondrashov <serj.kondrashov@gmail.com>\n"
+"Language-Team: serj.kondrashov@gmail.com\n"
+"X-Generator: Poedit 1.8.6\n"
+"Language: fa_IR\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: basic_google_apps_login.php:47
+msgid ""
+"For full support, and premium features that greatly simplify WordPress user "
+"management for admins, please visit:"
+msgstr "برای دستیابی به پشتیبانی کامل  و امکانت ویژه به این سایت مراجعه کنید :"
+
+#: basic_google_apps_login.php:80
+msgid ""
+"The Domain Control section is only applicable to the premium version of this "
+"plugin."
+msgstr "تنظیمات مربوط به دامنه برای نسخه پولی افزونه قابل دسترسی است."
+
+#: basic_google_apps_login.php:82
+msgid ""
+"In this basic version of the plugin, any <i>existing</i> WordPress account "
+"corresponding to a Google email address can authenticate via Google."
+msgstr ""
+"در این ورژن ، هر حساب کاربری <i>موجود</i> که از طریق جیمیل ایجاد شده نیز "
+"میتواند از طریق این ماژول وارد حساب کاربری خود شود."
+
+#: basic_google_apps_login.php:132
+msgid ""
+"Completely forget about WordPress user management - upgrade to <a href=\"%s"
+"\">Google Apps Login premium</a> to automatically sync users from your "
+"Google Apps domain"
+msgstr ""
+"دیگر نگران مدیریت کاربران در وردپرس نباشید - با خریداری ورژن پولی بصورت "
+"اتوماتیک لیست کاربران خود را با گوگل اپز دامنه خود همگام کنید."
+
+#: basic_google_apps_login.php:134
+msgid "Purchase"
+msgstr "خرید"
+
+#: basic_google_apps_login.php:135
+msgid "No Thanks"
+msgstr "خیر، متشکرم"
+
+#: core/commercial_google_apps_login.php:43
+msgid "User with email address %s must use Login with Google"
+msgstr ""
+"کاربر با آدرس ایمیل %s ، برای ورود به سایت از طریق حساب کاربری گوگل اقدام "
+"کنید ."
+
+#: core/commercial_google_apps_login.php:71
+msgid "User %s does not exist"
+msgstr "حساب کاربری %s وجود ندارد"
+
+#: core/commercial_google_apps_login.php:80
+msgid "Invalid email address"
+msgstr "ادرس ایمیل نامعتبر است."
+
+#: core/commercial_google_apps_login.php:88
+msgid "Email address needs to be in %s."
+msgstr "Email address needs to be in %s."
+
+#: core/commercial_google_apps_login.php:91
+msgid ""
+"%s not authorized -  <a href=\"https://accounts.google.com/Logout\" target="
+"\"_blank\">Sign out of Google</a> to switch accounts"
+msgstr ""
+"%s شناسایی نشد - برای تغییر اکانت <a href=\"https://accounts.google.com/"
+"Logout\" target=\"_blank\">از حساب کاربری گوگل خارج شوید</a>"
+
+#: core/commercial_google_apps_login.php:149
+msgid ""
+"By default, any existing account can authenticate either via Google (if a "
+"Gmail/Google Apps account), or by WordPress username/password."
+msgstr ""
+"بصورت پیشفرض ، هر حساب کاربری موجود هم از طریق گوگل ( اکانت جیمیل /  حساب "
+"کاربری گوگل اپ ) و هم از طریق نام کاربری / پسورد میتواند وارد حساب کاربری "
+"خود شود."
+
+#: core/commercial_google_apps_login.php:151
+msgid ""
+"To allow special behaviour on your Google Apps domain (auto-create users who "
+"don't yet exist, or disable regular WordPress username/password access for "
+"your users), fill in the following section."
+msgstr ""
+"برای عملکرد های ویژه بروی گوگل اپز دامنه خود ( ایجاد حسابهای کاربری که هنوز "
+"ثبت نشده اند یا غیر فعال سازی ورود از طریق یوزر /پسورد وردپرس) ، این بخش را "
+"کامل کنید."
+
+#: core/commercial_google_apps_login.php:153
+msgid ""
+"Please read the <a href=\"%s\" target=\"gainstr\">instructions here</a> "
+"first."
+msgstr ""
+"قبل از هر کاری لطفا  <a href=\"%s\" target=\"gainstr\">راهنما</a>را مطالعه "
+"فرمایید"
+
+#: core/commercial_google_apps_login.php:158
+msgid "My Google Apps domain"
+msgstr "دامنه گوگل اپز من"
+
+#: core/commercial_google_apps_login.php:163
+msgid "Auto-create new users on my domain"
+msgstr "در دامنه من بصورت اتوماتیک کاربر جدید اضافه کن"
+
+#: core/commercial_google_apps_login.php:167
+msgid "Default role for new users"
+msgstr "نقش پیشفرض برای کاربرهای جدید"
+
+#: core/commercial_google_apps_login.php:175
+msgid "Disable WordPress username/password login for my domain"
+msgstr "ورود از طریق نامکاربری/پسورد را برای دامنه من غیر فعال کن"
+
+#: core/commercial_google_apps_login.php:180
+msgid "Completely hide WordPress username and password boxes"
+msgstr "جعبه ورود از طریق نام کاربری / پسورد را بصورت کامل پنهان کن"
+
+#: core/commercial_google_apps_login.php:185
+msgid ""
+"Tick the last two with caution - leave unchecked until you are confident "
+"Google Login is working for your own admin account"
+msgstr ""
+"دو گزینه اخر را با دقت انتخاب کنید -در صورتی که از عملکرد \"ورود از طریق "
+"حساب کاربری گوگل\" برای حساب کاربری ادمین مطمئن نیستسد دو گزینه اخر را تیک "
+"نزنید."
+
+#: core/commercial_google_apps_login.php:207
+msgid ""
+"You should have received a license key when you purchased the premium "
+"version of Google Apps Login."
+msgstr ""
+"اگر این افزونه را خریداری کرده اید ، حتما سریال فعال سازی افزونه برای شما "
+"ارسال شده است."
+
+#: core/commercial_google_apps_login.php:209
+msgid ""
+"Please enter it below to enable automatic updates, or <a href=\"mailto:"
+"contact@wp-glogin.com\">email us</a> if you do not have one."
+msgstr ""
+"آن را در کادر زیر وارد کنید و در صورتی که کد تحویل شما نشده به  <a href="
+"\"mailto:contact@wp-glogin.com\">این ادرس </a>ایمیل ارسال کنید"
+
+#: core/commercial_google_apps_login.php:213
+msgid "License Key"
+msgstr "سریال فعال سازی"
+
+#: core/commercial_google_apps_login.php:272
+msgid ""
+"Domain name should be a space-separated list of valid domains, in lowercase "
+"letters (or blank)"
+msgstr ""
+"نام دامنه باید بصورت لیستی از نام دامنه های معتبر باشد که با حروف کوچک تایپ "
+"و با فاصه از هم جدا شده اند ( در صورتی که نمیدانید خالی بگذارید )"
+
+#: core/commercial_google_apps_login.php:273
+msgid "License key is too short"
+msgstr "سریال فعال سازی نامعتبر است"
+
+#: core/commercial_google_apps_login.php:274
+msgid "License key failed to activate"
+msgstr "فعال سازی سریال افزونه با خطا مواجه شد"
+
+#: core/commercial_google_apps_login.php:275
+msgid "Group names must be valid email addresses"
+msgstr "نام گروه ها باید بصورت ادرس های معتبر ایمیل باشد."
+
+#: core/core_google_apps_login.php:163
+msgid "Redirecting to <a href=\"%s\">Login via Google</a>..."
+msgstr "در حال هدایت به <a href=\"%s\">صفحه ورود گوگل</a>..."
+
+#: core/core_google_apps_login.php:173
+msgid "Login with Google"
+msgstr "ورود از طریق حساب کاربری گوگل"
+
+#: core/core_google_apps_login.php:177
+msgid "Powered by "
+msgstr "قدرت گرفته از"
+
+#: core/core_google_apps_login.php:191
+msgid "or"
+msgstr "ویا از طریق"
+
+#: core/core_google_apps_login.php:223
+msgid "You did not grant access"
+msgstr "شما اجازه دسترسی ندادید"
+
+#: core/core_google_apps_login.php:245
+msgid ""
+"Session mismatch - try again, but there could be a problem setting state"
+msgstr ""
+"نشست شما باطل شده است - لطفا مجددا سعی کنید\n"
+"There could be a problem setting state"
+
+#: core/core_google_apps_login.php:251
+msgid ""
+"Session mismatch - try again, but there could be a problem passing state"
+msgstr ""
+"نشست شما باطل شده است - لطفا مجددا سعی کنید \n"
+"There could be a problem passing state"
+
+#: core/core_google_apps_login.php:258
+msgid ""
+"Session mismatch - try again, but there could be a problem setting cookies"
+msgstr ""
+"نشست شما باطل شده است - لطفا مجددا سعی کنید\n"
+"There could be a problem setting cookies"
+
+#: core/core_google_apps_login.php:287
+msgid "Email needs to be verified on your Google Account"
+msgstr "این ادرس ایمیل به فعال سازی از طریق گوگل اکانت نیاز دارد."
+
+#: core/core_google_apps_login.php:308
+msgid "User authenticated OK, but error fetching user details from Google"
+msgstr ""
+"نام کاربری با موفقیت شناسایی شد اما در دسترسی به اطلاعات کاربر از گوگل خطایی "
+"رخ داد"
+
+#: core/core_google_apps_login.php:327
+msgid "User %s not registered in Wordpress"
+msgstr "کاربر %s  شناسایی نشد."
+
+#: core/core_google_apps_login.php:412
+msgid ""
+"You will need to complete Google Apps Login <a href=\"%s\">Settings</a> in "
+"order for the plugin to work"
+msgstr ""
+"برای راه اندازی افزونه نیاز دارید که <a href=\"%s\">Settings</a>تنظیمات</a> "
+"\"ورود از طریق حساب کاربری گوگل\" را کامل کنید"
+
+#: core/core_google_apps_login.php:444 core/core_google_apps_login.php:449
+msgid "Google Apps Login settings"
+msgstr "تنظیمات \"ورود از طریق حساب کاربری گوگل\""
+
+#: core/core_google_apps_login.php:444 core/core_google_apps_login.php:449
+msgid "Google Apps Login"
+msgstr "ورود از طریق حساب کاربری گوگل"
+
+#: core/core_google_apps_login.php:469
+msgid "Google Apps Login setup"
+msgstr "تنظیمات \"ورود از طریق حساب کاربری گوگل\""
+
+#: core/core_google_apps_login.php:475
+msgid ""
+"To set up your website to enable Google logins, you will need to follow "
+"instructions specific to your website."
+msgstr ""
+"برای راه اندازی افزونه \"ورود از طریق حساب کاربری گوگل\" ، باید طبق "
+"دستورالعمل منحصر به سایت خود عمل کنید"
+
+#: core/core_google_apps_login.php:478
+msgid "Click here to open your personalized instructions in a new window"
+msgstr "برا دستیابی به دستورالعمل منحصر به سایت خود اینجا کلیک کنید"
+
+#: core/core_google_apps_login.php:504
+msgid "Save Changes"
+msgstr "ذخیره تغییرات"
+
+#: core/core_google_apps_login.php:533
+msgid "Settings saved."
+msgstr "تنظیمات با موفقیت ذخیره شد"
+
+#: core/core_google_apps_login.php:560
+msgid ""
+"The <a href='%s'>instructions</a> above will guide you to Google's Cloud "
+"Console where you will enter two URLs, and also obtain two codes (Client ID "
+"and Client Secret) which you will need to enter in the boxes below."
+msgstr ""
+"دستورالعمل بالا شما را به کنسول کلود گوگل هدایت میکند که در آن شما دو آدرس "
+"وارد کرده و در نتیجه دو کد (Client ID and Client Secret) بدست خواهید آورد . "
+"شما باید دو کد بدست امده را در کادر های زیر وارد کنید."
+
+#: core/core_google_apps_login.php:565
+msgid "Client ID"
+msgstr "Client ID"
+
+#: core/core_google_apps_login.php:568 core/core_google_apps_login.php:574
+msgid "Normally something like %s"
+msgstr ""
+"معمولا چیزی شبیه\n"
+" %s"
+
+#: core/core_google_apps_login.php:571
+msgid "Client Secret"
+msgstr "Client Secret"
+
+#: core/core_google_apps_login.php:591
+msgid ""
+"Once you have the plugin working, you can try these settings to customize "
+"the login flow for your users."
+msgstr ""
+"بعد از بکاراندازی افزونه ، میتوانید از تنظیمات زیر برای کنترل جریان ورودی "
+"کاربران استفاده کنید."
+
+#: core/core_google_apps_login.php:592
+msgid "See <a href=\"%s\" target=\"gainstr\">instructions here</a>."
+msgstr "برای دیدن <a href=\"%s\" target=\"gainstr\">راهنما</a> کلیک کنید."
+
+#: core/core_google_apps_login.php:600
+msgid "Force user to confirm Google permissions every time"
+msgstr "کاربران را مجبور کن تا هر بار اجازه دسترسی به گوگل را تایید کنند."
+
+#: core/core_google_apps_login.php:608
+msgid "Automatically redirect to Google from login page"
+msgstr "کاربران بصورت اتوماتیک به صفحه ورود گوگل هدایت شوند"
+
+#: core/core_google_apps_login.php:616
+msgid "Display 'Powered By wp-glogin.com' on Login form"
+msgstr "نمایش \"قدرت گرفته از wp-glogin.com\" در صفحه ورود سایت"
+
+#: core/core_google_apps_login.php:622
+msgid "Multisite Options"
+msgstr "تنظیمات چند سایتی"
+
+#: core/core_google_apps_login.php:623
+msgid ""
+"This setting is for multisite admins only. See <a href=\"%s\" target="
+"\"gainstr\">instructions here</a>."
+msgstr ""
+"این تنظیمات مختص مدیرانی است که چند سایت را اداره میکنند. برای دین  <a href="
+"\"%s\" target=\"gainstr\">راهنما</a> کلیک کنید."
+
+#: core/core_google_apps_login.php:628
+msgid "Use sub-site specific callback from Google"
+msgstr "برای برگشت از گوگل به زیر سایت ها  از فراخوانی مخصوص استفاده کن"
+
+#: core/core_google_apps_login.php:632
+msgid "Leave unchecked if in doubt"
+msgstr "در صورتی که مطمئن نیستید ، تیک نزنید"
+
+#: core/core_google_apps_login.php:669
+msgid "The Client ID should be longer than that"
+msgstr "Client ID دی نامعتبر است"
+
+#: core/core_google_apps_login.php:670
+msgid "The Client Secret should be longer than that"
+msgstr "Client Secret نامعتبر است"
+
+#: core/core_google_apps_login.php:675
+msgid "Unspecified error"
+msgstr "خطای ناشناخته"
+
+#: core/core_google_apps_login.php:772
+msgid "Settings"
+msgstr "تنظیمات"
+
+#: enterprise_google_apps_login.php:211
+msgid "Default role"
+msgstr "نقش پیشفرض"
+
+#: enterprise_google_apps_login.php:219
+msgid "Check and reset roles on every login"
+msgstr "در هر بار ورود نقش را بررسی و ریست کن"
+
+#: enterprise_google_apps_login.php:318
+msgid "There are no logs to view."
+msgstr "گزارشی برای نمایش موجود نیست"
+
+# wordpress plugin description
+msgid ""
+"Simple secure login for Wordpress through users' Google Apps accounts (uses "
+"secure OAuth2, and MFA if enabled)"
+msgstr "ورود ساده و مطمئن به وردپرس از طریق حساب گوگل اپز کاربران "
+
+# wordpress plugin description
+msgid ""
+"Simple secure login and user management for Wordpress through your Google "
+"Apps domain (uses secure OAuth2, and MFA if enabled)"
+msgstr ""
+"مدیریت و ورود ساده و مطمئن کاربران برای وردپرس از طریق دامنه گوگل اپز شما "
+
+# wordpress plugin description
+msgid "Google Apps Login Premium"
+msgstr "ورود به حساب کاربری گوگل نسخه پولی"
