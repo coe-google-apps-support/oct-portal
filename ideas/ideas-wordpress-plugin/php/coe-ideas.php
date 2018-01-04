@@ -33,6 +33,11 @@ function coe_ideas_enqueue_scripts() {
         wp_enqueue_script( $jsFile, plugin_dir_url( __FILE__ ) . $jsFile, null, null, true );
     }
 
+    // Google fonts
+    $protocol       = is_ssl() ? 'https' : 'http';
+    wp_enqueue_style( "coe-gf-roboto", "$protocol://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons" );
+   
+
     foreach ( CoeIdeasWebpackBuiltFiles::$cssFiles as $cssFile) {
         wp_enqueue_style( $cssFile, plugin_dir_url( __FILE__ ) . $cssFile );
     }
