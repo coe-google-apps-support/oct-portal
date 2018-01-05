@@ -1,11 +1,11 @@
 <template>
   <div>
     <form novalidate class="md-layout-row md-gutter">
-      <md-card class="md-flex-50 md-flex-small-100">
+      <!-- <md-card class="md-flex-50 md-flex-small-100">
         <md-card-header>
           <div class="md-title">New Idea</div>
         </md-card-header>
-      </md-card>
+      </md-card> -->
 
       <md-card-content>
         <div class="md-layout-row md-layout-wrap md-gutter">
@@ -36,7 +36,7 @@
       <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
       <md-card-actions>
-        <md-button type="submit" class="md-primary" :disabled="sending">Submit idea</md-button>
+        <md-button type="submit" class="md-primary" v-on:click.prevent="saveIdea" :disabled="sending">Submit idea</md-button>
       </md-card-actions>
 
     </form>
@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import { HTTP } from '../HttpCommon'
 import { validationMixin } from 'vuelidate'
 import {
   required,
@@ -82,6 +83,7 @@ export default {
   name: 'NewIdea',
   mixins: [validationMixin],
   data: () => ({
+    sending: false,
     form: {
       title: null,
       description: null,
@@ -120,13 +122,19 @@ export default {
     saveIdea () {
       this.sending = true
 
-      // Instead of this timeout, here you can call your API
-      window.setTimeout(() => {
-        // this.lastUser = `${this.form.firstName} ${this.form.lastName}`
-        this.ideaSaved = true
+      console.log('saving new idea')
+
+      HTTP.post('', {
+        title: this.form.title,
+        description: this.form.description
+      }).then(x => {
+        console.log('new idea saved!')
         this.sending = false
-        this.clearForm()
-      }, 1500)
+      }).catch((err, y) => {
+        this.sending = false
+        console.debug(err)
+        console.debug(y)
+      })
     },
     validateIdea () {
       this.$v.$touch()

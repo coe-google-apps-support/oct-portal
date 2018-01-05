@@ -7,7 +7,24 @@
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons">
   </head>
   <body>
-    <div id="app-ideas"></div>
+    <div id="coe-idea-new"></div>
     <!-- built files will be auto injected -->
+
+    <script>
+      // temporary - coe.ideas is created from our apps
+      document.addEventListener("DOMContentLoaded", function(event) { 
+        var ideaApps = (window.coe || {}).ideas;
+        if (ideaApps) {
+          for (var key in ideaApps) {
+            if (ideaApps.hasOwnProperty(key) && typeof ideaApps[key].setUserInfo === 'function') {
+              ideaApps[key].setUserInfo({
+                "auth": "{Token}" 
+              });
+            }
+          }
+        }        
+      });
+
+    </script>
   </body>
 </html>
