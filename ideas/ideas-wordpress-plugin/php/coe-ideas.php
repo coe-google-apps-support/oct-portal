@@ -126,7 +126,7 @@ if (ideaApps) {
 
         if ($newCookieExpires ) {
             $str = $str . '
-document.cookie = "coeauth=' . $authKey . '; expires=' + date('D M d Y H:i:s O', $newCookieExpires) . ';path=' . COOKIEPATH . '";';
+document.cookie = "coeauth=' . $authKey . '; expires=' . date('D M d Y H:i:s O', $newCookieExpires) . ';path=' . COOKIEPATH . '";';
         }
     
         return $str;
