@@ -32,7 +32,7 @@ namespace CoE.Ideas.Core
             string dbConnectionString, string wordPressUrl)
         {
             services.AddDbContext<IdeaContext>(options =>
-                options.UseSqlServer(dbConnectionString));
+                options.UseMySql(dbConnectionString));
 
             services.AddScoped<IIdeaRepository, IdeaRepositoryInternal>();
 
@@ -80,6 +80,7 @@ namespace CoE.Ideas.Core
                     OnMessageReceived = OnJwtMessageReceived,
                     OnTokenValidated = OnJwtTokenValidated
                 };
+
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuerSigningKey = true,
@@ -88,11 +89,17 @@ namespace CoE.Ideas.Core
                     ValidIssuer = wordPressUrl,
                     ValidateAudience = false,
                     ValidateLifetime = true
+                    //    ,SignatureValidator = new SignatureValidator((token, p) =>
+                    //    {
+                    //        return new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(token);
+                    //    })
                 };
+                options.Validate();
             });
 
             return services;
         }
+
 
 
         private static byte[] __jwtDecrryptKey = null;

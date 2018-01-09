@@ -11,15 +11,15 @@ using System;
 namespace CoE.Ideas.Core.Migrations
 {
     [DbContext(typeof(IdeaContext))]
-    [Migration("20180105161521_Initial")]
+    [Migration("20180108201245_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
 
             modelBuilder.Entity("CoE.Ideas.Core.Internal.IdeaInternal", b =>
                 {

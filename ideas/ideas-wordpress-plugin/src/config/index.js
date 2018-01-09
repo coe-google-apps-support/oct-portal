@@ -1,3 +1,3 @@
 module.exports = {
-  IDEAS_API: 'http://localhost:2117/api/Ideas'
+  IDEAS_API: 'https://octportal.edmonton.ca:38503'
 }

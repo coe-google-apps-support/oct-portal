@@ -14,7 +14,7 @@ namespace CoE.Ideas.Core.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Description = table.Column<string>(nullable: false),
                     Title = table.Column<string>(nullable: false),
                     WordPressKey = table.Column<int>(nullable: false)
@@ -29,7 +29,7 @@ namespace CoE.Ideas.Core.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Email = table.Column<string>(nullable: false),
                     IdeaInternalId = table.Column<long>(nullable: true),
                     Type = table.Column<int>(nullable: false),
@@ -51,7 +51,7 @@ namespace CoE.Ideas.Core.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     IdeaInternalId = table.Column<long>(nullable: true),
                     Name = table.Column<string>(nullable: false)
                 },
