@@ -1,3 +1,3 @@
 module.exports = {
-  IDEAS_API: 'https://octportal.edmonton.ca:38503'
+  IDEAS_API: 'https://octportal.edmonton.ca:18197'
 }
