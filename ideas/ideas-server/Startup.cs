@@ -60,6 +60,14 @@ namespace CoE.Ideas.Server
             {
                 app.UseDeveloperExceptionPage();
             }
+            else if (env.IsProduction())
+            {
+                //https://docs.microsoft.com/en-us/aspnet/core/publishing/linuxproduction?tabs=aspnetcore2x
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
+                });
+            }
 
             ConfigureCors(app, env);
 
