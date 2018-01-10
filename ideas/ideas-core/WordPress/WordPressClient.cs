@@ -21,7 +21,11 @@ namespace CoE.Ideas.Core.WordPress
         public WordPressClient(IOptions<WordPressClientOptions> options, 
             IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor;
+
+            if (options == null)
+                throw new ArgumentNullException("options");
+
+            _httpContextAccessor = httpContextAccessor; // allowed to be null
             string wordPressUrl = options.Value.Url.ToString();
             if (!wordPressUrl.EndsWith("/"))
                 wordPressUrl += "/";

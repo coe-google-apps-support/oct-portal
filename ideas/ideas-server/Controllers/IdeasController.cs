@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using CoE.Ideas.Core;
+using CoE.Ideas.Core.ServiceBus;
 
 namespace ideas_server.Controllers
 {
@@ -15,10 +16,13 @@ namespace ideas_server.Controllers
     public class IdeasController : Controller
     {
         private readonly IIdeaRepository _repository;
+        private readonly IIdeaServiceBusSender _serviceBusSender;
 
-        public IdeasController(IIdeaRepository repository)
+        public IdeasController(IIdeaRepository repository,
+            IIdeaServiceBusSender serviceBusSender)
         {
             _repository = repository;
+            _serviceBusSender = serviceBusSender;
         }
 
         // GET: api/Ideas
@@ -29,7 +33,8 @@ namespace ideas_server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Idea>> GetIdeas()
         {
-            return await _repository.GetIdeasAsync();
+            var ideas = await _repository.GetIdeasAsync();
+            return ideas.OrderByDescending(x => x.Id);
         }
 
         // GET: api/Ideas/5
@@ -98,6 +103,7 @@ namespace ideas_server.Controllers
             }
 
             var newIdea = await _repository.AddIdeaAsync(idea);
+            await _serviceBusSender.SendIdeaCreatedMessageAsync(newIdea);
 
             return CreatedAtAction("GetIdea", new { id = newIdea.Id }, newIdea);
         }

@@ -1,4 +1,5 @@
 ﻿using CoE.Ideas.Core.Internal;
+using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -42,6 +43,11 @@ namespace CoE.Ideas.Core
             var wordPressUri = new Uri(wordPressUrl);
             services.Configure<WordPressClientOptions>(options => options.Url = wordPressUri);
             services.AddSingleton<IWordPressClient, WordPressClient>();
+
+            //TODO: Add Queue
+            services.AddSingleton<IQueueSender<IdeaMessage>, QueueSender<IdeaMessage>>();
+            services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
+
 
             return services;
         }
@@ -130,7 +136,7 @@ namespace CoE.Ideas.Core
                         }
                         catch (Exception err)
                         {
-                            throw new System.Security.SecurityException("Unable to decrypt authentication token", err);
+                            throw new System.Security.SecurityException("Invalid authentication token", err);
                         }
 
                         ctx.Request.Headers["Authorization"] = "Bearer " + decrypted;
@@ -156,21 +162,18 @@ namespace CoE.Ideas.Core
             encryptor.Key = key;
             encryptor.IV = iv;
 
-            // Instantiate a new MemoryStream object to contain the encrypted bytes
-            var memoryStream = new System.IO.MemoryStream();
-
             // Instantiate a new encryptor from our Aes object
             var aesDecryptor = encryptor.CreateDecryptor();
-
-            // Instantiate a new CryptoStream object to process the data and write it to the 
-            // memory stream
-            var cryptoStream = new System.Security.Cryptography.CryptoStream(memoryStream, aesDecryptor, System.Security.Cryptography.CryptoStreamMode.Write);
 
             // Will contain decrypted plaintext
             string plainText = String.Empty;
 
-            try
-            {
+            // Instantiate a new MemoryStream object to contain the encrypted bytes
+            // and a new CryptoStream object to process the data and write it to the 
+            // memory stream
+            using (var memoryStream = new System.IO.MemoryStream())
+            using (var cryptoStream = new System.Security.Cryptography.CryptoStream(memoryStream, aesDecryptor, System.Security.Cryptography.CryptoStreamMode.Write))
+            { 
                 // Convert the ciphertext string into a byte array
                 byte[] cipherBytes = Convert.FromBase64String(cipherText);
 
@@ -185,12 +188,6 @@ namespace CoE.Ideas.Core
 
                 // Convert the encrypted byte array to a base64 encoded string
                 plainText = System.Text.Encoding.ASCII.GetString(plainBytes, 0, plainBytes.Length);
-            }
-            finally
-            {
-                // Close both the MemoryStream and the CryptoStream
-                memoryStream.Close();
-                cryptoStream.Close();
             }
 
             // Return the encrypted data as a string

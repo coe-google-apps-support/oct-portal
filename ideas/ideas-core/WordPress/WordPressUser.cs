@@ -80,11 +80,11 @@ namespace CoE.Ideas.Core.WordPress
         [JsonProperty("slug")]
         public string Slug { get; set; }
 
-        /// <summary>
-        /// Registration date for the user.
-        /// </summary>
-        [JsonProperty("registered_date")]
-        public DateTime RegisteredDate { get; internal set; }
+        ///// <summary>
+        ///// Registration date for the user.
+        ///// </summary>
+        //[JsonProperty("registered_date")]
+        //public DateTime RegisteredDate { get; internal set; }
 
         /// <summary>
         /// Roles assigned to the user.
