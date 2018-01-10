@@ -2,7 +2,7 @@
 
 class CoeIdeasWebpackBuiltFiles {
   static $jsFiles = [
-    'js/vendor.faaf8cac1d889f47bc92.js',    'js/app.572c6aa0323c71a98fd8.js',    'js/manifest.27359d00dfb096ad6c5e.js',
+    'js/vendor.faaf8cac1d889f47bc92.js',    'js/app.ad7c05295dff5ad6f6f1.js',    'js/manifest.a3ab6f8b7ee30870afe5.js',
   ];
   static $cssFiles = [
     'css/app.dc6b699f2e41106639faa072f01a03f7.css',
