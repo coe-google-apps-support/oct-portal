@@ -108,7 +108,7 @@ namespace CoE.Ideas.Core.Internal
         public async Task<IEnumerable<Core.Idea>> GetIdeasAsync()
         {
             //TODO: retrict to a reasonable amount of ideas
-            var ideas = await _context.Ideas.ToListAsync();
+            var ideas = await _context.Ideas.Include(x => x.Stakeholders).ToListAsync();
             return _mapper.Map<IEnumerable<IdeaInternal>, IEnumerable<Idea>>(ideas);
 
         }

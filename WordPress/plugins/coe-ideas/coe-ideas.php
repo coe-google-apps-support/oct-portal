@@ -19,6 +19,8 @@ class coe_ideas {
 		}
 		return self::$instance;
     }
+
+    private $mode = 'New'; // Can be 'New', 'ViewAll', 'ViewSingle'
     
     /**
      * Constructor; performs initialization
@@ -41,7 +43,7 @@ class coe_ideas {
     }
 
     protected function add_shortcodes() {
-        add_shortcode( 'coe_ideas_new',  array($this, 'show_new' ));
+        add_shortcode( 'coe_ideas',  array($this, 'show_new' ));
 
     }
 
@@ -59,7 +61,11 @@ class coe_ideas {
         // if( !is_page( 'new-idea' ) ) {
         // 	return;
         // }
-        if ( !preg_match('/\/new-idea(\/|#|\?|\z)/i', $_SERVER[REQUEST_URI])) {
+        if ( preg_match('/\/new-idea(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI'])) {
+            $mode = 'New';
+        } elseif ( preg_match('/\/view-ideas(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI']) ){
+            $mode = 'ViewAll';
+        } else {
             return;
         }
 
@@ -116,9 +122,31 @@ class coe_ideas {
         $str = 'var ideaApps = (window.coe || {}).ideas;
 if (ideaApps) {
   for (var key in ideaApps) {
-    if (ideaApps.hasOwnProperty(key) && typeof ideaApps[key].setUserInfo === "function") {
-      ideaApps[key].setUserInfo({
-        "auth": "' . $authKey . '"
+    if (ideaApps.hasOwnProperty(key) && typeof ideaApps[key].initialize === "function") {
+      ideaApps[key].initialize({          
+        ';
+
+        $ideaApi = defined('COE_IDEA_API') ? COE_IDEA_API : false;
+        if ($ideaApi) {
+            $str = $str . 'ideaApi: "' . $ideaApi . '",
+        ';
+        }
+
+        if ( preg_match('/\/new-idea(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI'])) {
+            $mode = 'New';
+        } elseif ( preg_match('/\/view-ideas(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI']) ){
+            $mode = 'ViewAll';
+        }        
+
+        if ($mode == 'ViewAll') {
+            $str = $str . 'route: "ViewIdeas",
+        ';
+        }
+
+        $str = $str . '
+        userInfo: {
+          "auth": "' . $authKey . '"
+        }
       });
     }
   }

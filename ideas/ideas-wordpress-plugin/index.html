@@ -8,6 +8,11 @@
   </head>
   <body>
     <div id="coe-idea-new"></div>
+
+    <hr />
+
+    <div id="coe-ideas-view"></div>
+
     <!-- built files will be auto injected -->
 
     <script>
@@ -16,9 +21,13 @@
         var ideaApps = (window.coe || {}).ideas;
         if (ideaApps) {
           for (var key in ideaApps) {
-            if (ideaApps.hasOwnProperty(key) && typeof ideaApps[key].setUserInfo === 'function') {
-              ideaApps[key].setUserInfo({
-                "auth": "{Token}" 
+            if (ideaApps.hasOwnProperty(key) && typeof ideaApps[key].initialize === 'function') {
+              ideaApps[key].initialize({
+                ideaApi: 'http://localhost:2117/api/Ideas',
+                route: 'ViewIdeas',
+                userInfo: {
+                  "auth": "{Token}" 
+                }
               });
             }
           }

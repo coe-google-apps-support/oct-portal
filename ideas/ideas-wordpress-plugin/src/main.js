@@ -1,7 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import AppNewIdea from './AppNewIdea'
+import AppIdeas from './AppIdeas'
 import router from './router'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
@@ -11,19 +11,23 @@ import { HTTP } from './HttpCommon'
 Vue.config.productionTip = false
 Vue.use(VueMaterial)
 
+export const bus = new Vue()
+
 /* eslint-disable no-new */
-var app1 = new Vue({
+var appIdeas = new Vue({
   el: '#coe-idea-new',
   router,
-  template: '<AppNewIdea/>',
-  components: { AppNewIdea },
+  template: '<AppIdeas/>',
+  components: { AppIdeas },
   methods: {
-    setUserInfo: userInfo => {
-      var that = this
-      console.log(that)
-      // debugger
-      // console.log(HTTP)
-      HTTP.setUserInfo(userInfo)
+    initialize (config) {
+      if (config.userInfo) {
+        HTTP.setUserInfo(config.userInfo)
+      }
+      if (config.ideaApi) {
+        HTTP.setIdeaApi(config.ideaApi)
+      }
+      bus.$emit('initialize-ideas', config)
     }
   }
 })
@@ -40,4 +44,4 @@ if (!ideas) {
   coe.ideas = ideas
 }
 
-ideas.appNew = app1
+ideas.app = appIdeas

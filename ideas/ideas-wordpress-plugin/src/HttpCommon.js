@@ -11,4 +11,12 @@ x.setUserInfo = function (userInfo) {
   axios.defaults.headers.common['Authorization'] = 'Bearer ' + (userInfo || {}).auth
 }
 
+x.setIdeaApi = function (api) {
+  if (api) {
+    x.baseURL = api
+  } else {
+    axios.defaults.baseURL = process.env.IDEAS_API
+  }
+}
+
 export const HTTP = x
