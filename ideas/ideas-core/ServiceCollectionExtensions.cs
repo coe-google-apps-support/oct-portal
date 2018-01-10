@@ -89,10 +89,13 @@ namespace CoE.Ideas.Core
                     ValidIssuer = wordPressUrl,
                     ValidateAudience = false,
                     ValidateLifetime = true
-                    //    ,SignatureValidator = new SignatureValidator((token, p) =>
-                    //    {
-                    //        return new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(token);
-                    //    })
+                   //,SignatureValidator = new SignatureValidator((token, p) =>
+                   // {
+                   //     var x = token;
+
+
+                   //    return new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(token);
+                   // })
                 };
                 options.Validate();
             });
@@ -125,9 +128,9 @@ namespace CoE.Ideas.Core
                         {
                             decrypted = DecryptString(authKey.ToString().Substring(7), __jwtDecrryptKey, __jwtDecryptIV);
                         }
-                        catch (Exception)
+                        catch (Exception err)
                         {
-                            throw new System.Security.SecurityException("Unable to decrypt authentication token");
+                            throw new System.Security.SecurityException("Unable to decrypt authentication token", err);
                         }
 
                         ctx.Request.Headers["Authorization"] = "Bearer " + decrypted;

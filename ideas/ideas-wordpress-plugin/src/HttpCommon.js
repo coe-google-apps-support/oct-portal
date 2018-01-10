@@ -1,8 +1,7 @@
 import axios from 'axios'
-import config from './config'
 
 var x = axios.create({
-  baseURL: config.IDEAS_API,
+  baseURL: process.env.IDEAS_API,
   headers: {
     AuthorizationEncrypted: 'true'
   }
