@@ -19,7 +19,7 @@ namespace CoE.Ideas.Remedy
         private readonly IWordPressClient _wordPressClient;
 
 
-        protected abstract Task ProcessIdeaMessage(IdeaMessage message, Idea idea, WordPressUser user);
+        protected abstract Task ProcessIdeaMessage(IdeaMessage message, Idea idea, string user3and3);
 
         protected virtual bool ShouldProcessMessage(IdeaMessage message)
         {
@@ -44,7 +44,11 @@ namespace CoE.Ideas.Remedy
                     var idea = await ideaTask;
                     var user = await userTask;
 
-                    await ProcessIdeaMessage(message, idea, user);
+                    //TODO: get user's 3+3
+                    
+                    string user3and3 = null;
+
+                    await ProcessIdeaMessage(message, idea, user3and3);
                 }
 
                 return MessageProcessResponse.Complete;

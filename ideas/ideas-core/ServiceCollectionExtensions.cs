@@ -110,7 +110,7 @@ namespace CoE.Ideas.Core
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
                     ValidateIssuer = true,
                     ValidIssuer = wordPressUrl,
                     ValidateAudience = false,

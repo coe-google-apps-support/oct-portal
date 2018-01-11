@@ -25,9 +25,9 @@ namespace CoE.Ideas.Remedy
             return message.Type == IdeaMessageType.IdeaCreated;
         }
 
-        protected override Task ProcessIdeaMessage(IdeaMessage message, Idea idea, WordPressUser user)
+        protected override Task ProcessIdeaMessage(IdeaMessage message, Idea idea, string user3and3)
         {
-            _remedyService.PostNewIdea(idea, user);
+            _remedyService.PostNewIdea(idea, user3and3);
 
             return Task.CompletedTask;
         }

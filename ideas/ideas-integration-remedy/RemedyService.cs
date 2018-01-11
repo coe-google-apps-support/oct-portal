@@ -13,7 +13,7 @@ namespace CoE.Ideas.Remedy
 
         }
 
-        public void PostNewIdea(Idea idea, WordPressUser user)
+        public void PostNewIdea(Idea idea, string user3and3)
         {
             // TODO: Send idea to Remedy
             throw new NotImplementedException();

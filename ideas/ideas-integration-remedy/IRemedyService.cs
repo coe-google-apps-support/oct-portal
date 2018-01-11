@@ -8,6 +8,6 @@ namespace CoE.Ideas.Remedy
 {
     public interface IRemedyService
     {
-        void PostNewIdea(Idea idea, WordPressUser user);
+        void PostNewIdea(Idea idea, string user3and3);
     }
 }
