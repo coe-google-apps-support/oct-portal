@@ -10,9 +10,15 @@ namespace CoE.Ideas.Remedy
 {
     public class NewIdeaListener : IdeaListener
     {
-        public NewIdeaListener(IIdeaRepository ideaRepository, IWordPressClient wordPressClient) : base(ideaRepository, wordPressClient)
+        public NewIdeaListener(IIdeaRepository ideaRepository, 
+            IWordPressClient wordPressClient,
+            IRemedyService remedyService)
+            : base(ideaRepository, wordPressClient)
         {
+            _remedyService = remedyService;
         }
+
+        private readonly IRemedyService _remedyService;
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
         {
@@ -21,7 +27,7 @@ namespace CoE.Ideas.Remedy
 
         protected override Task ProcessIdeaMessage(IdeaMessage message, Idea idea, WordPressUser user)
         {
-            // TODO: add the idea to Remedy
+            _remedyService.PostNewIdea(idea, user);
 
             return Task.CompletedTask;
         }

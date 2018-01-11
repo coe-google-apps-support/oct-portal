@@ -21,8 +21,10 @@ namespace CoE.Ideas.Remedy
             var wordPressClient = IdeaFactory.GetWordPressClient(config["WordPressUrl"]);
             var ideaRepository = IdeaFactory.GetIdeaRepository(config["IdeasApi"]);
 
+            var remedyService = new RemedyService();
+
             // Register listener
-            serviceBusReceiver.ReceiveMessagesAsync(new NewIdeaListener(ideaRepository, wordPressClient));
+            serviceBusReceiver.ReceiveMessagesAsync(new NewIdeaListener(ideaRepository, wordPressClient, remedyService));
 
             // now block forever
             // but I don't think the code will ever get here anyway...
