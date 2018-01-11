@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CoE.Ideas.Remedy
 {
-    internal class RemedyService : IRemedyService
+    public class RemedyService : IRemedyService
     {
         public RemedyService(/* initialization parameters go here */)
         {
