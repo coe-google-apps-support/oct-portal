@@ -6,6 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ServiceBus\IdeaQueue.cs" />
+    <Compile Remove="ServiceBus\IQueueSender.cs" />
+    <Compile Remove="ServiceBus\QueueReceiver.cs" />
+    <Compile Remove="ServiceBus\QueueSender.cs" />
+    <Compile Remove="ServiceBus\QueueSettings.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.1" />

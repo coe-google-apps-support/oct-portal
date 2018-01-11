@@ -6,6 +6,8 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     public class QueueSettings
     {
+        public QueueSettings() { }
+
         public QueueSettings(string connectionString, string queueName)
         {
             if (string.IsNullOrEmpty(connectionString))
@@ -18,7 +20,7 @@ namespace CoE.Ideas.Core.ServiceBus
             this.QueueName = queueName;
         }
 
-        public string ConnectionString { get; }
-        public string QueueName { get; }
+        public string ConnectionString { get; set; }
+        public string QueueName { get; set; }
     }
 }

@@ -12,7 +12,7 @@ using CoE.Ideas.Core.ServiceBus;
 namespace ideas_server.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Ideas")]
+    [Route("Ideas")]
     public class IdeasController : Controller
     {
         private readonly IIdeaRepository _repository;

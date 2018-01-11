@@ -8,20 +8,28 @@ using System.Threading.Tasks;
 
 namespace CoE.Ideas.Core.ServiceBus
 {
-    // from https://www.codeproject.com/Articles/1204091/Azure-ServiceBus-in-NET-Core
-    internal class QueueSender<T> : IQueueSender<T> where T : class
+    // based on https://github.com/TahirNaushad/Fiver.Azure.ServiceBus/blob/master/Fiver.Azure.ServiceBus/Topic/AzureTopicSender.cs
+    internal class TopicSender<T> : ITopicSender<T> where T : class
     {
-        public QueueSender(IOptions<QueueSettings> options)
+        public TopicSender(IOptions<TopicSettings> options)
         {
             if (options == null)
                 throw new ArgumentNullException("options");
 
-            _settings = options.Value ?? throw new ArgumentNullException("settings");
-            _client = new QueueClient(options.Value.ConnectionString, options.Value.QueueName);
+            var settings = options.Value;
+            if (settings == null)
+                throw new ArgumentNullException("settings");
+
+            _client = new TopicClient(settings.ConnectionString, settings.TopicName);
         }
 
-        private readonly QueueSettings _settings;
-        private readonly QueueClient _client;
+        private readonly TopicClient _client;
+
+
+        public async Task SendAsync(T item)
+        {
+            await SendAsync(item, null);
+        }
 
         public async Task SendAsync(T item, Dictionary<string, object> properties)
         {

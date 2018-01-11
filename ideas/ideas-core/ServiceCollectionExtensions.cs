@@ -30,8 +30,17 @@ namespace CoE.Ideas.Core
         /// <param name="dbConnectionString">The connection string to the Idea database.</param>
         /// <returns>The passed in services, for chaining</returns>
         public static IServiceCollection AddIdeaConfiguration(this IServiceCollection services,
-            string dbConnectionString, string wordPressUrl)
+            string dbConnectionString, 
+            string wordPressUrl,
+            string serviceBusConnectionString = null,
+            string serviceBusTopicName = null)
         {
+            if (string.IsNullOrWhiteSpace(dbConnectionString))
+                throw new ArgumentNullException("dbConnectionString");
+
+            if (string.IsNullOrWhiteSpace(wordPressUrl))
+                throw new ArgumentNullException("wordPressUrl");
+
             services.AddDbContext<IdeaContext>(options =>
                 options.UseMySql(dbConnectionString));
 
@@ -44,10 +53,14 @@ namespace CoE.Ideas.Core
             services.Configure<WordPressClientOptions>(options => options.Url = wordPressUri);
             services.AddSingleton<IWordPressClient, WordPressClient>();
 
-            //TODO: Add Queue
-            services.AddSingleton<IQueueSender<IdeaMessage>, QueueSender<IdeaMessage>>();
+            // Add Service Bus Queue
+            services.Configure<TopicSettings>(settings =>
+            {
+                settings.ConnectionString = serviceBusConnectionString;
+                settings.TopicName = serviceBusTopicName;
+            });
+            services.AddSingleton<ITopicSender<IdeaMessage>, TopicSender<IdeaMessage>>();
             services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
-
 
             return services;
         }

@@ -8,13 +8,13 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     internal class IdeaServiceBusSender : IIdeaServiceBusSender
     {
-        public IdeaServiceBusSender(IQueueSender<IdeaMessage> queueSender,
+        public IdeaServiceBusSender(ITopicSender<IdeaMessage> topicSender,
             IHttpContextAccessor httpContextAccessor)
         {
-            _queueSender = queueSender ?? throw new ArgumentNullException("settings");
+            _topicSenderr = topicSender ?? throw new ArgumentNullException("settings");
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException("httpContextAccessor");
         }
-        private readonly IQueueSender<IdeaMessage> _queueSender;
+        private readonly ITopicSender<IdeaMessage> _topicSenderr;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         protected virtual void SetProperties(Idea idea, IDictionary<string, object> properties)
@@ -33,7 +33,7 @@ namespace CoE.Ideas.Core.ServiceBus
             var props = new Dictionary<string, object>();
             SetProperties(idea, props);
 
-            await _queueSender.SendAsync(message, props);
+            await _topicSenderr.SendAsync(message, props);
         }
 
         public async Task SendIdeaUpdatedMessageAsync(Idea idea)
@@ -42,7 +42,7 @@ namespace CoE.Ideas.Core.ServiceBus
             var props = new Dictionary<string, object>();
             SetProperties(idea, props);
 
-            await _queueSender.SendAsync(message, props);
+            await _topicSenderr.SendAsync(message, props);
         }
     }
 }

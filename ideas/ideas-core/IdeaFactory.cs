@@ -10,37 +10,21 @@ namespace CoE.Ideas.Core
 {
     public class IdeaFactory
     {
-        public static IIdeaRepository GetIdeaRepository()
-        {
-            return new RemoteIdeaRepository("https://octportal.edmonton.ca:5000/api/ideas");
-        }
 
         public static IIdeaRepository GetIdeaRepository(string uri)
         {
             return new RemoteIdeaRepository(uri);
         }
 
-        public static QueueSettings GetIdeaQueue()
+        public static IIdeaServiceBusReceiver GetServiceBusReceiver(
+            string subscriptionName,
+            string serviceBusConnectionString =null, 
+            string topicName = null)
         {
-            return new QueueSettings("TBD", "Ideas");
-        }
-
-        public static QueueSettings GetIdeaQueue(string connectionString)
-        {
-            return new QueueSettings(connectionString, "Ideas");
-        }
-
-        public static QueueSettings GetIdeaQueue(string connectionString, string queueName)
-        {
-            return new QueueSettings(connectionString, queueName);
-        }
-
-        public static IWordPressClient GetWordPressClient()
-        {
-            WordPressClientOptions options = new WordPressClientOptions();
-            options.Url = new Uri("https://octportal.edmonton.ca");
-
-            return new WordPressClient(new SimpleWordPressOptions() { Value = options }, null);
+            var options = new SimpleOptions<SubscriptionSettings>();
+            options.Value = new SubscriptionSettings(serviceBusConnectionString, topicName, subscriptionName);
+            var subscriptionReceiver = new SubscriptionReceiver<IdeaMessage>(options);
+            return new IdeaServiceBusReceiver(subscriptionReceiver);
         }
 
         public static IWordPressClient GetWordPressClient(string url)
@@ -49,16 +33,15 @@ namespace CoE.Ideas.Core
                 throw new ArgumentNullException("url");
 
             WordPressClientOptions options = new WordPressClientOptions();
-            options.Url = new Uri("https://octportal.edmonton.ca");
+            options.Url = new Uri(url);
 
-            return new WordPressClient(new SimpleWordPressOptions() { Value = options }, null);
+            return new WordPressClient(new SimpleOptions<WordPressClientOptions>() { Value = options }, null);
         }
 
-        private class SimpleWordPressOptions : IOptions<WordPressClientOptions>
+        private class SimpleOptions<T> : IOptions<T> where T : class, new()
         {
-            public WordPressClientOptions Value { get; set; }
+            public T Value { get; set; }
         }
-
 
     }
 }

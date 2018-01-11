@@ -21,7 +21,6 @@ namespace CoE.Ideas.Core.WordPress
         public WordPressClient(IOptions<WordPressClientOptions> options, 
             IHttpContextAccessor httpContextAccessor)
         {
-
             if (options == null)
                 throw new ArgumentNullException("options");
 
