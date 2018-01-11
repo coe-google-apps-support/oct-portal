@@ -63,8 +63,8 @@ namespace CoE.Ideas.Core.Internal
             var ideaInternal = _mapper.Map<Idea, IdeaInternal>(idea);
 
             // post to WordPress
-            await _wordpressClient.PostIdeaAsync(idea);
-
+            var wordPressIdea = await _wordpressClient.PostIdeaAsync(idea);
+            ideaInternal.WordPressKey = wordPressIdea.Id;
 
             _context.Ideas.Add(ideaInternal);
             await _context.SaveChangesAsync();

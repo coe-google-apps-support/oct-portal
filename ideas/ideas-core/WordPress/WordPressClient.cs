@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security;
 using System.Security.Claims;
 using System.Text;
@@ -60,18 +61,20 @@ namespace CoE.Ideas.Core.WordPress
             if (string.IsNullOrWhiteSpace(idea.Title))
                 throw new ArgumentOutOfRangeException("idea cannot have an empty Title");
 
-            var ideaCategoryId = await GetIdeaCategoryId();
+            // Note this requires that the "Ideas" custom Post Type has been already 
+            // create in WordPress, and the option to include it in the REST API is also on.
             using (var client = GetHttpClient())
             {
-                client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+               // client.DefaultRequestHeaders.Add("Content-Type", "application/json");
                 try
                 {
                     dynamic postdata = new Newtonsoft.Json.Linq.JObject();
                     postdata.title = idea.Title;
                     postdata.content = idea.Description;
+                    postdata.status = "publish";
 
-                    // note we need context=edit to get additional fields, like email
-                    var postResponse = await client.PostAsync("posts", new StringContent(postdata.ToString()));
+                    var postResponse = await client.PostAsync("ideas", new StringContent(postdata.ToString(), Encoding.UTF8, "application/json"));
                     var postResponseMessage = await postResponse.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject<WordPressPost>(postResponseMessage);
 
@@ -83,60 +86,24 @@ namespace CoE.Ideas.Core.WordPress
             }
         }
 
-        private static int? _ideaCategoryId;
-        protected async Task<int> GetIdeaCategoryId()
-        {
-            if (!_ideaCategoryId.HasValue)
-            {
-                var allCategories = await GetCategories();
-                var ideaCategory = allCategories.FirstOrDefault(c => "Idea".Equals(c.Name, StringComparison.OrdinalIgnoreCase));
-                if (ideaCategory == null)
-                {
-                    // create it here
-                    using (var client = GetHttpClient())
-                    {
-                        client.DefaultRequestHeaders.Add("Content-Type", "application/json");
-                        try
-                        {
-                            dynamic postdata = new Newtonsoft.Json.Linq.JObject();
-                            postdata.name = "Idea";
-                            postdata.slug = "idea";
-
-                            // note we need context=edit to get additional fields, like email
-                            var postResponse = await client.PostAsync("categories", new StringContent(postdata.ToString()));
-                            var postResponseMessage = await postResponse.Content.ReadAsStringAsync();
-                            ideaCategory = JsonConvert.DeserializeObject<WordPressCategory>(postResponseMessage);
-                        }
-                        catch (Exception err)
-                        {
-                            throw err;
-                        }
-                    }
-                }
-                _ideaCategoryId = ideaCategory.Id;
-            }
-            return _ideaCategoryId.Value;
-        }
-
-
-        protected async Task<IEnumerable<WordPressCategory>> GetCategories()
-        {
-            using (var client = GetHttpClient())
-            {
-                client.DefaultRequestHeaders.Add("Content-Type", "application/json");
-                try
-                {
-                    // note we need context=edit to get additional fields, like email
-                    var categoriesString = await client.GetStringAsync("categories");
-                    return JsonConvert.DeserializeObject< IEnumerable<WordPressCategory>>(categoriesString);
-                }
-                catch (Exception err)
-                {
-                    throw err;
-                }
-            }
-
-        }
+        // Not currently in use so I'm commenting it out -DC 2018.1.11
+        //protected async Task<IEnumerable<WordPressCategory>> GetCategories()
+        //{
+        //    using (var client = GetHttpClient())
+        //    {
+        //        client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+        //        try
+        //        {
+        //            // note we need context=edit to get additional fields, like email
+        //            var categoriesString = await client.GetStringAsync("categories");
+        //            return JsonConvert.DeserializeObject< IEnumerable<WordPressCategory>>(categoriesString);
+        //        }
+        //        catch (Exception err)
+        //        {
+        //            throw err;
+        //        }
+        //    }
+        //}
 
 
 
