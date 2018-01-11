@@ -54,12 +54,19 @@ namespace CoE.Ideas.Core
             services.AddSingleton<IWordPressClient, WordPressClient>();
 
             // Add Service Bus Queue
-            services.Configure<TopicSettings>(settings =>
+            if (string.IsNullOrWhiteSpace(serviceBusConnectionString) || string.IsNullOrWhiteSpace(serviceBusTopicName))
             {
-                settings.ConnectionString = serviceBusConnectionString;
-                settings.TopicName = serviceBusTopicName;
-            });
-            services.AddSingleton<ITopicSender<IdeaMessage>, TopicSender<IdeaMessage>>();
+                services.AddSingleton<ITopicSender<IdeaMessage>, NullTopicSender<IdeaMessage>>();
+            }
+            else
+            {
+                services.Configure<TopicSettings>(settings =>
+                {
+                    settings.ConnectionString = serviceBusConnectionString;
+                    settings.TopicName = serviceBusTopicName;
+                });
+                services.AddSingleton<ITopicSender<IdeaMessage>, TopicSender<IdeaMessage>>();
+            }
             services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
 
             return services;
@@ -108,13 +115,6 @@ namespace CoE.Ideas.Core
                     ValidIssuer = wordPressUrl,
                     ValidateAudience = false,
                     ValidateLifetime = true
-                   //,SignatureValidator = new SignatureValidator((token, p) =>
-                   // {
-                   //     var x = token;
-
-
-                   //    return new System.IdentityModel.Tokens.Jwt.JwtSecurityToken(token);
-                   // })
                 };
                 options.Validate();
             });

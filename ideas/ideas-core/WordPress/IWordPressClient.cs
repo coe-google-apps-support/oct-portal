@@ -9,8 +9,7 @@ namespace CoE.Ideas.Core.WordPress
     {
         Task<WordPressUser> GetCurrentUserAsync();
 
-        // TODO: create a new WordPress Post Type and 
-        // create those Posts when creating ideas.
-        //Task<WordPressPost> PostIdea(Idea idea);
+        
+        Task<WordPressPost> PostIdeaAsync(Idea idea);
     }
 }

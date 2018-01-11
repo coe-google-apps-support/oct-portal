@@ -62,10 +62,8 @@ namespace CoE.Ideas.Core.Internal
 
             var ideaInternal = _mapper.Map<Idea, IdeaInternal>(idea);
 
-            // TODO; post to WordPress...?
-            // 
-
-
+            // post to WordPress
+            await _wordpressClient.PostIdeaAsync(idea);
 
 
             _context.Ideas.Add(ideaInternal);

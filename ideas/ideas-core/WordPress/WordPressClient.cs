@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Security;
 using System.Security.Claims;
@@ -35,20 +36,109 @@ namespace CoE.Ideas.Core.WordPress
         {
             var userId = GetUserId(_httpContextAccessor.HttpContext.User);
 
-            var client = GetHttpClient();
+            using (var client = GetHttpClient())
+            {
+                try
+                {
+                    // note we need context=edit to get additional fields, like email
+                    var wpUserString = await client.GetStringAsync($"users/{userId}?context=edit");
+                    return JsonConvert.DeserializeObject<WordPressUser>(wpUserString);
 
-            try
-            {
-                // note we need context=edit to get additional fields, like email
-                var wpUserString = await client.GetStringAsync($"users/{userId}?context=edit");
-                return JsonConvert.DeserializeObject<WordPressUser>(wpUserString);
-               
-            }
-            catch (Exception err)
-            {
-                throw err;
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
             }
         }
+
+
+        public async Task<WordPressPost> PostIdeaAsync(Idea idea)
+        {
+            if (idea == null)
+                throw new ArgumentNullException("idea");
+            if (string.IsNullOrWhiteSpace(idea.Title))
+                throw new ArgumentOutOfRangeException("idea cannot have an empty Title");
+
+            var ideaCategoryId = await GetIdeaCategoryId();
+            using (var client = GetHttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+                try
+                {
+                    dynamic postdata = new Newtonsoft.Json.Linq.JObject();
+                    postdata.title = idea.Title;
+                    postdata.content = idea.Description;
+
+                    // note we need context=edit to get additional fields, like email
+                    var postResponse = await client.PostAsync("posts", new StringContent(postdata.ToString()));
+                    var postResponseMessage = await postResponse.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<WordPressPost>(postResponseMessage);
+
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            }
+        }
+
+        private static int? _ideaCategoryId;
+        protected async Task<int> GetIdeaCategoryId()
+        {
+            if (!_ideaCategoryId.HasValue)
+            {
+                var allCategories = await GetCategories();
+                var ideaCategory = allCategories.FirstOrDefault(c => "Idea".Equals(c.Name, StringComparison.OrdinalIgnoreCase));
+                if (ideaCategory == null)
+                {
+                    // create it here
+                    using (var client = GetHttpClient())
+                    {
+                        client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+                        try
+                        {
+                            dynamic postdata = new Newtonsoft.Json.Linq.JObject();
+                            postdata.name = "Idea";
+                            postdata.slug = "idea";
+
+                            // note we need context=edit to get additional fields, like email
+                            var postResponse = await client.PostAsync("categories", new StringContent(postdata.ToString()));
+                            var postResponseMessage = await postResponse.Content.ReadAsStringAsync();
+                            ideaCategory = JsonConvert.DeserializeObject<WordPressCategory>(postResponseMessage);
+                        }
+                        catch (Exception err)
+                        {
+                            throw err;
+                        }
+                    }
+                }
+                _ideaCategoryId = ideaCategory.Id;
+            }
+            return _ideaCategoryId.Value;
+        }
+
+
+        protected async Task<IEnumerable<WordPressCategory>> GetCategories()
+        {
+            using (var client = GetHttpClient())
+            {
+                client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+                try
+                {
+                    // note we need context=edit to get additional fields, like email
+                    var categoriesString = await client.GetStringAsync("categories");
+                    return JsonConvert.DeserializeObject< IEnumerable<WordPressCategory>>(categoriesString);
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            }
+
+        }
+
+
 
         protected static int GetUserId(ClaimsPrincipal principal)
         {
@@ -102,5 +192,7 @@ namespace CoE.Ideas.Core.WordPress
 
             return client;
         }
+
+
     }
 }
