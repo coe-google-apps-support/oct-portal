@@ -34,6 +34,13 @@
           <md-chips name="tags" id="idea-tags" v-model="form.tags" md-placeholder="Add tag..." />
 
 
+        <div class="md-flex md-flex-small-100">
+          <md-field>
+            <label>Attachments</label>
+            <md-file v-model="fileAttachments" multiple />
+          </md-field>
+        </div>
+
         </div>
       </md-card-content>
 
@@ -65,7 +72,8 @@ export default {
       title: null,
       description: null,
       tags: []
-    }
+    },
+    fileAttachments: []
   }),
   validations: {
     form: {
