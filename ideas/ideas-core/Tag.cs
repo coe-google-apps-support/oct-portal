@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoE.Ideas.Core
 {
@@ -12,5 +13,11 @@ namespace CoE.Ideas.Core
         /// </summary>
         [Required]
         public string Name { get; set; }
+
+
+        /// <summary>
+        /// The date and time the issue was created
+        /// </summary>
+        public DateTimeOffset CreatedDate { get; set; }
     }
 }

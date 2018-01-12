@@ -40,5 +40,35 @@ namespace CoE.Ideas.Core.Internal
         /// User-defined tags to categorize the idea
         /// </summary>
         public virtual ICollection<TagInternal> Tags { get; set; }
+
+        /// <summary>
+        /// The address of the idea for display in a browser
+        /// </summary>
+        public string Url { get; set; }
+
+        /// <summary>
+        /// The date and time the issue was created
+        /// </summary>
+        public DateTimeOffset CreatedDate { get; set; }
+
+        /// <summary>
+        /// Does the idea have a business sponsor? 
+        /// </summary>
+        public bool HasBusinessSponsor { get; set; }
+
+        /// <summary>
+        /// The name of the Business Sponsor
+        /// </summary>
+        public string BusinessSponsor { get; set; }
+
+        /// <summary>
+        /// Do you have a budget for this initiative? 
+        /// </summary>
+        public bool HasBudget { get; set; }
+
+        /// <summary>
+        /// What is your expected target date?
+        /// </summary>
+        public DateTime? ExpectedTargetDate { get; set; }
     }
 }

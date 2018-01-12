@@ -11,7 +11,7 @@
         <div class="md-layout-row md-layout-wrap md-gutter">
           <div class="md-flex md-flex-small-100">
             <md-field :class="getValidationClass('title')">
-              <label for="idea-title">Idea</label>
+              <label for="idea-title">What is your technology initiative?</label>
               <md-input name="title" id="idea-title" v-model="form.title" />
               <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
               <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
@@ -27,6 +27,10 @@
             </md-field>
           </div>
 
+          <!-- <div class="md-flex md-flex-small-100">
+              <md-checkbox>Do you have a businses sponsor?</md-checkbox>
+         </div> -->
+
           <md-chips name="tags" id="idea-tags" v-model="form.tags" md-placeholder="Add tag..." />
 
 
@@ -36,7 +40,7 @@
       <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
       <md-card-actions>
-        <md-button type="submit" class="md-primary" v-on:click.prevent="saveIdea" :disabled="sending">Submit idea</md-button>
+        <md-button type="submit" class="md-primary" v-on:click.prevent="saveIdea" :disabled="sending">Submit</md-button>
       </md-card-actions>
 
     </form>

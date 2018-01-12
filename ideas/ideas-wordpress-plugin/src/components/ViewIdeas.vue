@@ -7,7 +7,7 @@
       </md-table-row>
 
       <md-table-row v-for="idea in ideas" :key="idea.id">
-        <md-table-cell>{{ idea.title }}</md-table-cell>
+        <md-table-cell><a v-bind:href="idea.url">{{ idea.title }}</a></md-table-cell>
         <md-table-cell>
           <ul v-if="idea.stakeholders && idea.stakeholders.length">
             <li v-for="s in idea.stakeholders" :key="s.id">{{ s.userName }}</li>

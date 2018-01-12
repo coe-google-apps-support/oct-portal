@@ -12,5 +12,7 @@ namespace CoE.Ideas.Core.Internal
 
         public DbSet<IdeaInternal> Ideas { get; set; }
 
+        public DbSet<TagInternal> Tags { get; set; }
+
     }
 }

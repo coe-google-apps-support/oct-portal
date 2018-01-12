@@ -47,5 +47,41 @@ namespace CoE.Ideas.Core
         /// <returns>The idea from the database, just before it's deleted.</returns>
         Task<Idea> DeleteIdeaAsync(long id);
 
+
+        /// <summary>
+        /// Retrieves all tags in the database.
+        /// </summary>
+        /// <returns>
+        /// A collection of tags.
+        /// </returns>
+        Task<IEnumerable<Tag>> GetTagsAsync();
+
+        /// <summary>
+        /// Retrieves a single tag from the database.
+        /// </summary>
+        /// <param name="id">The Idea id to get</param>
+        /// <returns>The idea for the specified id.</returns>
+        Task<Tag> GetTagAsync(long id);
+
+        /// <summary>
+        /// Updates a tag.
+        /// </summary>
+        /// <param name="tag">The tag to update</param>
+        /// <returns>The tag after being updated</returns>
+        Task<Tag> UpdateTagAsync(Tag tag);
+
+        /// <summary>
+        /// Adds a new tag to the database.
+        /// </summary>
+        /// <param name="tag">The tag to add.</param>
+        /// <returns>The tag after its been added to the data (with Id)</returns>
+        Task<Tag> AddTagAsync(Tag tag);
+
+        /// <summary>
+        /// Deletes a tag from the database.
+        /// </summary>
+        /// <param name="id">The Id of the tag to delete</param>
+        /// <returns>The tag from the database, just before it's deleted.</returns>
+        Task<Tag> DeleteTagAsync(long id);
     }
 }

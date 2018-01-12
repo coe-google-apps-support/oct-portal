@@ -58,17 +58,17 @@ namespace CoE.Ideas.Core.Internal
 
         public Task<Idea> AddIdeaAsync(Idea idea)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task<Idea> DeleteIdeaAsync(long id)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task<Idea> UpdateIdeaAsync(Idea idea)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
 
@@ -86,6 +86,42 @@ namespace CoE.Ideas.Core.Internal
             }
 
             return client;
+        }
+
+        public async Task<IEnumerable<Tag>> GetTagsAsync()
+        {
+            var client = GetHttpClient();
+
+            try
+            {
+                var allIdeasString = await client.GetStringAsync(_baseUri);
+                return JsonConvert.DeserializeObject<IEnumerable<Tag>>(allIdeasString);
+
+            }
+            catch (Exception err)
+            {
+                throw err;
+            }
+        }
+
+        public Task<Tag> GetTagAsync(long id)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<Tag> UpdateTagAsync(Tag tag)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<Tag> AddTagAsync(Tag tag)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<Tag> DeleteTagAsync(long id)
+        {
+            throw new NotSupportedException();
         }
     }
 }

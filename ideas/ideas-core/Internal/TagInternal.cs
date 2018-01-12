@@ -17,5 +17,11 @@ namespace CoE.Ideas.Core.Internal
         /// </summary>
         [Required]
         public string Name { get; set; }
+
+
+        /// <summary>
+        /// The date and time the issue was created
+        /// </summary>
+        public DateTimeOffset CreatedDate { get; set; }
     }
 }

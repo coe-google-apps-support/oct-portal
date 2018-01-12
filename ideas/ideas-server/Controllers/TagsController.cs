@@ -12,29 +12,29 @@ using CoE.Ideas.Core.ServiceBus;
 namespace CoE.Ideas.Server.Controllers
 {
     [Produces("application/json")]
-    [Route("Ideas")]
-    public class IdeasController : Controller
+    [Route("Tags")]
+    public class TagsController : Controller
     {
         private readonly IIdeaRepository _repository;
         private readonly IIdeaServiceBusSender _serviceBusSender;
 
-        public IdeasController(IIdeaRepository repository,
+        public TagsController(IIdeaRepository repository,
             IIdeaServiceBusSender serviceBusSender)
         {
             _repository = repository;
             _serviceBusSender = serviceBusSender;
         }
 
-        // GET: api/Ideas
+        // GET: api/Tags
         /// <summary>
-        /// Retrieves all of the ideas 
+        /// Retrieves all of the Tags 
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IEnumerable<Idea>> GetIdeas()
+        public async Task<IEnumerable<Tag>> GetTags()
         {
-            var ideas = await _repository.GetIdeasAsync();
-            return ideas.OrderByDescending(x => x.Id);
+            var tags = await _repository.GetTagsAsync();
+            return tags.OrderByDescending(x => x.CreatedDate);
         }
 
         // GET: api/Ideas/5

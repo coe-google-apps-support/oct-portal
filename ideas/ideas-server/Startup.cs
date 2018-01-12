@@ -46,9 +46,13 @@ namespace CoE.Ideas.Server
         {
             app.UseCors(builder =>
             {
-                (env.IsDevelopment() ? builder.AllowAnyOrigin() : builder.WithOrigins(Configuration["Ideas:WordPressUrl"]))
+                //(env.IsDevelopment() ? builder.AllowAnyOrigin() : builder.WithOrigins(Configuration["Ideas:WordPressUrl"]))
+                //    .WithMethods("OPTIONS", "GET", "PUT", "POST", "DELETE")
+                //    .AllowAnyHeader();
+                builder.AllowAnyOrigin()
                     .WithMethods("OPTIONS", "GET", "PUT", "POST", "DELETE")
                     .AllowAnyHeader();
+
             });
         }
 
