@@ -74,7 +74,7 @@ namespace CoE.Ideas.Core.WordPress
                     postdata.content = idea.Description;
                     postdata.status = "publish";
 
-                    var postResponse = await client.PostAsync("ideas", new StringContent(postdata.ToString(), Encoding.UTF8, "application/json"));
+                    var postResponse = await client.PostAsync("initiatives", new StringContent(postdata.ToString(), Encoding.UTF8, "application/json"));
                     var postResponseMessage = await postResponse.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject<WordPressPost>(postResponseMessage);
 

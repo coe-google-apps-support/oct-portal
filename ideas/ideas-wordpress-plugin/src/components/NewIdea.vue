@@ -40,38 +40,11 @@
       <md-progress-bar md-mode="indeterminate" v-if="sending" />
 
       <md-card-actions>
-        <md-button type="submit" class="md-primary" v-on:click.prevent="saveIdea" :disabled="sending">Submit</md-button>
+        <button type="submit" class="et_pb_button" v-on:click.prevent="saveIdea" :disabled="sending">Submit</button>
       </md-card-actions>
 
     </form>
-    <!-- <md-whiteframe md-elevation="2">
-        <md-toolbar>
-        <h1 class="md-title">New Idea</h1>
-        </md-toolbar>
-    </md-whiteframe> -->
-
-    <!-- <md-layout md-gutter class="main-content">
-        <md-layout md-flex="35" class="form-content">
-            <md-layout md-column>
-                <md-input-container>
-                    <label for="title">Idea</label>
-                    <md-input v-model="title" id="idea-title" name="title" required></md-input>
-                </md-input-container>
-
-                <md-input-container>
-                    <label for="idea-description">Description</label>
-                    <md-textarea v-model="description" id="idea-description" name="description" required></md-textarea>
-                </md-input-container>
-
-                <md-input-container>
-                    <label for="idea-tags">Tags</label>
-                    <md-chips v-model="tags" id="idea-tags" name="tags" md-placeholder="Add tag..."></md-chips>
-                </md-input-container>            
-            </md-layout>
-        </md-layout>
-    </md-layout> -->
-
-    </div>    
+  </div>    
 </template>
 
 <script>
@@ -134,6 +107,11 @@ export default {
       }).then(x => {
         console.log('new idea saved!')
         this.sending = false
+        var idea = x.data
+
+        if (idea && idea.url && idea.url.length > 0) {
+          window.location.href = idea.url
+        }
       }).catch((err, y) => {
         this.sending = false
         console.debug(err)
