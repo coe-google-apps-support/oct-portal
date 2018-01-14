@@ -22,7 +22,7 @@ let x = class IdeasService {
                     createdDate: 'Jan 14 2018 10:40:16 GMT-0700 (Mountain Standard Time)',
                     stakeholders: [
                         {
-                            'userName': 'jared.rewerts@edmonton.ca'
+                            'userName': 'gregory.onuczko@edmonton.ca'
                         }
                     ]
                 },
@@ -35,6 +35,30 @@ let x = class IdeasService {
                     stakeholders: [
                         {
                             'userName': 'jared.rewerts@edmonton.ca'
+                        }
+                    ]
+                },
+                {
+                    id: 3,
+                    url: 'http://localhost:8080',
+                    title: 'Idea #3',
+                    description: 'Another idea! They\'re everywhere!',
+                    createdDate: 'Dec 30 2017 10:40:16 GMT-0700 (Mountain Standard Time)',
+                    stakeholders: [
+                        {
+                            'userName': 'daniel.chenier@edmonton.ca'
+                        }
+                    ]
+                },
+                {
+                    id: 4,
+                    url: 'http://localhost:8080',
+                    title: 'Idea #4',
+                    description: 'And another idea! They\'re everywhere!',
+                    createdDate: 'Dec 31 2017 10:40:16 GMT-0700 (Mountain Standard Time)',
+                    stakeholders: [
+                        {
+                            'userName': 'daniel.chenier@edmonton.ca'
                         }
                     ]
                 },
