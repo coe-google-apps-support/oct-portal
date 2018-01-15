@@ -1,23 +1,30 @@
 <template>
   <div>
     <div v-if="ideas && ideas.length">
+      <md-card v-for="idea in ideas" :key="idea.id" class="md-primary" :style="{backgroundColor: getColor(idea)}">
+        <md-card-header>
+          <md-card-header-text>
+            <div class="md-title">{{ idea.title }}</div>
+            <div class="md-subhead">{{ formatDate(idea) }} by {{ idea.stakeholders[0].userName }}</div>
+          </md-card-header-text>
 
-      <div v-for="idea in ideas" :key="idea.id" class="summary">
-        <h3><a v-bind:href="idea.url">{{ idea.title }}</a></h3>
-        <div class="ideaDetails">
-          {{ formatIdeaDescription(idea) }}
-        </div>
-        <div class="started">
-          {{ formatDate(idea) }} by {{ idea.stakeholders[0].userName }}
-        </div>
-        <hr class="separator" />
-      </div>
+          <md-card-media>
+            <img v-bind:src="getImage(idea)" alt="Avatar">
+          </md-card-media>
+        </md-card-header>
+
+        <md-card-actions>
+          <md-button>+1</md-button>
+          <md-button v-bind:href="idea.url">View</md-button>
+        </md-card-actions>
+      </md-card>
     </div>
   </div>    
 </template>
 
 <script>
-import { HTTP } from '../HttpCommon'
+/* eslint-disable */
+import { IdeasService } from '../services/IdeasService.js'
 
 const emptyDate = new Date('0001-01-01T00:00:00.000Z')
 
@@ -31,11 +38,10 @@ export default {
   created () {
     // clear out the ideas
     this.ideas.splice(0, this.ideas.length)
-    HTTP.get('').then(response => {
-      // JSON responses are automatically parsed.
+    IdeasService.getIdeas().then((response) => {
+      console.log('received ideas!!')
       this.ideas = response.data
-    })
-    .catch(e => {
+    }, (e) => {
       this.errors.push(e)
     })
   },
@@ -93,6 +99,33 @@ export default {
           }
         }
       }
+    },
+    getImage (idea) {
+      const images = [
+        '/static/assets/temp/balance-200-white.png',
+        '/static/assets/temp/card-travel-200-white.png',
+        '/static/assets/temp/explore-200-white.png',
+        '/static/assets/temp/help-200-white.png',
+        '/static/assets/temp/house-200-white.png'
+      ]
+
+      const randIndex = Math.floor(Math.random() * images.length)
+      return images[randIndex]
+    },
+    getColor (idea) {
+      const colors = [
+        '#3F51B5',
+        '#009688',
+        '#4CAF50',
+        '#607D8B',
+        '#ef5350',
+        '#00C853',
+        '#FF5722',
+        '#E91E63',
+      ]
+
+      const randIndex = (Math.floor(Math.random() * colors.length) + idea.id) % colors.length
+      return colors[randIndex]
     }
   }
 }
@@ -108,4 +141,12 @@ export default {
   margin-top: 30px;
   clear:both;
 }
+
+.md-card {
+  width: 320px;
+  margin: 4px;
+  display: inline-block;
+  vertical-align: top;
+}
+
 </style>
