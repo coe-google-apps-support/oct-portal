@@ -12,6 +12,6 @@ namespace CoE.Ideas.Core
         /// <summary>
         /// Person who created the idea
         /// </summary>
-        Owner = 1
+        Owner 
     }
 }

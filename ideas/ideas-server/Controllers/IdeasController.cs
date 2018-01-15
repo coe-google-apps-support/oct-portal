@@ -25,7 +25,7 @@ namespace CoE.Ideas.Server.Controllers
             _serviceBusSender = serviceBusSender;
         }
 
-        // GET: api/Ideas
+        // GET: ideas
         /// <summary>
         /// Retrieves all of the ideas 
         /// </summary>
@@ -37,7 +37,7 @@ namespace CoE.Ideas.Server.Controllers
             return ideas.OrderByDescending(x => x.Id);
         }
 
-        // GET: api/Ideas/5
+        // GET: ideas/5
         /// <summary>
         /// Retrieves a single Idea based on its Id
         /// </summary>
@@ -61,7 +61,31 @@ namespace CoE.Ideas.Server.Controllers
             return Ok(idea);
         }
 
-        // PUT: api/Ideas/5
+        // GET: ideas/wp/5
+        /// <summary>
+        /// Retrieves a single Idea based on its assocated wordpressKey
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("wp/{id}")]
+        public async Task<IActionResult> GetIdeaByWordpressKey([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var idea = await _repository.GetIdeaByWordpressKeyAsync(id);
+
+            if (idea == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(idea);
+        }
+
+        // PUT: ideas/5
         /// <summary>
         /// Modifies an Idea
         /// </summary>
@@ -87,7 +111,7 @@ namespace CoE.Ideas.Server.Controllers
             return NoContent();
         }
 
-        // POST: api/Ideas
+        // POST: ideas
         /// <summary>
         /// Adds a new Idea to the database
         /// </summary>
@@ -108,7 +132,7 @@ namespace CoE.Ideas.Server.Controllers
             return CreatedAtAction("GetIdea", new { id = newIdea.Id }, newIdea);
         }
 
-        // DELETE: api/Ideas/5
+        // DELETE: ideas/5
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteIdea([FromRoute] long id)

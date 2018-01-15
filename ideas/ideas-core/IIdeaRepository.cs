@@ -27,6 +27,13 @@ namespace CoE.Ideas.Core
         Task<Idea> GetIdeaAsync(long id);
 
         /// <summary>
+        /// Retrieves a single idea from the database.
+        /// </summary>
+        /// <param name="id">The id of the wordpress post relating to an idea</param>
+        /// <returns>The idea for the specified id.</returns>
+        Task<Idea> GetIdeaByWordpressKeyAsync(int id);
+
+        /// <summary>
         /// Updates an idea.
         /// </summary>
         /// <param name="idea">The idea to update</param>

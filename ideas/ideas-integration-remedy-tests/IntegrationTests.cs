@@ -1,6 +1,7 @@
 using CoE.Ideas.Core;
 using CoE.Ideas.Remedy;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Threading.Tasks;
 
 namespace ideas_integration_remedy_tests
 {
@@ -8,9 +9,9 @@ namespace ideas_integration_remedy_tests
     public class UnitTest1
     {
         [TestMethod]
-        public void TestCreateRemedyWorkOrder()
+        public async Task TestCreateRemedyWorkOrder()
         {
-            IRemedyService svc = new RemedyService();
+            IRemedyService svc = RemedyServiceFactory.CreateRemedyService();
 
             // mock Idea
             var newIdea = new Idea()
@@ -18,7 +19,7 @@ namespace ideas_integration_remedy_tests
                 Title = "Test Idea 1",
                 Description = "Test Idea 1 Contents"
             };
-            svc.PostNewIdea(newIdea, "COE\\fakeuser");
+            await svc.PostNewIdeaAsync(newIdea, "COE\\fakeuser");
         }
     }
 }

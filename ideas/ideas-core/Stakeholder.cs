@@ -25,8 +25,8 @@ namespace CoE.Ideas.Core
         /// The type of stakeholder: owner, etc.
         /// </summary>
         [Required]
-        [DefaultValue(StakeholderType.Owner)]
-        public StakeholderType Type { get; set; }
+      
+        public string Type { get; set; }
 
     }
 }

@@ -56,7 +56,7 @@ namespace CoE.Ideas.Core.Internal
                 {
                     Email = wpUser.Email,
                     UserName = wpUser.Name,
-                    Type = StakeholderType.Owner
+                    Type = Enum.GetName(typeof(StakeholderType), StakeholderType.Owner)
                 });
             }
 
@@ -126,12 +126,34 @@ namespace CoE.Ideas.Core.Internal
             }
         }
 
+        private IQueryable<IdeaInternal> IdeaCollection
+        {
+            get
+            {
+                return _context.Ideas
+                    .Include(x => x.Stakeholders)
+                    .Include(x => x.Tags);
+            }
+        }
+
         public async Task<Core.Idea> GetIdeaAsync(long id)
         {
             if (id <= 0)
                 throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
 
-            var ideaInternal = await _context.Ideas.SingleOrDefaultAsync(m => m.Id == id);
+            var ideaInternal = await IdeaCollection.SingleOrDefaultAsync(m => m.Id == id);
+            if (ideaInternal == null)
+                return null;
+            else
+                return _mapper.Map<IdeaInternal, Idea>(ideaInternal);
+        }
+
+        public async Task<Idea> GetIdeaByWordpressKeyAsync(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
+
+            var ideaInternal = await IdeaCollection.SingleOrDefaultAsync(m => m.WordPressKey == id);
             if (ideaInternal == null)
                 return null;
             else
@@ -141,7 +163,7 @@ namespace CoE.Ideas.Core.Internal
         public async Task<IEnumerable<Core.Idea>> GetIdeasAsync()
         {
             //TODO: retrict to a reasonable amount of ideas
-            var ideas = await _context.Ideas.Include(x => x.Stakeholders).ToListAsync();
+            var ideas = await IdeaCollection.ToListAsync();
             return _mapper.Map<IEnumerable<IdeaInternal>, IEnumerable<Idea>>(ideas);
 
         }

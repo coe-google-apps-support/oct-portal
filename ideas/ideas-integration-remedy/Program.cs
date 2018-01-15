@@ -21,7 +21,7 @@ namespace CoE.Ideas.Remedy
             var wordPressClient = IdeaFactory.GetWordPressClient(config["WordPressUrl"]);
             var ideaRepository = IdeaFactory.GetIdeaRepository(config["IdeasApi"]);
 
-            var remedyService = new RemedyService();
+            var remedyService = RemedyServiceFactory.CreateRemedyService();
 
             // Register listener
             serviceBusReceiver.ReceiveMessagesAsync(new NewIdeaListener(ideaRepository, wordPressClient, remedyService));

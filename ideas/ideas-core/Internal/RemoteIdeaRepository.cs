@@ -123,5 +123,10 @@ namespace CoE.Ideas.Core.Internal
         {
             throw new NotSupportedException();
         }
+
+        public Task<Idea> GetIdeaByWordpressKeyAsync(int id)
+        {
+            throw new NotSupportedException();
+        }
     }
 }
