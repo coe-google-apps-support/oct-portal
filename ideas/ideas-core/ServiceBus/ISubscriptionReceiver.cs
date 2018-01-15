@@ -9,7 +9,7 @@ namespace CoE.Ideas.Core.ServiceBus
     internal interface ISubscriptionReceiver<T> where T : class
     {
         void Receive(
-            Func<T, Task<MessageProcessResponse>> onProcess,
+            Func<T, IDictionary<string, object>, Task<MessageProcessResponse>> onProcess,
             Action<Exception> onError,
             Action onWait);
     }

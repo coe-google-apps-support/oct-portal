@@ -28,7 +28,7 @@ namespace CoE.Ideas.Core.ServiceBus
         private readonly SubscriptionClient _client;
 
         public void Receive(
-            Func<T, Task<MessageProcessResponse>> onProcess,
+            Func<T, IDictionary<string, object>, Task<MessageProcessResponse>> onProcess,
             Action<Exception> onError,
             Action onWait)
         {
@@ -52,7 +52,7 @@ namespace CoE.Ideas.Core.ServiceBus
                         T item = JsonConvert.DeserializeObject<T>(data);
 
                         // Process message
-                        var result = await onProcess(item);
+                        var result = await onProcess(item, message.UserProperties);
 
                         if (result == MessageProcessResponse.Complete)
                             await _client.CompleteAsync(message.SystemProperties.LockToken);

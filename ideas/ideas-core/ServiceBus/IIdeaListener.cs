@@ -7,7 +7,7 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     public interface IIdeaListener
     {
-        Task<MessageProcessResponse> OnMessageRecevied(IdeaMessage message);
+        Task<MessageProcessResponse> OnMessageRecevied(IdeaMessage message, IDictionary<string, object> properties);
         void OnError(Exception err);
         void OnWait();
     }
