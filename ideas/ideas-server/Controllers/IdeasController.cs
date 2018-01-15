@@ -13,16 +13,14 @@ namespace CoE.Ideas.Server.Controllers
 {
     [Produces("application/json")]
     [Route("Ideas")]
+    [Route("Initiatives")]
     public class IdeasController : Controller
     {
         private readonly IIdeaRepository _repository;
-        private readonly IIdeaServiceBusSender _serviceBusSender;
 
-        public IdeasController(IIdeaRepository repository,
-            IIdeaServiceBusSender serviceBusSender)
+        public IdeasController(IIdeaRepository repository)
         {
             _repository = repository;
-            _serviceBusSender = serviceBusSender;
         }
 
         // GET: ideas
@@ -127,7 +125,6 @@ namespace CoE.Ideas.Server.Controllers
             }
 
             var newIdea = await _repository.AddIdeaAsync(idea);
-            await _serviceBusSender.SendIdeaCreatedMessageAsync(newIdea);
 
             return CreatedAtAction("GetIdea", new { id = newIdea.Id }, newIdea);
         }

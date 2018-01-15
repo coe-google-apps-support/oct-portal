@@ -23,7 +23,7 @@ namespace CoE.Ideas.Core.ServiceBus
             var requestHeaders = _httpContextAccessor.HttpContext?.Request?.Headers;
             if (requestHeaders != null && requestHeaders.ContainsKey("Authorization"))
             {
-                properties["AuthToken"] = requestHeaders["Authorization"];
+                properties["AuthToken"] = requestHeaders["Authorization"].ToString();
             }
         }
 

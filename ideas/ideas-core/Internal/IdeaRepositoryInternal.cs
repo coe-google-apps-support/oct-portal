@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,12 +17,17 @@ namespace CoE.Ideas.Core.Internal
         private readonly IdeaContext _context;
         private readonly IMapper _mapper;
         private readonly IWordPressClient _wordpressClient;
+        private readonly IIdeaServiceBusSender _serviceBusSender;
 
-        public IdeaRepositoryInternal(IdeaContext context, IMapper mapper, IWordPressClient wordpressClient)
+        public IdeaRepositoryInternal(IdeaContext context, 
+            IMapper mapper, 
+            IWordPressClient wordpressClient, 
+            IIdeaServiceBusSender serviceBusSender)
         {
             _context = context;
             _mapper = mapper;
             _wordpressClient = wordpressClient;
+            _serviceBusSender = serviceBusSender;
         }
 
 
@@ -31,7 +37,15 @@ namespace CoE.Ideas.Core.Internal
                 throw new ArgumentNullException("idea");
 
             // get user from WordPress
-            var wpUser = await _wordpressClient.GetCurrentUserAsync();
+            WordPressUser wpUser;
+            try
+            {
+                wpUser = await _wordpressClient.GetCurrentUserAsync();
+            }
+            catch (Exception err)
+            {
+                throw new SecurityException($"Unable to determine current WordPress user: { err.Message }");
+            }
 
             if (wpUser == null)
             {
@@ -71,7 +85,19 @@ namespace CoE.Ideas.Core.Internal
             _context.Ideas.Add(ideaInternal);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<IdeaInternal, Idea>(ideaInternal);
+            var returnValue = _mapper.Map<IdeaInternal, Idea>(ideaInternal);
+
+            try
+            {
+                await _serviceBusSender.SendIdeaCreatedMessageAsync(returnValue);
+            }
+            catch (Exception err)
+            {
+                // should we throw this error???
+                System.Diagnostics.Trace.TraceError($"Idea saved but there was an error sending a message to the service bus: { err.Message }");
+            }
+
+            return returnValue;
         }
 
         public async Task<Tag> AddTagAsync(Tag tag)

@@ -28,7 +28,11 @@ namespace CoE.Ideas.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdeaConfiguration(Configuration.GetConnectionString("IdeaDatabase"), Configuration["Ideas:WordPressUrl"]);
+            services.AddIdeaConfiguration(
+                Configuration.GetConnectionString("IdeaDatabase"), 
+                Configuration["Ideas:WordPressUrl"],
+                Configuration.GetConnectionString("IdeaServiceBus"),
+                Configuration["Ideas:ServiceBusTopic"]);
 
 
             services.AddIdeaAuthSecurity(Configuration["Authorization:JwtSecretKey"],
