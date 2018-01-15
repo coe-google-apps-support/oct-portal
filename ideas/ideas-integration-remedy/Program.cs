@@ -22,9 +22,13 @@ namespace CoE.Ideas.Remedy
             var ideaRepository = IdeaFactory.GetIdeaRepository(config["IdeasApi"]);
 
             var remedyService = RemedyServiceFactory.CreateRemedyService();
+            IActiveDirectoryUserService adUserService = new ActiveDirectoryUserService(
+                config["ActiveDirectory:Domain"],
+                config["ActiveDirectory:ServiceUserName"],
+                config["ActiveDirectory:ServicePassword"]);
 
             // Register listener
-            serviceBusReceiver.ReceiveMessagesAsync(new NewIdeaListener(ideaRepository, wordPressClient, remedyService));
+            serviceBusReceiver.ReceiveMessagesAsync(new NewIdeaListener(ideaRepository, wordPressClient, remedyService, adUserService));
 
             // now block forever
             // but I don't think the code will ever get here anyway...

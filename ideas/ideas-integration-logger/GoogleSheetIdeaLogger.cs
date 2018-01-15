@@ -12,7 +12,7 @@ namespace CoE.Ideas.Integration.Logger
     {
         public Task LogIdeaAsync(Idea idea, WordPressUser wordPressUser, UserPrincipal adUser)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
