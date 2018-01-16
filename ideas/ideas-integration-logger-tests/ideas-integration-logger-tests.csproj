@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ideas\ideas-core\ideas-core.csproj" />
-    <ProjectReference Include="..\ideas\ideas-integration-logger\ideas-integration-logger.csproj" />
+    <ProjectReference Include="ideas-core\ideas-core.csproj" />
+    <ProjectReference Include="ideas-integration-logger\ideas-integration-logger.csproj" />
   </ItemGroup>
 
 </Project>

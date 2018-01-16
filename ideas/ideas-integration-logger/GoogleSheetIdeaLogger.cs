@@ -1,18 +1,120 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using CoE.Ideas.Core;
 using CoE.Ideas.Core.WordPress;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Sheets.v4;
+using Google.Apis.Sheets.v4.Data;
+using Newtonsoft.Json;
 
 namespace CoE.Ideas.Integration.Logger
 {
     internal class GoogleSheetIdeaLogger : IIdeaLogger
     {
-        public Task LogIdeaAsync(Idea idea, WordPressUser wordPressUser, UserPrincipal adUser)
+        public GoogleSheetIdeaLogger(string serviceAccountPrivateKey,
+            string serviceAccountEmail,
+            string spreadsheetId)
         {
-            
+            if (string.IsNullOrWhiteSpace(serviceAccountPrivateKey))
+                throw new ArgumentNullException("serviceAccountPrivateKey");
+            if (string.IsNullOrWhiteSpace(serviceAccountEmail))
+                throw new ArgumentNullException("serviceAccountEmail");
+            if (string.IsNullOrWhiteSpace(spreadsheetId))
+                throw new ArgumentNullException("spreadsheetid");
+
+            _spreadsheetId = spreadsheetId;
+
+            if (!string.Equals(_serviceAccountPrivateKey, serviceAccountPrivateKey, StringComparison.Ordinal) ||
+                !string.Equals(_serviceAccountEmail, serviceAccountEmail, StringComparison.Ordinal))
+            {
+                credential = null;
+                _serviceAccountPrivateKey = serviceAccountPrivateKey;
+                _serviceAccountEmail = serviceAccountEmail;
+            }
+        }
+
+        private static string _serviceAccountPrivateKey;
+        private static string _serviceAccountEmail;
+        private readonly string _spreadsheetId;
+
+
+        private static ICredential credential;
+        protected ICredential Credentials
+        {
+            get
+            {
+                if (credential == null)
+                {
+                    // Create an explicit ServiceAccountCredential credential
+                    credential = new ServiceAccountCredential(new ServiceAccountCredential.Initializer(_serviceAccountEmail)
+                    {
+                        Scopes = GetCredentialScopes()
+                    }.FromPrivateKey(_serviceAccountPrivateKey));
+                }
+
+                return credential;
+            }
+        }
+
+        protected virtual string[] GetCredentialScopes()
+        {
+            return new[] {
+                    SheetsService.Scope.Spreadsheets
+                };
+        }
+
+        private SheetsService sheetsService;
+        protected virtual SheetsService SheetsService
+        {
+            get
+            {
+                if (sheetsService == null)
+                {
+                    sheetsService = new SheetsService(
+                        new Google.Apis.Services.BaseClientService.Initializer()
+                        {
+                            HttpClientInitializer = Credentials,
+                            ApplicationName = "Octavia Logger"
+                        }
+                    );
+                }
+                return sheetsService;
+            }
+        }
+
+
+        public async Task LogIdeaAsync(Idea idea, WordPressUser wordPressUser, UserPrincipal adUser)
+        {
+            var values = new ValueRange() { MajorDimension = "ROWS" };
+            IList<object> rowData = new List<object>()
+            {
+                idea.Title,
+                idea.Description,
+                wordPressUser?.Name,
+                wordPressUser?.Email,
+                adUser?.SamAccountName,
+                idea.CreatedDate
+            };
+
+            values.Values = new List<IList<object>> { rowData };
+
+            var range = "Initiatives!A1:F1";
+
+            var request = SheetsService.Spreadsheets.Values.Append(values, _spreadsheetId, range);
+            request.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
+
+            try
+            {
+                var response = await request.ExecuteAsync();
+            }
+            catch (Exception err)
+            {
+                throw;
+            }
         }
     }
 }
