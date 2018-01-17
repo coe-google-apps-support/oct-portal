@@ -5,7 +5,8 @@ namespace CoE.Ideas.Integration.Notification
 {
     public interface IMailmanEnabledSheetReader
     {
-        Task<IDictionary<string, object>> GetValuesAsync(long ideaId);
+        Task<IDictionary<string, object>> GetValuesAsync(dynamic mergeTemplate, long ideaId);
+        Task<IDictionary<string, object>> GetValuesAsync(dynamic mergeTemplate, string range);
 
         Task<dynamic> GetMergeTemplateAsync(string templateName);
     }

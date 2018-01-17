@@ -26,11 +26,14 @@ namespace CoE.Ideas.Integration.Notification
                 config["Notification:spreadsheetId"]
                 );
 
+            var emailService = new EmailService();
+
             // Register listener
             serviceBusReceiver.ReceiveMessagesAsync(new IdeaLoggedListener(
                 ideaRepository, 
                 wordPressClient, 
                 mailmanSheetReader, 
+                emailService,
                 config["Notification:MergeTemplate"]));
 
             // now block forever

@@ -3,8 +3,10 @@ using Google.Apis.Sheets.v4;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Integration.Notification
@@ -98,7 +100,7 @@ namespace CoE.Ideas.Integration.Notification
                 {
                     var value = JObject.Parse(valueObj.ToString());
                     var mergeData = value?["mergeData"];
-                    var title = value?["title"]?.ToString();
+                    var title = mergeData?["title"]?.ToString();
                     if (templateName.Equals(title, StringComparison.OrdinalIgnoreCase))
                     {
                         return mergeData;
@@ -109,11 +111,81 @@ namespace CoE.Ideas.Integration.Notification
             return null;
         }
 
-        public Task<IDictionary<string, object>> GetValuesAsync(long ideaId)
+        public Task<IDictionary<string, object>> GetValuesAsync(dynamic mergeTemplate, long ideaId)
         {
             // TODO: MergeTemplate definitions should be cached because they change infrequently
 
             throw new NotImplementedException();
+        }
+
+        public async Task<IDictionary<string, object>> GetValuesAsync(dynamic mergeTemplate, string range)
+        {
+            if (mergeTemplate == null)
+                throw new ArgumentNullException("mergeTemplate");
+            if (string.IsNullOrWhiteSpace(range))
+                throw new ArgumentNullException("range");
+
+            // this is the best I could come up with on short notice to get the columns/rows in the given range
+            string rangeSimple = range, sheetName = string.Empty;
+            if (rangeSimple.IndexOf("!") >= 0)
+            {
+                int i = rangeSimple.IndexOf("!");
+                if (rangeSimple.Length > i + 1)
+                {
+                    sheetName = i > 0 ? rangeSimple.Substring(0, i) : string.Empty;
+                    rangeSimple = rangeSimple.Substring(i + 1);
+                }
+            }
+
+            var m = Regex.Match(rangeSimple, @"^([A-Z]+)(\d+):([A-Z]+)(\d+)$");
+            if (!m.Success || m.Groups?.Count < 4)
+                throw new ArgumentOutOfRangeException("Expecting range to be in the format A1:B2 format");
+
+
+            // get the last row in the range for value
+            string valuesRange =
+                (!string.IsNullOrWhiteSpace(sheetName) ? $"{sheetName}!" : string.Empty) + 
+                m.Groups[1] + m.Groups[4] + ":" + m.Groups[3] + m.Groups[4];
+
+            // header range is row defined in mergeTemplate and columns defined in range
+            var headerRange =
+                (!string.IsNullOrWhiteSpace(sheetName) ? $"{sheetName}!" : string.Empty) + 
+                m.Groups[1] + mergeTemplate.headerRow + ":" + m.Groups[3] + mergeTemplate.headerRow;
+
+            var batchGet = SheetsService.Spreadsheets.Values.BatchGet(_spreadsheetId);
+            batchGet.Ranges = new Google.Apis.Util.Repeatable<string>(new string[] { headerRange, valuesRange });
+
+
+            IList<object> headerRow;
+            IList<object> valuesRow;
+            try
+            {
+                var result = await batchGet.ExecuteAsync();
+                headerRow = result.ValueRanges[0].Values.FirstOrDefault();
+                valuesRow = result.ValueRanges[1].Values.FirstOrDefault();
+            }
+            catch (Exception err)
+            {
+                Trace.TraceError($"Error retriving values or header row: { err.Message }");
+                throw;
+            }
+
+            if (valuesRow == null)
+                throw new InvalidOperationException("No data returned from Google Sheet");
+            if (headerRow == null)
+                throw new InvalidOperationException("No header row returned from Google Sheet");
+
+            int index = Math.Min(valuesRow.Count, headerRow.Count);
+
+            var returnValue = new Dictionary<string, object>();
+            for (int j=0; j<index; j++)
+            {
+                string s = headerRow[j] as string;
+                if (!string.IsNullOrWhiteSpace(s))
+                    returnValue[s] = valuesRow[j];
+            }
+
+            return returnValue;
         }
     }
 }

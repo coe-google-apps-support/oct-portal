@@ -13,14 +13,17 @@ namespace CoE.Ideas.Integration.Notification
         public IdeaLoggedListener(IIdeaRepository ideaRepository,
             IWordPressClient wordPressClient, 
             IMailmanEnabledSheetReader mailmanSheetReader,
+            IEmailService emailService,
             string mergeTemplateName)
         : base(ideaRepository, wordPressClient)
         {
             _mailmanSheetReader = mailmanSheetReader;
+            _emailService = emailService;
             _mergeTemplateName = mergeTemplateName;
         }
 
         private readonly IMailmanEnabledSheetReader _mailmanSheetReader;
+        private readonly IEmailService _emailService;
         private readonly string _mergeTemplateName;
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
@@ -39,15 +42,25 @@ namespace CoE.Ideas.Integration.Notification
                 if (ShouldProcessMessage(message))
                 {
                     var mergeTemplate = await _mailmanSheetReader.GetMergeTemplateAsync(_mergeTemplateName);
-
-                    var ideaData = await _mailmanSheetReader.GetValuesAsync(message.IdeaId);
-
-                    if (mergeTemplate != null && ideaData != null)
+                    if (mergeTemplate != null)
                     {
-                        //TODO: Send Email
-                        throw new NotImplementedException();
-                    }
+                        string ideaRange = properties.ContainsKey("RangeUpdated") ? properties["RangeUpdated"] as string : null;
 
+                        IDictionary<string, object> ideaData;
+                        if (string.IsNullOrWhiteSpace(ideaRange))
+                        {
+                            ideaData = await _mailmanSheetReader.GetValuesAsync(mergeTemplate, message.IdeaId);
+                        }
+                        else
+                        {
+                            ideaData = await _mailmanSheetReader.GetValuesAsync(mergeTemplate, ideaRange);
+                        }
+
+                        if (ideaData != null)
+                        {
+                            _emailService.SendEmailAsync(mergeTemplate, ideaData);
+                        }
+                    }
                 }
 
                 return MessageProcessResponse.Complete;
