@@ -4,6 +4,15 @@
 
 const path = require('path')
 
+let assetsPath;
+if (process.argv[2]) {
+  assetsPath = path.resolve(process.argv[2])
+  console.log(`File output path argument detected. Outputting to ${assetsPath}.`)
+}
+else {
+  assetsPath = path.resolve(__dirname, '../dist')
+}
+
 module.exports = {
   dev: {
 
@@ -50,10 +59,10 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(assetsPath, 'index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: assetsPath,
     assetsSubDirectory: '',
     assetsPublicPath: '/',
 
