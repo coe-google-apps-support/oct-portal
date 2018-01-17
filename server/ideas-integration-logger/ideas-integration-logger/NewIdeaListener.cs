@@ -33,6 +33,7 @@ namespace CoE.Ideas.Integration.Logger
             return message.Type == IdeaMessageType.IdeaCreated;
         }
 
+
         protected override async Task ProcessIdeaMessage(IdeaMessage message, Idea idea, WordPressUser wordPressUser)
         {
             if (idea == null)
@@ -52,24 +53,30 @@ namespace CoE.Ideas.Integration.Logger
                 throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
             }
 
-            if (adUser == null)
-                throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
+            //if (adUser == null)
+            //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
 
-            bool success;
+            Google.Apis.Sheets.v4.Data.AppendValuesResponse loggerResponse;
             try
             {
-                await _ideaLogger.LogIdeaAsync(idea, wordPressUser, adUser);
-                success = true;
+                loggerResponse = await _ideaLogger.LogIdeaAsync(idea, wordPressUser, adUser);
             }
             catch (Exception err)
             {
                 Trace.TraceError($"Unable to log idea: { err.Message}");
-                success = false;
+                loggerResponse = null;
             }
 
             try
             {
-                await _ideaServiceBusSender.SendIdeaMessageAsync(idea, IdeaMessageType.IdeaLogged, headers => headers["logWasSuccessfull"] = success);
+                await _ideaServiceBusSender.SendIdeaMessageAsync(
+                    idea, 
+                    IdeaMessageType.IdeaLogged, 
+                    headers => 
+                    {
+                        headers["logWasSuccessfull"] = loggerResponse != null;
+                        headers["RangeUpdated"] = loggerResponse?.TableRange;
+                    });
             }
             catch (Exception err)
             {

@@ -8,9 +8,10 @@ namespace CoE.Ideas.Integration.Logger
     {
         public static IIdeaLogger CreateGoogleSheetIdeaLogger(string serviceAccountPrivateKey,
             string serviceAccountEmail,
-            string spreadsheetId)
+            string spreadsheetId,
+            string ideasApiBaseUrl)
         {
-            return new GoogleSheetIdeaLogger(serviceAccountPrivateKey, serviceAccountEmail, spreadsheetId);
+            return new GoogleSheetIdeaLogger(serviceAccountPrivateKey, serviceAccountEmail, spreadsheetId, ideasApiBaseUrl);
         }
     }
 }

@@ -23,7 +23,8 @@ namespace CoE.Ideas.Integration.Logger
             var ideaLogger = IdeaLoggerFactory.CreateGoogleSheetIdeaLogger(
                 config["Logger:serviceAccountPrivateKey"],
                 config["Logger:serviceAccountEmail"],
-                config["Logger:spreadsheetId"]);
+                config["Logger:spreadsheetId"],
+                config["IdeasApi"]);
             IActiveDirectoryUserService adUserService = new ActiveDirectoryUserService(
                 config["ActiveDirectory:Domain"], 
                 config["ActiveDirectory:ServiceUserName"], 

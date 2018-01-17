@@ -1,24 +1,19 @@
-﻿using System;
+﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Sheets.v4;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
-using System.DirectoryServices.AccountManagement;
-using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoE.Ideas.Core;
-using CoE.Ideas.Core.WordPress;
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Sheets.v4;
-using Google.Apis.Sheets.v4.Data;
-using Newtonsoft.Json;
 
-namespace CoE.Ideas.Integration.Logger
+namespace CoE.Ideas.Integration.Notification
 {
-    internal class GoogleSheetIdeaLogger : IIdeaLogger
+    internal class MailmanEnabledSheetReader : IMailmanEnabledSheetReader
     {
-        public GoogleSheetIdeaLogger(string serviceAccountPrivateKey,
+        public MailmanEnabledSheetReader(string serviceAccountPrivateKey,
             string serviceAccountEmail,
-            string spreadsheetId,
-            string ideasApiBaseUrl)
+            string spreadsheetId)
         {
             if (string.IsNullOrWhiteSpace(serviceAccountPrivateKey))
                 throw new ArgumentNullException("serviceAccountPrivateKey");
@@ -28,7 +23,6 @@ namespace CoE.Ideas.Integration.Logger
                 throw new ArgumentNullException("spreadsheetid");
 
             _spreadsheetId = spreadsheetId;
-            _ideasApiBaseUrl = ideasApiBaseUrl;
 
             if (!string.Equals(_serviceAccountPrivateKey, serviceAccountPrivateKey, StringComparison.Ordinal) ||
                 !string.Equals(_serviceAccountEmail, serviceAccountEmail, StringComparison.Ordinal))
@@ -41,9 +35,7 @@ namespace CoE.Ideas.Integration.Logger
 
         private static string _serviceAccountPrivateKey;
         private static string _serviceAccountEmail;
-        private readonly string _ideasApiBaseUrl;
         private readonly string _spreadsheetId;
-
 
         private static ICredential credential;
         protected ICredential Credentials
@@ -66,8 +58,8 @@ namespace CoE.Ideas.Integration.Logger
         protected virtual string[] GetCredentialScopes()
         {
             return new[] {
-                    SheetsService.Scope.Spreadsheets
-                };
+                SheetsService.Scope.SpreadsheetsReadonly
+            };
         }
 
         private SheetsService sheetsService;
@@ -81,7 +73,7 @@ namespace CoE.Ideas.Integration.Logger
                         new Google.Apis.Services.BaseClientService.Initializer()
                         {
                             HttpClientInitializer = Credentials,
-                            ApplicationName = "Octavia Logger"
+                            ApplicationName = "Octavia Notification"
                         }
                     );
                 }
@@ -90,39 +82,38 @@ namespace CoE.Ideas.Integration.Logger
         }
 
 
-        public async Task<AppendValuesResponse> LogIdeaAsync(Idea idea, WordPressUser wordPressUser, UserPrincipal adUser)
+        public async Task<dynamic> GetMergeTemplateAsync(string templateName)
         {
-            var values = new ValueRange() { MajorDimension = "ROWS" };
-            IList<object> rowData = new List<object>()
+            string configSheetName = "mm-config";
+
+            // get at most 128 rows, that should be plenty
+            var valuesRequest = SheetsService.Spreadsheets.Values.Get(_spreadsheetId, $"{ configSheetName }!B1:B128");
+            var valuesResponse = await valuesRequest.ExecuteAsync();
+
+            foreach (var row in valuesResponse.Values)
             {
-                idea.Id,
-                idea.Title,
-                idea.Description,
-                idea.Url,
-                $"{_ideasApiBaseUrl}/{idea.Id}",
-                wordPressUser?.Name,
-                wordPressUser?.Email,
-                adUser?.SamAccountName,
-                idea.CreatedDate
-            };
-
-            values.Values = new List<IList<object>> { rowData };
-
-            var range = "Initiatives!A1:F1";
-
-            var request = SheetsService.Spreadsheets.Values.Append(values, _spreadsheetId, range);
-            request.ValueInputOption = SpreadsheetsResource.ValuesResource.AppendRequest.ValueInputOptionEnum.USERENTERED;
-
-            try
-            {
-                AppendValuesResponse response = await request.ExecuteAsync();
-                return response;
+                // should only be at most object in each row
+                var valueObj = row.FirstOrDefault();
+                if (valueObj != null)
+                {
+                    var value = JObject.Parse(valueObj.ToString());
+                    var mergeData = value?["mergeData"];
+                    var title = value?["title"]?.ToString();
+                    if (templateName.Equals(title, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return mergeData;
+                    }
+                }
             }
-            catch (Exception err)
-            {
-                System.Diagnostics.Trace.TraceError($"Unable to append values to Google sheet: { err.Message}");
-                throw;
-            }
+
+            return null;
+        }
+
+        public Task<IDictionary<string, object>> GetValuesAsync(long ideaId)
+        {
+            // TODO: MergeTemplate definitions should be cached because they change infrequently
+
+            throw new NotImplementedException();
         }
     }
 }

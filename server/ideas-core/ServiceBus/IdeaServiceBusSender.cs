@@ -17,13 +17,14 @@ namespace CoE.Ideas.Core.ServiceBus
         private readonly ITopicSender<IdeaMessage> _topicSenderr;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        protected virtual void SetProperties(Idea idea, IDictionary<string, object> properties)
+        protected virtual void SetProperties(Idea idea, IdeaMessageType messageType, IDictionary<string, object> properties)
         {
             // get user info 
             var requestHeaders = _httpContextAccessor?.HttpContext?.Request?.Headers;
             if (requestHeaders != null && requestHeaders.ContainsKey("Authorization"))
             {
                 properties["AuthToken"] = requestHeaders["Authorization"].ToString();
+                properties["IdeaMessageType"] = messageType.ToString();
             }
         }
 
@@ -31,7 +32,7 @@ namespace CoE.Ideas.Core.ServiceBus
         {
             var message = new IdeaMessage() { IdeaId = idea.Id, Type = messageType };
             var props = new Dictionary<string, object>();
-            SetProperties(idea, props);
+            SetProperties(idea, messageType, props);
 
             await _topicSenderr.SendAsync(message, props);
         }
@@ -40,10 +41,9 @@ namespace CoE.Ideas.Core.ServiceBus
         {
             var message = new IdeaMessage() { IdeaId = idea.Id, Type = messageType };
             var props = new Dictionary<string, object>();
-            SetProperties(idea, props);
+            SetProperties(idea, messageType, props);
 
-            if (onMessageHeaders != null)
-                onMessageHeaders(props);
+            onMessageHeaders?.Invoke(props);
 
             await _topicSenderr.SendAsync(message, props);
         }
