@@ -14,6 +14,9 @@ npm run dev
 # build for production with minification
 npm run build
 
+# build for production to a specific location with minification
+npm run build -- "THIS/IS/A/PATH"
+
 # build for production and view the bundle analyzer report
 npm run build --report
 

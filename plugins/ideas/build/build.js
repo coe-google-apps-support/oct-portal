@@ -39,7 +39,7 @@ rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
     ncp(path.resolve(__dirname, '../php'), config.build.assetsRoot, { }, function() {});
 
     // copy to plugins git directory
-    var pluginOutputPath = path.resolve(__dirname, '../../../WordPress/plugins/coe-ideas');
+    /*var pluginOutputPath = config.build.assetsRoot;
     rm(pluginOutputPath, pluginOutputErr => {
       ncp(config.build.assetsRoot, pluginOutputPath, {
           filter: function(fn) {
@@ -65,7 +65,7 @@ rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
               });
           });
       });
-    });
+    });*/
 
 
   })
