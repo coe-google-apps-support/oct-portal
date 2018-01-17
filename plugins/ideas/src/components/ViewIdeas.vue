@@ -115,7 +115,7 @@ export default {
         `${root}/assets/temp/house-200-white.png`
       ]
 
-      const randIndex = Math.floor(Math.random() * images.length)
+      const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % images.length
       return images[randIndex]
     },
     getColor (idea) {
