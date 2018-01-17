@@ -101,12 +101,13 @@ export default {
       }
     },
     getImage (idea) {
+      const root = process.env.STATIC_ASSETS
       const images = [
-        '/static/assets/temp/balance-200-white.png',
-        '/static/assets/temp/card-travel-200-white.png',
-        '/static/assets/temp/explore-200-white.png',
-        '/static/assets/temp/help-200-white.png',
-        '/static/assets/temp/house-200-white.png'
+        `${root}/assets/temp/balance-200-white.png`,
+        `${root}/assets/temp/card-travel-200-white.png`,
+        `${root}/assets/temp/explore-200-white.png`,
+        `${root}/assets/temp/help-200-white.png`,
+        `${root}/assets/temp/house-200-white.png`
       ]
 
       const randIndex = Math.floor(Math.random() * images.length)
