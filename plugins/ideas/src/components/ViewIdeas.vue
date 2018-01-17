@@ -1,21 +1,27 @@
 <template>
   <div>
     <div v-if="ideas && ideas.length">
-      <md-card v-for="idea in ideas" :key="idea.id" class="md-primary" :style="{backgroundColor: getColor(idea)}">
-        <md-card-header>
-          <md-card-header-text>
-            <div class="md-title">{{ idea.title }}</div>
-            <div class="md-subhead">{{ formatDate(idea) }} by {{ idea.stakeholders[0].userName }}</div>
+      <md-card v-for="idea in ideas" :key="idea.id" >
+        <md-card-header :style="{backgroundColor: getColor(idea)}">
+          <md-card-header-text class="title-container">
+            <div class="filler"></div>
+            <div class="md-title title">{{ idea.title }}</div>            
           </md-card-header-text>
 
-          <md-card-media>
-            <img v-bind:src="getImage(idea)" alt="Avatar">
+          <md-card-media class="big-media">
+            <img v-bind:src="getImage(idea)" class="big-media" alt="Avatar">
           </md-card-media>
         </md-card-header>
 
+        <div class="card-secondary-info">
+          <div class ="description-text">{{ idea.description }}</div>
+          <div class="date-text md-subhead">{{ formatDate(idea) }}</div>
+        </div>
+        
+        <md-divider></md-divider>
+
         <md-card-actions>
-          <md-button>+1</md-button>
-          <md-button v-bind:href="idea.url">View</md-button>
+          <md-button v-bind:href="idea.url" :style="{color: getColor(idea)}">View</md-button>
         </md-card-actions>
       </md-card>
     </div>
@@ -124,7 +130,7 @@ export default {
         '#E91E63',
       ]
 
-      const randIndex = (Math.floor(Math.random() * colors.length) + idea.id) % colors.length
+      const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length
       return colors[randIndex]
     }
   }
@@ -133,20 +139,48 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.started { 
-  float: right;
-  
-}
-.separator { 
-  margin-top: 30px;
-  clear:both;
-}
 
 .md-card {
-  width: 320px;
-  margin: 4px;
+  width: 360px;
+  margin: 12px;
   display: inline-block;
   vertical-align: top;
+}
+
+.title {
+  color: #fefefe;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 180px;
+  overflow: hidden;
+}
+
+.title-container {
+  flex-direction: column;
+  display: flex;
+}
+
+.filler {
+  flex-grow: 1;
+}
+
+.big-media {
+  width: 120px;
+  height: 120px;
+  flex-basis: inherit;
+}
+
+.card-secondary-info {
+  margin: 8px;
+}
+
+.card-secondary-info > * {
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+
+.date-text {
+  text-align: right;
 }
 
 </style>
