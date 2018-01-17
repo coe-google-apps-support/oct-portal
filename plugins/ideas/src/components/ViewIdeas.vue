@@ -8,13 +8,13 @@
             <div class="md-title title">{{ idea.title }}</div>            
           </md-card-header-text>
 
-          <md-card-media class="big-media">
-            <img v-bind:src="getImage(idea)" class="big-media" alt="Avatar">
-          </md-card-media>
+          <div class="big-media">
+            <img v-bind:src="getImage(idea)" alt="Avatar">
+          </div>
         </md-card-header>
 
         <div class="card-secondary-info">
-          <div class ="description-text">{{ idea.description }}</div>
+          <div class ="description-text">{{ idea.description | truncate }}</div>
           <div class="date-text md-subhead">{{ formatDate(idea) }}</div>
         </div>
         
@@ -49,6 +49,17 @@ export default {
     }, (e) => {
       this.errors.push(e)
     })
+  },
+  filters: {
+    truncate(str) {
+      const MAX_LENGTH = 300
+      if (str.length < MAX_LENGTH) {
+        return str;
+      }
+      else {
+        return str.slice(0, MAX_LENGTH) + '...'
+      }      
+    }
   },
   methods: {
     formatIdeaDescription (idea) {
@@ -165,9 +176,12 @@ export default {
 }
 
 .big-media {
+  position: relative;
   width: 120px;
   height: 120px;
-  flex-basis: inherit;
+  margin-left: 16px;
+  -webkit-box-flex: 0;
+  flex: 0 0 inherit;
 }
 
 .card-secondary-info {
