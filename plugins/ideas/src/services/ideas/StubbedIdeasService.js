@@ -1,7 +1,18 @@
 /* eslint-disable */
-import { HTTP } from '../HttpCommon'
+import { HTTP } from '../../HttpCommon'
 
-let x = class IdeasService {
+/**
+ * This acts as a stubbed out class for the ideas service.
+ * Idea format:
+ * idea.id
+ * idea.url
+ * idea.title
+ * idea.description
+ * idea.createdDate
+ * idea.stakeholders
+ * idea.stakeholders[0].userName
+ */
+let x = class StubbedIdeasService {
 
     constructor() {
         
@@ -85,4 +96,4 @@ let x = class IdeasService {
      */
 }
 
-export const IdeasService = x
+export const StubbedIdeasService = x

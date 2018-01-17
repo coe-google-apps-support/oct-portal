@@ -24,7 +24,6 @@
 
 <script>
 /* eslint-disable */
-import { IdeasService } from '../services/IdeasService.js'
 
 const emptyDate = new Date('0001-01-01T00:00:00.000Z')
 
@@ -38,7 +37,7 @@ export default {
   created () {
     // clear out the ideas
     this.ideas.splice(0, this.ideas.length)
-    IdeasService.getIdeas().then((response) => {
+    this.services.ideas.getIdeas().then((response) => {
       console.log('received ideas!!')
       this.ideas = response.data
     }, (e) => {
