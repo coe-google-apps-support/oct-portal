@@ -103,7 +103,7 @@ namespace CoE.Ideas.Server.Controllers
             }
 
             var newIdea = await _repository.AddIdeaAsync(idea);
-            await _serviceBusSender.SendIdeaCreatedMessageAsync(newIdea);
+            await _serviceBusSender.SendIdeaMessageAsync(newIdea, IdeaMessageType.IdeaCreated);
 
             return CreatedAtAction("GetIdea", new { id = newIdea.Id }, newIdea);
         }

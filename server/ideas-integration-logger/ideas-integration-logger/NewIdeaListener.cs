@@ -3,6 +3,7 @@ using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,20 +15,24 @@ namespace CoE.Ideas.Integration.Logger
         public NewIdeaListener(IIdeaRepository ideaRepository,
             IWordPressClient wordPressClient,
             IIdeaLogger ideaLogger,
-            IActiveDirectoryUserService activeDirectoryUserService)
+            IActiveDirectoryUserService activeDirectoryUserService,
+            IIdeaServiceBusSender ideaServiceBusSender)
         : base(ideaRepository, wordPressClient)
         {
             _ideaLogger = ideaLogger;
             _activeDirectoryUserService = activeDirectoryUserService;
+            _ideaServiceBusSender = ideaServiceBusSender;
         }
 
         private readonly IIdeaLogger _ideaLogger;
         private readonly IActiveDirectoryUserService _activeDirectoryUserService;
+        private readonly IIdeaServiceBusSender _ideaServiceBusSender;
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
         {
             return message.Type == IdeaMessageType.IdeaCreated;
         }
+
 
         protected override async Task ProcessIdeaMessage(IdeaMessage message, Idea idea, WordPressUser wordPressUser)
         {
@@ -48,10 +53,36 @@ namespace CoE.Ideas.Integration.Logger
                 throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
             }
 
-            if (adUser == null)
-                throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
+            //if (adUser == null)
+            //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
 
-            await _ideaLogger.LogIdeaAsync(idea, wordPressUser, adUser);
+            Google.Apis.Sheets.v4.Data.AppendValuesResponse loggerResponse;
+            try
+            {
+                loggerResponse = await _ideaLogger.LogIdeaAsync(idea, wordPressUser, adUser);
+            }
+            catch (Exception err)
+            {
+                Trace.TraceError($"Unable to log idea: { err.Message}");
+                loggerResponse = null;
+            }
+
+            try
+            {
+                await _ideaServiceBusSender.SendIdeaMessageAsync(
+                    idea, 
+                    IdeaMessageType.IdeaLogged, 
+                    headers => 
+                    {
+                        headers["logWasSuccessfull"] = loggerResponse != null;
+                        headers["RangeUpdated"] = loggerResponse?.TableRange;
+                    });
+            }
+            catch (Exception err)
+            {
+                Trace.TraceError($"Unable to send IdeaLogged message: { err.Message }");
+            }
+
         }
     }
 }

@@ -89,7 +89,7 @@ namespace CoE.Ideas.Core.Internal
 
             try
             {
-                await _serviceBusSender.SendIdeaCreatedMessageAsync(returnValue);
+                await _serviceBusSender.SendIdeaMessageAsync(returnValue, IdeaMessageType.IdeaCreated);
             }
             catch (Exception err)
             {

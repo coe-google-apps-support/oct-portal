@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Threading;
 
-namespace CoE.Ideas.Integration.Logger
+namespace CoE.Ideas.Integration.Notification
 {
     class Program
     {
@@ -20,23 +20,18 @@ namespace CoE.Ideas.Integration.Logger
             var wordPressClient = IdeaFactory.GetWordPressClient(config["WordPressUrl"]);
             var ideaRepository = IdeaFactory.GetIdeaRepository(config["IdeasApi"]);
 
-            var ideaLogger = IdeaLoggerFactory.CreateGoogleSheetIdeaLogger(
-                config["Logger:serviceAccountPrivateKey"],
-                config["Logger:serviceAccountEmail"],
-                config["Logger:spreadsheetId"],
-                config["IdeasApi"]);
-            IActiveDirectoryUserService adUserService = new ActiveDirectoryUserService(
-                config["ActiveDirectory:Domain"], 
-                config["ActiveDirectory:ServiceUserName"], 
-                config["ActiveDirectory:ServicePassword"]);
-
-            var serviceBusSender = IdeaFactory.GetServiceBusSender(
-                config["ServiceBus:ConnectionString"], 
-                config["ServiceBus:TopicName"]
+            var mailmanSheetReader = new MailmanEnabledSheetReader(
+                config["Notification:serviceAccountPrivateKey"],
+                config["Notification:serviceAccountEmail"],
+                config["Notification:spreadsheetId"]
                 );
 
             // Register listener
-            serviceBusReceiver.ReceiveMessagesAsync(new NewIdeaListener(ideaRepository, wordPressClient, ideaLogger, adUserService, serviceBusSender));
+            serviceBusReceiver.ReceiveMessagesAsync(new IdeaLoggedListener(
+                ideaRepository, 
+                wordPressClient, 
+                mailmanSheetReader, 
+                config["Notification:MergeTemplate"]));
 
             // now block forever
             // but I don't think the code will ever get here anyway...
@@ -53,5 +48,6 @@ namespace CoE.Ideas.Integration.Logger
 
             return builder.Build();
         }
+
     }
 }

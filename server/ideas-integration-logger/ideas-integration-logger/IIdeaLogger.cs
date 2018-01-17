@@ -1,5 +1,6 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.WordPress;
+using Google.Apis.Sheets.v4.Data;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
@@ -10,6 +11,8 @@ namespace CoE.Ideas.Integration.Logger
 {
     public interface IIdeaLogger
     {
-        Task LogIdeaAsync(Idea idea, WordPressUser wordPressUser, UserPrincipal adUser);
+        // I know it's bad to return a Google specific resturn value, but it's really convenient 
+        // and I'm in a hurry -DC
+        Task<AppendValuesResponse> LogIdeaAsync(Idea idea, WordPressUser wordPressUser, UserPrincipal adUser);
     }
 }

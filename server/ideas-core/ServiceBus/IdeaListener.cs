@@ -17,14 +17,14 @@ namespace CoE.Ideas.Core.ServiceBus
         private readonly IWordPressClient _wordPressClient;
 
 
-        protected abstract Task ProcessIdeaMessage(IdeaMessage message, Idea idea, WordPressUser wordPressUser);
+        protected virtual Task ProcessIdeaMessage(IdeaMessage message, Idea idea, WordPressUser wordPressUser) { return Task.CompletedTask; }
 
         protected virtual bool ShouldProcessMessage(IdeaMessage message)
         {
             return true;
         }
 
-        public async Task<MessageProcessResponse> OnMessageRecevied(IdeaMessage message, IDictionary<string, object> properties)
+        public virtual async Task<MessageProcessResponse> OnMessageRecevied(IdeaMessage message, IDictionary<string, object> properties)
         {
 
             try
