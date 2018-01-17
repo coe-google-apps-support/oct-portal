@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ideas-integration-logger", "ideas-integration-logger\ideas-integration-logger.csproj", "{37349312-B5F5-472A-A59A-EF8B1F76800B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "ideas-core\ideas-core.csproj", "{0BDF1765-C734-4C0A-9ACD-AA8A5CE40238}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "..\ideas-core\ideas-core.csproj", "{0BDF1765-C734-4C0A-9ACD-AA8A5CE40238}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ideas-integration-logger-tests", "ideas-integration-logger-tests\ideas-integration-logger-tests.csproj", "{BD4207C3-516B-428A-BE33-C80B0DC7DDA0}"
 EndProject

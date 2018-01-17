@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ideas-core\ideas-core.csproj" />
+    <ProjectReference Include="..\..\ideas-core\ideas-core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

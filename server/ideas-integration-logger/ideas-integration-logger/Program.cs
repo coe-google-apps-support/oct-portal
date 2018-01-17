@@ -20,7 +20,10 @@ namespace CoE.Ideas.Integration.Logger
             var wordPressClient = IdeaFactory.GetWordPressClient(config["WordPressUrl"]);
             var ideaRepository = IdeaFactory.GetIdeaRepository(config["IdeasApi"]);
 
-            var ideaLogger = IdeaLoggerFactory.CreateGoogleSheetIdeaLogger();
+            var ideaLogger = IdeaLoggerFactory.CreateGoogleSheetIdeaLogger(
+                config["Logger:serviceAccountPrivateKey"],
+                config["Logger:serviceAccountEmail"],
+                config["Logger:spreadsheetId"]);
             IActiveDirectoryUserService adUserService = new ActiveDirectoryUserService(
                 config["ActiveDirectory:Domain"], 
                 config["ActiveDirectory:ServiceUserName"], 

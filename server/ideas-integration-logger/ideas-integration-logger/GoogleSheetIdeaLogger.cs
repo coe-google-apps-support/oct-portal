@@ -113,6 +113,7 @@ namespace CoE.Ideas.Integration.Logger
             }
             catch (Exception err)
             {
+                System.Diagnostics.Trace.TraceError($"Unable to append values to Google sheet: { err.Message}");
                 throw;
             }
         }
