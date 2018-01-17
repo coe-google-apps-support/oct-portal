@@ -6,9 +6,8 @@ const path = require('path')
 
 let assetsPath;
 if (process.argv[2]) {
-  console.log('Absolute output path argument detected.')
   assetsPath = path.resolve(process.argv[2])
-  console.log(assetsPath)
+  console.log(`File output path argument detected. Outputting to ${assetsPath}.`)
 }
 else {
   assetsPath = path.resolve(__dirname, '../dist')
