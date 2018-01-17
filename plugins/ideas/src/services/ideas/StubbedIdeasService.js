@@ -79,7 +79,7 @@ let x = class StubbedIdeasService {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve(fakeIdeas);
-            }, 2000)
+            }, 200)
         });
     }
 
