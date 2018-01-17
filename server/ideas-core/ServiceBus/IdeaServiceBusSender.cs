@@ -12,7 +12,7 @@ namespace CoE.Ideas.Core.ServiceBus
             IHttpContextAccessor httpContextAccessor)
         {
             _topicSenderr = topicSender ?? throw new ArgumentNullException("settings");
-            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException("httpContextAccessor");
+            _httpContextAccessor = httpContextAccessor;
         }
         private readonly ITopicSender<IdeaMessage> _topicSenderr;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -20,27 +20,30 @@ namespace CoE.Ideas.Core.ServiceBus
         protected virtual void SetProperties(Idea idea, IDictionary<string, object> properties)
         {
             // get user info 
-            var requestHeaders = _httpContextAccessor.HttpContext?.Request?.Headers;
+            var requestHeaders = _httpContextAccessor?.HttpContext?.Request?.Headers;
             if (requestHeaders != null && requestHeaders.ContainsKey("Authorization"))
             {
                 properties["AuthToken"] = requestHeaders["Authorization"].ToString();
             }
         }
 
-        public async Task SendIdeaCreatedMessageAsync(Idea idea)
+        public async Task SendIdeaMessageAsync(Idea idea, IdeaMessageType messageType)
         {
-            var message = new IdeaMessage() { IdeaId = idea.Id, Type = IdeaMessageType.IdeaCreated };
+            var message = new IdeaMessage() { IdeaId = idea.Id, Type = messageType };
             var props = new Dictionary<string, object>();
             SetProperties(idea, props);
 
             await _topicSenderr.SendAsync(message, props);
         }
 
-        public async Task SendIdeaUpdatedMessageAsync(Idea idea)
+        public async Task SendIdeaMessageAsync(Idea idea, IdeaMessageType messageType, Action<IDictionary<string, object>> onMessageHeaders)
         {
-            var message = new IdeaMessage() { IdeaId = idea.Id, Type = IdeaMessageType.IdeaUpdated };
+            var message = new IdeaMessage() { IdeaId = idea.Id, Type = messageType };
             var props = new Dictionary<string, object>();
             SetProperties(idea, props);
+
+            if (onMessageHeaders != null)
+                onMessageHeaders(props);
 
             await _topicSenderr.SendAsync(message, props);
         }

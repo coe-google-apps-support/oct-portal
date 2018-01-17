@@ -29,8 +29,13 @@ namespace CoE.Ideas.Integration.Logger
                 config["ActiveDirectory:ServiceUserName"], 
                 config["ActiveDirectory:ServicePassword"]);
 
+            var serviceBusSender = IdeaFactory.GetServiceBusSender(
+                config["ServiceBus:ConnectionString"], 
+                config["ServiceBus:TopicName"]
+                );
+
             // Register listener
-            serviceBusReceiver.ReceiveMessagesAsync(new NewIdeaListener(ideaRepository, wordPressClient, ideaLogger, adUserService));
+            serviceBusReceiver.ReceiveMessagesAsync(new NewIdeaListener(ideaRepository, wordPressClient, ideaLogger, adUserService, serviceBusSender));
 
             // now block forever
             // but I don't think the code will ever get here anyway...

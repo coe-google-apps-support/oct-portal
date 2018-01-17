@@ -7,7 +7,8 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     public interface IIdeaServiceBusSender
     {
-        Task SendIdeaCreatedMessageAsync(Idea idea);
-        Task SendIdeaUpdatedMessageAsync(Idea idea);
+        Task SendIdeaMessageAsync(Idea idea, IdeaMessageType messageType);
+        Task SendIdeaMessageAsync(Idea idea, IdeaMessageType messageType, Action<IDictionary<string, object>> onMessageHeaders);
+
     }
 }

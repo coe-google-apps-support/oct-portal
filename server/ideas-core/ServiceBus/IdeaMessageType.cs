@@ -3,6 +3,7 @@
     public enum IdeaMessageType
     {
         IdeaCreated,
-        IdeaUpdated
+        IdeaUpdated,
+        IdeaLogged
     }
 }

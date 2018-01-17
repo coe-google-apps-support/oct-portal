@@ -27,6 +27,16 @@ namespace CoE.Ideas.Core
             return new IdeaServiceBusReceiver(subscriptionReceiver);
         }
 
+        public static IIdeaServiceBusSender GetServiceBusSender(
+            string serviceBusConnectionString,
+            string topicName)
+        {
+            var options = new SimpleOptions<TopicSettings>();
+            options.Value = new TopicSettings(serviceBusConnectionString, topicName);
+            var topicSender = new TopicSender<IdeaMessage>(options);
+            return new IdeaServiceBusSender(topicSender, null);
+        }
+
         public static IWordPressClient GetWordPressClient(string url)
         {
             if (string.IsNullOrWhiteSpace(url))

@@ -3,6 +3,7 @@ using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,15 +15,18 @@ namespace CoE.Ideas.Integration.Logger
         public NewIdeaListener(IIdeaRepository ideaRepository,
             IWordPressClient wordPressClient,
             IIdeaLogger ideaLogger,
-            IActiveDirectoryUserService activeDirectoryUserService)
+            IActiveDirectoryUserService activeDirectoryUserService,
+            IIdeaServiceBusSender ideaServiceBusSender)
         : base(ideaRepository, wordPressClient)
         {
             _ideaLogger = ideaLogger;
             _activeDirectoryUserService = activeDirectoryUserService;
+            _ideaServiceBusSender = ideaServiceBusSender;
         }
 
         private readonly IIdeaLogger _ideaLogger;
         private readonly IActiveDirectoryUserService _activeDirectoryUserService;
+        private readonly IIdeaServiceBusSender _ideaServiceBusSender;
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
         {
@@ -51,7 +55,27 @@ namespace CoE.Ideas.Integration.Logger
             if (adUser == null)
                 throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
 
-            await _ideaLogger.LogIdeaAsync(idea, wordPressUser, adUser);
+            bool success;
+            try
+            {
+                await _ideaLogger.LogIdeaAsync(idea, wordPressUser, adUser);
+                success = true;
+            }
+            catch (Exception err)
+            {
+                Trace.TraceError($"Unable to log idea: { err.Message}");
+                success = false;
+            }
+
+            try
+            {
+                await _ideaServiceBusSender.SendIdeaMessageAsync(idea, IdeaMessageType.IdeaLogged, headers => headers["logWasSuccessfull"] = success);
+            }
+            catch (Exception err)
+            {
+                Trace.TraceError($"Unable to send IdeaLogged message: { err.Message }");
+            }
+
         }
     }
 }
