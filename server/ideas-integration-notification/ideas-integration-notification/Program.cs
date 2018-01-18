@@ -1,5 +1,9 @@
 ﻿using CoE.Ideas.Core;
+using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Core.WordPress;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Threading;
@@ -12,29 +16,58 @@ namespace CoE.Ideas.Integration.Notification
         {
             var config = GetConfig();
 
-            // TODO: get settings here from configuration
-            var serviceBusReceiver = IdeaFactory.GetServiceBusReceiver(
-                config["ServiceBus:Subscription"],
+            var services = new ServiceCollection();
+
+            // basic stuff - there's probably a better way to register these
+            services.AddSingleton(
+                typeof(Microsoft.Extensions.Options.IOptions<>),
+                typeof(Microsoft.Extensions.Options.OptionsManager<>));
+            services.AddSingleton(
+                typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
+                typeof(Microsoft.Extensions.Options.OptionsFactory<>));
+
+            services.AddRemoteIdeaConfiguration(config["IdeasApi"], 
+                config["WordPressUrl"]);
+            services.AddIdeaListener<IdeaLoggedListener>(
                 config["ServiceBus:ConnectionString"],
-                config["ServiceBus:TopicName"]);
-            var wordPressClient = IdeaFactory.GetWordPressClient(config["WordPressUrl"]);
-            var ideaRepository = IdeaFactory.GetIdeaRepository(config["IdeasApi"]);
+                config["ServiceBus:TopicName"],
+                config["ServiceBus:Subscription"], x =>
+                {
+                    return new IdeaLoggedListener(
+                        x.GetRequiredService<IIdeaRepository>(),
+                        x.GetRequiredService<IWordPressClient>(),
+                        x.GetRequiredService<IMailmanEnabledSheetReader>(),
+                        x.GetRequiredService<IEmailService>(),
+                        config["Notification:MergeTemplate"]);
+                });
 
-            var mailmanSheetReader = new MailmanEnabledSheetReader(
-                config["Notification:serviceAccountPrivateKey"],
-                config["Notification:serviceAccountEmail"],
-                config["Notification:spreadsheetId"]
-                );
+            services.AddSingleton<IEmailService, EmailService>(x =>
+            {
+                return new EmailService(
+                    x.GetRequiredService<INodeServices>(),
+                    config["Email:Smtp"],
+                    config["Email:FromAddress"],
+                    config["Email:FromDisplayName"]);
+            });
+            services.AddSingleton<IMailmanEnabledSheetReader, MailmanEnabledSheetReader>(
+                x =>
+                {
+                    return new MailmanEnabledSheetReader(
+                        config["Notification:serviceAccountPrivateKey"],
+                        config["Notification:serviceAccountEmail"],
+                        config["Notification:spreadsheetId"]
+                    );
+                });
 
-            var emailService = new EmailService();
+            services.AddNodeServices(x =>
+            {
+                x.ProjectPath = Directory.GetCurrentDirectory();
+            });
 
-            // Register listener
-            serviceBusReceiver.ReceiveMessagesAsync(new IdeaLoggedListener(
-                ideaRepository, 
-                wordPressClient, 
-                mailmanSheetReader, 
-                emailService,
-                config["Notification:MergeTemplate"]));
+            var serviceProvider = services.BuildServiceProvider();
+
+            // TODO: eliminate the need to ask for IIdeaServiceBusReceiver to make sure we're listening
+            serviceProvider.GetRequiredService<IIdeaServiceBusReceiver>();
 
             // now block forever
             // but I don't think the code will ever get here anyway...

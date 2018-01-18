@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -71,6 +72,89 @@ namespace CoE.Ideas.Core
 
             return services;
         }
+
+        public static IServiceCollection AddRemoteIdeaConfiguration(this IServiceCollection services,
+            string ideasApiUrl, string wordpressUrl)
+        {
+            if (string.IsNullOrWhiteSpace(ideasApiUrl))
+                throw new ArgumentNullException("ideasApiUrl");
+            if (string.IsNullOrWhiteSpace(wordpressUrl))
+                throw new ArgumentNullException("wordpressUrl");
+
+
+            Uri wordpressUri = new Uri(wordpressUrl);
+            services.AddScoped<IIdeaRepository, RemoteIdeaRepository>(x => new RemoteIdeaRepository(ideasApiUrl));
+
+
+            services.Configure<WordPressClientOptions>(options =>
+            {
+                options.Url = wordpressUri;
+            });
+            services.AddScoped<IWordPressClient, WordPressClient>();
+            return services;
+        }
+
+        public static IServiceCollection AddIdeaListener<T>(this IServiceCollection services,
+            string connectionString,
+            string topicName,
+            string subscriptionName) where T : IdeaListener
+        {
+            return AddIdeaListener<T>(services, connectionString, topicName, subscriptionName, null);
+        }
+
+        public static IServiceCollection AddIdeaListener<T>(this IServiceCollection services,
+            string connectionString,
+            string topicName,
+            string subscriptionName,
+            Func<IServiceProvider, T> implmentationFactory) where T : IdeaListener
+        {
+            if (implmentationFactory == null)
+                services.AddSingleton<IIdeaListener, T>();
+            else
+                services.AddSingleton<IIdeaListener, T>(implmentationFactory);
+
+
+            services.AddSingleton<ISubscriptionReceiver<IdeaMessage>, SubscriptionReceiver<IdeaMessage>>(x =>
+            {
+                var options = new SubscriptionSettings
+                {
+                    ConnectionString = connectionString,
+                    TopicName = topicName,
+                    SubscriptionName = subscriptionName
+                };
+
+                var returnValue = new SubscriptionReceiver<IdeaMessage>(
+                    new SimpleOptions<SubscriptionSettings>() { Value = options });
+
+                var svc = x.GetRequiredService<IIdeaListener>();
+                returnValue.Receive(svc.OnMessageRecevied, svc.OnError, svc.OnWait);
+
+                return returnValue;
+            });
+
+            services.AddSingleton<IIdeaServiceBusReceiver, IdeaServiceBusReceiver>();
+
+            return services;
+        }
+
+
+        public static IServiceCollection AddIdeaServiceBusSender(
+            this IServiceCollection services,
+            string connectionString,
+            string topicName)
+        {
+            services.Configure<TopicSettings>(x =>
+            {
+                x.ConnectionString = connectionString;
+                x.TopicName = topicName;
+            });
+            services.AddSingleton<ITopicSender<IdeaMessage>, TopicSender<IdeaMessage>>();
+
+            services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
+            return services;
+        }
+
+
 
         /// <summary>
         /// Adds Idea authentication for WebAPI. Sets up JWT handlers for use with the token generator 
@@ -235,6 +319,12 @@ namespace CoE.Ideas.Core
             }
 
             return Task.CompletedTask;
+        }
+
+
+        private class SimpleOptions<T> : IOptions<T> where T : class, new()
+        {
+            public T Value { get; set; }
         }
     }
 }

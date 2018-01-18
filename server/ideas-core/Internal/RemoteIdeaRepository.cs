@@ -11,17 +11,14 @@ namespace CoE.Ideas.Core.Internal
     {
 
         public RemoteIdeaRepository(
-            string url,
-            string jwtBearerToken = null)
+            string url)
         {
             if (string.IsNullOrWhiteSpace(url))
                 throw new ArgumentNullException(url);
 
-            _jwtBearerToken = jwtBearerToken; // allowed to be null
             _baseUri = new Uri(url);
         }
 
-        private readonly string _jwtBearerToken;
         private readonly Uri _baseUri;
 
         public async Task<IEnumerable<Idea>> GetIdeasAsync()
@@ -76,14 +73,14 @@ namespace CoE.Ideas.Core.Internal
         {
             var client = new HttpClient();
 
-            // easy case - we have a bearer token in our own HTTP Request headers:
-            // so we can just reuse it because WordPress should be using the same
-            // JWT Auth keys we are.
-            if (!string.IsNullOrWhiteSpace(_jwtBearerToken))
-            {
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _jwtBearerToken);
+            //// easy case - we have a bearer token in our own HTTP Request headers:
+            //// so we can just reuse it because WordPress should be using the same
+            //// JWT Auth keys we are.
+            //if (!string.IsNullOrWhiteSpace(_jwtBearerToken))
+            //{
+            //    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _jwtBearerToken);
 
-            }
+            //}
 
             return client;
         }

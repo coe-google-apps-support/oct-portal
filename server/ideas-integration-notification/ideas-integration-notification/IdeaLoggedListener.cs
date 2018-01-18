@@ -25,6 +25,7 @@ namespace CoE.Ideas.Integration.Notification
         private readonly IMailmanEnabledSheetReader _mailmanSheetReader;
         private readonly IEmailService _emailService;
         private readonly string _mergeTemplateName;
+        private Func<object> getRequiredService;
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
         {

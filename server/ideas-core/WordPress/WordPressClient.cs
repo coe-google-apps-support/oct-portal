@@ -67,6 +67,12 @@ namespace CoE.Ideas.Core.WordPress
             }
         }
 
+        public WordPressClient(IOptions<WordPressClientOptions> options) : this(options, null)
+        {
+
+        }
+
+
         public WordPressClient(IOptions<WordPressClientOptions> options, 
             IHttpContextAccessor httpContextAccessor)
         {

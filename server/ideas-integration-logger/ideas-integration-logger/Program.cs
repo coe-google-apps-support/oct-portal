@@ -1,5 +1,8 @@
 ﻿using CoE.Ideas.Core;
+using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Core.WordPress;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Threading;
@@ -12,31 +15,46 @@ namespace CoE.Ideas.Integration.Logger
         {
             var config = GetConfig();
 
-            // TODO: get settings here from configuration
-            var serviceBusReceiver = IdeaFactory.GetServiceBusReceiver(
-                config["ServiceBus:Subscription"],
+            var services = new ServiceCollection();
+
+            // basic stuff - there's probably a better way to register these
+            services.AddSingleton(
+                typeof(Microsoft.Extensions.Options.IOptions<>), 
+                typeof(Microsoft.Extensions.Options.OptionsManager<>));
+            services.AddSingleton(
+                typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
+                typeof(Microsoft.Extensions.Options.OptionsFactory<>));
+
+            services.AddRemoteIdeaConfiguration(config["IdeasApi"],
+                config["WordPressUrl"]);
+            services.AddIdeaListener<NewIdeaListener>(
+                config["ServiceBus:ConnectionString"],
+                config["ServiceBus:TopicName"],
+                config["ServiceBus:Subscription"]);
+            services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
+            {
+                return new ActiveDirectoryUserService(
+                    config["ActiveDirectory:Domain"],
+                    config["ActiveDirectory:ServiceUserName"],
+                    config["ActiveDirectory:ServicePassword"]);
+            });
+            services.AddIdeaServiceBusSender(
                 config["ServiceBus:ConnectionString"],
                 config["ServiceBus:TopicName"]);
-            var wordPressClient = IdeaFactory.GetWordPressClient(config["WordPressUrl"]);
-            var ideaRepository = IdeaFactory.GetIdeaRepository(config["IdeasApi"]);
 
-            var ideaLogger = IdeaLoggerFactory.CreateGoogleSheetIdeaLogger(
-                config["Logger:serviceAccountPrivateKey"],
-                config["Logger:serviceAccountEmail"],
-                config["Logger:spreadsheetId"],
-                config["IdeasApi"]);
-            IActiveDirectoryUserService adUserService = new ActiveDirectoryUserService(
-                config["ActiveDirectory:Domain"], 
-                config["ActiveDirectory:ServiceUserName"], 
-                config["ActiveDirectory:ServicePassword"]);
+            services.AddSingleton<IIdeaLogger, IIdeaLogger>(x =>
+            {
+                return new GoogleSheetIdeaLogger(
+                    config["Logger:serviceAccountPrivateKey"],
+                    config["Logger:serviceAccountEmail"],
+                    config["Logger:spreadsheetId"],
+                    config["IdeasApi"]);
+            });
 
-            var serviceBusSender = IdeaFactory.GetServiceBusSender(
-                config["ServiceBus:ConnectionString"], 
-                config["ServiceBus:TopicName"]
-                );
+            var serviceProvider = services.BuildServiceProvider();
 
-            // Register listener
-            serviceBusReceiver.ReceiveMessagesAsync(new NewIdeaListener(ideaRepository, wordPressClient, ideaLogger, adUserService, serviceBusSender));
+            // TODO: eliminate the need to ask for IIdeaServiceBusReceiver to make sure we're listening
+            serviceProvider.GetRequiredService<IIdeaServiceBusReceiver>();
 
             // now block forever
             // but I don't think the code will ever get here anyway...

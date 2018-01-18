@@ -8,6 +8,13 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     internal class IdeaServiceBusSender : IIdeaServiceBusSender
     {
+        public IdeaServiceBusSender(ITopicSender<IdeaMessage> topicSender)
+            : this(topicSender, null)
+        {
+
+        }
+
+
         public IdeaServiceBusSender(ITopicSender<IdeaMessage> topicSender,
             IHttpContextAccessor httpContextAccessor)
         {
