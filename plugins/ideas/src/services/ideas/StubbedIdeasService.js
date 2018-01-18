@@ -1,7 +1,18 @@
 /* eslint-disable */
-import { HTTP } from '../HttpCommon'
+import { HTTP } from '../../HttpCommon'
 
-let x = class IdeasService {
+/**
+ * This acts as a stubbed out class for the ideas service.
+ * Idea format:
+ * idea.id
+ * idea.url
+ * idea.title
+ * idea.description
+ * idea.createdDate
+ * idea.stakeholders
+ * idea.stakeholders[0].userName
+ */
+let x = class StubbedIdeasService {
 
     constructor() {
         
@@ -62,13 +73,25 @@ let x = class IdeasService {
                         }
                     ]
                 },
+                {
+                    id: 5,
+                    url: 'http://localhost:8080',
+                    title: 'I want to create an AI version of both Dan and Jared...',
+                    description: `I believe we can create single Android and implant both Dan and Jared's brains into this singularity. This new life form will then be used to develop a new Blockchain methodology . I want to own 50% of the initial ICO Token's prior to launch. I want this new AI being to make me very very rich. I will then rule the world. This new fully automatism being will hack into every government military mainframe and manipulate all launch code systems and use them against the oppressive regimes in order to gain global power over all humans and make me the supreme leader! I do see this being funded by the City.`,
+                    createdDate: 'Jan 16 2018 10:40:16 GMT-0700 (Mountain Standard Time)',
+                    stakeholders: [
+                        {
+                            'userName': 'stephen.mundy@edmonton.ca'
+                        }
+                    ]
+                },
             ]
         }
-
+        
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 resolve(fakeIdeas);
-            }, 2000)
+            }, 200)
         });
     }
 
@@ -85,4 +108,4 @@ let x = class IdeasService {
      */
 }
 
-export const IdeasService = x
+export const StubbedIdeasService = x

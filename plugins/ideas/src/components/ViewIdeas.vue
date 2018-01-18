@@ -1,21 +1,27 @@
 <template>
   <div>
     <div v-if="ideas && ideas.length">
-      <md-card v-for="idea in ideas" :key="idea.id" class="md-primary" :style="{backgroundColor: getColor(idea)}">
-        <md-card-header>
-          <md-card-header-text>
-            <div class="md-title">{{ idea.title }}</div>
-            <div class="md-subhead">{{ formatDate(idea) }} by {{ idea.stakeholders[0].userName }}</div>
+      <md-card v-for="idea in ideas" :key="idea.id" >
+        <md-card-header :style="{backgroundColor: getColor(idea)}">
+          <md-card-header-text class="title-container">
+            <div class="filler"></div>
+            <div class="md-title title">{{ idea.title }}</div>            
           </md-card-header-text>
 
-          <md-card-media>
+          <div class="big-media">
             <img v-bind:src="getImage(idea)" alt="Avatar">
-          </md-card-media>
+          </div>
         </md-card-header>
 
+        <div class="card-secondary-info">
+          <div class ="description-text">{{ idea.description | truncate }}</div>
+          <div class="date-text md-subhead">{{ formatDate(idea) }}</div>
+        </div>
+        
+        <md-divider></md-divider>
+
         <md-card-actions>
-          <md-button>+1</md-button>
-          <md-button v-bind:href="idea.url">View</md-button>
+          <md-button v-bind:href="idea.url" :style="{color: getColor(idea)}">View</md-button>
         </md-card-actions>
       </md-card>
     </div>
@@ -24,7 +30,6 @@
 
 <script>
 /* eslint-disable */
-import { IdeasService } from '../services/IdeasService.js'
 
 const emptyDate = new Date('0001-01-01T00:00:00.000Z')
 
@@ -38,12 +43,23 @@ export default {
   created () {
     // clear out the ideas
     this.ideas.splice(0, this.ideas.length)
-    IdeasService.getIdeas().then((response) => {
+    this.services.ideas.getIdeas().then((response) => {
       console.log('received ideas!!')
       this.ideas = response.data
     }, (e) => {
       this.errors.push(e)
     })
+  },
+  filters: {
+    truncate(str) {
+      const MAX_LENGTH = 300
+      if (str.length < MAX_LENGTH) {
+        return str;
+      }
+      else {
+        return str.slice(0, MAX_LENGTH) + '...'
+      }      
+    }
   },
   methods: {
     formatIdeaDescription (idea) {
@@ -110,7 +126,7 @@ export default {
         `${root}/assets/temp/house-200-white.png`
       ]
 
-      const randIndex = Math.floor(Math.random() * images.length)
+      const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % images.length
       return images[randIndex]
     },
     getColor (idea) {
@@ -125,7 +141,7 @@ export default {
         '#E91E63',
       ]
 
-      const randIndex = (Math.floor(Math.random() * colors.length) + idea.id) % colors.length
+      const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length
       return colors[randIndex]
     }
   }
@@ -134,20 +150,51 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.started { 
-  float: right;
-  
-}
-.separator { 
-  margin-top: 30px;
-  clear:both;
-}
 
 .md-card {
-  width: 320px;
-  margin: 4px;
+  width: 360px;
+  margin: 12px;
   display: inline-block;
   vertical-align: top;
+}
+
+.title {
+  color: #fefefe;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 180px;
+  overflow: hidden;
+}
+
+.title-container {
+  flex-direction: column;
+  display: flex;
+}
+
+.filler {
+  flex-grow: 1;
+}
+
+.big-media {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-left: 16px;
+  -webkit-box-flex: 0;
+  flex: 0 0 inherit;
+}
+
+.card-secondary-info {
+  margin: 8px;
+}
+
+.card-secondary-info > * {
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+
+.date-text {
+  text-align: right;
 }
 
 </style>

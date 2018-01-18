@@ -7,9 +7,11 @@ import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/black-green-light.css'
 import { HTTP } from './HttpCommon'
+import ServiceLoader from './services/service-loader.js'
 
 Vue.config.productionTip = false
 Vue.use(VueMaterial)
+Vue.use(ServiceLoader)
 
 export const bus = new Vue()
 
