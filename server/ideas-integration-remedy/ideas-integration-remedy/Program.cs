@@ -1,11 +1,12 @@
-﻿using CoE.Ideas.Core;
+﻿using COE_WOI_WorkOrderInterface_WS;
+using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RemedyService;
 using System;
 using System.IO;
 using System.Threading;
+using System.ServiceModel;
 
 namespace CoE.Ideas.Remedy
 {
@@ -39,10 +40,13 @@ namespace CoE.Ideas.Remedy
                     config["ActiveDirectory:ServicePassword"]);
             });
 
-            services.AddSingleton<IRemedyService, RemedyServiceImpl>(x =>
+            services.AddSingleton<IRemedyService, RemedyService>(x =>
             {
-                var client = new New_Port_0PortTypeClient();
-                return new RemedyServiceImpl(client);
+                var client = new New_Port_0PortTypeClient(
+                    new BasicHttpBinding(BasicHttpSecurityMode.None),
+                    new EndpointAddress(""));
+
+                return new RemedyService(client);
             });
 
             var serviceProvider = services.BuildServiceProvider();

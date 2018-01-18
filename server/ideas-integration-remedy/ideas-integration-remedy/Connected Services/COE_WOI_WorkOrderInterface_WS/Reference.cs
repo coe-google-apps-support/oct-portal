@@ -7,18 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RemedyService
+namespace COE_WOI_WorkOrderInterface_WS
 {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", ConfigurationName="RemedyService.New_Port_0PortType")]
-    internal interface New_Port_0PortType
+    [System.ServiceModel.ServiceContractAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", ConfigurationName="COE_WOI_WorkOrderInterface_WS.New_Port_0PortType")]
+    public interface New_Port_0PortType
     {
         
         [System.ServiceModel.OperationContractAttribute(Action="urn:COE_WOI_WorkOrderInterface_WS/New_Create_Operation_0", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        System.Threading.Tasks.Task<RemedyService.New_Create_Operation_0Response> New_Create_Operation_0Async(RemedyService.New_Create_Operation_0Request request);
+        System.Threading.Tasks.Task<COE_WOI_WorkOrderInterface_WS.New_Create_Operation_0Response> New_Create_Operation_0Async(COE_WOI_WorkOrderInterface_WS.New_Create_Operation_0Request request);
     }
     
     /// <remarks/>
@@ -132,11 +132,11 @@ namespace RemedyService
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(WrapperName="New_Create_Operation_0", WrapperNamespace="urn:COE_WOI_WorkOrderInterface_WS", IsWrapped=true)]
-    internal partial class New_Create_Operation_0Request
+    public partial class New_Create_Operation_0Request
     {
         
         [System.ServiceModel.MessageHeaderAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
-        public RemedyService.AuthenticationInfo AuthenticationInfo;
+        public COE_WOI_WorkOrderInterface_WS.AuthenticationInfo AuthenticationInfo;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=0)]
         public string Customer_Company;
@@ -170,7 +170,7 @@ namespace RemedyService
         {
         }
         
-        public New_Create_Operation_0Request(RemedyService.AuthenticationInfo AuthenticationInfo, string Customer_Company, string Customer_Login_ID, string z1D_Action, string Summary, string Description, System.Nullable<Requested_ForType> Requested_For, string Location_Company, string Work_Order_Template_Used, string TemplateName)
+        public New_Create_Operation_0Request(COE_WOI_WorkOrderInterface_WS.AuthenticationInfo AuthenticationInfo, string Customer_Company, string Customer_Login_ID, string z1D_Action, string Summary, string Description, System.Nullable<Requested_ForType> Requested_For, string Location_Company, string Work_Order_Template_Used, string TemplateName)
         {
             this.AuthenticationInfo = AuthenticationInfo;
             this.Customer_Company = Customer_Company;
@@ -189,7 +189,7 @@ namespace RemedyService
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(WrapperName="New_Create_Operation_0Response", WrapperNamespace="urn:COE_WOI_WorkOrderInterface_WS", IsWrapped=true)]
-    internal partial class New_Create_Operation_0Response
+    public partial class New_Create_Operation_0Response
     {
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=0)]
@@ -206,13 +206,13 @@ namespace RemedyService
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    internal interface New_Port_0PortTypeChannel : RemedyService.New_Port_0PortType, System.ServiceModel.IClientChannel
+    public interface New_Port_0PortTypeChannel : COE_WOI_WorkOrderInterface_WS.New_Port_0PortType, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    internal partial class New_Port_0PortTypeClient : System.ServiceModel.ClientBase<RemedyService.New_Port_0PortType>, RemedyService.New_Port_0PortType
+    public partial class New_Port_0PortTypeClient : System.ServiceModel.ClientBase<COE_WOI_WorkOrderInterface_WS.New_Port_0PortType>, COE_WOI_WorkOrderInterface_WS.New_Port_0PortType
     {
         
     /// <summary>
@@ -256,14 +256,14 @@ namespace RemedyService
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<RemedyService.New_Create_Operation_0Response> RemedyService.New_Port_0PortType.New_Create_Operation_0Async(RemedyService.New_Create_Operation_0Request request)
+        System.Threading.Tasks.Task<COE_WOI_WorkOrderInterface_WS.New_Create_Operation_0Response> COE_WOI_WorkOrderInterface_WS.New_Port_0PortType.New_Create_Operation_0Async(COE_WOI_WorkOrderInterface_WS.New_Create_Operation_0Request request)
         {
             return base.Channel.New_Create_Operation_0Async(request);
         }
         
-        public System.Threading.Tasks.Task<RemedyService.New_Create_Operation_0Response> New_Create_Operation_0Async(RemedyService.AuthenticationInfo AuthenticationInfo, string Customer_Company, string Customer_Login_ID, string z1D_Action, string Summary, string Description, System.Nullable<Requested_ForType> Requested_For, string Location_Company, string Work_Order_Template_Used, string TemplateName)
+        public System.Threading.Tasks.Task<COE_WOI_WorkOrderInterface_WS.New_Create_Operation_0Response> New_Create_Operation_0Async(COE_WOI_WorkOrderInterface_WS.AuthenticationInfo AuthenticationInfo, string Customer_Company, string Customer_Login_ID, string z1D_Action, string Summary, string Description, System.Nullable<Requested_ForType> Requested_For, string Location_Company, string Work_Order_Template_Used, string TemplateName)
         {
-            RemedyService.New_Create_Operation_0Request inValue = new RemedyService.New_Create_Operation_0Request();
+            COE_WOI_WorkOrderInterface_WS.New_Create_Operation_0Request inValue = new COE_WOI_WorkOrderInterface_WS.New_Create_Operation_0Request();
             inValue.AuthenticationInfo = AuthenticationInfo;
             inValue.Customer_Company = Customer_Company;
             inValue.Customer_Login_ID = Customer_Login_ID;
@@ -274,7 +274,7 @@ namespace RemedyService
             inValue.Location_Company = Location_Company;
             inValue.Work_Order_Template_Used = Work_Order_Template_Used;
             inValue.TemplateName = TemplateName;
-            return ((RemedyService.New_Port_0PortType)(this)).New_Create_Operation_0Async(inValue);
+            return ((COE_WOI_WorkOrderInterface_WS.New_Port_0PortType)(this)).New_Create_Operation_0Async(inValue);
         }
         
         public virtual System.Threading.Tasks.Task OpenAsync()
