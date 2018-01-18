@@ -14,5 +14,22 @@ namespace CoE.Ideas.Core.Internal
 
         public DbSet<TagInternal> Tags { get; set; }
 
+        public DbSet<BranchInternal> Branches { get; set; }
+
+        public DbSet<DepartmentInternal> Departments { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // set default values
+            modelBuilder.Entity<BranchInternal>()
+                .Property(b => b.IsActive)
+                .HasDefaultValue(true);
+
+            modelBuilder.Entity<DepartmentInternal>()
+                .Property(d => d.IsActive)
+                .HasDefaultValue(true);
+        }
     }
 }

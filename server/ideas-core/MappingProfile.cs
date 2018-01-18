@@ -18,6 +18,10 @@ namespace CoE.Ideas.Core
             CreateMap<StakeholderTypeInternal, StakeholderType>();
             CreateMap<Tag, TagInternal>();
             CreateMap<TagInternal, Tag>();
+            CreateMap<Branch, BranchInternal>();
+            CreateMap<BranchInternal, Branch>();
+            CreateMap<Department, DepartmentInternal>();
+            CreateMap<DepartmentInternal, Department>();
         }
     }
 }

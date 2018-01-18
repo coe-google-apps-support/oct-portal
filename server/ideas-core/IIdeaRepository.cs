@@ -11,6 +11,7 @@ namespace CoE.Ideas.Core
     /// </summary>
     public interface IIdeaRepository
     {
+        #region Ideas
         /// <summary>
         /// Retrieves all ideas in the database.
         /// </summary>
@@ -53,8 +54,9 @@ namespace CoE.Ideas.Core
         /// <param name="id">The Id of the idea to delete</param>
         /// <returns>The idea from the database, just before it's deleted.</returns>
         Task<Idea> DeleteIdeaAsync(long id);
+        #endregion
 
-
+        #region Tags
         /// <summary>
         /// Retrieves all tags in the database.
         /// </summary>
@@ -90,5 +92,33 @@ namespace CoE.Ideas.Core
         /// <param name="id">The Id of the tag to delete</param>
         /// <returns>The tag from the database, just before it's deleted.</returns>
         Task<Tag> DeleteTagAsync(long id);
+        #endregion
+
+        #region Branches and Tags
+        /// <summary>
+        /// Retrieves all branches in the database.
+        /// </summary>
+        /// <returns>
+        /// A collection of branches.
+        /// </returns>
+        Task<IEnumerable<Branch>> GetBranchesAsync();
+
+        /// <summary>
+        ///  Retrieves a single branch from the database.
+        /// </summary>
+        /// <param name="id">The Branch id to get</param>
+        /// <returns>The branch for the specified id.</returns>
+        Task<Branch> GetBranchAsync(long id);
+
+        /// <summary>
+        /// Retrieves all departments in a given branch
+        /// </summary>
+        /// <returns>
+        /// A collection of departments.
+        /// </returns>
+        Task<IEnumerable<Department>> GetDepartmentsForBranchAsync(long branchId);
+
+
+        #endregion
     }
 }

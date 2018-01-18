@@ -50,23 +50,50 @@ namespace CoE.Ideas.Core
         public DateTimeOffset CreatedDate { get; set; }
 
         /// <summary>
+        /// The department where the initiative is a part of. Can be different
+        /// than the department the owner is in.
+        /// </summary>
+        [Display(Name = "Department", Description = "The department for this initiative")]
+        public Department Department { get; set; }
+
+        /// <summary>
         /// Does the idea have a business sponsor? 
         /// </summary>
+        [Display(Name = "Has Business Sponsor", Description = "Do you have a business sponsor?")]
         public bool HasBusinessSponsor { get; set; }
 
         /// <summary>
         /// The name of the Business Sponsor
         /// </summary>
-        public string BusinessSponsor { get; set; }
+        [Display(Name = "Sponsor Name", Description = "What is the Business Sponsor's name?")]
+        public string BusinessSponsorName { get; set; }
+
+        /// <summary>
+        /// The email address of the Business Sponsor
+        /// </summary>
+        [Display(Name = "Sponsor Email", Description = "What is the Business Sponsor's email address?")]
+        public string BusinessSponsorEmail { get; set; }
+
 
         /// <summary>
         /// Do you have a budget for this initiative? 
         /// </summary>
+        [Display(Name = "Budget", Description = "Do you have a budget for this initiative? ")]
         public bool HasBudget { get; set; }
 
         /// <summary>
         /// What is your expected target date?
         /// </summary>
+        [Display(Name = "Expected Target Date", Description = "What is your expected target date?")]
         public DateTime? ExpectedTargetDate { get; set; }
+
+        /// <summary>
+        /// Describe the business benefits of the initiative.
+        /// </summary>
+        [Display(Name = "Benefits", Description = "Describe the business benefits of the initiative.")]
+        public string BusinessBenefites { get; set; }
+
+        [Display(Name = "Alignment", Description = "Describe how this initiative aligns with and supports the One City objective.")]
+        public string OneCityAlignment { get; set; }
     }
 }

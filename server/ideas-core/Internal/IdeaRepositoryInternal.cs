@@ -30,6 +30,55 @@ namespace CoE.Ideas.Core.Internal
             _serviceBusSender = serviceBusSender;
         }
 
+        #region Ideas
+
+        private IQueryable<IdeaInternal> IdeaCollection
+        {
+            get
+            {
+                return _context.Ideas
+                    .Include(x => x.Stakeholders)
+                    .Include(x => x.Tags)
+                    .Include(x => x.Department)
+                    .ThenInclude(y => y.Branch);
+            }
+        }
+
+        private async Task<bool> IdeaExists(long id)
+        {
+            return await _context.Ideas.AnyAsync(e => e.Id == id);
+        }
+
+        public async Task<IEnumerable<Core.Idea>> GetIdeasAsync()
+        {
+            //TODO: retrict to a reasonable amount of ideas
+            var ideas = await IdeaCollection.ToListAsync();
+            return _mapper.Map<IEnumerable<IdeaInternal>, IEnumerable<Idea>>(ideas);
+        }
+
+        public async Task<Core.Idea> GetIdeaAsync(long id)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
+
+            var ideaInternal = await IdeaCollection.SingleOrDefaultAsync(m => m.Id == id);
+            if (ideaInternal == null)
+                return null;
+            else
+                return _mapper.Map<IdeaInternal, Idea>(ideaInternal);
+        }
+
+        public async Task<Idea> GetIdeaByWordpressKeyAsync(int id)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
+
+            var ideaInternal = await IdeaCollection.SingleOrDefaultAsync(m => m.WordPressKey == id);
+            if (ideaInternal == null)
+                return null;
+            else
+                return _mapper.Map<IdeaInternal, Idea>(ideaInternal);
+        }
 
         public async Task<Core.Idea> AddIdeaAsync(Idea idea)
         {
@@ -100,119 +149,6 @@ namespace CoE.Ideas.Core.Internal
             return returnValue;
         }
 
-        public async Task<Tag> AddTagAsync(Tag tag)
-        {
-            if (tag == null)
-                throw new ArgumentNullException("tag");
-
-            var tagInternal = _mapper.Map<Tag, TagInternal>(tag);
-            tagInternal.CreatedDate = DateTimeOffset.Now;
-
-            _context.Tags.Add(tagInternal);
-            await _context.SaveChangesAsync();
-
-            return _mapper.Map<TagInternal, Tag>(tagInternal);
-        }
-
-        public async Task<Core.Idea> DeleteIdeaAsync(long id)
-        {
-            if (id <= 0)
-                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
-
-            var idea = await _context.Ideas.SingleOrDefaultAsync(m => m.Id == id);
-            if (idea == null)
-            {
-                return null;
-            }
-            else
-            {
-                _context.Ideas.Remove(idea);
-                await _context.SaveChangesAsync();
-
-                return _mapper.Map<IdeaInternal, Idea>(idea);
-            }
-        }
-
-        public async Task<Tag> DeleteTagAsync(long id)
-        {
-            if (id <= 0)
-                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
-
-            var tag = await _context.Tags.SingleOrDefaultAsync(m => m.Id == id);
-            if (tag == null)
-            {
-                return null;
-            }
-            else
-            {
-                _context.Tags.Remove(tag);
-                await _context.SaveChangesAsync();
-
-                return _mapper.Map<TagInternal, Tag>(tag);
-            }
-        }
-
-        private IQueryable<IdeaInternal> IdeaCollection
-        {
-            get
-            {
-                return _context.Ideas
-                    .Include(x => x.Stakeholders)
-                    .Include(x => x.Tags);
-            }
-        }
-
-        public async Task<Core.Idea> GetIdeaAsync(long id)
-        {
-            if (id <= 0)
-                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
-
-            var ideaInternal = await IdeaCollection.SingleOrDefaultAsync(m => m.Id == id);
-            if (ideaInternal == null)
-                return null;
-            else
-                return _mapper.Map<IdeaInternal, Idea>(ideaInternal);
-        }
-
-        public async Task<Idea> GetIdeaByWordpressKeyAsync(int id)
-        {
-            if (id <= 0)
-                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
-
-            var ideaInternal = await IdeaCollection.SingleOrDefaultAsync(m => m.WordPressKey == id);
-            if (ideaInternal == null)
-                return null;
-            else
-                return _mapper.Map<IdeaInternal, Idea>(ideaInternal);
-        }
-
-        public async Task<IEnumerable<Core.Idea>> GetIdeasAsync()
-        {
-            //TODO: retrict to a reasonable amount of ideas
-            var ideas = await IdeaCollection.ToListAsync();
-            return _mapper.Map<IEnumerable<IdeaInternal>, IEnumerable<Idea>>(ideas);
-
-        }
-
-        public async Task<Tag> GetTagAsync(long id)
-        {
-            if (id <= 0)
-                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
-
-            var tagInternal = await _context.Tags.SingleOrDefaultAsync(m => m.Id == id);
-            if (tagInternal == null)
-                return null;
-            else
-                return _mapper.Map<TagInternal, Tag>(tagInternal);
-        }
-
-        public async Task<IEnumerable<Tag>> GetTagsAsync()
-        {
-            //TODO: retrict to a reasonable amount of tags
-            var tags = await _context.Tags.ToListAsync();
-            return _mapper.Map<IEnumerable<TagInternal>, IEnumerable<Tag>>(tags);
-        }
-
         public async Task<Core.Idea> UpdateIdeaAsync(Core.Idea idea)
         {
             if (idea == null)
@@ -238,6 +174,63 @@ namespace CoE.Ideas.Core.Internal
             }
 
             return _mapper.Map<IdeaInternal, Idea>(ideaInternal);
+        }
+
+        public async Task<Core.Idea> DeleteIdeaAsync(long id)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
+
+            var idea = await _context.Ideas.SingleOrDefaultAsync(m => m.Id == id);
+            if (idea == null)
+            {
+                return null;
+            }
+            else
+            {
+                _context.Ideas.Remove(idea);
+                await _context.SaveChangesAsync();
+
+                return _mapper.Map<IdeaInternal, Idea>(idea);
+            }
+        }
+
+        #endregion
+
+
+        #region Tags
+
+        public async Task<IEnumerable<Tag>> GetTagsAsync()
+        {
+            //TODO: retrict to a reasonable amount of tags
+            var tags = await _context.Tags.ToListAsync();
+            return _mapper.Map<IEnumerable<TagInternal>, IEnumerable<Tag>>(tags);
+        }
+
+        public async Task<Tag> GetTagAsync(long id)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
+
+            var tagInternal = await _context.Tags.SingleOrDefaultAsync(m => m.Id == id);
+            if (tagInternal == null)
+                return null;
+            else
+                return _mapper.Map<TagInternal, Tag>(tagInternal);
+        }
+
+        public async Task<Tag> AddTagAsync(Tag tag)
+        {
+            if (tag == null)
+                throw new ArgumentNullException("tag");
+
+            var tagInternal = _mapper.Map<Tag, TagInternal>(tag);
+            tagInternal.CreatedDate = DateTimeOffset.Now;
+
+            _context.Tags.Add(tagInternal);
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<TagInternal, Tag>(tagInternal);
         }
 
         public async Task<Tag> UpdateTagAsync(Tag tag)
@@ -267,9 +260,50 @@ namespace CoE.Ideas.Core.Internal
             return _mapper.Map<TagInternal, Tag>(tagInternal);
         }
 
-        private async Task<bool> IdeaExists(long id)
+        public async Task<Tag> DeleteTagAsync(long id)
         {
-            return await _context.Ideas.AnyAsync(e => e.Id == id);
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
+
+            var tag = await _context.Tags.SingleOrDefaultAsync(m => m.Id == id);
+            if (tag == null)
+            {
+                return null;
+            }
+            else
+            {
+                _context.Tags.Remove(tag);
+                await _context.SaveChangesAsync();
+
+                return _mapper.Map<TagInternal, Tag>(tag);
+            }
         }
+
+
+        #endregion
+
+        #region Departments and Branches
+
+        public async Task<IEnumerable<Branch>> GetBranchesAsync()
+        {
+            var branches = await _context.Branches.ToListAsync();
+            return _mapper.Map<IEnumerable<BranchInternal>, IEnumerable<Branch>>(branches);
+        }
+
+        public async Task<IEnumerable<Department>> GetDepartmentsForBranchAsync(long branchId)
+        {
+            var departments = await _context.Departments
+                .Include(d => d.Branch)
+                .Where(x => x.Branch.Id == branchId)
+                .ToListAsync();
+            return _mapper.Map<IEnumerable<DepartmentInternal>, IEnumerable<Department>>(departments);
+        }
+
+        public async Task<Branch> GetBranchAsync(long id)
+        {
+            var branch = await _context.Branches.FindAsync(id);
+            return _mapper.Map<BranchInternal, Branch>(branch);
+        }
+        #endregion
     }
 }

@@ -21,6 +21,24 @@ namespace CoE.Ideas.Core.Internal
 
         private readonly Uri _baseUri;
 
+        protected virtual HttpClient GetHttpClient()
+        {
+            var client = new HttpClient();
+
+            //// easy case - we have a bearer token in our own HTTP Request headers:
+            //// so we can just reuse it because WordPress should be using the same
+            //// JWT Auth keys we are.
+            //if (!string.IsNullOrWhiteSpace(_jwtBearerToken))
+            //{
+            //    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _jwtBearerToken);
+
+            //}
+
+            return client;
+        }
+
+
+        #region Ideas
         public async Task<IEnumerable<Idea>> GetIdeasAsync()
         {
             var client = GetHttpClient();
@@ -53,12 +71,12 @@ namespace CoE.Ideas.Core.Internal
             }
         }
 
-        public Task<Idea> AddIdeaAsync(Idea idea)
+        public Task<Idea> GetIdeaByWordpressKeyAsync(int id)
         {
             throw new NotSupportedException();
         }
 
-        public Task<Idea> DeleteIdeaAsync(long id)
+        public Task<Idea> AddIdeaAsync(Idea idea)
         {
             throw new NotSupportedException();
         }
@@ -68,23 +86,13 @@ namespace CoE.Ideas.Core.Internal
             throw new NotSupportedException();
         }
 
-
-        protected virtual HttpClient GetHttpClient()
+        public Task<Idea> DeleteIdeaAsync(long id)
         {
-            var client = new HttpClient();
-
-            //// easy case - we have a bearer token in our own HTTP Request headers:
-            //// so we can just reuse it because WordPress should be using the same
-            //// JWT Auth keys we are.
-            //if (!string.IsNullOrWhiteSpace(_jwtBearerToken))
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _jwtBearerToken);
-
-            //}
-
-            return client;
+            throw new NotSupportedException();
         }
+        #endregion
 
+        #region Tags
         public async Task<IEnumerable<Tag>> GetTagsAsync()
         {
             var client = GetHttpClient();
@@ -93,7 +101,6 @@ namespace CoE.Ideas.Core.Internal
             {
                 var allIdeasString = await client.GetStringAsync(_baseUri);
                 return JsonConvert.DeserializeObject<IEnumerable<Tag>>(allIdeasString);
-
             }
             catch (Exception err)
             {
@@ -121,9 +128,25 @@ namespace CoE.Ideas.Core.Internal
             throw new NotSupportedException();
         }
 
-        public Task<Idea> GetIdeaByWordpressKeyAsync(int id)
+        #endregion
+
+        #region Branches and Departments
+
+        public Task<IEnumerable<Branch>> GetBranchesAsync()
         {
-            throw new NotSupportedException();
+            throw new NotImplementedException();
         }
+
+        public Task<IEnumerable<Department>> GetDepartmentsForBranchAsync(long branchId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Branch> GetBranchAsync(long id)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
     }
 }

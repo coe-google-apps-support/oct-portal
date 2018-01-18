@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Compile Remove="Migrations\20180111211436_AddingSecondaryFieldsToIdea.cs" />
+    <Compile Remove="Migrations\20180118144804_MoreSecondaryFields.cs" />
     <Compile Remove="ServiceBus\IdeaQueue.cs" />
     <Compile Remove="ServiceBus\IQueueSender.cs" />
     <Compile Remove="ServiceBus\QueueReceiver.cs" />
