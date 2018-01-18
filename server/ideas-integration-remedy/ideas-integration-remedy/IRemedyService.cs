@@ -9,6 +9,6 @@ namespace CoE.Ideas.Remedy
 {
     public interface IRemedyService
     {
-        Task PostNewIdeaAsync(Idea idea, string user3and3);
+        Task PostNewIdeaAsync(Idea idea, WordPressUser user, string user3and3);
     }
 }

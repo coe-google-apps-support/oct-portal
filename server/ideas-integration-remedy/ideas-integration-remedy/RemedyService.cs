@@ -20,7 +20,7 @@ namespace CoE.Ideas.Remedy
 
 
 
-        public async Task PostNewIdeaAsync(Idea idea, string user3and3)
+        public async Task PostNewIdeaAsync(Idea idea, WordPressUser user, string user3and3)
         {
 
             var request = new New_Create_Operation_0Request();
@@ -30,26 +30,27 @@ namespace CoE.Ideas.Remedy
             authInfo.password = ""; // give a valid password 
 
 
-            using (new OperationContextScope(_remedyClient.InnerChannel))
+                
+            try
             {
-                try
-                {
-                    await _remedyClient.New_Create_Operation_0Async(authInfo,
-                        Customer_Company: "City of Edmonton",
-                        Customer_Login_ID: "",
-                        z1D_Action: "Create",
-                        Summary: idea.Title,
-                        Description: idea.Description,
-                        Requested_For: Requested_ForType.Individual,
-                        Location_Company: "City of Edmonton",
-                        Work_Order_Template_Used: "Work Order - Generic - Create",
-                        TemplateName: "Work Order - Generic - Create");
-                }
-                catch (Exception err)
-                {
+               var response = await _remedyClient.New_Create_Operation_0Async(authInfo,
+                    Customer_Login_ID: user3and3,
+                    Summary: idea.Title,
+                    Description: idea.Description,
+                    Requested_For: Requested_ForType.Individual,
+                    Location_Company: "City of Edmonton",
+                    Work_Order_Template_Used: "Work Order - Generic - Create",
+                    TemplateName: "Work Order - Generic - Create",
+                    TemplateId: "IDGC9I1TFF46MANHQ5SWAK91QGC3AB",
+                    Customer_First_Name: user.FirstName,
+                    Customer_Last_Name: user.LastName,
+                    Categorization_Tier_1: "Information",
+                    Categorization_Tier_2: "Adhoc");
+            }
+            catch (Exception err)
+            {
 
-                    throw;
-                }
+                throw;
             }
 
         }

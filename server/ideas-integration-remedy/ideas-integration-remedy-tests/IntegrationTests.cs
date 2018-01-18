@@ -1,4 +1,5 @@
 using CoE.Ideas.Core;
+using CoE.Ideas.Core.WordPress;
 using CoE.Ideas.Remedy;
 using COE_WOI_WorkOrderInterface_WS;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,9 +13,9 @@ namespace ideas_integration_remedy_tests
     {
         [TestMethod]
         public async Task TestCreateRemedyWorkOrder()
-        {
+        { 
             var client = new New_Port_0PortTypeClient(
-                new BasicHttpBinding(BasicHttpSecurityMode.None),
+                New_Port_0PortTypeClient.EndpointConfiguration.New_Port_0Soap,
                 new EndpointAddress(""));
             IRemedyService svc = new RemedyService(client);
 
@@ -24,7 +25,15 @@ namespace ideas_integration_remedy_tests
                 Title = "Test Idea 1",
                 Description = "Test Idea 1 Contents"
             };
-            await svc.PostNewIdeaAsync(newIdea, "COE\\fakeuser");
+
+            // mock user 
+            var newUser = new WordPressUser()
+            {
+                FirstName = "", LastName = ""
+            };
+
+
+            await svc.PostNewIdeaAsync(newIdea, newUser, "COE\\fakeuser");
         }
     }
 }

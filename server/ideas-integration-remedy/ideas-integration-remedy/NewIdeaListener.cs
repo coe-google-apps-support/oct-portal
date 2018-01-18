@@ -52,7 +52,7 @@ namespace CoE.Ideas.Remedy
                 throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
 
 
-            await _remedyService.PostNewIdeaAsync(idea, adUser.SamAccountName);
+            await _remedyService.PostNewIdeaAsync(idea, wordPressUser, adUser.SamAccountName);
         }
     }
 }
