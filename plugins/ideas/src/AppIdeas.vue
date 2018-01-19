@@ -21,13 +21,14 @@ export default {
 }
 </script>
 
-<style>
-/* #app-ideas {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-} */
+<style lang="scss">
+  @import "~vue-material/dist/theme/engine"; // Import the theme engine
+  @import "./colors.scss";
+
+  @include md-register-theme("default", (
+    primary: $oct-primary, // The primary color of your application
+    accent: $oct-accent // The accent or secondary color
+  ));
+
+  @import "~vue-material/dist/theme/all"; // Apply the theme
 </style>
