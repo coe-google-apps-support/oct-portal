@@ -156,6 +156,7 @@ export default {
   margin: 12px;
   display: inline-block;
   vertical-align: top;
+  background-color: #fafafa;
 }
 
 .title {
@@ -185,7 +186,7 @@ export default {
 }
 
 .card-secondary-info {
-  margin: 8px;
+  margin: 14px;
 }
 
 .card-secondary-info > * {
