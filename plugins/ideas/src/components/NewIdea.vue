@@ -7,8 +7,8 @@
         </md-card-header>
       </md-card> -->
 
-      <md-card-content>
-        <div class="md-layout-row md-layout-wrap md-gutter">
+      <md-steppers :md-active-step.sync="active" md-alternative md-linear>
+        <md-step id="first" md-label="Details" :md-error="firstStepError" :md-done.sync="first">
           <div class="md-flex md-flex-small-100">
             <md-field :class="getValidationClass('title')">
               <label for="idea-title">What is your technology initiative?</label>
@@ -23,32 +23,28 @@
               <label for="idea-desc">Description</label>
               <md-textarea name="description" id="idea-desc" v-model="form.description" />
               <span class="md-error" v-if="!$v.form.description.required">Description is required</span>
-              <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid Description</span>
+              <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
             </md-field>
           </div>
 
-          <!-- <div class="md-flex md-flex-small-100">
-              <md-checkbox>Do you have a businses sponsor?</md-checkbox>
-         </div> -->
+          <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
+        </md-step>
 
+        <md-step id="second" md-label="Personalize" :md-done.sync="second">
           <md-chips name="tags" id="idea-tags" v-model="form.tags" md-placeholder="Add tag..." />
 
+          <div class="md-flex md-flex-small-100">
+            <md-field>
+              <label>Attachments</label>
+              <md-file v-model="fileAttachments" multiple />
+            </md-field>
+          </div>
 
-        <div class="md-flex md-flex-small-100">
-          <md-field>
-            <label>Attachments</label>
-            <md-file v-model="fileAttachments" multiple />
-          </md-field>
-        </div>
+          <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea" :disabled="sending">Done</md-button>
+        </md-step>
+      </md-steppers>
 
-        </div>
-      </md-card-content>
-
-      <md-progress-bar md-mode="indeterminate" v-if="sending" />
-
-      <md-card-actions>
-        <button type="submit" class="et_pb_button" v-on:click.prevent="saveIdea" :disabled="sending">Submit</button>
-      </md-card-actions>
+      <md-progress-bar md-mode="indeterminate" v-if="sending" />      
 
     </form>
   </div>    
@@ -67,6 +63,10 @@ export default {
   name: 'NewIdea',
   mixins: [validationMixin],
   data: () => ({
+    active: 'first',
+    first: false,
+    second: false,
+    firstStepError: null,
     sending: false,
     form: {
       title: null,
@@ -80,7 +80,7 @@ export default {
       title: {
         required,
         minLength: minLength(3),
-        maxLength: maxLength(255)
+        maxLength: maxLength(140)
       },
       description: {
         required,
@@ -89,6 +89,24 @@ export default {
     }
   },
   methods: {
+    setDone (id, index) {
+      this.$v.$touch()
+
+      if (!this.$v.$invalid) {
+        this[id] = true
+
+        this.firstStepError = null
+
+        if (index) {
+          this.active = index
+        }
+      } else {
+        this.setError()
+      }
+    },
+    setError () {
+      this.firstStepError = 'Uh oh!'
+    },
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName]
 
@@ -125,13 +143,6 @@ export default {
         console.debug(err)
         console.debug(y)
       })
-    },
-    validateIdea () {
-      this.$v.$touch()
-
-      if (!this.$v.$invalid) {
-        this.saveIdea()
-      }
     }
   }
 }
