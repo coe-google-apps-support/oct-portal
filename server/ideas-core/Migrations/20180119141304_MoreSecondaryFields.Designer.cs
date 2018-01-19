@@ -11,7 +11,7 @@ using System;
 namespace CoE.Ideas.Core.Migrations
 {
     [DbContext(typeof(IdeaContext))]
-    [Migration("20180118145608_MoreSecondaryFields")]
+    [Migration("20180119141304_MoreSecondaryFields")]
     partial class MoreSecondaryFields
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -91,6 +91,8 @@ namespace CoE.Ideas.Core.Migrations
                     b.Property<string>("Url");
 
                     b.Property<int>("WordPressKey");
+
+                    b.Property<string>("WorkItemId");
 
                     b.HasKey("Id");
 

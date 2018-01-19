@@ -17,8 +17,8 @@ namespace CoE.Ideas.Remedy
             IActiveDirectoryUserService activeDirectoryUserService)
             : base(ideaRepository, wordPressClient)
         {
-            _remedyService = remedyService;
-            _activeDirectoryUserService = activeDirectoryUserService;
+            _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
+            _activeDirectoryUserService = activeDirectoryUserService ?? throw new ArgumentNullException("activeDirectoryUserService");
         }
 
         private readonly IRemedyService _remedyService;

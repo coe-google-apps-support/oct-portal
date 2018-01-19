@@ -10,32 +10,29 @@ namespace COE_WOI_WorkOrderInterface_WS
             COE_WOI_WorkOrderInterface_WS.AuthenticationInfo AuthenticationInfo, 
             string Customer_Login_ID, 
             string Summary, 
-            string Description, 
-            System.Nullable<Requested_ForType> Requested_For, 
-            string Location_Company, 
-            string Work_Order_Template_Used, 
-            string TemplateName,
+            string Description,
+            Requested_ForType? Requested_For,
+            string Location_Company,
+            string Customer_Company, 
             string TemplateId,
             string Customer_First_Name,
             string Customer_Last_Name,
             string Categorization_Tier_1,
             string Categorization_Tier_2)
         {
-            COE_WOI_WorkOrderInterface_WS.New_Create_Operation_0Request inValue = new COE_WOI_WorkOrderInterface_WS.New_Create_Operation_0Request();
+            New_Create_Operation_0Request inValue = new New_Create_Operation_0Request();
             inValue.AuthenticationInfo = AuthenticationInfo;
 
             // hard code some values
 
-            inValue.Customer_Company = "City of Edmonton";
+            inValue.Location_Company = Location_Company;
+            inValue.Customer_Company = Customer_Company;
             inValue.Customer_Login_ID = Customer_Login_ID;
             inValue.z1D_Action = "Create";
             inValue.Summary = Summary;
             inValue.Description = Description;
             inValue.Requested_For = Requested_For;
-            inValue.Location_Company = Location_Company;
-            inValue.Work_Order_Template_Used = Work_Order_Template_Used;
-            inValue.TemplateName = TemplateName;
-
+            inValue.Customer_Company = Customer_Company;
             inValue.Customer_First_Name = Customer_First_Name;
             inValue.Customer_Last_Name = Customer_Last_Name;
             //inValue.WorkOrder = WorkOrder;

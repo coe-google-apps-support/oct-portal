@@ -12,7 +12,7 @@ namespace CoE.Ideas.Core.Migrations
             migrationBuilder.RenameColumn(
                 name: "BusinessSponsor",
                 table: "Ideas",
-                newName: "OneCityAlignment");
+                newName: "WorkItemId");
 
             migrationBuilder.AddColumn<string>(
                 name: "BusinessBenefites",
@@ -31,6 +31,11 @@ namespace CoE.Ideas.Core.Migrations
 
             migrationBuilder.AddColumn<long>(
                 name: "DepartmentId",
+                table: "Ideas",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "OneCityAlignment",
                 table: "Ideas",
                 nullable: true);
 
@@ -120,8 +125,12 @@ namespace CoE.Ideas.Core.Migrations
                 name: "DepartmentId",
                 table: "Ideas");
 
-            migrationBuilder.RenameColumn(
+            migrationBuilder.DropColumn(
                 name: "OneCityAlignment",
+                table: "Ideas");
+
+            migrationBuilder.RenameColumn(
+                name: "WorkItemId",
                 table: "Ideas",
                 newName: "BusinessSponsor");
         }

@@ -95,5 +95,10 @@ namespace CoE.Ideas.Core
 
         [Display(Name = "Alignment", Description = "Describe how this initiative aligns with and supports the One City objective.")]
         public string OneCityAlignment { get; set; }
+
+        /// <summary>
+        /// Unique identifier in Work Item Tracking system (Remedy)
+        /// </summary>
+        public string WorkItemId { get; internal set; }
     }
 }

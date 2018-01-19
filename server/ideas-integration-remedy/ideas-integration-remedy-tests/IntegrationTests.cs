@@ -11,29 +11,29 @@ namespace ideas_integration_remedy_tests
     [TestClass]
     public class UnitTest1
     {
-        [TestMethod]
-        public async Task TestCreateRemedyWorkOrder()
-        { 
-            var client = new New_Port_0PortTypeClient(
-                New_Port_0PortTypeClient.EndpointConfiguration.New_Port_0Soap,
-                new EndpointAddress(""));
-            IRemedyService svc = new RemedyService(client);
+        //[TestMethod]
+        //public async Task TestCreateRemedyWorkOrder()
+        //{ 
+        //    var client = new New_Port_0PortTypeClient(
+        //        New_Port_0PortTypeClient.EndpointConfiguration.New_Port_0Soap,
+        //        new EndpointAddress(""));
+        //    IRemedyService svc = new RemedyService(client);
 
-            // mock Idea
-            var newIdea = new Idea()
-            {
-                Title = "Test Idea 1",
-                Description = "Test Idea 1 Contents"
-            };
+        //    // mock Idea
+        //    var newIdea = new Idea()
+        //    {
+        //        Title = "Test Idea 1",
+        //        Description = "Test Idea 1 Contents"
+        //    };
 
-            // mock user 
-            var newUser = new WordPressUser()
-            {
-                FirstName = "", LastName = ""
-            };
+        //    // mock user 
+        //    var newUser = new WordPressUser()
+        //    {
+        //        FirstName = "", LastName = ""
+        //    };
 
 
-            await svc.PostNewIdeaAsync(newIdea, newUser, "COE\\fakeuser");
-        }
+        //    await svc.PostNewIdeaAsync(newIdea, newUser, "COE\\fakeuser");
+        //}
     }
 }

@@ -91,6 +91,8 @@ namespace CoE.Ideas.Core.Migrations
 
                     b.Property<int>("WordPressKey");
 
+                    b.Property<string>("WorkItemId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");

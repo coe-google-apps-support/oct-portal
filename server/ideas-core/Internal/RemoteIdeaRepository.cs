@@ -61,7 +61,7 @@ namespace CoE.Ideas.Core.Internal
 
             try
             {
-                var ideaString = await client.GetStringAsync(_baseUri.ToString() + "/" + id);
+                var ideaString = await client.GetStringAsync(_baseUri.ToString() + "initiatives/" + id);
                 return JsonConvert.DeserializeObject<Idea>(ideaString);
 
             }
@@ -99,7 +99,7 @@ namespace CoE.Ideas.Core.Internal
 
             try
             {
-                var allIdeasString = await client.GetStringAsync(_baseUri);
+                var allIdeasString = await client.GetStringAsync(_baseUri + "/tags");
                 return JsonConvert.DeserializeObject<IEnumerable<Tag>>(allIdeasString);
             }
             catch (Exception err)
