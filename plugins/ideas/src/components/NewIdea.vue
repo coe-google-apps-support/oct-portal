@@ -167,15 +167,9 @@ export default {
     }
   }
 
-  .md-steppers-navigation {
-      box-shadow: inherit!important;
-      background-color: red;
-    }
-
   .md-steppers {
-    // WHY DOESN'T THIS WORK?????
-    .md-steppers-navigation {
-      box-shadow: inherit!important;
+    :first-child {
+      box-shadow: none;
     }
   }
 
@@ -192,5 +186,8 @@ export default {
     text-align: center;
     margin: 40px 0px 20px 0px;
   }
+
+</style>
+<style scoped>
 
 </style>
