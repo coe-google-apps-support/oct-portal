@@ -1,13 +1,8 @@
 <template>
   <div>
     <form novalidate class="md-layout-row md-gutter">
-      <!-- <md-card class="md-flex-50 md-flex-small-100">
-        <md-card-header>
-          <div class="md-title">New Idea</div>
-        </md-card-header>
-      </md-card> -->
-
       <md-steppers :md-active-step.sync="active" md-alternative md-linear>
+
         <md-step id="first" md-label="Details" :md-error="firstStepError" :md-done.sync="first">
           <div class="md-flex md-flex-small-100">
             <md-field :class="getValidationClass('title')">
@@ -17,7 +12,6 @@
               <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
             </md-field>
           </div>
-
           <div class="md-flex md-flex-small-100">
             <md-field :class="getValidationClass('description')">
               <label for="idea-desc">Description</label>
@@ -26,26 +20,22 @@
               <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
             </md-field>
           </div>
-
           <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
         </md-step>
 
         <md-step id="second" md-label="Personalize" :md-done.sync="second">
           <md-chips name="tags" id="idea-tags" v-model="form.tags" md-placeholder="Add tag..." />
-
           <div class="md-flex md-flex-small-100">
             <md-field>
               <label>Attachments</label>
               <md-file v-model="fileAttachments" multiple />
             </md-field>
           </div>
-
           <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea" :disabled="sending">Done</md-button>
         </md-step>
+
       </md-steppers>
-
       <md-progress-bar md-mode="indeterminate" v-if="sending" />      
-
     </form>
   </div>    
 </template>
