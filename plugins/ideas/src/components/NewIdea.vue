@@ -1,46 +1,58 @@
 <template>
   <div>
     <form novalidate class="md-layout-row md-gutter">
-      <md-steppers :md-active-step.sync="active" md-alternative md-linear>
+      <md-card>
+        <md-card-header id="custom-header">
+          <div class="md-title">Submit an initiative!</div>
+        </md-card-header>
 
-        <md-step id="first" md-label="Details" :md-error="firstStepError" :md-done.sync="first">
-          <div class="md-flex md-flex-small-100">
-            <md-field :class="getValidationClass('title')">
-              <label for="idea-title">What is your technology initiative?</label>
-              <md-input name="title" id="idea-title" v-model="form.title" />
-              <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
-              <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
-            </md-field>
-          </div>
-          <div class="md-flex md-flex-small-100">
-            <md-field :class="getValidationClass('description')">
-              <label for="idea-desc">Description</label>
-              <md-textarea name="description" id="idea-desc" v-model="form.description" />
-              <span class="md-error" v-if="!$v.form.description.required">Description is required</span>
-              <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
-            </md-field>
-          </div>
-          <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
-        </md-step>
+        <md-steppers :md-active-step.sync="active" md-alternative md-linear>
 
-        <md-step id="second" md-label="Personalize" :md-done.sync="second">
-          <md-chips name="tags" id="idea-tags" v-model="form.tags" md-placeholder="Add tag..." />
-          <div class="md-flex md-flex-small-100">
-            <md-field>
-              <label>Attachments</label>
-              <md-file v-model="fileAttachments" multiple />
-            </md-field>
-          </div>
-          <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea" :disabled="sending">Done</md-button>
-        </md-step>
+          <md-step id="first" md-label="Details" :md-error="firstStepError" :md-done.sync="first">
+            <div class="md-flex md-flex-small-100">
+              <md-field :class="getValidationClass('title')">
+                <label for="idea-title">What is your technology initiative?</label>
+                <md-input name="title" id="idea-title" v-model="form.title" />
+                <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
+                <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
+              </md-field>
+            </div>
+            <div class="md-flex md-flex-small-100">
+              <md-field :class="getValidationClass('description')">
+                <label for="idea-desc">Description</label>
+                <md-textarea name="description" id="idea-desc" v-model="form.description" />
+                <span class="md-error" v-if="!$v.form.description.required">Description is required</span>
+                <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
+              </md-field>
+            </div>
+            <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
+          </md-step>
 
-      </md-steppers>
-      <md-progress-bar md-mode="indeterminate" v-if="sending" />      
+          <md-step id="second" md-label="Personalize" :md-done.sync="second">
+            <md-chips name="tags" id="idea-tags" v-model="form.tags" md-placeholder="Add tag..." />
+            <div class="md-flex md-flex-small-100">
+              <md-field>
+                <label>Attachments</label>
+                <md-file v-model="fileAttachments" multiple />
+              </md-field>
+            </div>
+            <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea" :disabled="sending">Submit</md-button>
+          </md-step>
+
+          <md-step id="third" md-label="Finalize" :md-done.sync="third">
+            <div id="whats-next">What's next?</div>
+            <StolenFromDivi :url="ideaURL"></StolenFromDivi>
+          </md-step>
+
+        </md-steppers>
+        <md-progress-bar md-mode="indeterminate" v-if="sending" />
+      </md-card>
     </form>
   </div>    
 </template>
 
 <script>
+import StolenFromDivi from '@/components/StolenFromDivi'
 import { HTTP } from '../HttpCommon'
 import { validationMixin } from 'vuelidate'
 import {
@@ -52,10 +64,15 @@ import {
 export default {
   name: 'NewIdea',
   mixins: [validationMixin],
+  components: {
+    StolenFromDivi
+  },
   data: () => ({
     active: 'first',
+    ideaURL: '',
     first: false,
     second: false,
+    third: false,
     firstStepError: null,
     sending: false,
     form: {
@@ -124,10 +141,10 @@ export default {
         console.log('new idea saved!')
         this.sending = false
         var idea = x.data
-
         if (idea && idea.url && idea.url.length > 0) {
-          window.location.href = idea.url
+          this.ideaURL = idea.url
         }
+        this.setDone('second', 'third')
       }).catch((err, y) => {
         this.sending = false
         console.debug(err)
@@ -139,19 +156,41 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-/* h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-} */
+<style lang="scss" scoped>
+  @import "../colors.scss";
+
+  .md-card-header {
+    background-color: $oct-primary;
+
+    .md-title {
+      color: $oct-offoffwhite;
+    }
+  }
+
+  .md-steppers-navigation {
+      box-shadow: inherit!important;
+      background-color: red;
+    }
+
+  .md-steppers {
+    // WHY DOESN'T THIS WORK?????
+    .md-steppers-navigation {
+      box-shadow: inherit!important;
+    }
+  }
+
+  .md-card {
+    margin: 12px;
+  }
+
+  #whats-next {
+    color: $oct-primary;
+    font-size: 48px;
+    letter-spacing: 0;
+    line-height: 32px;
+    font-weight: 400;
+    text-align: center;
+    margin: 40px 0px 20px 0px;
+  }
+
 </style>
