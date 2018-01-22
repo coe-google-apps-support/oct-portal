@@ -23,7 +23,16 @@ let x = class IdeasService {
      * @returns {Promise} Resolved with an array of ideas.
      */
     static getIdeas() {
-        return HTTP.get('')
+      return HTTP.get('')
+    }   
+
+    /**
+     * Returns a Promise that resolves with an initiative.
+     * @param {string} id The id of the initiative.
+     * @returns {Promise} Resolved with an initiative.
+     */
+    static getInitiative(id) {
+        return HTTP.get(`/${id}`)
     }    
 }
 
