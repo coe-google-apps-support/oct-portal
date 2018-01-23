@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 namespace CoE.Ideas.Remedy.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class IntegrationTests
     {
         [ClassInitialize]
-        public static void ClassInit()
+        public static void ClassInit(TestContext context)
         {
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
