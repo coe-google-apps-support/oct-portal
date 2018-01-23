@@ -65,6 +65,9 @@ namespace CoE.Ideas.Remedy
                 options.ServicePassword = Configuration["Remedy:ServicePassword"];
                 options.ServiceUserName = Configuration["Remedy:ServiceUserName"];
                 options.TemplateId = Configuration["Remedy:TemplateId"];
+                options.CustomerLoginId = Configuration["Remedy:CustomerLoginId"];
+                options.CustomerFirstName = Configuration["Remedy:CustomerFirstName"];
+                options.CustomerLastName = Configuration["Remedy:CustomerLastName"];
             });
             services.AddSingleton<IRemedyService, RemedyService>();
 
