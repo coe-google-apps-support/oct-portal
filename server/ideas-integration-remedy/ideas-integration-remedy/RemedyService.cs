@@ -26,7 +26,7 @@ namespace CoE.Ideas.Remedy
         private readonly RemedyServiceOptions _options;
 
 
-        public async Task PostNewIdeaAsync(Idea idea, WordPressUser user, string user3and3)
+        public async Task<string> PostNewIdeaAsync(Idea idea, WordPressUser user, string user3and3)
         {
             var request = new New_Create_Operation_0Request();
 
@@ -48,6 +48,8 @@ namespace CoE.Ideas.Remedy
                     Customer_Last_Name: _options.CustomerLastName,
                     Categorization_Tier_1: _options.CategorizationTier1,
                     Categorization_Tier_2: _options.CategorizationTier2);
+
+                return response.InstanceId;
             }
             catch (Exception err)
             {

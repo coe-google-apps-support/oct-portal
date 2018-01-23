@@ -4,6 +4,7 @@
     {
         IdeaCreated,
         IdeaUpdated,
-        IdeaLogged
+        IdeaLogged,
+        WorkItemTicketCreated
     }
 }

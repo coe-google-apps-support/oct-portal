@@ -14,15 +14,18 @@ namespace CoE.Ideas.Remedy
         public NewIdeaListener(IIdeaRepository ideaRepository, 
             IWordPressClient wordPressClient,
             IRemedyService remedyService,
-            IActiveDirectoryUserService activeDirectoryUserService)
+            IActiveDirectoryUserService activeDirectoryUserService,
+            IIdeaServiceBusSender ideaServiceBusSender)
             : base(ideaRepository, wordPressClient)
         {
             _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
             _activeDirectoryUserService = activeDirectoryUserService ?? throw new ArgumentNullException("activeDirectoryUserService");
+            _ideaServiceBusSender = ideaServiceBusSender;
         }
 
         private readonly IRemedyService _remedyService;
         private readonly IActiveDirectoryUserService _activeDirectoryUserService;
+        private readonly IIdeaServiceBusSender _ideaServiceBusSender;
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
         {
@@ -52,7 +55,12 @@ namespace CoE.Ideas.Remedy
                 throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
 
 
-            await _remedyService.PostNewIdeaAsync(idea, wordPressUser, adUser.SamAccountName);
+            var remedyTicketId = await _remedyService.PostNewIdeaAsync(idea, wordPressUser, adUser.SamAccountName);
+
+            await _ideaServiceBusSender.SendIdeaMessageAsync(idea, IdeaMessageType.WorkItemTicketCreated, headers =>
+            {
+                headers["WorkItemId"] = remedyTicketId;
+            });
         }
     }
 }
