@@ -6,54 +6,60 @@
         <div class="underline"></div>
         <div class="md-caption">{{ initiative.createdDate | formatDate}}</div>
       </div>
-    </div>
-    <md-steppers md-vertical>
-      <md-step id="first" md-label="Submit" md-description="Optional">
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
-      </md-step>
 
-      <md-step id="second" md-label="Review">
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
-      </md-step>
+      <md-steppers md-vertical :md-active-step="active">
+        <md-step v-for="step in steps" 
+          :key="step.step" 
+          :id="step.step | formatNumber" 
+          :md-label="step.name" 
+          :md-active-step.sync="active"
+          md-description="Description">
 
-      <md-step id="third" md-label="Collaborate">
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
-      </md-step>
-
-      <md-step id="fourth" md-label="Deliver">
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias doloribus eveniet quaerat modi cumque quos sed, temporibus nemo eius amet aliquid, illo minus blanditiis tempore, dolores voluptas dolore placeat nulla.</p>
-      </md-step>
-    </md-steppers>
+          <TextStep v-if="step.type==='text'">{{ step.data }}</TextStep>
+          <ChatStep v-else-if="step.type==='chat'"></ChatStep>
+          <BurndownStep v-else-if="step.type==='burndown'"></BurndownStep>
+        </md-step>
+      </md-steppers>
+    </div>    
   </div>
 </template>
 
 <script>
 import formatDate from '@/utils/format-date-since'
+import formatNumber from '@/utils/format-number-long'
+import BurndownStep from '@/components/steps/burndown'
+import ChatStep from '@/components/steps/chat'
+import TextStep from '@/components/steps/text'
 
 export default {
   name: 'ViewInitiative',
   props: ['id'],
   data: () => ({
+    active: 'first',
     initiative: {},
+    steps: {},
     errors: []
   }),
+  components: {
+    BurndownStep,
+    ChatStep,
+    TextStep
+  },
   // Fetches ideas when the component is created.
   created () {
     console.log('created')
     this.initiative = {}
-    this.services.ideas.getInitiative(this.id).then((result) => {
-      this.initiative = result
+    this.services.ideas.getInitiative(this.id).then((response) => {
+      this.initiative = response
+    })
+
+    this.services.ideas.getInitiativeSteps(this.id).then((response) => {
+      this.steps = response.data
     })
   },
   filters: {
     formatDate,
+    formatNumber,
     truncate (str) {
       const MAX_LENGTH = 300
       if (str.length < MAX_LENGTH) {
