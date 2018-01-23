@@ -14,5 +14,8 @@ namespace CoE.Ideas.Remedy
         public string CategorizationTier2 { get; set; }
         public string CustomerCompany { get; set; }
         public string LocationCompany { get; set; }
+        public string CustomerLoginId { get; set; }
+        public string CustomerFirstName { get; set; }
+        public string CustomerLastName { get; set; }
     }
 }

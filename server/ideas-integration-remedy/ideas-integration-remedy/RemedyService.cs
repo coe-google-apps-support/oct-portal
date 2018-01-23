@@ -37,15 +37,15 @@ namespace CoE.Ideas.Remedy
             try
             {
                var response = await _remedyClient.New_Create_Operation_0Async(authInfo,
-                    Customer_Login_ID: user3and3,
+                    Customer_Login_ID: _options.CustomerLoginId,
                     Summary: idea.Title,
                     Description: idea.Description,
                     Requested_For: Requested_ForType.Individual,
                     Location_Company: _options.LocationCompany,
                     Customer_Company: _options.CustomerCompany,
                     TemplateId: _options.TemplateId,
-                    Customer_First_Name: user.FirstName,
-                    Customer_Last_Name: user.LastName,
+                    Customer_First_Name: _options.CustomerFirstName,
+                    Customer_Last_Name: _options.CustomerLastName,
                     Categorization_Tier_1: _options.CategorizationTier1,
                     Categorization_Tier_2: _options.CategorizationTier2);
             }
