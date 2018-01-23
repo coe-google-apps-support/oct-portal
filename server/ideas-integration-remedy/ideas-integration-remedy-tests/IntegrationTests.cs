@@ -50,7 +50,7 @@ namespace CoE.Ideas.Remedy.Tests
                 LastName = "Doe"
             };
 
-            var remedyService = serviceProvider.GetRequiredService<RemedyService>();
+            var remedyService = serviceProvider.GetRequiredService<IRemedyService>();
             await remedyService.PostNewIdeaAsync(newIdea, newUser, "COE\\fakeuser");
         }
     }
