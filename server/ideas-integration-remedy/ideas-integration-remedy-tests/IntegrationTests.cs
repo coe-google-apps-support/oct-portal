@@ -2,38 +2,56 @@ using CoE.Ideas.Core;
 using CoE.Ideas.Core.WordPress;
 using CoE.Ideas.Remedy;
 using COE_WOI_WorkOrderInterface_WS;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.IO;
 using System.ServiceModel;
 using System.Threading.Tasks;
 
-namespace ideas_integration_remedy_tests
+namespace CoE.Ideas.Remedy.Tests
 {
     [TestClass]
     public class UnitTest1
     {
-        //[TestMethod]
-        //public async Task TestCreateRemedyWorkOrder()
-        //{ 
-        //    var client = new New_Port_0PortTypeClient(
-        //        New_Port_0PortTypeClient.EndpointConfiguration.New_Port_0Soap,
-        //        new EndpointAddress(""));
-        //    IRemedyService svc = new RemedyService(client);
+        [ClassInitialize]
+        public static void ClassInit()
+        {
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+                .AddEnvironmentVariables()
+                .Build();
 
-        //    // mock Idea
-        //    var newIdea = new Idea()
-        //    {
-        //        Title = "Test Idea 1",
-        //        Description = "Test Idea 1 Contents"
-        //    };
+            serviceProvider = new TestConfiguration(config)
+                .ConfigureBasicServices()
+                .ConfigureRemedyServices()
+                .BuildServiceProvider();
+        }
 
-        //    // mock user 
-        //    var newUser = new WordPressUser()
-        //    {
-        //        FirstName = "", LastName = ""
-        //    };
+        private static ServiceProvider serviceProvider;
 
+        [TestMethod]
+        public async Task TestCreateRemedyWorkOrder()
+        {
+            // mock Idea
+            var newIdea = new Idea()
+            {
+                Title = "Test Idea 1",
+                Description = "Test Idea 1 Contents"
+            };
 
-        //    await svc.PostNewIdeaAsync(newIdea, newUser, "COE\\fakeuser");
-        //}
+            // mock user 
+            var newUser = new WordPressUser()
+            {
+                FirstName = "Jane",
+                LastName = "Doe"
+            };
+
+            var remedyService = serviceProvider.GetRequiredService<RemedyService>();
+            await remedyService.PostNewIdeaAsync(newIdea, newUser, "COE\\fakeuser");
+        }
     }
 }
