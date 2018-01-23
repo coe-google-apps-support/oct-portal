@@ -20,6 +20,7 @@ wp-content/plugins/hello.php
 *.suo
 *.user
 *.sln.docstates
+**/appsettings.Development.json 
 
 # Build results
 
