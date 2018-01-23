@@ -143,9 +143,10 @@ namespace CoE.Ideas.Integration.Notification
 
 
             // get the last row in the range for value
+            var valuesRowIndex = int.Parse(m.Groups[4].Value) + 1;
             string valuesRange =
                 (!string.IsNullOrWhiteSpace(sheetName) ? $"{sheetName}!" : string.Empty) + 
-                m.Groups[1] + m.Groups[4] + ":" + m.Groups[3] + m.Groups[4];
+                m.Groups[1] + valuesRowIndex + ":" + m.Groups[3] + valuesRowIndex;
 
             // header range is row defined in mergeTemplate and columns defined in range
             var headerRange =

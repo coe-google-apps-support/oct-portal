@@ -91,7 +91,7 @@ namespace CoE.Ideas.Core
         /// Describe the business benefits of the initiative.
         /// </summary>
         [Display(Name = "Benefits", Description = "Describe the business benefits of the initiative.")]
-        public string BusinessBenefites { get; set; }
+        public string BusinessBenefits { get; set; }
 
         [Display(Name = "Alignment", Description = "Describe how this initiative aligns with and supports the One City objective.")]
         public string OneCityAlignment { get; set; }

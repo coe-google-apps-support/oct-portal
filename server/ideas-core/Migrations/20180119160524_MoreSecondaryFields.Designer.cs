@@ -11,7 +11,7 @@ using System;
 namespace CoE.Ideas.Core.Migrations
 {
     [DbContext(typeof(IdeaContext))]
-    [Migration("20180119141304_MoreSecondaryFields")]
+    [Migration("20180119160524_MoreSecondaryFields")]
     partial class MoreSecondaryFields
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

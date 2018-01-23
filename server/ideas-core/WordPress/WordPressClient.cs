@@ -144,7 +144,7 @@ namespace CoE.Ideas.Core.WordPress
                     postdata.title = idea.Title;
                     postdata.content = idea.Description;
                     postdata.status = "publish";
-                    postdata.template = "single-initiative.php";
+                    //postdata.template = "single-initiative.php";
 
                     var postResponse = await client.PostAsync("initiatives", new StringContent(postdata.ToString(), Encoding.UTF8, "application/json"));
                     var postResponseMessage = await postResponse.Content.ReadAsStringAsync();
