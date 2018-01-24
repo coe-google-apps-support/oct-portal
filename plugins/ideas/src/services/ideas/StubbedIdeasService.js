@@ -119,6 +119,7 @@ const fakeInitiativeSteps = {
     name: 'Deliver',
     status: 'ongoing',
     type: 'burndown',
+    url: 'https://github.com/coe-google-apps-support/oct-portal',
     initialWork: 24,
     data: [
       {

@@ -26,7 +26,9 @@
 
       <md-divider></md-divider>
 
-      <div class="oct-actions">Optional actions</div>
+      <div class="oct-actions">
+        <md-button @click="openURL(burndown.url)" :style="{color: color}">View</md-button>
+      </div>
     </md-card>
   </div>
 </template>
