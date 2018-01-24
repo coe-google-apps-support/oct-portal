@@ -16,12 +16,15 @@ export default new Router({
     {
       path: '/ViewIdeas',
       name: 'ViewIdeas',
-      component: ViewIdeas
-    },
-    {
-      path: '/ViewIdeas/:id',
-      component: ViewInitiative,
-      props: true
+      component: ViewIdeas,
+      children: [
+        {
+          path: ':id',
+          name: 'ViewInitiative',
+          component: ViewInitiative,
+          props: true
+        }
+      ]
     }
   ]
 })

@@ -25,6 +25,8 @@
         </md-card-actions>
       </md-card>
     </div>
+    
+    <router-view></router-view>
   </div>    
 </template>
 

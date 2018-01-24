@@ -1,32 +1,37 @@
 <template>
-  <div class="md-layout md-alignment-top-center" v-if="initiative && initiative.title" :style="{backgroundColor: getColor(initiative)}">
-    <div id="oct-base" class="md-layout-item md-size-66">
-      <div>
-        <span class="md-display-2">{{ initiative.title }}</span>
-        <div class="underline"></div>
-        <div class="md-caption">{{ initiative.createdDate | formatDate}}</div>
+  <div>
+      <div class="oct-blocker"></div>
+      <div class="oct-content">
+        <div class="md-layout md-alignment-top-center" v-if="initiative && initiative.title" :style="{backgroundColor: getColor(initiative)}">
+          <div id="oct-base" class="md-layout-item md-size-66">
+            <div>
+              <span class="md-display-2">{{ initiative.title }}</span>
+              <div class="underline"></div>
+              <div class="md-caption">{{ initiative.createdDate | formatDate}}</div>
+            </div>
+
+            <md-steppers md-vertical :md-active-step="active">
+              <md-step v-for="step in steps" 
+                :key="step.step" 
+                :id="step.step | formatNumber" 
+                :md-label="step.name" 
+                :md-active-step.sync="active"
+                md-description="Description">
+
+                <TextStep v-if="step.type==='text'">{{ step.data }}</TextStep>
+                <ChatStep v-else-if="step.type==='chat'"></ChatStep>
+                <BurndownStep v-else-if="step.type==='burndown'" 
+                  :color="getColor(initiative)" 
+                  :burndown="step" 
+                  :title="initiative.title"
+                  :description="initiative.description"
+                  :date="initiative.createdDate">
+                </BurndownStep>
+              </md-step>
+            </md-steppers>
+          </div>    
+        </div>
       </div>
-
-      <md-steppers md-vertical :md-active-step="active">
-        <md-step v-for="step in steps" 
-          :key="step.step" 
-          :id="step.step | formatNumber" 
-          :md-label="step.name" 
-          :md-active-step.sync="active"
-          md-description="Description">
-
-          <TextStep v-if="step.type==='text'">{{ step.data }}</TextStep>
-          <ChatStep v-else-if="step.type==='chat'"></ChatStep>
-          <BurndownStep v-else-if="step.type==='burndown'" 
-            :color="getColor(initiative)" 
-            :burndown="step" 
-            :title="initiative.title"
-            :description="initiative.description"
-            :date="initiative.createdDate">
-          </BurndownStep>
-        </md-step>
-      </md-steppers>
-    </div>    
   </div>
 </template>
 
@@ -117,7 +122,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  //@import "~vue-material/dist/theme/engine";
 
   .underline {
     width: 140px;
@@ -129,5 +133,27 @@ export default {
 
   .md-steppers {
     margin: 24px 0px;
+  }
+
+  /* card overlay */
+  .oct-blocker {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    z-index: 1;
+    background-color: #090909;
+    opacity: 0.2;
+  }
+  .oct-content {
+    position: absolute;
+    width: 800px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    border-radius: 30px;
+    overflow: hidden;
   }
 </style>
