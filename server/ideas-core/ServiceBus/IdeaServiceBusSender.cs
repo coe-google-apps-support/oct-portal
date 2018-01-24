@@ -18,10 +18,10 @@ namespace CoE.Ideas.Core.ServiceBus
         public IdeaServiceBusSender(ITopicSender<IdeaMessage> topicSender,
             IHttpContextAccessor httpContextAccessor)
         {
-            _topicSenderr = topicSender ?? throw new ArgumentNullException("settings");
+            _topicSender = topicSender ?? throw new ArgumentNullException("settings");
             _httpContextAccessor = httpContextAccessor;
         }
-        private readonly ITopicSender<IdeaMessage> _topicSenderr;
+        private readonly ITopicSender<IdeaMessage> _topicSender;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         protected virtual void SetProperties(Idea idea, IdeaMessageType messageType, IDictionary<string, object> properties)
@@ -41,7 +41,7 @@ namespace CoE.Ideas.Core.ServiceBus
             var props = new Dictionary<string, object>();
             SetProperties(idea, messageType, props);
 
-            await _topicSenderr.SendAsync(message, props);
+            await _topicSender.SendAsync(message, props);
         }
 
         public async Task SendIdeaMessageAsync(Idea idea, IdeaMessageType messageType, Action<IDictionary<string, object>> onMessageHeaders)
@@ -52,7 +52,7 @@ namespace CoE.Ideas.Core.ServiceBus
 
             onMessageHeaders?.Invoke(props);
 
-            await _topicSenderr.SendAsync(message, props);
+            await _topicSender.SendAsync(message, props);
         }
     }
 }
