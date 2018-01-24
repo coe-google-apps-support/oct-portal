@@ -1,7 +1,6 @@
 using CoE.Ideas.Core;
 using CoE.Ideas.Core.WordPress;
 using CoE.Ideas.Remedy;
-using COE_WOI_WorkOrderInterface_WS;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,10 +17,11 @@ namespace CoE.Ideas.Remedy.Tests
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
+            context.WriteLine($"Environment is { Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") }");
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true)
-                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+                .AddJsonFile($"appsettings.Development.json", optional: true)
                 .AddEnvironmentVariables()
                 .Build();
 

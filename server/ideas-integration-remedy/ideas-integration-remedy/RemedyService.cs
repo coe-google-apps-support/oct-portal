@@ -1,6 +1,6 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.WordPress;
-using COE_WOI_WorkOrderInterface_WS;
+using RemedyServiceReference;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -28,26 +28,29 @@ namespace CoE.Ideas.Remedy
 
         public async Task<string> PostNewIdeaAsync(Idea idea, WordPressUser user, string user3and3)
         {
-            var request = new New_Create_Operation_0Request();
-
-            AuthenticationInfo authInfo = new AuthenticationInfo();
-            authInfo.userName = _options.ServiceUserName; // give a valid AR user name 
-            authInfo.password = _options.ServicePassword; // give a valid password 
+            var request = new New_Create_Operation_0Request()
+            {
+                AuthenticationInfo = new AuthenticationInfo()
+                {
+                    userName = _options.ServiceUserName,
+                    password = _options.ServicePassword
+                },
+                Customer_Login_ID = _options.CustomerLoginId,
+                Summary = idea.Title,
+                Short_Description = idea.Description, // should this be Long_Description?
+                Location_Company = _options.LocationCompany,
+                Customer_Company = _options.CustomerCompany,
+                TemplateID = _options.TemplateId,
+                Customer_First_Name = _options.CustomerFirstName,
+                Customer_Last_Name = _options.CustomerLastName,
+                Categorization_Tier_1 = _options.CategorizationTier1,
+                Categorization_Tier_2 = _options.CategorizationTier2
+            };
             
+
             try
             {
-               var response = await _remedyClient.New_Create_Operation_0Async(authInfo,
-                    Customer_Login_ID: _options.CustomerLoginId,
-                    Summary: idea.Title,
-                    Description: idea.Description,
-                    Requested_For: Requested_ForType.Individual,
-                    Location_Company: _options.LocationCompany,
-                    Customer_Company: _options.CustomerCompany,
-                    TemplateId: _options.TemplateId,
-                    Customer_First_Name: _options.CustomerFirstName,
-                    Customer_Last_Name: _options.CustomerLastName,
-                    Categorization_Tier_1: _options.CategorizationTier1,
-                    Categorization_Tier_2: _options.CategorizationTier2);
+                var response = await _remedyClient.New_Create_Operation_0Async(request);
 
                 return response.InstanceId;
             }

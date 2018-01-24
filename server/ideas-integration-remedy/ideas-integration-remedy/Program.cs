@@ -1,5 +1,4 @@
-﻿using COE_WOI_WorkOrderInterface_WS;
-using CoE.Ideas.Core;
+﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

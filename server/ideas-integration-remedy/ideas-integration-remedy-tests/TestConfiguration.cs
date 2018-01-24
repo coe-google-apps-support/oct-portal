@@ -1,7 +1,7 @@
 ﻿using CoE.Ideas.Core;
-using COE_WOI_WorkOrderInterface_WS;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RemedyServiceReference;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
