@@ -1,0 +1,1 @@
+﻿This application listens for notifications on the service bus that initiatives have been created. WHhen they are created, new work orders are created in Remedy.

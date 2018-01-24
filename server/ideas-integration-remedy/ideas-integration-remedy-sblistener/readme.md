@@ -1,0 +1,1 @@
+﻿This application listens for notifications on the service bus that remedy initiatives have changed.

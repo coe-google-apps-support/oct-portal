@@ -1,0 +1,1 @@
+﻿This application reads changes from the Remedy application and posts notification on the service bus
