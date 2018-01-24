@@ -55,6 +55,14 @@ export default {
 
     this.services.ideas.getInitiativeSteps(this.id).then((response) => {
       this.steps = response.data
+
+      for (let i = 0; i < this.steps.length; i++) {
+        // TODO externalise this status somehow.
+        if (this.steps[i].status !== 'done') {
+          this.active = formatNumber(this.steps[i].step)
+          break
+        }
+      }
     })
   },
   filters: {
