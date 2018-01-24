@@ -9,9 +9,9 @@
 
         <div class="oct-burndown">
           <div class="oct-horz-spacer"></div>
-          <div v-for="day in burndown.data" :key="day.date" class="oct-day-holder">            
+          <div v-for="day in burndown.data" :key="day.date" @click="openURL(day.url)" class="oct-day-holder">
             <div class="oct-bar-container" :style="{backgroundColor: colorDark}">
-              <div class="oct-bar-stub" :style="{backgroundColor: colorLight}"></div>
+              <div class="oct-bar-stub" :style="{backgroundColor: colorLight, height: reduceWork(day) + '%'}"></div>
             </div>
             <div class="oct-baby-date">{{ day.date | dayOfWeek }}</div>
           </div>
@@ -46,9 +46,6 @@ export default {
   ],
   computed: {
     colorLight: function () {
-      console.log('colorLight')
-      console.log(this.color)
-      console.log(colorMod(0.2, this.color))
       return colorMod(0.2, this.color)
     },
     colorDark: function () {
@@ -56,10 +53,13 @@ export default {
     }
   },
   data: () => ({
-    contents: {}
+    remainingWork: -1,
+    maxWork: -1
   }),
   created () {
     console.log('created')
+    this.remainingWork = this.burndown.initialWork
+    this.calculateMaxWork()
   },
   filters: {
     formatDate,
@@ -78,7 +78,24 @@ export default {
     }
   },
   methods: {
+    reduceWork: function (byStep) {
+      this.remainingWork += byStep.workAdded - byStep.workRemoved
 
+      return (this.remainingWork / this.maxWork) * 100
+    },
+    calculateMaxWork: function () {
+      this.maxWork = this.remainingWork
+      let currentWork = this.maxWork
+      for (let i = 0; i < this.burndown.data.length; i++) {
+        currentWork += this.burndown.data[i].workAdded - this.burndown.data[i].workRemoved
+        if (currentWork > this.maxWork) {
+          this.maxWork = currentWork
+        }
+      }
+    },
+    openURL: function (url) {
+      window.location.href = url
+    }
   }
 }
 </script>
@@ -117,15 +134,21 @@ export default {
     flex-flow: column;
     width: 40px;
     height: 100%;
+    cursor: pointer;
   }
 
   .oct-bar-container {
     flex: 2;
     margin: 0 6px;
     border-radius: 4px;
+    overflow: hidden;
+    flex-direction: column;
+    display: flex; 
+    justify-content: flex-end;
+    height: 100%;
 
     .oct-bar-stub {
-    
+
     }
   }
 
