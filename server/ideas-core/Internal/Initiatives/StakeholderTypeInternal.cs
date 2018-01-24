@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CoE.Ideas.Core.Internal
+namespace CoE.Ideas.Core.Internal.Initiatives
 {
     /// <summary>
     /// The type of stakeholder: owner, etc.

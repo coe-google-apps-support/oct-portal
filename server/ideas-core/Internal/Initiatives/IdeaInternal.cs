@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace CoE.Ideas.Core.Internal
+namespace CoE.Ideas.Core.Internal.Initiatives
 {
     /// <summary>
     /// An idea is a thought, request, or some other interaction with the City of Edmonton

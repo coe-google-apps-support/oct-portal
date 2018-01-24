@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoE.Ideas.Core.Internal
+namespace CoE.Ideas.Core.Internal.Initiatives
 {
     internal class IdeaRepositoryInternal : IIdeaRepository
     {
@@ -24,10 +24,10 @@ namespace CoE.Ideas.Core.Internal
             IWordPressClient wordpressClient, 
             IIdeaServiceBusSender serviceBusSender)
         {
-            _context = context;
-            _mapper = mapper;
-            _wordpressClient = wordpressClient;
-            _serviceBusSender = serviceBusSender;
+            _context = context ?? throw new ArgumentNullException("context");
+            _mapper = mapper ?? throw new ArgumentNullException("mapper");
+            _wordpressClient = wordpressClient ?? throw new ArgumentNullException("wordpressClient");
+            _serviceBusSender = serviceBusSender ?? throw new ArgumentNullException("serviceBusSender");
         }
 
         #region Ideas

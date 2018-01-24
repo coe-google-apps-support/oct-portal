@@ -18,6 +18,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\IssueInternal.cs" Link="Internal\ProjectManagement\IssueInternal.cs" />
+    <Compile Include="..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\IssueStatusChangeInternal.cs" Link="Internal\ProjectManagement\IssueStatusChangeInternal.cs" />
+    <Compile Include="..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\IssueStatusInternal.cs" Link="Internal\ProjectManagement\IssueStatusInternal.cs" />
+    <Compile Include="..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\ProjectManagementContext.cs" Link="Internal\ProjectManagement\ProjectManagementContext.cs" />
+    <Compile Include="..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\ProjectManagementEntityBaseInternal.cs" Link="Internal\ProjectManagement\ProjectManagementEntityBaseInternal.cs" />
+    <Compile Include="..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\ProjectManagementSystemInternal.cs" Link="Internal\ProjectManagement\ProjectManagementSystemInternal.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.1" />
@@ -30,6 +39,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Internal\ProjectManagement\" />
   </ItemGroup>
 
 </Project>

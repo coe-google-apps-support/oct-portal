@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace CoE.Ideas.Core.Internal
+namespace CoE.Ideas.Core.Internal.Initiatives
 {
     /// <summary>
     /// A City of Edmonton Department within a Branch

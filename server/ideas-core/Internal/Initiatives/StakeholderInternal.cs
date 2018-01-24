@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace CoE.Ideas.Core.Internal
+namespace CoE.Ideas.Core.Internal.Initiatives
 {
     /// <summary>
     /// People who have some sort of stake in ideas.
