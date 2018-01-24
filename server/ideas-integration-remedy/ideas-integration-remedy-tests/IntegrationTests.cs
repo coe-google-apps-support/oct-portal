@@ -34,6 +34,7 @@ namespace CoE.Ideas.Remedy.Tests
         private static ServiceProvider serviceProvider;
 
         [TestMethod]
+        [TestCategory("Integration")]
         public async Task TestCreateRemedyWorkOrder()
         {
             // mock Idea
