@@ -3,17 +3,19 @@
     There is burndown here
     <md-card class="oct-container">
       <md-card-header class="oct-header" :style="{backgroundColor: color}">
-        <md-card-header-text class="title-container">
+        <md-card-header-text class="oct-title-container">
           <div class="md-title oct-title">{{ title }}</div>
         </md-card-header-text>
 
         <div class="oct-burndown">
+          <div class="oct-horz-spacer"></div>
           <div v-for="day in burndown.data" :key="day.date" class="oct-day-holder">            
             <div class="oct-bar-container" :style="{backgroundColor: colorDark}">
               <div class="oct-bar-stub" :style="{backgroundColor: colorLight}"></div>
             </div>
             <div class="oct-baby-date">{{ day.date | dayOfWeek }}</div>
           </div>
+          <div class="oct-horz-spacer"></div>
         </div>
       </md-card-header>
 
@@ -43,13 +45,13 @@ export default {
     'date'
   ],
   computed: {
-    colorLight: function() {
+    colorLight: function () {
       console.log('colorLight')
       console.log(this.color)
       console.log(colorMod(0.2, this.color))
       return colorMod(0.2, this.color)
     },
-    colorDark: function() {
+    colorDark: function () {
       return colorMod(-0.2, this.color)
     }
   },
@@ -91,6 +93,11 @@ export default {
 
   .oct-header {
     height: 200px;
+    flex-direction: column;
+  }
+
+  .oct-title-container {
+    flex-grow: 0;
   }
 
   // The actual burndown
@@ -98,6 +105,11 @@ export default {
   .oct-burndown {
     display: flex;
     flex-direction: row;
+    height: 100%;
+  }
+
+  .oct-horz-spacer {
+    flex-grow: 1;
   }
 
   .oct-day-holder {
@@ -109,6 +121,8 @@ export default {
 
   .oct-bar-container {
     flex: 2;
+    margin: 0 6px;
+    border-radius: 4px;
 
     .oct-bar-stub {
     
