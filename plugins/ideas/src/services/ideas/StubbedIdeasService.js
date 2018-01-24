@@ -120,36 +120,91 @@ const fakeInitiativeSteps = {
     status: 'ongoing',
     type: 'burndown',
     initialWork: 24,
-    data: [{
-      date: 'Jan 23 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-      workAdded: 0,
-      workRemoved: 3,
-      url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-23..2018-01-24&type=Issues'
-    },
-    {
-      date: 'Jan 24 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-      workAdded: 0,
-      workRemoved: 3,
-      url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-24..2018-01-25&type=Issues'
-    },
-    {
-      date: 'Jan 25 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-      workAdded: 0,
-      workRemoved: 3,
-      url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-25..2018-01-26&type=Issues'
-    },
-    {
-      date: 'Jan 26 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-      workAdded: 0,
-      workRemoved: 3,
-      url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-26..2018-01-27&type=Issues'
-    },
-    {
-      date: 'Jan 27 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-      workAdded: 0,
-      workRemoved: 3,
-      url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-27..2018-01-28&type=Issues'
-    }
+    data: [
+      {
+        date: 'Jan 18 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 0,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-18..2018-01-18&type=Issues'
+      },
+      {
+        date: 'Jan 19 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 2,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-19..2018-01-19&type=Issues'
+      },
+      {
+        date: 'Jan 20 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-20..2018-01-20&type=Issues'
+      },
+      {
+        date: 'Jan 21 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-21..2018-01-21&type=Issues'
+      },
+      {
+        date: 'Jan 22 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-22..2018-01-22&type=Issues'
+      },
+      {
+        date: 'Jan 23 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-23..2018-01-23&type=Issues'
+      },
+      {
+        date: 'Jan 24 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-24..2018-01-24&type=Issues'
+      },
+      {
+        date: 'Jan 25 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-25..2018-01-25&type=Issues'
+      },
+      {
+        date: 'Jan 26 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-26..2018-01-26&type=Issues'
+      },
+      {
+        date: 'Jan 27 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-27..2018-01-27&type=Issues'
+      },
+      {
+        date: 'Jan 28 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-28..2018-01-28&type=Issues'
+      },
+      {
+        date: 'Jan 29 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 23,
+        workRemoved: 0,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-29..2018-01-29&type=Issues'
+      },
+      {
+        date: 'Jan 30 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 1,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-30..2018-01-30&type=Issues'
+      },
+      {
+        date: 'Jan 31 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 5,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-31..2018-02-31&type=Issues'
+      }
     ]
   }
   ]
