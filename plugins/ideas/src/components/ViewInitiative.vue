@@ -17,7 +17,13 @@
 
           <TextStep v-if="step.type==='text'">{{ step.data }}</TextStep>
           <ChatStep v-else-if="step.type==='chat'"></ChatStep>
-          <BurndownStep v-else-if="step.type==='burndown'"></BurndownStep>
+          <BurndownStep v-else-if="step.type==='burndown'" 
+            :color="getColor(initiative)" 
+            :burndown="step" 
+            :title="initiative.title"
+            :description="initiative.description"
+            :date="initiative.createdDate">
+          </BurndownStep>
         </md-step>
       </md-steppers>
     </div>    
