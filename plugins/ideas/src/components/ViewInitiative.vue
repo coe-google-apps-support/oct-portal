@@ -2,7 +2,7 @@
   <div>
       <div class="oct-blocker" @click="goBack"></div>
       <div class="oct-content">        
-        <div class="md-layout md-alignment-top-center" v-if="initiative && initiative.title" :style="{backgroundColor: getColor(initiative)}">
+        <div class="md-layout md-alignment-top-center" v-if="initiative && initiative.title">
           <md-button class="md-icon-button oct-back-button" @click="goBack">
             <md-icon class="md-size-2x">arrow_back</md-icon>
           </md-button>          
@@ -32,7 +32,7 @@
                 </BurndownStep>
               </md-step>
             </md-steppers>
-          </div>    
+          </div>
         </div>
       </div>
   </div>
@@ -162,6 +162,7 @@ export default {
     z-index: 2;
     border-radius: 8px;
     overflow: hidden;
+    background-color: #FEFEFE;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
   }
 
