@@ -122,10 +122,10 @@ export default {
     },
     getCompletion (date) {
       if (!date) {
-        return '';
+        return ''
       }
 
-      return `Completed ${ formatDate(date) }`
+      return `Completed ${formatDate(date)}`
     },
     goBack () {
       this.$router.push('/ViewIdeas')
