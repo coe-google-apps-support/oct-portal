@@ -18,8 +18,8 @@ namespace CoE.Ideas.ProjectManagement.Core.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
 
             modelBuilder.Entity("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubIssueEventInternal", b =>
                 {
@@ -28,13 +28,23 @@ namespace CoE.Ideas.ProjectManagement.Core.Migrations
 
                     b.Property<string>("Action");
 
+                    b.Property<long?>("AssigneeId");
+
+                    b.Property<long?>("AssignerId");
+
                     b.Property<long?>("IssueId");
 
                     b.Property<long?>("RepositoryId");
 
                     b.Property<long?>("SenderId");
 
+                    b.Property<string>("Url");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AssigneeId");
+
+                    b.HasIndex("AssignerId");
 
                     b.HasIndex("IssueId");
 
@@ -42,7 +52,7 @@ namespace CoE.Ideas.ProjectManagement.Core.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("IssueEvents","GitHub");
+                    b.ToTable("GitHub_Issue_Events");
                 });
 
             modelBuilder.Entity("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubLabelInternal", b =>
@@ -66,7 +76,7 @@ namespace CoE.Ideas.ProjectManagement.Core.Migrations
 
                     b.HasIndex("GitHubIssueInternalId");
 
-                    b.ToTable("Labels","GitHub");
+                    b.ToTable("GitHub_Labels");
                 });
 
             modelBuilder.Entity("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubRepositoryInternal", b =>
@@ -212,7 +222,7 @@ namespace CoE.Ideas.ProjectManagement.Core.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Repositories","GitHub");
+                    b.ToTable("GitHub_Repositories");
                 });
 
             modelBuilder.Entity("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubUserInternal", b =>
@@ -231,6 +241,8 @@ namespace CoE.Ideas.ProjectManagement.Core.Migrations
                     b.Property<string>("FollowingUrl");
 
                     b.Property<string>("GistsUrl");
+
+                    b.Property<long?>("GitHubIssueInternalId");
 
                     b.Property<string>("GravatarId");
 
@@ -256,7 +268,9 @@ namespace CoE.Ideas.ProjectManagement.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users","GitHub");
+                    b.HasIndex("GitHubIssueInternalId");
+
+                    b.ToTable("GitHub_Users");
                 });
 
             modelBuilder.Entity("CoE.Ideas.ProjectManagement.Core.Internal.IssueInternal", b =>
@@ -301,14 +315,14 @@ namespace CoE.Ideas.ProjectManagement.Core.Migrations
 
                     b.HasIndex("IssueId");
 
-                    b.ToTable("IssueStatusChanges");
+                    b.ToTable("Issue_Status_Changes");
                 });
 
             modelBuilder.Entity("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubIssueInternal", b =>
                 {
                     b.HasBaseType("CoE.Ideas.ProjectManagement.Core.Internal.IssueInternal");
 
-                    b.Property<string>("Assignee");
+                    b.Property<long?>("AssigneeId");
 
                     b.Property<string>("Body");
 
@@ -336,15 +350,25 @@ namespace CoE.Ideas.ProjectManagement.Core.Migrations
 
                     b.Property<long?>("UserId");
 
+                    b.HasIndex("AssigneeId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("Issues","GitHub");
+                    b.ToTable("GitHub_Issues");
 
                     b.HasDiscriminator().HasValue("GitHubIssueInternal");
                 });
 
             modelBuilder.Entity("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubIssueEventInternal", b =>
                 {
+                    b.HasOne("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubUserInternal", "Assignee")
+                        .WithMany()
+                        .HasForeignKey("AssigneeId");
+
+                    b.HasOne("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubUserInternal", "Assigner")
+                        .WithMany()
+                        .HasForeignKey("AssignerId");
+
                     b.HasOne("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubIssueInternal", "Issue")
                         .WithMany()
                         .HasForeignKey("IssueId");
@@ -372,6 +396,13 @@ namespace CoE.Ideas.ProjectManagement.Core.Migrations
                         .HasForeignKey("OwnerId");
                 });
 
+            modelBuilder.Entity("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubUserInternal", b =>
+                {
+                    b.HasOne("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubIssueInternal")
+                        .WithMany("Asseignees")
+                        .HasForeignKey("GitHubIssueInternalId");
+                });
+
             modelBuilder.Entity("CoE.Ideas.ProjectManagement.Core.Internal.IssueStatusChangeInternal", b =>
                 {
                     b.HasOne("CoE.Ideas.ProjectManagement.Core.Internal.IssueInternal", "Issue")
@@ -381,6 +412,10 @@ namespace CoE.Ideas.ProjectManagement.Core.Migrations
 
             modelBuilder.Entity("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubIssueInternal", b =>
                 {
+                    b.HasOne("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubUserInternal", "Assignee")
+                        .WithMany()
+                        .HasForeignKey("AssigneeId");
+
                     b.HasOne("CoE.Ideas.ProjectManagement.Core.Internal.GitHub.GitHubUserInternal", "User")
                         .WithMany()
                         .HasForeignKey("UserId");

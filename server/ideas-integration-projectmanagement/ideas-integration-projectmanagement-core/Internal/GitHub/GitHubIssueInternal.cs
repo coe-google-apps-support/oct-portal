@@ -6,7 +6,7 @@ using System.Text;
 namespace CoE.Ideas.ProjectManagement.Core.Internal.GitHub
 {
     // ref: https://developer.github.com/v3/activity/events/types/#issuesevent
-    [Table("Issues", Schema = "GitHub")]
+    [Table("GitHub_Issues")]
     internal class GitHubIssueInternal : IssueInternal
     {
         public string LabelsUrl { get; set; }
@@ -18,7 +18,8 @@ namespace CoE.Ideas.ProjectManagement.Core.Internal.GitHub
         public ICollection<GitHubLabelInternal> Labels { get; set; }
         public string State { get; set; }
         public bool IsLocked { get; set; }
-        public string  Assignee { get; set; }
+        public GitHubUserInternal Assignee { get; set; }
+        public ICollection<GitHubUserInternal> Asseignees { get; set; }
         public string Milestone { get; set; }
         public string Comments { get; set; }
         // CreatedAt is in base class (CreatedDate)

@@ -20,7 +20,7 @@ namespace CoE.Ideas.ProjectManagement.Core
                 throw new ArgumentNullException("dbConnectionString");
 
             services.AddDbContext<ExtendedProjectManagementContext>(options =>
-                options.UseSqlServer(dbConnectionString));
+                options.UseMySql(dbConnectionString));
 
             services.AddScoped<IExtendedProjectManagementRepository, ExtendedProjectManagementRepositoryInternal>();
             services.AddScoped<IProjectManagementRepository, ProjectManagementRepositoryInternal>();

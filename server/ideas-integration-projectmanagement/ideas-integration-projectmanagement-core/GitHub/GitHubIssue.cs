@@ -45,7 +45,10 @@ namespace CoE.Ideas.ProjectManagement.Core.GitHub
         public bool IsLocked { get; set; }
 
         [JsonProperty("assignee")]
-        public string Assignee { get; set; }
+        public GitHubUser Assignee { get; set; }
+
+        [JsonProperty("assignees")]
+        public ICollection<GitHubUser> Asseignees { get; set; }
 
         [JsonProperty("milestone")]
         public string Milestone { get; set; }

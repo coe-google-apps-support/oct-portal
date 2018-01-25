@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CoE.Ideas.ProjectManagement.Core.Internal.GitHub
 {
-    [Table("Users", Schema = "GitHub")]
+    [Table("GitHub_Users")]
     internal class GitHubUserInternal : ProjectManagementEntityBaseInternal
     {
         public string Login { get; set; }

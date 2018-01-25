@@ -16,7 +16,5 @@ namespace CoE.Ideas.ProjectManagement.Core
         Task<GitHubIssueEvent> AddGitHubIssueEventAsync(GitHubIssueEvent issue);
 
         Task<Issue> DeleteIssueAsync(long id);
-
-        Task<IssueStatusChange> AddIssueStatusChangeAsync(IssueStatusChange issueStatusChange);
     }
 }

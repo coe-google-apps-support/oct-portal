@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CoE.Ideas.ProjectManagement.Core.Internal.GitHub
 {
-    [Table("Repositories", Schema = "GitHub")]
+    [Table("GitHub_Repositories")]
     internal class GitHubRepositoryInternal : ProjectManagementEntityBaseInternal
     {
         public string AlternateKey { get; set; }

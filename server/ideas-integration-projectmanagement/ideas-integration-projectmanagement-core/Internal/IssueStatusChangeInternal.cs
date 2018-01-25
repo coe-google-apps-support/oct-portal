@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CoE.Ideas.ProjectManagement.Core.Internal
 {
-    [Table("IssueStatusChanges")]
+    [Table("Issue_Status_Changes")]
     internal class IssueStatusChangeInternal : ProjectManagementEntityBaseInternal
     {
         public IssueInternal Issue { get; set; }

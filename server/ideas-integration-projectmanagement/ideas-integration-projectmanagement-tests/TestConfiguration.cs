@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using CoE.Ideas.ProjectManagement.Core;
+using CoE.Ideas.ProjectManagement.Core.Internal;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -51,6 +53,18 @@ namespace CoE.Ideas.ProjectManagement.Tests
         {
             _services.AddProjectManagementConfiguration(
                 _configuration.GetConnectionString("IdeaProjectManagementDatabase"));
+
+            _services.AddAutoMapper();
+            return this;
+        }
+
+        internal TestConfiguration ConfigureProjectManagementServicesInMemory()
+        {
+            _services.AddDbContext<ProjectManagementContext>(x => x.UseInMemoryDatabase("pm"));
+            _services.AddDbContext<ExtendedProjectManagementContext>(x => x.UseInMemoryDatabase("pm"));
+            _services.AddScoped<IProjectManagementRepository, ProjectManagementRepositoryInternal>();
+            _services.AddScoped<IExtendedProjectManagementRepository, ExtendedProjectManagementRepositoryInternal>();
+
 
             _services.AddAutoMapper();
             return this;

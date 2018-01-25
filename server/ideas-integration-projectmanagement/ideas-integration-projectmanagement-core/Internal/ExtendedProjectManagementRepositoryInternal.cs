@@ -45,6 +45,25 @@ namespace CoE.Ideas.ProjectManagement.Core.Internal
         #endregion
 
 
+        #region Issue Status Changes
+        private async Task<IssueStatusChange> AddIssueStatusChangeAsync(IssueStatusChange issueStatusChange)
+        {
+            if (issueStatusChange == null)
+                throw new ArgumentNullException("issueStatusChange");
+
+            var issueStatusChangeInternal = _mapper.Map<IssueStatusChange, IssueStatusChangeInternal>(issueStatusChange);
+
+            _context.IssueStatusChanges.Add(issueStatusChangeInternal);
+            await _context.SaveChangesAsync();
+
+            var returnValue = _mapper.Map<IssueStatusChangeInternal, IssueStatusChange>(issueStatusChangeInternal);
+
+            return returnValue;
+        }
+
+        #endregion
+
+
         #region GitHub Issues
 
         public async Task<IEnumerable<GitHubIssue>> GetGitHubIssuesAsync()
@@ -71,10 +90,39 @@ namespace CoE.Ideas.ProjectManagement.Core.Internal
         {
             if (issueEvent == null)
                 throw new ArgumentNullException("issueEvent");
+            if (issueEvent.Issue == null)
+                throw new ArgumentException("issueEvent.Issue cannot be null");
 
             var issueEventInternal = _mapper.Map<GitHubIssueEvent, GitHubIssueEventInternal>(issueEvent);
 
+            // Action can come from either Action (WebHook) or from EventName (v3 API)
+            if (!string.IsNullOrWhiteSpace(issueEvent.EventName) && string.IsNullOrWhiteSpace(issueEvent.Action))
+                issueEvent.Action = issueEvent.EventName;
+
             _context.GitHubIssueEvents.Add(issueEventInternal);
+
+            // This may trigger a github issue status change:
+            IssueStatusChangeInternal statusChange = null;
+            if (String.Equals(issueEvent.Action, "Closed", StringComparison.OrdinalIgnoreCase))
+            {
+                statusChange = new IssueStatusChangeInternal()
+                {
+                    Issue = issueEventInternal.Issue,
+                    ChangeDate = DateTimeOffset.Now,
+                    NewStatus = IssueStatusInternal.Closed
+                };
+            } else if (String.Equals(issueEvent.Action, "Opened", StringComparison.OrdinalIgnoreCase))
+            {
+                statusChange = new IssueStatusChangeInternal()
+                {
+                    Issue = issueEventInternal.Issue,
+                    ChangeDate = DateTimeOffset.Now,
+                    NewStatus = IssueStatusInternal.Open
+                };
+            }
+            if (statusChange != null)
+                _context.IssueStatusChanges.Add(statusChange);
+
             await _context.SaveChangesAsync();
 
             var returnValue = _mapper.Map<GitHubIssueEventInternal, GitHubIssueEvent>(issueEventInternal);
@@ -110,22 +158,5 @@ namespace CoE.Ideas.ProjectManagement.Core.Internal
         }
         #endregion
 
-        #region Issue Status Changes
-        public async Task<IssueStatusChange> AddIssueStatusChangeAsync(IssueStatusChange issueStatusChange)
-        {
-            if (issueStatusChange == null)
-                throw new ArgumentNullException("issueStatusChange");
-
-            var issueStatusChangeInternal = _mapper.Map<IssueStatusChange, IssueStatusChangeInternal>(issueStatusChange);
-
-            _context.IssueStatusChanges.Add(issueStatusChangeInternal);
-            await _context.SaveChangesAsync();
-
-            var returnValue = _mapper.Map<IssueStatusChangeInternal, IssueStatusChange>(issueStatusChangeInternal);
-
-            return returnValue;
-        }
-
-        #endregion
     }
 }

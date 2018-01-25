@@ -23,7 +23,7 @@ namespace CoE.Ideas.ProjectManagement.Tests
 
             serviceProvider = new TestConfiguration(config)
                 .ConfigureBasicServices()
-                .ConfigureProjectManagementServices()
+                .ConfigureProjectManagementServicesInMemory()
                 .BuildServiceProvider();
         }
         private static ServiceProvider serviceProvider;
@@ -38,6 +38,18 @@ namespace CoE.Ideas.ProjectManagement.Tests
             var sampleGitHubIssueEvent = SampleData.GetSampleGitHubIssueEvent();
 
             await gitHubController.Post(sampleGitHubIssueEvent);
+
+        }
+
+        [TestMethod]
+        public async Task MockGitHubIssuesEvent()
+        {
+            var gitHubController = new GitHubIssuesController(
+                serviceProvider.GetRequiredService<IExtendedProjectManagementRepository>());
+
+            var sampleGitHubIssueEvents = SampleData.GetSampleGitHubIssueEvents();
+            foreach (var e in sampleGitHubIssueEvents)
+                await gitHubController.Post(e);
 
         }
     }
