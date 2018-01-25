@@ -7,5 +7,7 @@ namespace CoE.Ideas.Remedy.Listener.Web.Models
 {
     public class StatusUpdate
     {
+        public string WorkOrderId { get; set; }
+        public string Status { get; set; }
     }
 }

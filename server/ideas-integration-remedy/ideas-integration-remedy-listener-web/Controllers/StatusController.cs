@@ -38,18 +38,22 @@ namespace CoE.Ideas.Remedy.Listener.Web.Controllers
         [HttpPost]
         public async Task Post([FromBody]StatusUpdate update)
         {
-            var message = new Message();
-
-
+            var message = new Message
+            {
+                Label = "Remedy"
+            };
+            message.UserProperties.Add("Event", "StatusUpdated");
+            message.UserProperties.Add("WorkOrderId", update.WorkOrderId);
+            message.UserProperties.Add("WorkOrderStatus", update.Status);
 
             await _serviceBusTopicClient.SendAsync(message);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        //// PUT api/values/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody]string value)
+        //{
+        //}
 
         //// DELETE api/values/5
         //[HttpDelete("{id}")]
