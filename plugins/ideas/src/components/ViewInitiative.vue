@@ -1,8 +1,11 @@
 <template>
   <div>
-      <div class="oct-blocker"></div>
-      <div class="oct-content">
+      <div class="oct-blocker" @click="goBack"></div>
+      <div class="oct-content">        
         <div class="md-layout md-alignment-top-center" v-if="initiative && initiative.title" :style="{backgroundColor: getColor(initiative)}">
+          <md-button class="md-icon-button oct-back-button" @click="goBack">
+            <md-icon class="md-size-2x">arrow_back</md-icon>
+          </md-button>          
           <div id="oct-base" class="md-layout-item md-size-66">
             <div class="oct-title-content">
               <span class="md-display-2">{{ initiative.title }}</span>
@@ -116,6 +119,9 @@ export default {
 
       const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length
       return colors[randIndex]
+    },
+    goBack () {
+      this.$router.push('/ViewIdeas')
     }
   }
 }
@@ -146,7 +152,7 @@ export default {
     background-color: #090909;
     opacity: 0.2;
   }
-  
+
   .oct-content {
     position: absolute;
     width: 800px;
@@ -156,9 +162,16 @@ export default {
     z-index: 2;
     border-radius: 8px;
     overflow: hidden;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
   }
 
   .oct-title-content {
     margin: 14px 0px;
+  }
+
+  .oct-back-button {
+    position: absolute;
+    top: 28px;
+    left: 28px;
   }
 </style>
