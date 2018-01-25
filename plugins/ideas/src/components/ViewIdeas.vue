@@ -21,7 +21,7 @@
         <md-divider></md-divider>
 
         <md-card-actions>
-          <md-button @click="openCard(idea.url)" :style="{color: getColor(idea)}">View</md-button>
+          <md-button @click="openCard(idea)" :style="{color: getColor(idea)}">View</md-button>
         </md-card-actions>
       </md-card>
     </div>
@@ -102,8 +102,8 @@ export default {
       const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length
       return colors[randIndex]
     },
-    openCard (url) {
-      this.$router.push(url)
+    openCard (idea) {
+      this.$router.push(`/ViewIdeas/${idea.id}`)
     }
   }
 }
