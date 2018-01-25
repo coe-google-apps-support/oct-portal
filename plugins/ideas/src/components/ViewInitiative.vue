@@ -19,7 +19,7 @@
                 :id="step.step | formatNumber" 
                 :md-label="step.name" 
                 :md-active-step.sync="active"
-                md-description="Description">
+                :md-description="getCompletion(step.completedDate)">
 
                 <TextStep v-if="step.type==='text'">{{ step.data }}</TextStep>
                 <ChatStep v-else-if="step.type==='chat'"></ChatStep>
@@ -119,6 +119,13 @@ export default {
 
       const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length
       return colors[randIndex]
+    },
+    getCompletion (date) {
+      if (!date) {
+        return '';
+      }
+
+      return `Completed ${ formatDate(date) }`
     },
     goBack () {
       this.$router.push('/ViewIdeas')

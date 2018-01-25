@@ -57,6 +57,7 @@ const fakeInitiativeSteps = {
     step: 1,
     name: 'Submit',
     status: 'done',
+    completedDate: 'Jan 14 2018 9:17:00 GMT-0700 (Mountain Standard Time)',
     type: 'text',
     data: 'Congrats! You submitted this on January 14th, 2018.'
   },
@@ -64,6 +65,7 @@ const fakeInitiativeSteps = {
     step: 2,
     name: 'Review',
     status: 'done',
+    completedDate: 'Jan 14 2018 11:17:00 GMT-0700 (Mountain Standard Time)',
     type: 'chat',
     data: [{
       user: 'super.ba@edmonton.ca',
@@ -86,6 +88,7 @@ const fakeInitiativeSteps = {
     step: 3,
     name: 'Collaborate',
     status: 'done',
+    completedDate: 'Jan 18 2018 11:17:00 GMT-0700 (Mountain Standard Time)',
     type: 'chat',
     data: [{
       user: 'a.random@edmonton.ca',
@@ -118,6 +121,7 @@ const fakeInitiativeSteps = {
     step: 4,
     name: 'Deliver',
     status: 'ongoing',
+    completedDate: null,
     type: 'burndown',
     url: 'https://github.com/coe-google-apps-support/oct-portal',
     initialWork: 24,
