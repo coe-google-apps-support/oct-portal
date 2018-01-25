@@ -19,21 +19,6 @@ namespace CoE.Ideas.Remedy.Listener.Web.Controllers
 
         private readonly ITopicClient _serviceBusTopicClient;
 
-
-        //// GET api/values
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
-        //// GET api/values/5
-        //[HttpGet("{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
         // POST remedy/status
         [HttpPost]
         public async Task Post([FromBody]StatusUpdate update)
@@ -48,17 +33,5 @@ namespace CoE.Ideas.Remedy.Listener.Web.Controllers
 
             await _serviceBusTopicClient.SendAsync(message);
         }
-
-        //// PUT api/values/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody]string value)
-        //{
-        //}
-
-        //// DELETE api/values/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }
