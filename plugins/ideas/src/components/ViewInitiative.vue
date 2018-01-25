@@ -23,6 +23,7 @@
 
                 <TextStep v-if="step.type==='text'">{{ step.data }}</TextStep>
                 <ChatStep v-else-if="step.type==='chat'"></ChatStep>
+                <ResourceStep v-else-if="step.type==='resource'" :color="getColor(initiative)" :users="step.data"></ResourceStep>
                 <BurndownStep v-else-if="step.type==='burndown'" 
                   :color="getColor(initiative)" 
                   :burndown="step" 
@@ -44,6 +45,7 @@ import formatNumber from '@/utils/format-number-long'
 import BurndownStep from '@/components/steps/burndown'
 import ChatStep from '@/components/steps/chat'
 import TextStep from '@/components/steps/text'
+import ResourceStep from '@/components/steps/resource'
 
 export default {
   name: 'ViewInitiative',
@@ -57,7 +59,8 @@ export default {
   components: {
     BurndownStep,
     ChatStep,
-    TextStep
+    TextStep,
+    ResourceStep
   },
   // Fetches ideas when the component is created.
   created () {
