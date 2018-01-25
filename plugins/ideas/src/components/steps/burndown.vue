@@ -1,6 +1,5 @@
 <template>
   <div>
-    There is burndown here
     <md-card class="oct-container">
       <md-card-header class="oct-header" :style="{backgroundColor: color}">
         <md-card-header-text class="oct-title-container">

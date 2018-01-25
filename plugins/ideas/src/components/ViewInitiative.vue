@@ -4,7 +4,7 @@
       <div class="oct-content">
         <div class="md-layout md-alignment-top-center" v-if="initiative && initiative.title" :style="{backgroundColor: getColor(initiative)}">
           <div id="oct-base" class="md-layout-item md-size-66">
-            <div>
+            <div class="oct-title-content">
               <span class="md-display-2">{{ initiative.title }}</span>
               <div class="underline"></div>
               <div class="md-caption">{{ initiative.createdDate | formatDate}}</div>
@@ -146,6 +146,7 @@ export default {
     background-color: #090909;
     opacity: 0.2;
   }
+  
   .oct-content {
     position: absolute;
     width: 800px;
@@ -153,7 +154,11 @@ export default {
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
-    border-radius: 30px;
+    border-radius: 8px;
     overflow: hidden;
+  }
+
+  .oct-title-content {
+    margin: 14px 0px;
   }
 </style>
