@@ -71,7 +71,7 @@ namespace CoE.Ideas.Integration.Notification
             }
             catch (Exception err)
             {
-                Trace.TraceError($"Error calling renderer");
+                Trace.TraceError($"Error calling renderer: { err.Message }");
                 throw;
             }
         }
