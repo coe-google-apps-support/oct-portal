@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CoE.Ideas.ProjectManagement.Core
+namespace CoE.Ideas.Core.ProjectManagement
 {
     public class Issue : ProjectManagementEntityBase
     {

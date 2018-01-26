@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CoE.Ideas.ProjectManagement.Core
+namespace CoE.Ideas.Core.ProjectManagement
 {
     /// <summary>
     /// Base class for all Entities

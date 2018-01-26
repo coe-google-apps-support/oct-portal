@@ -40,6 +40,8 @@ namespace CoE.Ideas.Server
                 Configuration["Authorization:CoeAuthIV"],
                 Configuration["Ideas:WordPressUrl"]);
 
+            services.AddProjectManagementConfiguration(Configuration.GetConnectionString("IdeaProjectManagementDatabase"));
+
             services.AddMvc();
 
             services.AddAutoMapper();

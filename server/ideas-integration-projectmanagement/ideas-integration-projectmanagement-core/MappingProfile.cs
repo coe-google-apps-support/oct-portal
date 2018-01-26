@@ -1,4 +1,5 @@
 ﻿using AutoMapper.Configuration;
+using CoE.Ideas.Core.ProjectManagement;
 using CoE.Ideas.ProjectManagement.Core.GitHub;
 using CoE.Ideas.ProjectManagement.Core.Internal;
 using CoE.Ideas.ProjectManagement.Core.Internal.GitHub;

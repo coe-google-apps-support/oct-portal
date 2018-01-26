@@ -6,7 +6,7 @@ using System.Text;
 namespace CoE.Ideas.ProjectManagement.Core.Internal
 {
     [Table("Issues")]
-    internal abstract class IssueInternal : ProjectManagementEntityBaseInternal
+    internal class IssueInternal : ProjectManagementEntityBaseInternal
     {
         public ProjectManagementSystemInternal ProjectManagementSystem { get; set; }
         public string AlternateKey { get; set; }

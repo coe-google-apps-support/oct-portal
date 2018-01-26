@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CoE.Ideas.Core.ProjectManagement;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
