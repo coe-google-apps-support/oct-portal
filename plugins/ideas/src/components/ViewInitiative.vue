@@ -95,29 +95,24 @@ export default {
     }
   },
   methods: {
-    getImage (idea) {
-      const root = process.env.STATIC_ASSETS
-      const images = [
-        `${root}/assets/temp/balance-200-white.png`,
-        `${root}/assets/temp/card-travel-200-white.png`,
-        `${root}/assets/temp/explore-200-white.png`,
-        `${root}/assets/temp/help-200-white.png`,
-        `${root}/assets/temp/house-200-white.png`
-      ]
-
-      const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % images.length
-      return images[randIndex]
-    },
     getColor (idea) {
       const colors = [
-        '#3F51B5',
-        '#009688',
-        '#4CAF50',
-        '#607D8B',
-        '#ef5350',
-        '#00C853',
-        '#FF5722',
-        '#E91E63'
+        '#e57373',
+        '#F06292',
+        '#BA68C8',
+        '#9575CD',
+        '#7986CB',
+        '#64B5F6',
+        '#4FC3F7',
+        '#4DD0E1',
+        '#4DB6AC',
+        '#81C784',
+        '#AED581',
+        '#DCE775',
+        '#FFF176',
+        '#FFD54F',
+        '#FFB74D',
+        '#FF8A65'
       ]
 
       const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length

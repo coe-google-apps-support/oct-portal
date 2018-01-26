@@ -70,7 +70,7 @@ const fakeInitiativeSteps = {
     data: [{
       user: 'super.ba@edmonton.ca',
       assignedOn: 'Jan 14 2018 10:55:32 GMT-0700 (Mountain Standard Time)',
-      avatarURL: `${process.env.STATIC_ASSETS}/assets/temp/avatar1.png`
+      avatarURL: `${process.env.STATIC_ASSETS}/assets/avatar/avatar1.png`
     }
     ]
   },
@@ -83,7 +83,7 @@ const fakeInitiativeSteps = {
     data: [{
       user: 'super.ba@edmonton.ca',
       assignedOn: 'Jan 14 2018 12:31:55 GMT-0700 (Mountain Standard Time)',
-      avatarURL: `${process.env.STATIC_ASSETS}/assets/temp/avatar1.png`
+      avatarURL: `${process.env.STATIC_ASSETS}/assets/avatar/avatar1.png`
     }
     ]
   },

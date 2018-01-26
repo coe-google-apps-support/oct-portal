@@ -1,15 +1,20 @@
 <template>
   <md-card>
-    <md-card-header :style="{backgroundColor: getColor(initiative)}">
-      <md-card-header-text class="title-container">
-        <div class="filler"></div>
-        <div class="md-title title">{{ initiative.title }}</div>            
-      </md-card-header-text>
+    <md-card-media-cover>
+      <md-card-media md-ratio="16:9">
+        <img :src="getImage()" alt="Skyscraper">
+        <div class="oct-cover" :style="{ backgroundColor: getColor(initiative) }"></div>
+      </md-card-media>
 
-      <div class="big-media">
-        <img v-bind:src="getImage(initiative)" alt="Avatar">
-      </div>
-    </md-card-header>
+      <md-card-area>
+        <md-card-header>
+          <md-card-header-text class="title-container">
+            <div class="filler"></div>
+            <div class="md-title title">{{ initiative.title }}</div>            
+          </md-card-header-text>
+        </md-card-header>
+      </md-card-area>
+    </md-card-media-cover>
 
     <div class="card-secondary-info">
       <div class ="description-text">{{ initiative.description | truncate }}</div>
@@ -19,7 +24,7 @@
     <md-divider></md-divider>
 
     <md-card-actions>
-      <md-button @click="openCard(initiative)" :style="{color: getColor(initiative)}">View</md-button>
+      <md-button @click="openCard(initiative)" :style="{ color: getColor(initiative) }">View</md-button>
     </md-card-actions>
   </md-card>
 </template>
@@ -43,29 +48,46 @@ export default {
     formatDate
   },
   methods: {
-    getImage (idea) {
+    getImage () {
       const root = process.env.STATIC_ASSETS
       const images = [
-        `${root}/assets/temp/balance-200-white.png`,
-        `${root}/assets/temp/card-travel-200-white.png`,
-        `${root}/assets/temp/explore-200-white.png`,
-        `${root}/assets/temp/help-200-white.png`,
-        `${root}/assets/temp/house-200-white.png`
+        `${root}/assets/cards/card1.png`,
+        `${root}/assets/cards/card2.png`,
+        `${root}/assets/cards/card3.png`,
+        `${root}/assets/cards/card4.png`,
+        `${root}/assets/cards/card5.png`,
+        `${root}/assets/cards/card6.png`,
+        `${root}/assets/cards/card7.png`,
+        `${root}/assets/cards/card8.png`,
+        `${root}/assets/cards/card9.png`,
+        `${root}/assets/cards/card10.png`,
+        `${root}/assets/cards/card11.png`,
+        `${root}/assets/cards/card12.png`,
+        `${root}/assets/cards/card13.png`,
+        `${root}/assets/cards/card14.png`
       ]
 
-      const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % images.length
+      const randIndex = (this.initiative.title.charCodeAt(0) + this.initiative.title.charCodeAt(1) + this.initiative.id) % images.length
       return images[randIndex]
     },
     getColor (idea) {
       const colors = [
-        '#3F51B5',
-        '#009688',
-        '#4CAF50',
-        '#607D8B',
-        '#ef5350',
-        '#00C853',
-        '#FF5722',
-        '#E91E63'
+        '#e57373',
+        '#F06292',
+        '#BA68C8',
+        '#9575CD',
+        '#7986CB',
+        '#64B5F6',
+        '#4FC3F7',
+        '#4DD0E1',
+        '#4DB6AC',
+        '#81C784',
+        '#AED581',
+        '#DCE775',
+        '#FFF176',
+        '#FFD54F',
+        '#FFB74D',
+        '#FF8A65'
       ]
 
       const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length
@@ -80,6 +102,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.oct-cover {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+  top: 50%;
+  right: 0;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 1;
+}
 
 .md-card {
   width: 360px;
