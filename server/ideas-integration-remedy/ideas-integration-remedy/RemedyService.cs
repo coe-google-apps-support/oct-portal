@@ -52,20 +52,22 @@ namespace CoE.Ideas.Remedy
             try
             {
                 var response = await _remedyClient.New_Create_Operation_0Async(request);
-                //var response = await _remedyClient.New_Create_Operation_0Async(
-                //    request.AuthenticationInfo, 
-                //    Customer_Login_ID: request.Customer_Login_ID,
-                //    Summary: request.Summary, 
-                //    Description: request.Short_Description,
-                //    Location_Company: request.Location_Company,
+                return response.InstanceId;
+
+                //string instanceId = null;
+                //_remedyClient.New_Create_Operation_0(
+                //    AuthenticationInfo: request.AuthenticationInfo,
                 //    Customer_Company: request.Customer_Company,
-                //    TemplateId: request.TemplateID,
+                //    Customer_Login_ID: request.Customer_Login_ID,
                 //    Customer_First_Name: request.Customer_First_Name,
                 //    Customer_Last_Name: request.Customer_Last_Name,
+                //    z1D_Action: request.z1D_Action,
+                //    Summary: request.Summary,
+                //    Location_Company: request.Location_Company,
                 //    Categorization_Tier_1: request.Categorization_Tier_1,
-                //    Categorization_Tier_2: request.Categorization_Tier_2);
-
-                return response.InstanceId;
+                //    Categorization_Tier_2: request.Categorization_Tier_2,
+                //    TemplateID: request.TemplateID,
+                //    InstanceId: ref instanceId);
             }
             catch (Exception err)
             {

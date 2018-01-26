@@ -563,7 +563,8 @@ namespace RemedyServiceReference
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 10)]
         public string TemplateID;
 
-
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 11)]
+        public string InstanceId;
 
         public New_Create_Operation_0Request()
         {
