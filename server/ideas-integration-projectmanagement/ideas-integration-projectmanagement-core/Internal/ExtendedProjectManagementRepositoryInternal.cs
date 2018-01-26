@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CoE.Ideas.Core;
+using CoE.Ideas.Core.ProjectManagement;
 using CoE.Ideas.ProjectManagement.Core.GitHub;
 using CoE.Ideas.ProjectManagement.Core.Internal.GitHub;
 using Microsoft.EntityFrameworkCore;

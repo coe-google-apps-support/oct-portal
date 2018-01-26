@@ -6,9 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CoE.Ideas.ProjectManagement.Server.Controllers
+namespace CoE.Ideas.Server.Controllers.ProjectManagement
 {
-    [Route("issues")]
+    [Produces("application/json")]
+    [Route("pm/issues")]
     public class IssuesController : Controller
     {
         private readonly IProjectManagementRepository _repository;
@@ -17,7 +18,6 @@ namespace CoE.Ideas.ProjectManagement.Server.Controllers
         {
             _repository = repository;
         }
-
 
         // GET github/issues
         [HttpGet]

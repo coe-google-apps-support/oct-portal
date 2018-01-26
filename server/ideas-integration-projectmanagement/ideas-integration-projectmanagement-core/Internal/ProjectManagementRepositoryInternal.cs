@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CoE.Ideas.Core.ProjectManagement;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoE.Ideas.ProjectManagement.Core
+namespace CoE.Ideas.Core.ProjectManagement
 {
     public interface IProjectManagementRepository
     {

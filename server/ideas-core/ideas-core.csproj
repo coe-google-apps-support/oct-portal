@@ -23,6 +23,7 @@
     <Compile Include="..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\IssueStatusInternal.cs" Link="Internal\ProjectManagement\IssueStatusInternal.cs" />
     <Compile Include="..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\ProjectManagementContext.cs" Link="Internal\ProjectManagement\ProjectManagementContext.cs" />
     <Compile Include="..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\ProjectManagementEntityBaseInternal.cs" Link="Internal\ProjectManagement\ProjectManagementEntityBaseInternal.cs" />
+    <Compile Include="..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\ProjectManagementRepositoryInternal.cs" Link="Internal\ProjectManagement\ProjectManagementRepositoryInternal.cs" />
     <Compile Include="..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\ProjectManagementSystemInternal.cs" Link="Internal\ProjectManagement\ProjectManagementSystemInternal.cs" />
   </ItemGroup>
 

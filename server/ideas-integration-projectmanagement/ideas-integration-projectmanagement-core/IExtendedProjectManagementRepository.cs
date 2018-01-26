@@ -1,4 +1,5 @@
-﻿using CoE.Ideas.ProjectManagement.Core.GitHub;
+﻿using CoE.Ideas.Core.ProjectManagement;
+using CoE.Ideas.ProjectManagement.Core.GitHub;
 using System;
 using System.Collections.Generic;
 using System.Text;

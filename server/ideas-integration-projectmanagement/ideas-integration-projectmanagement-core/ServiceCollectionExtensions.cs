@@ -1,4 +1,6 @@
-﻿using CoE.Ideas.ProjectManagement.Core.Internal;
+﻿using AutoMapper;
+using CoE.Ideas.Core.ProjectManagement;
+using CoE.Ideas.ProjectManagement.Core.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -22,9 +24,15 @@ namespace CoE.Ideas.ProjectManagement.Core
             services.AddDbContext<ExtendedProjectManagementContext>(options =>
                 options.UseMySql(dbConnectionString));
 
+            services.AddDbContext<ProjectManagementContext>(options =>
+                options.UseMySql(dbConnectionString));
+
+
+
             services.AddScoped<IExtendedProjectManagementRepository, ExtendedProjectManagementRepositoryInternal>();
             services.AddScoped<IProjectManagementRepository, ProjectManagementRepositoryInternal>();
 
+            services.AddAutoMapper();
 
             return services;
         }

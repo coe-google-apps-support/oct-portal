@@ -17,9 +17,21 @@ namespace CoE.Ideas.ProjectManagement.Server
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IWebHost BuildWebHost(string[] args)
+        {
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("hosting.json", optional: true)
+                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
+                .AddCommandLine(args)
+                .Build();
+
+            return WebHost.CreateDefaultBuilder(args)
+                .UseUrls("http://0.0.0.0:5001")
+                .UseConfiguration(config)
+                .UseKestrel()
                 .UseStartup<Startup>()
                 .Build();
+        }
     }
 }

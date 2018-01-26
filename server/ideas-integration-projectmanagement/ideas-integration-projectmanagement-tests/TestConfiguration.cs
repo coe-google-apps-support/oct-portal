@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CoE.Ideas.Core.ProjectManagement;
 using CoE.Ideas.ProjectManagement.Core;
 using CoE.Ideas.ProjectManagement.Core.Internal;
 using Microsoft.EntityFrameworkCore;
