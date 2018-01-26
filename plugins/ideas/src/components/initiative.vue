@@ -127,7 +127,6 @@ export default {
   color: #fefefe;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: 180px;
   overflow: hidden;
 }
 
