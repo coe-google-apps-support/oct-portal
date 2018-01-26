@@ -217,6 +217,7 @@ let x = class StubbedIdeasService {
    * @returns {Promise} Resolved with an initiative.
    */
   static getInitiative (id) {
+    id = id.toString()
     const initiative = fakeIdeas.data.find((el) => {
       return id === el.id.toString()
     })

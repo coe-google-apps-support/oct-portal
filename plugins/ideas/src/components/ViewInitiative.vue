@@ -1,41 +1,33 @@
 <template>
-  <div>
-      <div class="oct-blocker" @click="goBack"></div>
-      <div class="oct-content">        
-        <div class="md-layout md-alignment-top-center" v-if="initiative && initiative.title">
-          <md-button class="md-icon-button oct-back-button" @click="goBack">
-            <md-icon class="md-size-2x">arrow_back</md-icon>
-          </md-button>          
-          <div id="oct-base" class="md-layout-item md-size-66">
-            <div class="oct-title-content">
-              <span class="md-display-2">{{ initiative.title }}</span>
-              <div class="underline"></div>
-              <div class="md-caption">{{ initiative.createdDate | formatDate}}</div>
-            </div>
-
-            <md-steppers md-vertical :md-active-step="active">
-              <md-step v-for="step in steps" 
-                :key="step.step" 
-                :id="step.step | formatNumber" 
-                :md-label="step.name" 
-                :md-active-step.sync="active"
-                :md-description="getCompletion(step.completedDate)">
-
-                <TextStep v-if="step.type==='text'">{{ step.data }}</TextStep>
-                <ChatStep v-else-if="step.type==='chat'"></ChatStep>
-                <ResourceStep v-else-if="step.type==='resource'" :color="getColor(initiative)" :users="step.data"></ResourceStep>
-                <BurndownStep v-else-if="step.type==='burndown'" 
-                  :color="getColor(initiative)" 
-                  :burndown="step" 
-                  :title="initiative.title"
-                  :description="initiative.description"
-                  :date="initiative.createdDate">
-                </BurndownStep>
-              </md-step>
-            </md-steppers>
-          </div>
-        </div>
+  <div class="oct-scrolly md-scrollbar md-content md-layout md-alignment-top-center" v-if="initiative && initiative.title">       
+    <div id="oct-base" class="md-layout-item md-size-66">
+      <div class="oct-title-content">
+        <span class="md-display-2">{{ initiative.title }}</span>
+        <div class="underline"></div>
+        <div class="md-caption">{{ initiative.createdDate | formatDate}}</div>
       </div>
+
+      <md-steppers md-vertical :md-active-step="active">
+        <md-step v-for="step in steps" 
+          :key="step.step" 
+          :id="step.step | formatNumber" 
+          :md-label="step.name" 
+          :md-active-step.sync="active"
+          :md-description="getCompletion(step.completedDate)">
+
+          <TextStep v-if="step.type==='text'">{{ step.data }}</TextStep>
+          <ChatStep v-else-if="step.type==='chat'"></ChatStep>
+          <ResourceStep v-else-if="step.type==='resource'" :color="getColor(initiative)" :users="step.data"></ResourceStep>
+          <BurndownStep v-else-if="step.type==='burndown'" 
+            :color="getColor(initiative)" 
+            :burndown="step" 
+            :title="initiative.title"
+            :description="initiative.description"
+            :date="initiative.createdDate">
+          </BurndownStep>
+        </md-step>
+      </md-steppers>
+    </div>
   </div>
 </template>
 
@@ -133,6 +125,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+  .oct-scrolly {
+    overflow-y: scroll;
+  }
 
   .underline {
     width: 140px;

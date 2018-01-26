@@ -24,7 +24,7 @@
     <md-divider></md-divider>
 
     <md-card-actions>
-      <md-button @click="openCard(initiative)" :style="{ color: getColor(initiative) }">View</md-button>
+      <md-button @click="onActionClick(initiative)" :style="{ color: getColor(initiative) }">View</md-button>
     </md-card-actions>
   </md-card>
 </template>
@@ -34,7 +34,8 @@ import formatDate from '@/utils/format-date-since'
 export default {
   name: 'Initiative',
   props: [
-    'initiative'
+    'initiative',
+    'onActionClick'
   ],
   filters: {
     truncate (str) {
