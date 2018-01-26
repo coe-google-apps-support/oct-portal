@@ -217,9 +217,8 @@ namespace CoE.Ideas.Core
             var headers = ctx.Request.Headers;
             if (headers.ContainsKey("AuthorizationEncrypted") && "true".Equals(headers["AuthorizationEncrypted"], StringComparison.OrdinalIgnoreCase))
             {
-                Microsoft.Extensions.Primitives.StringValues authKey;
 
-                if (ctx.Request.Headers.TryGetValue("Authorization", out authKey))
+                if (ctx.Request.Headers.TryGetValue("Authorization", out Microsoft.Extensions.Primitives.StringValues authKey))
                 {
                     string authKeyString = authKey.ToString();
                     bool? isBearer = authKeyString?.StartsWith("Bearer");
@@ -297,8 +296,7 @@ namespace CoE.Ideas.Core
         {
             // here we will add any additional claims to our user
             // i.e. Nameidentifier
-            var claimsIdentity = context.Principal?.Identity as ClaimsIdentity;
-            if (claimsIdentity != null)
+            if (context.Principal?.Identity is ClaimsIdentity claimsIdentity)
             {
                 var dataClaim = claimsIdentity.Claims.FirstOrDefault(x => x.Type == "data");
                 if (dataClaim != null && !string.IsNullOrWhiteSpace(dataClaim.Value))
