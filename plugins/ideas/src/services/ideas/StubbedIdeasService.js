@@ -48,6 +48,36 @@ const fakeIdeas = {
     stakeholders: [{
       'userName': 'stephen.mundy@edmonton.ca'
     }]
+  },
+  {
+    id: 6,
+    url: 'ViewIdeas/2',
+    title: 'Idea #2',
+    description: 'Easily one of the lamest ideas ever made, this idea does things for people that people really really do not need. Mediocre. Milquetoast. Moronic. Welcome to Idea #2.',
+    createdDate: 'Dec 28 2017 10:40:16 GMT-0700 (Mountain Standard Time)',
+    stakeholders: [{
+      'userName': 'jared.rewerts@edmonton.ca'
+    }]
+  },
+  {
+    id: 7,
+    url: 'ViewIdeas/3',
+    title: 'Idea #3',
+    description: 'Another idea! They\'re everywhere!',
+    createdDate: 'Dec 30 2017 10:40:16 GMT-0700 (Mountain Standard Time)',
+    stakeholders: [{
+      'userName': 'daniel.chenier@edmonton.ca'
+    }]
+  },
+  {
+    id: 8,
+    url: 'ViewIdeas/4',
+    title: 'Idea #4',
+    description: 'And another idea! They\'re everywhere!',
+    createdDate: 'Dec 31 2017 10:40:16 GMT-0700 (Mountain Standard Time)',
+    stakeholders: [{
+      'userName': 'daniel.chenier@edmonton.ca'
+    }]
   }
   ]
 }
