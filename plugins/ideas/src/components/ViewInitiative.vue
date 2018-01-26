@@ -1,40 +1,33 @@
 <template>
-  <div>
-      <div class="oct-blocker" @click="goBack"></div>
-      <div class="oct-content">        
-        <div class="md-layout md-alignment-top-center" v-if="initiative && initiative.title">
-          <md-button class="md-icon-button oct-back-button" @click="goBack">
-            <md-icon class="md-size-2x">arrow_back</md-icon>
-          </md-button>          
-          <div id="oct-base" class="md-layout-item md-size-66">
-            <div class="oct-title-content">
-              <span class="md-display-2">{{ initiative.title }}</span>
-              <div class="underline"></div>
-              <div class="md-caption">{{ initiative.createdDate | formatDate}}</div>
-            </div>
-
-            <md-steppers md-vertical :md-active-step="active">
-              <md-step v-for="step in steps" 
-                :key="step.step" 
-                :id="step.step | formatNumber" 
-                :md-label="step.name" 
-                :md-active-step.sync="active"
-                :md-description="getCompletion(step.completedDate)">
-
-                <TextStep v-if="step.type==='text'">{{ step.data }}</TextStep>
-                <ChatStep v-else-if="step.type==='chat'"></ChatStep>
-                <BurndownStep v-else-if="step.type==='burndown'" 
-                  :color="getColor(initiative)" 
-                  :burndown="step" 
-                  :title="initiative.title"
-                  :description="initiative.description"
-                  :date="initiative.createdDate">
-                </BurndownStep>
-              </md-step>
-            </md-steppers>
-          </div>
-        </div>
+  <div class="oct-scrolly md-scrollbar md-content md-layout md-alignment-top-center" v-if="initiative && initiative.title">    
+    <div id="oct-base" class="md-layout-item md-size-66">
+      <div class="oct-title-content">
+        <span class="md-display-2">{{ initiative.title }}</span>
+        <div class="underline"></div>
+        <div class="md-caption">{{ initiative.createdDate | formatDate}}</div>
       </div>
+
+      <md-steppers md-vertical :md-active-step="active">
+        <md-step v-for="step in steps" 
+          :key="step.step" 
+          :id="step.step | formatNumber" 
+          :md-label="step.name" 
+          :md-active-step.sync="active"
+          :md-description="getCompletion(step.completedDate)">
+
+          <TextStep v-if="step.type==='text'">{{ step.data }}</TextStep>
+          <ChatStep v-else-if="step.type==='chat'"></ChatStep>
+          <ResourceStep v-else-if="step.type==='resource'" :color="getColor(initiative)" :users="step.data"></ResourceStep>
+          <BurndownStep v-else-if="step.type==='burndown'" 
+            :color="getColor(initiative)" 
+            :burndown="step" 
+            :title="initiative.title"
+            :description="initiative.description"
+            :date="initiative.createdDate">
+          </BurndownStep>
+        </md-step>
+      </md-steppers>
+    </div>
   </div>
 </template>
 
@@ -44,6 +37,7 @@ import formatNumber from '@/utils/format-number-long'
 import BurndownStep from '@/components/steps/burndown'
 import ChatStep from '@/components/steps/chat'
 import TextStep from '@/components/steps/text'
+import ResourceStep from '@/components/steps/resource'
 
 export default {
   name: 'ViewInitiative',
@@ -57,7 +51,8 @@ export default {
   components: {
     BurndownStep,
     ChatStep,
-    TextStep
+    TextStep,
+    ResourceStep
   },
   // Fetches ideas when the component is created.
   created () {
@@ -65,6 +60,8 @@ export default {
     this.initiative = {}
     this.services.ideas.getInitiative(this.id).then((response) => {
       this.initiative = response
+    }).catch((err) => {
+      this.errors.push(err)
     })
 
     this.services.ideas.getInitiativeSteps(this.id).then((response) => {
@@ -77,6 +74,8 @@ export default {
           break
         }
       }
+    }).catch((err) => {
+      this.errors.push(err)
     })
   },
   filters: {
@@ -92,29 +91,24 @@ export default {
     }
   },
   methods: {
-    getImage (idea) {
-      const root = process.env.STATIC_ASSETS
-      const images = [
-        `${root}/assets/temp/balance-200-white.png`,
-        `${root}/assets/temp/card-travel-200-white.png`,
-        `${root}/assets/temp/explore-200-white.png`,
-        `${root}/assets/temp/help-200-white.png`,
-        `${root}/assets/temp/house-200-white.png`
-      ]
-
-      const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % images.length
-      return images[randIndex]
-    },
     getColor (idea) {
       const colors = [
-        '#3F51B5',
-        '#009688',
-        '#4CAF50',
-        '#607D8B',
-        '#ef5350',
-        '#00C853',
-        '#FF5722',
-        '#E91E63'
+        '#e57373',
+        '#F06292',
+        '#BA68C8',
+        '#9575CD',
+        '#7986CB',
+        '#64B5F6',
+        '#4FC3F7',
+        '#4DD0E1',
+        '#4DB6AC',
+        '#81C784',
+        '#AED581',
+        '#DCE775',
+        '#FFF176',
+        '#FFD54F',
+        '#FFB74D',
+        '#FF8A65'
       ]
 
       const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length
@@ -135,6 +129,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+  .oct-scrolly {
+    overflow-y: scroll;
+  }
 
   .underline {
     width: 140px;

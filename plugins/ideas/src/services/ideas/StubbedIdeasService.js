@@ -66,21 +66,11 @@ const fakeInitiativeSteps = {
     name: 'Review',
     status: 'done',
     completedDate: 'Jan 14 2018 11:17:00 GMT-0700 (Mountain Standard Time)',
-    type: 'chat',
+    type: 'resource',
     data: [{
       user: 'super.ba@edmonton.ca',
-      created: 'Jan 14 2018 10:55:32 GMT-0700 (Mountain Standard Time)',
-      data: 'Wow. What a great idea. Just consulting with my BA side-kick, bat-ba.'
-    },
-    {
-      user: 'bat.ba@edmonton.ca',
-      created: 'Jan 14 2018 11:07:00 GMT-0700 (Mountain Standard Time)',
-      data: 'Agreed. Game changer.'
-    },
-    {
-      user: 'super.ba@edmonton.ca',
-      created: 'Jan 14 2018 11:11:00 GMT-0700 (Mountain Standard Time)',
-      data: 'All systems go!!'
+      assignedOn: 'Jan 14 2018 10:55:32 GMT-0700 (Mountain Standard Time)',
+      avatarURL: `${process.env.STATIC_ASSETS}/assets/avatar/avatar1.png`
     }
     ]
   },
@@ -89,31 +79,11 @@ const fakeInitiativeSteps = {
     name: 'Collaborate',
     status: 'done',
     completedDate: 'Jan 18 2018 11:17:00 GMT-0700 (Mountain Standard Time)',
-    type: 'chat',
+    type: 'resource',
     data: [{
-      user: 'a.random@edmonton.ca',
-      created: 'Jan 16 2018 7:03:32 GMT-0700 (Mountain Standard Time)',
-      data: 'how do I get in on this? seems like this could have some potential'
-    },
-    {
       user: 'super.ba@edmonton.ca',
-      created: 'Jan 16 2018 8:07:00 GMT-0700 (Mountain Standard Time)',
-      data: 'If you\'d like, we could add you to the list of stakeholders?'
-    },
-    {
-      user: 'a.random@edmonton.ca',
-      created: 'Jan 17 2018 11:11:00 GMT-0700 (Mountain Standard Time)',
-      data: 'ya please do that'
-    },
-    {
-      user: 'gregory.onuczko@edmonton.ca',
-      created: 'Jan 17 2018 11:19:00 GMT-0700 (Mountain Standard Time)',
-      data: 'Glad to have you onboard, A Random!!'
-    },
-    {
-      user: 'super.ba@edmonton.ca',
-      created: 'Jan 18 2018 8:07:00 GMT-0700 (Mountain Standard Time)',
-      data: 'Transitioning to our technical experts for solutioning.'
+      assignedOn: 'Jan 14 2018 12:31:55 GMT-0700 (Mountain Standard Time)',
+      avatarURL: `${process.env.STATIC_ASSETS}/assets/avatar/avatar1.png`
     }
     ]
   },
@@ -247,6 +217,7 @@ let x = class StubbedIdeasService {
    * @returns {Promise} Resolved with an initiative.
    */
   static getInitiative (id) {
+    id = id.toString()
     const initiative = fakeIdeas.data.find((el) => {
       return id === el.id.toString()
     })

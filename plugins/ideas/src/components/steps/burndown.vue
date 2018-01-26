@@ -13,7 +13,7 @@
               <div class="oct-bar-stub" :style="{backgroundColor: colorLight, height: reduceWork(day) + '%'}"></div>
             </div>
             <div class="oct-baby-date">{{ day.date | dayOfWeek }}</div>
-            <md-tooltip md-direction="bottom">{{ `${day.workRemoved} issues closed, ${day.workAdded} issues added` }}</md-tooltip>
+            <md-tooltip md-direction="bottom" style="z-index: 15">{{ `${day.workRemoved} issues closed, ${day.workAdded} issues added` }}</md-tooltip>
           </div>
           <div class="oct-horz-spacer"></div>
         </div>
