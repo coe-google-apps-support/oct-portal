@@ -42,13 +42,16 @@ namespace CoE.Ideas.Remedy
                 Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],
                 Configuration["ServiceBus:Subscription"]);
-            services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
-            {
-                return new ActiveDirectoryUserService(
-                    Configuration["ActiveDirectory:Domain"],
-                    Configuration["ActiveDirectory:ServiceUserName"],
-                    Configuration["ActiveDirectory:ServicePassword"]);
-            });
+            //services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
+            //{
+            //    return new ActiveDirectoryUserService(
+            //        Configuration["ActiveDirectory:Domain"],
+            //        Configuration["ActiveDirectory:ServiceUserName"],
+            //        Configuration["ActiveDirectory:ServicePassword"]);
+            //});
+            services.AddIdeaServiceBusSender(
+                Configuration["ServiceBus:ConnectionString"],
+                Configuration["ServiceBus:TopicName"]);
 
             services.AddSingleton(x =>
             {

@@ -52,7 +52,15 @@ namespace CoE.Ideas.Core.ServiceBus
 
             onMessageHeaders?.Invoke(props);
 
-            await _topicSender.SendAsync(message, props);
+            try
+            {
+                await _topicSender.SendAsync(message, props);
+            }
+            catch (Exception err)
+            {
+                System.Diagnostics.Trace.TraceError($"Unable to send message to service bus: { err.Message }");
+                throw;
+            }
         }
     }
 }
