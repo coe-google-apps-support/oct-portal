@@ -37,7 +37,7 @@ namespace CoE.Ideas.Remedy
                 },
                 Customer_Login_ID = _options.CustomerLoginId,
                 Summary = idea.Title,
-                Short_Description = idea.Description, // should this be Long_Description?
+                //Description = idea.Description, // should this be Long_Description?
                 Location_Company = _options.LocationCompany,
                 Customer_Company = _options.CustomerCompany,
                 TemplateID = _options.TemplateId,
