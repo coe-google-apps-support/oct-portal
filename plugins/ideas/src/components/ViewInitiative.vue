@@ -1,5 +1,5 @@
 <template>
-  <div class="oct-scrolly md-scrollbar md-content md-layout md-alignment-top-center" v-if="initiative && initiative.title">       
+  <div class="oct-scrolly md-scrollbar md-content md-layout md-alignment-top-center" v-if="initiative && initiative.title">    
     <div id="oct-base" class="md-layout-item md-size-66">
       <div class="oct-title-content">
         <span class="md-display-2">{{ initiative.title }}</span>
@@ -60,6 +60,8 @@ export default {
     this.initiative = {}
     this.services.ideas.getInitiative(this.id).then((response) => {
       this.initiative = response
+    }).catch((err) => {
+      this.errors.push(err)
     })
 
     this.services.ideas.getInitiativeSteps(this.id).then((response) => {
@@ -72,6 +74,8 @@ export default {
           break
         }
       }
+    }).catch((err) => {
+      this.errors.push(err)
     })
   },
   filters: {
