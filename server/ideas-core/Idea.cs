@@ -100,5 +100,10 @@ namespace CoE.Ideas.Core
         /// Unique identifier in Work Item Tracking system (Remedy)
         /// </summary>
         public string WorkItemId { get; internal set; }
+
+        /// <summary>
+        /// Status of the Initiative
+        /// </summary>
+        public InitiativeStatus Status { get; internal set; }
     }
 }

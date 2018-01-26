@@ -75,6 +75,10 @@ namespace CoE.Ideas.Core.Internal
         {
             throw new NotSupportedException();
         }
+        public Task<Idea> GetIdeaByWorkItemIdAsync(string workItemId)
+        {
+            throw new NotSupportedException();
+        }
 
         public Task<Idea> AddIdeaAsync(Idea idea)
         {
@@ -89,6 +93,16 @@ namespace CoE.Ideas.Core.Internal
         public Task<Idea> DeleteIdeaAsync(long id)
         {
             throw new NotSupportedException();
+        }
+        public Task<Idea> SetWorkItemTicketIdAsync(long id, string workItemId)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<Idea> SetWorkItemStatusAsync(long id, InitiativeStatus status)
+        {
+            throw new NotSupportedException();
+
         }
         #endregion
 

@@ -28,8 +28,8 @@ namespace CoE.Ideas.Remedy.Listener.Web.Controllers
                 Label = "Remedy"
             };
             message.UserProperties.Add("Event", "StatusUpdated");
-            message.UserProperties.Add("WorkOrderId", update.WorkOrderId);
-            message.UserProperties.Add("WorkOrderStatus", update.Status);
+            message.UserProperties.Add("WorkItemId", update.WorkOrderId);
+            message.UserProperties.Add("WorkItemStatus", update.Status);
 
             await _serviceBusTopicClient.SendAsync(message);
         }

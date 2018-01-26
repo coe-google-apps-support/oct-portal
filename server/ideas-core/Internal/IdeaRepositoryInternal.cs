@@ -80,6 +80,20 @@ namespace CoE.Ideas.Core.Internal
                 return _mapper.Map<IdeaInternal, Idea>(ideaInternal);
         }
 
+        public async Task<Idea> GetIdeaByWorkItemIdAsync(string workItemId)
+        {
+            if (string.IsNullOrWhiteSpace(workItemId))
+            {
+                throw new ArgumentNullException("workItemId");
+            }
+
+            var ideaInternal = await IdeaCollection.SingleOrDefaultAsync(m => m.WorkItemId == workItemId);
+            if (ideaInternal == null)
+                return null;
+            else
+                return _mapper.Map<IdeaInternal, Idea>(ideaInternal);
+        }
+
         public async Task<Core.Idea> AddIdeaAsync(Idea idea)
         {
             if (idea == null)
@@ -195,6 +209,45 @@ namespace CoE.Ideas.Core.Internal
             }
         }
 
+        public async Task<Idea> SetWorkItemTicketIdAsync(long id, string workItemId)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
+            if (string.IsNullOrWhiteSpace(workItemId))
+                throw new ArgumentNullException("workItemId");
+
+            var idea = await _context.Ideas.SingleOrDefaultAsync(m => m.Id == id);
+            if (idea == null)
+            {
+                return null;
+            }
+            else
+            {
+                idea.WorkItemId = workItemId;
+                await _context.SaveChangesAsync();
+
+                return _mapper.Map<IdeaInternal, Idea>(idea);
+            }
+        }
+
+        public async Task<Idea> SetWorkItemStatusAsync(long id, InitiativeStatus status)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException("id", "id cannot be less than or equal to zero");
+
+            var idea = await _context.Ideas.SingleOrDefaultAsync(m => m.Id == id);
+            if (idea == null)
+            {
+                return null;
+            }
+            else
+            {
+                idea.Status =  _mapper.Map<InitiativeStatus, InitiativeStatusInternal>(status);
+                await _context.SaveChangesAsync();
+
+                return _mapper.Map<IdeaInternal, Idea>(idea);
+            }
+        }
         #endregion
 
 
@@ -304,6 +357,7 @@ namespace CoE.Ideas.Core.Internal
             var branch = await _context.Branches.FindAsync(id);
             return _mapper.Map<BranchInternal, Branch>(branch);
         }
+
         #endregion
     }
 }
