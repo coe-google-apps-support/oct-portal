@@ -116,7 +116,6 @@ export default {
 }
 
 .md-card {
-  width: 360px;
   margin: 12px;
   display: inline-block;
   vertical-align: top;
@@ -137,15 +136,6 @@ export default {
 
 .filler {
   flex-grow: 1;
-}
-
-.big-media {
-  position: relative;
-  width: 120px;
-  height: 120px;
-  margin-left: 16px;
-  -webkit-box-flex: 0;
-  flex: 0 0 inherit;
 }
 
 .card-secondary-info {
