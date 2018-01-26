@@ -36,8 +36,8 @@ namespace CoE.Ideas.Remedy
                     password = _options.ServicePassword
                 },
                 Customer_Login_ID = _options.CustomerLoginId,
-                //Summary = idea.Title,
-                //Short_Description = idea.Description, // should this be Long_Description?
+                Summary = idea.Title,
+                Short_Description = idea.Description, // should this be Long_Description?
                 Location_Company = _options.LocationCompany,
                 Customer_Company = _options.CustomerCompany,
                 TemplateID = _options.TemplateId,
