@@ -1,9 +1,9 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
-using RemedyServiceReference;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RemedyServiceReference;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;

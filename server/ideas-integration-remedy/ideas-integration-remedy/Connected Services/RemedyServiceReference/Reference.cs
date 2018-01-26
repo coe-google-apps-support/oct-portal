@@ -12,12 +12,12 @@ namespace RemedyServiceReference
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", ConfigurationName="RemedyServiceReference.New_Port_0PortType")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", ConfigurationName="RemedyServiceReference.New_Port_0PortType")]
     public interface New_Port_0PortType
     {
         
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action="urn:COE_WOI_WorkOrderInterface_WS_Octavia/New_Create_Operation_0", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="urn:COE_WOI_WorkOrderInterface_WS/New_Create_Operation_0", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<RemedyServiceReference.New_Create_Operation_0Response> New_Create_Operation_0Async(RemedyServiceReference.New_Create_Operation_0Request request);
     }
@@ -25,7 +25,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public partial class AuthenticationInfo
     {
         
@@ -112,7 +112,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum Set_Manager_usingType
     {
         
@@ -123,7 +123,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum StatusType
     {
         
@@ -159,7 +159,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum SRWorkInfoTypeType
     {
         
@@ -178,7 +178,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum z1D_View_AccessType
     {
         
@@ -191,7 +191,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum Secure_Work_Log2Type
     {
         
@@ -204,7 +204,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum Assignment_Accelerator_AssigneeType
     {
         
@@ -231,7 +231,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum z1D_CommunicationSourceType
     {
         
@@ -268,7 +268,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum CreatedFromBackEndSynchWIType
     {
         
@@ -278,7 +278,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum Status_ReasonType
     {
         
@@ -407,7 +407,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum Work_Order_TypeType
     {
         
@@ -443,7 +443,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum PriorityType
     {
         
@@ -462,7 +462,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum Created_From_flagType
     {
         
@@ -475,7 +475,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum Contact_SensitivityType
     {
         
@@ -488,7 +488,7 @@ namespace RemedyServiceReference
     
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
     public enum Add_Request_For_Type
     {
         
@@ -507,643 +507,643 @@ namespace RemedyServiceReference
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="New_Create_Operation_0", WrapperNamespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="New_Create_Operation_0", WrapperNamespace="urn:COE_WOI_WorkOrderInterface_WS", IsWrapped=true)]
     public partial class New_Create_Operation_0Request
     {
         
-        [System.ServiceModel.MessageHeaderAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS")]
         public RemedyServiceReference.AuthenticationInfo AuthenticationInfo;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=0)]
         public string WO_Type_Field_16_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=1)]
         public string Customer_Login_ID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=2)]
         public string Submitter;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=3)]
         public string CAB_Manager_Login;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=4)]
         public string Assigned_To;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=5)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=5)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<Set_Manager_usingType> Set_Manager_using;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=6)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=6)]
         public RemedyServiceReference.StatusType Status;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=7)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=7)]
         public string Short_Description;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=8)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=8)]
         public string CustomRecordInstanceId;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=9)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=9)]
         public string Request_Manager;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=10)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=10)]
         public int WO_Type_Field_25;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=11)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=11)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<SRWorkInfoTypeType> SRWorkInfoType;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=12)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=12)]
         public string WO_Type_Field_21_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=13)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=13)]
         public string WO_Type_Field_26_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=14)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=14)]
         public string z1D_WorklogDetails;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=15)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=15)]
         public string WO_Type_Field_30;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=16)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=16)]
         public string WO_Type_Field_15;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=17)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=17)]
         public string WO_Type_Field_10_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=18)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=18)]
         public string WO_Type_Field_10;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=19)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=19)]
         public string TemplateName;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=20)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=20)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<z1D_View_AccessType> z1D_View_Access;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=21)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=21)]
         public string WO_Type_Field_20;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=22)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=22)]
         public string Schema_Name;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=23)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=23)]
         public string LookupKeyword;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=24)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=24)]
         public string WO_Type_Field_11_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=25)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=25)]
         public string StatusString;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=26)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=26)]
         public string z2AF_Act_Attachment_2_attachmentName;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=27)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=27)]
         [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
         public byte[] z2AF_Act_Attachment_2_attachmentData;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=28)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=28)]
         public int z2AF_Act_Attachment_2_attachmentOrigSize;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=29)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=29)]
         [System.Xml.Serialization.XmlElementAttribute(DataType="time")]
         public System.DateTime WO_Type_Field_50;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=30)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=30)]
         [System.Xml.Serialization.XmlElementAttribute(DataType="time")]
         public System.DateTime WO_Type_Field_51;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=31)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=31)]
         public string WO_Type_Field_48_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=32)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=32)]
         public string SRMSAOIGuid;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=33)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=33)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<Secure_Work_Log2Type> Secure_Work_Log2;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=34)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=34)]
         public string WO_Type_Field_17_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=35)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=35)]
         public string Requested_By_Person_ID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=36)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=36)]
         public string WO_Type_Field_22_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=37)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=37)]
         public int WO_Type_Field_26;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=38)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=38)]
         [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
         public System.DateTime WO_Type_Field_48;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=39)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=39)]
         public string Assignee_Groups;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=40)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=40)]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string DatasetId;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=41)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=41)]
         public System.DateTime z1D_ActivityDate_tab;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=42)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=42)]
         public string WO_Type_Field_27_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=43)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=43)]
         [System.Xml.Serialization.XmlElementAttribute(DataType="date")]
         public System.DateTime WO_Type_Field_49;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=44)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=44)]
         public string Site;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=45)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=45)]
         public string WO_Type_Field_16;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=46)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=46)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<Secure_Work_Log2Type> Secure_Work_Log;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=47)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=47)]
         public string SRInstanceID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=48)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=48)]
         public string WO_Type_Field_12_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=49)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=49)]
         public string WO_Type_Field_04_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=50)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=50)]
         public string WO_Type_Field_05_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=51)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=51)]
         public string CustomerFullName;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=52)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=52)]
         public string WO_Type_Field_06_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=53)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=53)]
         public string WO_Type_Field_07_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=54)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=54)]
         public string WO_Type_Field_01_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=55)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=55)]
         public string WO_Type_Field_02_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=56)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=56)]
         public string WO_Type_Field_03_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=57)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=57)]
         public string WO_Type_Field_08_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=58)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=58)]
         public string WO_Type_Field_21;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=59)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=59)]
         public string WO_Type_Field_09_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=60)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=60)]
         public string WO_Type_Field_49_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=61)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=61)]
         public string z2AF_Act_Attachment_1_attachmentName;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=62)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=62)]
         [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
         public byte[] z2AF_Act_Attachment_1_attachmentData;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=63)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=63)]
         public int z2AF_Act_Attachment_1_attachmentOrigSize;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=64)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=64)]
         public string StatusReasonString;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=65)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=65)]
         public string WO_Type_Field_50_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=66)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=66)]
         public string WO_Type_Field_51_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=67)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=67)]
         public string InstanceId;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=68)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=68)]
         public string WO_Type_Field_11;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=69)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=69)]
         public string Cost_Centre;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=70)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=70)]
         public System.DateTime Scheduled_Start_Date;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=71)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=71)]
         public string SRMSRegistryInstanceID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=72)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=72)]
         public System.DateTime Actual_Start_Date;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=73)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=73)]
         public string z1D_ConfirmGroup;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=74)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=74)]
         public string Requestor_ID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=75)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=75)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<Assignment_Accelerator_AssigneeType> Assignment_Accelerator_Assignee;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=76)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=76)]
         public string WO_Type_Field_23_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=77)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=77)]
         public string Requester_Support_Organization;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=78)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=78)]
         public string WO_Type_Field_28_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=79)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=79)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<z1D_CommunicationSourceType> z1D_CommunicationSource;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=80)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=80)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<CreatedFromBackEndSynchWIType> CreatedFromBackEndSynchWI;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=81)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=81)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<Secure_Work_Log2Type> CreatedfromParentTemplate;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=82)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=82)]
         [System.ComponentModel.DefaultValueAttribute("Headline field")]
         public string Headline;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=83)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=83)]
         public string z1D_Details;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=84)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=84)]
         public string z1D_Status_Reason;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=85)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=85)]
         public string WO_Type_Field_17;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=86)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=86)]
         public System.DateTime Scheduled_End_Date;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=87)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=87)]
         public string WO_Type_Field_13_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=88)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=88)]
         public int WO_Type_Field_27;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=89)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=89)]
         public System.DateTime Actual_End_Date;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=90)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=90)]
         public string WO_Type_Field_18_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=91)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=91)]
         public string WO_Type_Field_22;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=92)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=92)]
         public string Support_Organization;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=93)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=93)]
         public string Request_Assignee;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=94)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=94)]
         public string Support_Company;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=95)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=95)]
         public string Support_Group_Name;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=96)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=96)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<Status_ReasonType> Status_Reason;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=97)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=97)]
         public string Detailed_Description;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=98)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=98)]
         public string WO_Type_Field_12;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=99)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=99)]
         public string z1D_Char10;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=100)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=100)]
         public string WO_Type_Field_24_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=101)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=101)]
         public string Customer_Middle_Name;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=102)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=102)]
         public string WorkOrder_ID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=103)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=103)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<Work_Order_TypeType> Work_Order_Type;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=104)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=104)]
         public string WO_Type_Field_29_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=105)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=105)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<PriorityType> Priority;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=106)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=106)]
         public string Manufacturer__2_;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=107)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=107)]
         public string WO_Type_Field_23;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=108)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=108)]
         public string Product_Name__2_;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=109)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=109)]
         public string Product_Model_Version__2_;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=110)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=110)]
         public string WO_Type_Field_14_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=111)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=111)]
         public string WO_Type_Field_18;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=112)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=112)]
         public string WO_Type_Field_28;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=113)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=113)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<Created_From_flagType> Created_From_flag;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=114)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=114)]
         public string z1D_Summary;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=115)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=115)]
         public string WO_Type_Field_19_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=116)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=116)]
         public string zTmpEventGUID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=117)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=117)]
         public string Request_Manager_Company;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=118)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=118)]
         public string Product_Cat_Tier_3__2_;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=119)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=119)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<z1D_View_AccessType> View_Access;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=120)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=120)]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string ReconciliationIdentity;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=121)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=121)]
         public string Product_Cat_Tier_1_2_;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=122)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=122)]
         public string Product_Cat_Tier_2__2_;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=123)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=123)]
         public string Customer_Phone_Number;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=124)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=124)]
         public string Customer_Last_Name;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=125)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=125)]
         public string Customer_Company;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=126)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=126)]
         public string Customer_Person_ID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=127)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=127)]
         public string Customer_First_Name;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=128)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=128)]
         [System.Xml.Serialization.XmlElementAttribute("Customer_Internet_E-mail")]
         public string Customer_Internet_Email;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=129)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=129)]
         public string WO_Type_Field_13;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=130)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=130)]
         public string Customer_Organization;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=131)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=131)]
         public string Customer_Department;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=132)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=132)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<Secure_Work_Log2Type> VIP;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=133)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=133)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<Contact_SensitivityType> Contact_Sensitivity;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=134)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=134)]
         public string WO_Type_Field_25_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=135)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=135)]
         public string WO_Type_Field_30_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=136)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=136)]
         public string Last_Name;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=137)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=137)]
         public string First_Name;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=138)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=138)]
         public string Middle_Initial;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=139)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=139)]
         public string WO_Type_Field_02;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=140)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=140)]
         public string Organization;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=141)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=141)]
         public string WO_Type_Field_03;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=142)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=142)]
         public string WO_Type_Field_01;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=143)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=143)]
         public System.DateTime WO_Type_Field_06;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=144)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=144)]
         public string Manager_Support_Organization;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=145)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=145)]
         public System.DateTime WO_Type_Field_07;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=146)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=146)]
         public string Manager_Support_Group_Name;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=147)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=147)]
         public string WO_Type_Field_04;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=148)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=148)]
         public string WO_Type_Field_05;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=149)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=149)]
         public string ClientLocale;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=150)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=150)]
         public int WO_Type_Field_08;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=151)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=151)]
         public string Summary;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=152)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=152)]
         public int WO_Type_Field_09;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=153)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=153)]
         public string Location_Company;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=154)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=154)]
         public string Custom_CFG_Form_InstanceId;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=155)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=155)]
         public string z1D_Char01;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=156)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=156)]
         public string TemplateID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=157)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=157)]
         public int WO_Type_Field_24;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=158)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=158)]
         public string Phone_Number;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=159)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=159)]
         public string Categorization_Tier_1;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=160)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=160)]
         [System.Xml.Serialization.XmlElementAttribute("Internet_E-mail")]
         public string Internet_Email;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=161)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=161)]
         public string WO_Type_Field_15_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=162)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=162)]
         public string WO_Type_Field_20_Label;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=163)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=163)]
         public string z1G_Global_AST_ProductionDataSetID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=164)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=164)]
         public int z1D_Permission_Group_ID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=165)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=165)]
         public string WorkOrder__EntryID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=166)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=166)]
         public string Chg_Location_Address;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=167)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=167)]
         public string WO_Type_Field_29;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=168)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=168)]
         public string Command;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=169)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=169)]
         public string Company;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=170)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=170)]
         public string Person_ID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=171)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=171)]
         public string Attachment_attachmentName;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=172)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=172)]
         [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
         public byte[] Attachment_attachmentData;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=173)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=173)]
         public int Attachment_attachmentOrigSize;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=174)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=174)]
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public System.Nullable<Add_Request_For_Type> Add_Request_For_;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=175)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=175)]
         public string Work_Order_Template_Instance_ID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=176)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=176)]
         public string Asset1;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=177)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=177)]
         public string Asset3;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=178)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=178)]
         public string Asset2;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=179)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=179)]
         public string Asset5;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=180)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=180)]
         public string WO_Type_Field_19;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=181)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=181)]
         public string Asset4;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=182)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=182)]
         [System.ComponentModel.DefaultValueAttribute("CREATE")]
         public string z1D_Action;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=183)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=183)]
         public int z1D_Integer01;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=184)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=184)]
         public string WO_Type_Field_14;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=185)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=185)]
         public string Categorization_Tier_2;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=186)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=186)]
         public string z1D_SRMCommand;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=187)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=187)]
         public string Categorization_Tier_3;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=188)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=188)]
         public string Vendor_Assignee_Groups;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=189)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=189)]
         public string Region;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=190)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=190)]
         public int z1D_Integer02;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=191)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=191)]
         public int z1D_Integer03;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=192)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=192)]
         public string Site_Group;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=193)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=193)]
         public string Department;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=194)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=194)]
         public string z2AF_Act_Attachment_3_attachmentName;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=195)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=195)]
         [System.Xml.Serialization.XmlElementAttribute(DataType="base64Binary")]
         public byte[] z2AF_Act_Attachment_3_attachmentData;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=196)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=196)]
         public int z2AF_Act_Attachment_3_attachmentOrigSize;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=197)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=197)]
         [System.ComponentModel.DefaultValueAttribute("$USER$")]
         public string RequesterLoginID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=198)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=198)]
         public string SRID;
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=199)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=199)]
         public string CI_Name;
         
         public New_Create_Operation_0Request()
@@ -1559,11 +1559,11 @@ namespace RemedyServiceReference
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("dotnet-svcutil", "1.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="New_Create_Operation_0Response", WrapperNamespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", IsWrapped=true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="New_Create_Operation_0Response", WrapperNamespace="urn:COE_WOI_WorkOrderInterface_WS", IsWrapped=true)]
     public partial class New_Create_Operation_0Response
     {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order=0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS", Order=0)]
         public string InstanceId;
         
         public New_Create_Operation_0Response()
@@ -1660,7 +1660,7 @@ namespace RemedyServiceReference
             if ((endpointConfiguration == EndpointConfiguration.New_Port_0Soap))
             {
                 return new System.ServiceModel.EndpointAddress("http://coetaars1.coe.ads/arsys/services/ARService?server=coetaars2&webService=COE" +
-                        "_WOI_WorkOrderInterface_WS_Octavia");
+                        "_WOI_WorkOrderInterface_WS");
             }
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
         }

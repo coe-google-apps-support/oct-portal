@@ -1,7 +1,7 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.WordPress;
-using RemedyServiceReference;
 using Microsoft.Extensions.Options;
+using RemedyServiceReference;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -36,21 +36,34 @@ namespace CoE.Ideas.Remedy
                     password = _options.ServicePassword
                 },
                 Customer_Login_ID = _options.CustomerLoginId,
-                Summary = idea.Title,
-                Short_Description = idea.Description, // should this be Long_Description?
+                //Summary = idea.Title,
+                //Short_Description = idea.Description, // should this be Long_Description?
                 Location_Company = _options.LocationCompany,
                 Customer_Company = _options.CustomerCompany,
                 TemplateID = _options.TemplateId,
                 Customer_First_Name = _options.CustomerFirstName,
                 Customer_Last_Name = _options.CustomerLastName,
                 Categorization_Tier_1 = _options.CategorizationTier1,
-                Categorization_Tier_2 = _options.CategorizationTier2
+                Categorization_Tier_2 = _options.CategorizationTier2,
+                z1D_Action = "Create"
             };
-            
+
 
             try
             {
                 var response = await _remedyClient.New_Create_Operation_0Async(request);
+                //var response = await _remedyClient.New_Create_Operation_0Async(
+                //    request.AuthenticationInfo, 
+                //    Customer_Login_ID: request.Customer_Login_ID,
+                //    Summary: request.Summary, 
+                //    Description: request.Short_Description,
+                //    Location_Company: request.Location_Company,
+                //    Customer_Company: request.Customer_Company,
+                //    TemplateId: request.TemplateID,
+                //    Customer_First_Name: request.Customer_First_Name,
+                //    Customer_Last_Name: request.Customer_Last_Name,
+                //    Categorization_Tier_1: request.Categorization_Tier_1,
+                //    Categorization_Tier_2: request.Categorization_Tier_2);
 
                 return response.InstanceId;
             }
