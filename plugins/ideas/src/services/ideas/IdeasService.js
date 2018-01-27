@@ -26,7 +26,12 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with an initiative.
    */
   static getInitiative (id) {
-    return HTTP.get(`/${id}`)
+    return HTTP.get(`/${id}`).then((response) => {
+      return response.data
+    }, (err) => {
+      console.error(`Failed at route /${id}`)
+      console.error(err)
+    })
   }
 
   /**
@@ -36,7 +41,7 @@ let x = class IdeasService {
    */
   static getInitiativeSteps (id) {
     return HTTP.get(`/${id}/steps`).then((response) => {
-      return response.data
+      return response
     }, (err) => {
       console.error(`Failed at route /${id}/steps.`)
       console.error(err)

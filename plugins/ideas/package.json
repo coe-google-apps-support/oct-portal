@@ -12,7 +12,8 @@
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
     "build": "node build/build.js",
-    "deploy-local": "node build/deploy-wp-plugin.js"
+    "deploy-local": "node build/deploy-wp-plugin.js",
+    "prod-local": "npm run build && http-server ./dist"
   },
   "dependencies": {
     "axios": "^0.17.1",
