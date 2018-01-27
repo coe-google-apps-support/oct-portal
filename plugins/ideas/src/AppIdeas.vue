@@ -30,5 +30,14 @@ export default {
     accent: $oct-accent // The accent or secondary color
   ));
 
+  // TRANSITIONS
+
+  .fade-enter-active, .fade-leave-active {
+  transition: opacity 1s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+
   @import "~vue-material/dist/theme/all"; // Apply the theme
 </style>
