@@ -1,5 +1,6 @@
 ﻿using AutoMapper.Configuration;
 using CoE.Ideas.Core.Internal;
+using CoE.Ideas.Core.Internal.Initiatives;
 using System;
 using System.Collections.Generic;
 using System.Text;

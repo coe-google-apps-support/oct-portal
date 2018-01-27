@@ -8,7 +8,7 @@
 
         <md-steppers :md-active-step.sync="active" md-alternative md-linear>
 
-          <md-step id="first" md-label="Details" :md-error="firstStepError" :md-done.sync="first">
+          <md-step id="first" md-label="Personalize" :md-error="firstStepError" :md-done.sync="first">
             <div class="md-flex md-flex-small-100">
               <md-field :class="getValidationClass('title')">
                 <label for="idea-title">What is your technology initiative?</label>
@@ -25,10 +25,6 @@
                 <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
               </md-field>
             </div>
-            <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
-          </md-step>
-
-          <md-step id="second" md-label="Personalize" :md-done.sync="second">
             <md-chips name="tags" id="idea-tags" v-model="form.tags" md-placeholder="Add tag..." />
             <div class="md-flex md-flex-small-100">
               <md-field>
@@ -36,6 +32,23 @@
                 <md-file v-model="fileAttachments" multiple />
               </md-field>
             </div>
+            <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
+          </md-step>
+
+          <md-step id="second" md-label="Details" :md-done.sync="second">
+            <div class="md-flex md-flex-small-100">
+              <md-checkbox v-model="form.hasSponsorship" class="md-primary">Do you have executive sponsorship for this initiative?</md-checkbox>
+            </div>
+            <div v-if="form.hasSponsorship" class="md-flex md-flex-small-100">
+              <md-field>
+                <label for="idea-sponsor">Sponsor email</label>
+                <md-input name="sponsorEmail" id="idea-sponsor" v-model="form.sponsorEmail" />
+              </md-field>
+            </div>
+            <div class="md-flex md-flex-small-100">
+              <md-checkbox v-model="form.hasBudget" class="md-primary">Do you have a budget for this initiative?</md-checkbox>
+            </div>
+            <md-datepicker v-model="selectedDate" />
             <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea" :disabled="sending">Submit</md-button>
           </md-step>
 
@@ -78,7 +91,11 @@ export default {
     form: {
       title: null,
       description: null,
-      tags: []
+      tags: [],
+      hasSponsorship: false,
+      sponsorEmail: null,
+      hasBudget: false,
+      deliveryDate: null
     },
     fileAttachments: []
   }),
@@ -136,7 +153,10 @@ export default {
 
       HTTP.post('', {
         title: this.form.title,
-        description: this.form.description
+        description: this.form.description,
+        businessSponsorEmail: this.form.sponsorEmail,
+        hasBudget: this.form.hasBudget,
+        expectedTargetDate: this.form.deliveryDate
       }).then(x => {
         console.log('new idea saved!')
         this.sending = false

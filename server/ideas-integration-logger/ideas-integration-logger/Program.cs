@@ -31,13 +31,13 @@ namespace CoE.Ideas.Integration.Logger
                 config["ServiceBus:ConnectionString"],
                 config["ServiceBus:TopicName"],
                 config["ServiceBus:Subscription"]);
-            services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
-            {
-                return new ActiveDirectoryUserService(
-                    config["ActiveDirectory:Domain"],
-                    config["ActiveDirectory:ServiceUserName"],
-                    config["ActiveDirectory:ServicePassword"]);
-            });
+            //services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
+            //{
+            //    return new ActiveDirectoryUserService(
+            //        config["ActiveDirectory:Domain"],
+            //        config["ActiveDirectory:ServiceUserName"],
+            //        config["ActiveDirectory:ServicePassword"]);
+            //});
             services.AddIdeaServiceBusSender(
                 config["ServiceBus:ConnectionString"],
                 config["ServiceBus:TopicName"]);

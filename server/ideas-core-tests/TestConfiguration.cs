@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CoE.Ideas.Core.Internal;
+using CoE.Ideas.Core.Internal.Initiatives;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.EntityFrameworkCore;

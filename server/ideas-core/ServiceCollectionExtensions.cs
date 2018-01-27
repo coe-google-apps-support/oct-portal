@@ -1,6 +1,9 @@
 ﻿using CoE.Ideas.Core.Internal;
+using CoE.Ideas.Core.Internal.Initiatives;
+using CoE.Ideas.Core.ProjectManagement;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
+using CoE.Ideas.ProjectManagement.Core.Internal;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -69,6 +72,24 @@ namespace CoE.Ideas.Core
                 services.AddSingleton<ITopicSender<IdeaMessage>, TopicSender<IdeaMessage>>();
             }
             services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddProjectManagementConfiguration(
+            this IServiceCollection services,
+            string dbConnectionString)
+        {
+            if (string.IsNullOrWhiteSpace(dbConnectionString))
+                throw new ArgumentNullException("dbConnectionString");
+
+
+            services.AddDbContext<ProjectManagementContext>(options =>
+                options.UseMySql(dbConnectionString));
+
+
+
+            services.AddScoped<IProjectManagementRepository, ProjectManagementRepositoryInternal>();
 
             return services;
         }

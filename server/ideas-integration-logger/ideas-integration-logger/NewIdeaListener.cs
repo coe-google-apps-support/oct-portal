@@ -15,17 +15,17 @@ namespace CoE.Ideas.Integration.Logger
         public NewIdeaListener(IIdeaRepository ideaRepository,
             IWordPressClient wordPressClient,
             IIdeaLogger ideaLogger,
-            IActiveDirectoryUserService activeDirectoryUserService,
+            //IActiveDirectoryUserService activeDirectoryUserService,
             IIdeaServiceBusSender ideaServiceBusSender)
         : base(ideaRepository, wordPressClient)
         {
             _ideaLogger = ideaLogger;
-            _activeDirectoryUserService = activeDirectoryUserService;
+            //_activeDirectoryUserService = activeDirectoryUserService;
             _ideaServiceBusSender = ideaServiceBusSender;
         }
 
         private readonly IIdeaLogger _ideaLogger;
-        private readonly IActiveDirectoryUserService _activeDirectoryUserService;
+        //private readonly IActiveDirectoryUserService _activeDirectoryUserService;
         private readonly IIdeaServiceBusSender _ideaServiceBusSender;
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
@@ -43,15 +43,15 @@ namespace CoE.Ideas.Integration.Logger
             if (string.IsNullOrWhiteSpace(wordPressUser.Email))
                 throw new ArgumentOutOfRangeException("wordpressUser email is empty");
 
-            UserPrincipal adUser;
-            try
-            {
-                adUser = _activeDirectoryUserService.GetADUser(wordPressUser.Email);
-            }
-            catch (Exception err)
-            {
-                throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
-            }
+            //UserPrincipal adUser;
+            //try
+            //{
+            //    adUser = _activeDirectoryUserService.GetADUser(wordPressUser.Email);
+            //}
+            //catch (Exception err)
+            //{
+            //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
+            //}
 
             //if (adUser == null)
             //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
@@ -59,7 +59,7 @@ namespace CoE.Ideas.Integration.Logger
             Google.Apis.Sheets.v4.Data.AppendValuesResponse loggerResponse;
             try
             {
-                loggerResponse = await _ideaLogger.LogIdeaAsync(idea, wordPressUser, adUser);
+                loggerResponse = await _ideaLogger.LogIdeaAsync(idea, wordPressUser, adUser: null);
             }
             catch (Exception err)
             {
