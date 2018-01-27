@@ -41,42 +41,17 @@ import ResourceStep from '@/components/steps/resource'
 
 export default {
   name: 'ViewInitiative',
-  props: ['id'],
-  data: () => ({
-    active: 'first',
-    initiative: {},
-    steps: {},
-    errors: []
-  }),
+  props: [
+    'id',
+    'active',
+    'steps',
+    'initiative'
+  ],
   components: {
     BurndownStep,
     ChatStep,
     TextStep,
     ResourceStep
-  },
-  // Fetches ideas when the component is created.
-  created () {
-    console.log('created')
-    this.initiative = {}
-    this.services.ideas.getInitiative(this.id).then((response) => {
-      this.initiative = response
-    }).catch((err) => {
-      this.errors.push(err)
-    })
-
-    this.services.ideas.getInitiativeSteps(this.id).then((response) => {
-      this.steps = response.data
-
-      for (let i = 0; i < this.steps.length; i++) {
-        // TODO externalise this status somehow.
-        if (this.steps[i].status !== 'done') {
-          this.active = formatNumber(this.steps[i].step)
-          break
-        }
-      }
-    }).catch((err) => {
-      this.errors.push(err)
-    })
   },
   filters: {
     formatDate,
