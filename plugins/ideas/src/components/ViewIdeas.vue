@@ -95,3 +95,8 @@ export default {
   }
 }
 </script>
+<style>
+  .md-overlay.md-fixed.md-dialog-overlay {
+    z-index: 9!important;
+  }
+</style>
