@@ -174,7 +174,7 @@ let x = class IdeasService {
    */
   static getInitiativeSteps (id) {
     return HTTP.get(`/${id}/steps`).then((response) => {
-      return response
+      return response.data
     }, (err) => {
       console.error(`Failed at route /${id}/steps.`)
       console.error(err)
