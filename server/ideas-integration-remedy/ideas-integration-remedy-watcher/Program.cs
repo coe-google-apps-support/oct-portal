@@ -16,6 +16,7 @@ namespace CoE.Ideas.Remedy.Watcher
                 .Build();
 
             new Startup(config);
+
         }
     }
 }
