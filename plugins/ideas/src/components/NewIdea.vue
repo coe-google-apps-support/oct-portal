@@ -48,7 +48,7 @@
             <div class="md-flex md-flex-small-100">
               <md-checkbox v-model="form.hasBudget" class="md-primary">Do you have a budget for this initiative?</md-checkbox>
             </div>
-            <md-datepicker v-model="selectedDate" />
+            <md-datepicker v-model="form.deliveryDate" />
             <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea" :disabled="sending">Submit</md-button>
           </md-step>
 
