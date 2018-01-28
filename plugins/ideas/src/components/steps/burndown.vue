@@ -10,7 +10,7 @@
           <div class="oct-horz-spacer"></div>
           <div v-for="day in burndown.data" :key="day.date" @click="openURL(day.url)" class="oct-day-holder">
             <div class="oct-bar-container" :style="{backgroundColor: colorDark}">
-              <div class="oct-bar-stub" :style="{backgroundColor: colorLight, height: reduceWork(day) + '%'}"></div>
+              <div class="oct-bar-stub" :style="{backgroundColor: colorLight, height: day.height + '%'}"></div>
             </div>
             <div class="oct-baby-date">{{ day.date | dayOfWeek }}</div>
             <md-tooltip md-direction="bottom" style="z-index: 15">{{ `${day.workRemoved} issues closed, ${day.workAdded} issues added` }}</md-tooltip>
@@ -55,13 +55,17 @@ export default {
     }
   },
   data: () => ({
-    remainingWork: -1,
     maxWork: -1
   }),
   created () {
     console.log('created')
-    this.remainingWork = this.burndown.initialWork
     this.calculateMaxWork()
+
+    let remainingWork = this.burndown.initialWork
+    for (let i = 0; i < this.burndown.data.length; i++) {
+      remainingWork = remainingWork + (this.burndown.data[i].workAdded - this.burndown.data[i].workRemoved)
+      this.burndown.data[i].height = (remainingWork / this.maxWork) * 100
+    }
   },
   filters: {
     formatDate,
@@ -80,13 +84,8 @@ export default {
     }
   },
   methods: {
-    reduceWork: function (byStep) {
-      this.remainingWork += byStep.workAdded - byStep.workRemoved
-
-      return (this.remainingWork / this.maxWork) * 100
-    },
     calculateMaxWork: function () {
-      this.maxWork = this.remainingWork
+      this.maxWork = this.burndown.initialWork
       let currentWork = this.maxWork
       for (let i = 0; i < this.burndown.data.length; i++) {
         currentWork += this.burndown.data[i].workAdded - this.burndown.data[i].workRemoved
