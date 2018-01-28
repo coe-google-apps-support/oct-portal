@@ -185,6 +185,7 @@ namespace CoE.Ideas.Server.Controllers
     step: 1,
     name: 'Submit',
     status: 'done',
+    completedDate: 'Jan 14 2018 9:17:00 GMT-0700 (Mountain Standard Time)',
     type: 'text',
     data: 'Congrats! You submitted this on January 14th, 2018.'
   },
@@ -192,21 +193,12 @@ namespace CoE.Ideas.Server.Controllers
     step: 2,
     name: 'Review',
     status: 'done',
-    type: 'chat',
+    completedDate: 'Jan 14 2018 11:17:00 GMT-0700 (Mountain Standard Time)',
+    type: 'resource',
     data: [{
       user: 'super.ba@edmonton.ca',
-      created: 'Jan 14 2018 10:55:32 GMT-0700 (Mountain Standard Time)',
-      data: 'Wow. What a great idea. Just consulting with my BA side-kick, bat-ba.'
-    },
-    {
-      user: 'bat.ba@edmonton.ca',
-      created: 'Jan 14 2018 11:07:00 GMT-0700 (Mountain Standard Time)',
-      data: 'Agreed. Game changer.'
-    },
-    {
-      user: 'super.ba@edmonton.ca',
-      created: 'Jan 14 2018 11:11:00 GMT-0700 (Mountain Standard Time)',
-      data: 'All systems go!!'
+      assignedOn: 'Jan 14 2018 10:55:32 GMT-0700 (Mountain Standard Time)',
+      avatarURL: `${process.env.STATIC_ASSETS}/assets/avatar/avatar1.png`
     }
     ]
   },
@@ -214,31 +206,12 @@ namespace CoE.Ideas.Server.Controllers
     step: 3,
     name: 'Collaborate',
     status: 'done',
-    type: 'chat',
+    completedDate: 'Jan 18 2018 11:17:00 GMT-0700 (Mountain Standard Time)',
+    type: 'resource',
     data: [{
-      user: 'a.random@edmonton.ca',
-      created: 'Jan 16 2018 7:03:32 GMT-0700 (Mountain Standard Time)',
-      data: 'how do I get in on this? seems like this could have some potential'
-    },
-    {
       user: 'super.ba@edmonton.ca',
-      created: 'Jan 16 2018 8:07:00 GMT-0700 (Mountain Standard Time)',
-      data: 'If you\'d like, we could add you to the list of stakeholders?'
-    },
-    {
-      user: 'a.random@edmonton.ca',
-      created: 'Jan 17 2018 11:11:00 GMT-0700 (Mountain Standard Time)',
-      data: 'ya please do that'
-    },
-    {
-      user: 'gregory.onuczko@edmonton.ca',
-      created: 'Jan 17 2018 11:19:00 GMT-0700 (Mountain Standard Time)',
-      data: 'Glad to have you onboard, A Random!!'
-    },
-    {
-      user: 'super.ba@edmonton.ca',
-      created: 'Jan 18 2018 8:07:00 GMT-0700 (Mountain Standard Time)',
-      data: 'Transitioning to our technical experts for solutioning.'
+      assignedOn: 'Jan 14 2018 12:31:55 GMT-0700 (Mountain Standard Time)',
+      avatarURL: `${process.env.STATIC_ASSETS}/assets/avatar/avatar1.png`
     }
     ]
   },
@@ -246,38 +219,95 @@ namespace CoE.Ideas.Server.Controllers
     step: 4,
     name: 'Deliver',
     status: 'ongoing',
+    completedDate: null,
     type: 'burndown',
+    url: 'https://github.com/coe-google-apps-support/oct-portal',
     initialWork: 24,
-    data: [{
-      date: 'Jan 23 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-      workAdded: 0,
-      workRemoved: 3,
-      url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-23..2018-01-24&type=Issues'
-    },
-    {
-      date: 'Jan 24 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-      workAdded: 0,
-      workRemoved: 3,
-      url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-24..2018-01-25&type=Issues'
-    },
-    {
-      date: 'Jan 25 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-      workAdded: 0,
-      workRemoved: 3,
-      url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-25..2018-01-26&type=Issues'
-    },
-    {
-      date: 'Jan 26 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-      workAdded: 0,
-      workRemoved: 3,
-      url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-26..2018-01-27&type=Issues'
-    },
-    {
-      date: 'Jan 27 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-      workAdded: 0,
-      workRemoved: 3,
-      url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-27..2018-01-28&type=Issues'
-    }
+    data: [
+      {
+        date: 'Jan 18 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 0,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-18..2018-01-18&type=Issues'
+      },
+      {
+        date: 'Jan 19 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 2,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-19..2018-01-19&type=Issues'
+      },
+      {
+        date: 'Jan 20 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-20..2018-01-20&type=Issues'
+      },
+      {
+        date: 'Jan 21 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-21..2018-01-21&type=Issues'
+      },
+      {
+        date: 'Jan 22 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-22..2018-01-22&type=Issues'
+      },
+      {
+        date: 'Jan 23 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-23..2018-01-23&type=Issues'
+      },
+      {
+        date: 'Jan 24 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-24..2018-01-24&type=Issues'
+      },
+      {
+        date: 'Jan 25 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-25..2018-01-25&type=Issues'
+      },
+      {
+        date: 'Jan 26 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-26..2018-01-26&type=Issues'
+      },
+      {
+        date: 'Jan 27 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-27..2018-01-27&type=Issues'
+      },
+      {
+        date: 'Jan 28 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-28..2018-01-28&type=Issues'
+      },
+      {
+        date: 'Jan 29 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 23,
+        workRemoved: 0,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-29..2018-01-29&type=Issues'
+      },
+      {
+        date: 'Jan 30 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 1,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-30..2018-01-30&type=Issues'
+      },
+      {
+        date: 'Jan 31 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 5,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-31..2018-02-31&type=Issues'
+      }
     ]
   }
   ]

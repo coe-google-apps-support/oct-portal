@@ -3,7 +3,7 @@
     <div id="oct-base" class="md-layout-item md-size-66">
       <div class="oct-title-content">
         <span class="md-display-2">{{ initiative.title }}</span>
-        <div class="underline"></div>
+        <md-divider class="oct-divider"></md-divider>
         <div class="md-caption">{{ initiative.createdDate | formatDate}}</div>
       </div>
 
@@ -92,23 +92,26 @@ export default {
   },
   methods: {
     getColor (idea) {
+      // const colors = [
+      //   '#e57373',
+      //   '#F06292',
+      //   '#BA68C8',
+      //   '#9575CD',
+      //   '#7986CB',
+      //   '#64B5F6',
+      //   '#4FC3F7',
+      //   '#4DD0E1',
+      //   '#4DB6AC',
+      //   '#81C784',
+      //   '#AED581',
+      //   '#DCE775',
+      //   '#FFF176',
+      //   '#FFD54F',
+      //   '#FFB74D',
+      //   '#FF8A65'
+      // ]
       const colors = [
-        '#e57373',
-        '#F06292',
-        '#BA68C8',
-        '#9575CD',
-        '#7986CB',
-        '#64B5F6',
-        '#4FC3F7',
-        '#4DD0E1',
-        '#4DB6AC',
-        '#81C784',
-        '#AED581',
-        '#DCE775',
-        '#FFF176',
-        '#FFD54F',
-        '#FFB74D',
-        '#FF8A65'
+        '#4DB6AC'
       ]
 
       const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length
@@ -129,17 +132,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @import "../colors.scss";
 
   .oct-scrolly {
     overflow-y: scroll;
   }
 
-  .underline {
-    width: 140px;
-    height: 2px;
-    border-radius: 1px;
-    background-color: currentColor;
-    margin: 12px;
+  .oct-divider {
+    background-color: $oct-primary;
   }
 
   .md-steppers {
