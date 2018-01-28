@@ -173,18 +173,12 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with an initiatives steps.
    */
   static getInitiativeSteps (id) {
-  //   return HTTP.get(`/${id}/steps`).then((response) => {
-  //     return response
-  //   }, (err) => {
-  //     console.error(`Failed at route /${id}/steps.`)
-  //     console.error(err)
-  //   })
-    console.log('Get dem steps')
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        console.log('rezzie')
-        resolve(fakeInitiativeSteps)
-      }, 0)
+    return HTTP.get(`/${id}/steps`).then((response) => {
+      return response
+    }, (err) => {
+      console.error(`Failed at route /${id}/steps.`)
+      console.error(err)
+      return fakeInitiativeSteps
     })
   }
 }
