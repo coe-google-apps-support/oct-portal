@@ -24,8 +24,9 @@
     <md-divider></md-divider>
 
     <md-card-actions>
-      <md-button @click="onActionClick(initiative)" :style="{ color: getColor(initiative) }">View</md-button>
+      <md-button @click="$emit('onView', initiative)" :style="{ color: getColor(initiative) }">View</md-button>
     </md-card-actions>
+    <md-progress-bar v-if="initiative.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
 </template>
 <script>
@@ -34,8 +35,7 @@ import formatDate from '@/utils/format-date-since'
 export default {
   name: 'Initiative',
   props: [
-    'initiative',
-    'onActionClick'
+    'initiative'
   ],
   filters: {
     truncate (str) {
