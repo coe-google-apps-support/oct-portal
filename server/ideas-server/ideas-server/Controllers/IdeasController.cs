@@ -198,7 +198,7 @@ namespace CoE.Ideas.Server.Controllers
     data: [{
       user: 'super.ba@edmonton.ca',
       assignedOn: 'Jan 14 2018 10:55:32 GMT-0700 (Mountain Standard Time)',
-      avatarURL: `${process.env.STATIC_ASSETS}/assets/avatar/avatar1.png`
+      avatarURL: '/wp-content/plugins/coe-ideas/assets/avatar/avatar1.png'
     }
     ]
   },
@@ -211,7 +211,7 @@ namespace CoE.Ideas.Server.Controllers
     data: [{
       user: 'super.ba@edmonton.ca',
       assignedOn: 'Jan 14 2018 12:31:55 GMT-0700 (Mountain Standard Time)',
-      avatarURL: `${process.env.STATIC_ASSETS}/assets/avatar/avatar1.png`
+      avatarURL: '/wp-content/plugins/coe-ideas/assets/avatar/avatar1.png'
     }
     ]
   },
