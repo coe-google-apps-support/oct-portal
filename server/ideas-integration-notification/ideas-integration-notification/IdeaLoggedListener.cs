@@ -1,6 +1,7 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,16 +15,19 @@ namespace CoE.Ideas.Integration.Notification
             IWordPressClient wordPressClient, 
             IMailmanEnabledSheetReader mailmanSheetReader,
             IEmailService emailService,
+            ILogger<IdeaLoggedListener> logger,
             string mergeTemplateName)
-        : base(ideaRepository, wordPressClient)
+        : base(ideaRepository, wordPressClient, logger)
         {
             _mailmanSheetReader = mailmanSheetReader;
             _emailService = emailService;
             _mergeTemplateName = mergeTemplateName;
+            _logger = logger;
         }
 
         private readonly IMailmanEnabledSheetReader _mailmanSheetReader;
         private readonly IEmailService _emailService;
+        private readonly ILogger<IdeaLoggedListener> _logger;
         private readonly string _mergeTemplateName;
         private Func<object> getRequiredService;
 

@@ -4,6 +4,7 @@ using CoE.Ideas.Core.WordPress;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Threading;
@@ -26,6 +27,16 @@ namespace CoE.Ideas.Integration.Notification
                 typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
                 typeof(Microsoft.Extensions.Options.OptionsFactory<>));
 
+            //// Add logging
+            //services.AddSingleton(new LoggerFactory()
+            //    .AddConsole(
+            //        Enum.Parse<LogLevel>(config["Logging:Debug:LogLevel:Default"]),
+            //        bool.Parse(config["Logging:IncludeScopes"]))
+            //    .AddDebug(
+            //        Enum.Parse<LogLevel>(config["Logging:Console:LogLevel:Default"])));
+            //services.AddLogging();
+
+
             services.AddRemoteIdeaConfiguration(config["IdeasApi"], 
                 config["WordPressUrl"]);
             services.AddIdeaListener<IdeaLoggedListener>(
@@ -37,7 +48,8 @@ namespace CoE.Ideas.Integration.Notification
                         x.GetRequiredService<IIdeaRepository>(),
                         x.GetRequiredService<IWordPressClient>(),
                         x.GetRequiredService<IMailmanEnabledSheetReader>(),
-                        x.GetRequiredService<IEmailService>(),
+                        x.GetRequiredService<IEmailService>(), 
+                        x.GetRequiredService<ILogger<IdeaLoggedListener>>(),
                         config["Notification:MergeTemplate"]);
                 });
 

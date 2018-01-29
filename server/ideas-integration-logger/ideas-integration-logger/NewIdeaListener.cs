@@ -1,6 +1,7 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,17 +17,20 @@ namespace CoE.Ideas.Integration.Logger
             IWordPressClient wordPressClient,
             IIdeaLogger ideaLogger,
             //IActiveDirectoryUserService activeDirectoryUserService,
-            IIdeaServiceBusSender ideaServiceBusSender)
-        : base(ideaRepository, wordPressClient)
+            IIdeaServiceBusSender ideaServiceBusSender, 
+            ILogger<NewIdeaListener> logger)
+        : base(ideaRepository, wordPressClient, logger)
         {
             _ideaLogger = ideaLogger;
             //_activeDirectoryUserService = activeDirectoryUserService;
             _ideaServiceBusSender = ideaServiceBusSender;
+            _logger = logger;
         }
 
         private readonly IIdeaLogger _ideaLogger;
         //private readonly IActiveDirectoryUserService _activeDirectoryUserService;
         private readonly IIdeaServiceBusSender _ideaServiceBusSender;
+        private readonly ILogger<NewIdeaListener> _logger;
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
         {
