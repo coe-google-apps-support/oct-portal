@@ -31,7 +31,7 @@
                 <md-file v-model="fileAttachments" multiple />
               </md-field>
             </div>
-            <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
+            <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea" @click="setDone('first', 'second')">Continue</md-button>
           </md-step>
 
           <md-step id="second" md-label="Finalize" :md-done.sync="second">
