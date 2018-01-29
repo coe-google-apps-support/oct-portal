@@ -1,10 +1,15 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using RemedyServiceReference;
 using System;
 using System.Collections.Generic;
+using System.ServiceModel;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CoE.Ideas.Remedy.Watcher
 {
@@ -15,14 +20,13 @@ namespace CoE.Ideas.Remedy.Watcher
             Configuration = configuration;
             var services = ConfigureServices(new ServiceCollection());
 
-            var serviceProvider = services.BuildServiceProvider();
+            ServiceProvider = services.BuildServiceProvider();
 
-            // TODO: eliminate the need to ask for IIdeaServiceBusReceiver to make sure we're listening
-            serviceProvider.GetRequiredService<IIdeaServiceBusReceiver>();
         }
 
 
         private readonly IConfigurationRoot Configuration;
+        private readonly IServiceProvider ServiceProvider;
 
         private IServiceCollection ConfigureServices(IServiceCollection services)
         {
@@ -34,10 +38,46 @@ namespace CoE.Ideas.Remedy.Watcher
                 typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
                 typeof(Microsoft.Extensions.Options.OptionsFactory<>));
 
-            services.AddRemoteIdeaConfiguration(Configuration["IdeasApi"],
-                Configuration["WordPressUrl"]);
+            // Add logging
+            services.AddSingleton(new LoggerFactory()
+                .AddConsole(
+                    Enum.Parse<LogLevel>(Configuration["Logging:Debug:LogLevel:Default"]),
+                    bool.Parse(Configuration["Logging:IncludeScopes"]))
+                .AddDebug(
+                    Enum.Parse<LogLevel>(Configuration["Logging:Console:LogLevel:Default"])));
+            services.AddLogging();
+
+            // Add service to talk to ServiceBus
+            services.AddSingleton<ITopicClient>(x =>
+            {
+                return new TopicClient(Configuration.GetConnectionString("ServiceBus"), Configuration["Ideas:ServiceBusTopic"]);
+            });
+
+            // Add services to talk to Remedy
+            services.Configure<RemedyCheckerOptions>(options =>
+            {
+                options.ServiceUserName = Configuration["Remedy:ServiceUserName"];
+                options.ServicePassword = Configuration["Remedy:ServicePassword"];
+                options.TemplateName = Configuration["Remedy:TemplateName"];
+                options.ApiUrl = Configuration["Remedy:ApiUrl"];
+                options.TempDirectory = Configuration["Remedy:TempDirectory"];
+            });
+            services.AddSingleton<New_Port_0PortType, 
+                New_Port_0PortTypeClient>(x => 
+                    new New_Port_0PortTypeClient(new BasicHttpBinding(BasicHttpSecurityMode.None)
+                    {
+                        MaxReceivedMessageSize = 16777216L // 16 MB, default it 65kb
+                    },
+                    new EndpointAddress(Configuration["Remedy:ApiUrl"])));
+            services.AddSingleton<RemedyChecker>();
 
             return services;
+        }
+
+        public async Task Start()
+        {
+            var checker = ServiceProvider.GetRequiredService<RemedyChecker>();
+            await checker.Poll();
         }
 
     }

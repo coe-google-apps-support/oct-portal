@@ -35,6 +35,14 @@ namespace CoE.Ideas.Core
         Task<Idea> GetIdeaByWordpressKeyAsync(int id);
 
         /// <summary>
+        /// Retrieves a single idea from the database.
+        /// </summary>
+        /// <param name="id">The id of the work item relating to an idea</param>
+        /// <returns>The idea for the specified id.</returns>
+        Task<Idea> GetIdeaByWorkItemIdAsync(string workItemId);
+
+
+        /// <summary>
         /// Updates an idea.
         /// </summary>
         /// <param name="idea">The idea to update</param>
@@ -54,6 +62,10 @@ namespace CoE.Ideas.Core
         /// <param name="id">The Id of the idea to delete</param>
         /// <returns>The idea from the database, just before it's deleted.</returns>
         Task<Idea> DeleteIdeaAsync(long id);
+
+        Task<Idea> SetWorkItemTicketIdAsync(long id, string workItemId);
+
+        Task<Idea> SetWorkItemStatusAsync(long id, InitiativeStatus status);
         #endregion
 
         #region Tags

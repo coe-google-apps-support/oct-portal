@@ -10,6 +10,7 @@
     <Compile Remove="Migrations\20180118144804_MoreSecondaryFields.cs" />
     <Compile Remove="Migrations\20180118145608_MoreSecondaryFields.cs" />
     <Compile Remove="Migrations\20180119141304_MoreSecondaryFields.cs" />
+    <Compile Remove="Migrations\20180129053136_Temp.cs" />
     <Compile Remove="ServiceBus\IdeaQueue.cs" />
     <Compile Remove="ServiceBus\IQueueSender.cs" />
     <Compile Remove="ServiceBus\QueueReceiver.cs" />
@@ -38,6 +39,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.1" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql.Design" Version="1.1.2" />
   </ItemGroup>

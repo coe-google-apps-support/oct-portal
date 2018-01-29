@@ -17,6 +17,8 @@ namespace CoE.Ideas.Core
             CreateMap<StakeholderInternal, Stakeholder>();
             CreateMap<StakeholderType, StakeholderTypeInternal>();
             CreateMap<StakeholderTypeInternal, StakeholderType>();
+            CreateMap<InitiativeStatus, InitiativeStatusInternal>();
+            CreateMap<InitiativeStatusInternal, InitiativeStatus>();
             CreateMap<Tag, TagInternal>();
             CreateMap<TagInternal, Tag>();
             CreateMap<Branch, BranchInternal>();

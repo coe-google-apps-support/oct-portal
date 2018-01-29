@@ -1,7 +1,10 @@
-﻿using CoE.Ideas.Core;
+﻿using AutoMapper;
+using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +21,8 @@ namespace CoE.Ideas.Remedy.SbListener
             var serviceProvider = services.BuildServiceProvider();
 
             // TODO: eliminate the need to ask for IIdeaServiceBusReceiver to make sure we're listening
-            serviceProvider.GetRequiredService<IIdeaServiceBusReceiver>();
+            var listener = serviceProvider.GetRequiredService<RemedyItemUpdatedIdeaListener>();
+            
         }
 
         private readonly IConfigurationRoot Configuration;
@@ -33,12 +37,33 @@ namespace CoE.Ideas.Remedy.SbListener
                 typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
                 typeof(Microsoft.Extensions.Options.OptionsFactory<>));
 
-            services.AddRemoteIdeaConfiguration(Configuration["IdeasApi"],
-                Configuration["WordPressUrl"]);
-            services.AddIdeaListener<RemedyItemUpdatedIdeaListener>(
-                Configuration["ServiceBus:ConnectionString"],
-                Configuration["ServiceBus:TopicName"],
-                Configuration["ServiceBus:Subscription"]);
+            // Add logging
+            services.AddSingleton(new LoggerFactory()
+                .AddConsole(
+                    Enum.Parse<LogLevel>(Configuration["Logging:Debug:LogLevel:Default"]),
+                    bool.Parse(Configuration["Logging:IncludeScopes"]))
+                .AddDebug(
+                    Enum.Parse<LogLevel>(Configuration["Logging:Console:LogLevel:Default"])));
+            services.AddLogging();
+
+            // Add Idea Repository
+            services.AddIdeaConfiguration(
+                Configuration.GetConnectionString("IdeaDatabase"),
+                Configuration["Ideas:WordPressUrl"],
+                Configuration.GetConnectionString("IdeaServiceBus"),
+                Configuration["Ideas:ServiceBusTopic"]);
+
+            // Add service to talk to ServiceBus
+            services.AddSingleton<ISubscriptionClient>(x =>
+            {
+                return new SubscriptionClient(Configuration["ServiceBus:ConnectionString"],
+                    Configuration["ServiceBus:TopicName"],
+                    Configuration["ServiceBus:Subscription"]);
+            });
+
+            services.AddSingleton<RemedyItemUpdatedIdeaListener>();
+
+            services.AddAutoMapper();
 
             return services;
         }
