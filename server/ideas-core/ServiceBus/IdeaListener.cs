@@ -1,4 +1,5 @@
 ﻿using CoE.Ideas.Core.WordPress;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,13 +9,17 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     public abstract class IdeaListener : IIdeaListener
     {
-        public IdeaListener(IIdeaRepository ideaRepository, IWordPressClient wordPressClient)
+        public IdeaListener(IIdeaRepository ideaRepository, 
+            IWordPressClient wordPressClient,
+            ILogger<IdeaListener> logger)
         {
             _ideaRepository = ideaRepository ?? throw new ArgumentNullException("ideaRepository");
             _wordPressClient = wordPressClient ?? throw new ArgumentException("wordPressClient");
+            _logger = logger ?? throw new ArgumentNullException("logger");
         }
         private readonly IIdeaRepository _ideaRepository;
         private readonly IWordPressClient _wordPressClient;
+        private readonly ILogger<IdeaListener> _logger;
 
 
         protected virtual Task ProcessIdeaMessage(IdeaMessage message, Idea idea, WordPressUser wordPressUser) { return Task.CompletedTask; }
@@ -34,14 +39,24 @@ namespace CoE.Ideas.Core.ServiceBus
 
                 if (ShouldProcessMessage(message))
                 {
+                    _logger.LogInformation($"Received New Idea Message for idea with id { message.IdeaId }");
 
                     // Get the actual idea and the user who created it
                     var ideaTask = _ideaRepository.GetIdeaAsync(message.IdeaId);
-                    _wordPressClient.JwtCredentials = properties["AuthToken"]?.ToString();
-                    var userTask = _wordPressClient.GetCurrentUserAsync();
+                    string authToken = properties.ContainsKey("AuthToken") ? properties["AuthToken"]?.ToString() : null;
+                    WordPressUser user;
+                    if (string.IsNullOrWhiteSpace(authToken))
+                    {
+                        _logger.LogError("Received New Idea message without an AuthToken");
+                        user = null;
+                    }
+                    else
+                    {
+                        _wordPressClient.JwtCredentials = authToken;
+                        user = await _wordPressClient.GetCurrentUserAsync();
+                    }
 
                     var idea = await ideaTask;
-                    var user = await userTask;
 
                     await ProcessIdeaMessage(message, idea, user);
                 }
@@ -50,8 +65,10 @@ namespace CoE.Ideas.Core.ServiceBus
             }
             catch (Exception err)
             {
+                _logger.LogError($"Error processing idea message: { err.Message } - { err.StackTrace }");
+
                 // log the error
-                System.Diagnostics.Trace.TraceError($"Error processing idea message: { err.Message }");
+                System.Diagnostics.Trace.TraceError($"Error processing idea message: { err.ToString() }");
 
                 // abandon message?
                 return MessageProcessResponse.Abandon;

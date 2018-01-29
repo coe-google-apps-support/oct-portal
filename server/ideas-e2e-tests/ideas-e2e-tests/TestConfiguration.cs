@@ -1,6 +1,13 @@
 ﻿using CoE.Ideas.Core;
+using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Core.Tests;
+using CoE.Ideas.Core.WordPress;
+using CoE.Ideas.Remedy;
+using CoE.Ideas.Server.Controllers;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -43,30 +50,39 @@ namespace CoE.Ideas.EndToEnd.Tests
                 typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
                 typeof(Microsoft.Extensions.Options.OptionsFactory<>));
 
+            // Add logging
+            
+            _services.AddSingleton(new LoggerFactory()
+                .AddConsole(
+                    Enum.Parse<LogLevel>(_configuration["Logging:Debug:LogLevel:Default"]),
+                    bool.Parse(_configuration["Logging:IncludeScopes"]))
+                .AddDebug(
+                    Enum.Parse<LogLevel>(_configuration["Logging:Console:LogLevel:Default"])));
+            _services.AddLogging();
+
             return this;
         }
 
         public TestConfiguration ConfigureIdeaServices()
         {
-            //_services.AddRemoteIdeaConfiguration(_configuration["IdeasApi"],
-            //    _configuration["WordPressUrl"]);
-            //_services.AddIdeaListener<NewIdeaListener>(
-            //    _configuration["ServiceBus:ConnectionString"],
-            //    _configuration["ServiceBus:TopicName"],
-            //    _configuration["ServiceBus:Subscription"]);
-            //_services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
-            //{
-            //    return new ActiveDirectoryUserService(
-            //        _configuration["ActiveDirectory:Domain"],
-            //        _configuration["ActiveDirectory:ServiceUserName"],
-            //        _configuration["ActiveDirectory:ServicePassword"]);
-            //});
+            _services.AddScoped<IWordPressClient, MockWordPressClient>();
+            _services.AddSingleton<IIdeaServiceBusSender, MockIdeaServiceBusSender>();
+            _services.AddScoped<IIdeaRepository, MockIdeaRepository>();
+            _services.AddScoped<IdeasController>();
+            return this;
+        }
 
+        public TestConfiguration ConfigureServiceBus()
+        {
+            _services.AddSingleton<ITopicClient, MockTopicClient>();
             return this;
         }
 
         public TestConfiguration ConfigureRemedyServices()
         {
+            _services.AddSingleton<IRemedyService, MockRemedyService>();
+            //_services.AddSingleton<NewIdeaListener>();
+
             //_services.AddSingleton(x =>
             //{
             //    return new New_Port_0PortTypeClient(

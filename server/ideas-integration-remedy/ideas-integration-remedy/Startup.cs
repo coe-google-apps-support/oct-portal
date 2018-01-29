@@ -3,6 +3,7 @@ using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using RemedyServiceReference;
 using System;
 using System.Collections.Generic;
@@ -36,12 +37,30 @@ namespace CoE.Ideas.Remedy
                 typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
                 typeof(Microsoft.Extensions.Options.OptionsFactory<>));
 
+
+            // Add logging
+            services.AddSingleton(new LoggerFactory()
+                .AddConsole(
+                    Enum.Parse<LogLevel>(Configuration["Logging:Debug:LogLevel:Default"]),
+                    bool.Parse(Configuration["Logging:IncludeScopes"]))
+                .AddDebug(
+                    Enum.Parse<LogLevel>(Configuration["Logging:Console:LogLevel:Default"])));
+            services.AddLogging();
+
+
             services.AddRemoteIdeaConfiguration(Configuration["IdeasApi"],
                 Configuration["WordPressUrl"]);
             services.AddIdeaListener<NewIdeaListener>(
                 Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],
-                Configuration["ServiceBus:Subscription"]);
+                Configuration["ServiceBus:Subscription"], x =>
+                {
+                    return new NewIdeaListener(x.GetRequiredService<IIdeaRepository>(),
+                        x.GetRequiredService<IWordPressClient>(),
+                        x.GetRequiredService<IRemedyService>(),
+                        new Microsoft.Azure.ServiceBus.TopicClient(Configuration["ServiceBus:ConnectionString"], Configuration["ServiceBus:TopicName"]),
+                        x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<NewIdeaListener>>());
+                });
             //services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
             //{
             //    return new ActiveDirectoryUserService(

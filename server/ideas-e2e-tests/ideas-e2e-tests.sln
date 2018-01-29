@@ -5,9 +5,13 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-e2e-tests", "ideas-e2e-tests\ideas-e2e-tests.csproj", "{82416B2F-6A11-4016-90D8-C4F21446397C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "ideas-core\ideas-core.csproj", "{1250997E-E97E-4109-8144-65A585D364CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "..\ideas-core\ideas-core.csproj", "{1250997E-E97E-4109-8144-65A585D364CE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-server", "ideas-server\ideas-server\ideas-server.csproj", "{9B50D838-FF67-4C66-9053-4CC137AC4098}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-server", "..\ideas-server\ideas-server\ideas-server.csproj", "{9B50D838-FF67-4C66-9053-4CC137AC4098}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy", "..\ideas-integration-remedy\ideas-integration-remedy\ideas-integration-remedy.csproj", "{D37720E3-535C-4E0A-940B-E63827079F48}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy-watcher", "..\ideas-integration-remedy\ideas-integration-remedy-watcher\ideas-integration-remedy-watcher.csproj", "{F79DB6C8-E726-4046-9A0F-DB1E83CFA5BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{9B50D838-FF67-4C66-9053-4CC137AC4098}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B50D838-FF67-4C66-9053-4CC137AC4098}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B50D838-FF67-4C66-9053-4CC137AC4098}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D37720E3-535C-4E0A-940B-E63827079F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D37720E3-535C-4E0A-940B-E63827079F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D37720E3-535C-4E0A-940B-E63827079F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D37720E3-535C-4E0A-940B-E63827079F48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F79DB6C8-E726-4046-9A0F-DB1E83CFA5BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F79DB6C8-E726-4046-9A0F-DB1E83CFA5BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F79DB6C8-E726-4046-9A0F-DB1E83CFA5BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F79DB6C8-E726-4046-9A0F-DB1E83CFA5BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
