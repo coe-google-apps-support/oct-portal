@@ -12,7 +12,7 @@ namespace CoE.Ideas.Remedy.SbListener
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true)
-                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+                .AddJsonFile($"appsettings.Development.json", optional: true)
                 .AddEnvironmentVariables()
                 .Build();
 

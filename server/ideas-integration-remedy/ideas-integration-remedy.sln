@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy-sb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy-watcher", "ideas-integration-remedy-watcher\ideas-integration-remedy-watcher.csproj", "{2FA02259-9403-450D-993C-A80501356AD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ideas-integration-remedy-listener-web", "ideas-integration-remedy-listener-web\ideas-integration-remedy-listener-web.csproj", "{1ED4B52F-FE5F-440B-8542-EE83D67E9DA3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ideas-integration-remedy-watcher-receiver", "ideas-integration-remedy-watcher-receiver\ideas-integration-remedy-watcher-receiver.csproj", "{AD0127C7-D8F8-42DC-8C0E-F918BC35C17A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{2FA02259-9403-450D-993C-A80501356AD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FA02259-9403-450D-993C-A80501356AD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FA02259-9403-450D-993C-A80501356AD0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1ED4B52F-FE5F-440B-8542-EE83D67E9DA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1ED4B52F-FE5F-440B-8542-EE83D67E9DA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1ED4B52F-FE5F-440B-8542-EE83D67E9DA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1ED4B52F-FE5F-440B-8542-EE83D67E9DA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD0127C7-D8F8-42DC-8C0E-F918BC35C17A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD0127C7-D8F8-42DC-8C0E-F918BC35C17A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD0127C7-D8F8-42DC-8C0E-F918BC35C17A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD0127C7-D8F8-42DC-8C0E-F918BC35C17A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

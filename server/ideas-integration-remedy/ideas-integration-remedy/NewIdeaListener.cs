@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
+using Microsoft.Azure.ServiceBus;
 
 namespace CoE.Ideas.Remedy
 {
@@ -15,17 +16,17 @@ namespace CoE.Ideas.Remedy
             IWordPressClient wordPressClient,
             IRemedyService remedyService,
             //IActiveDirectoryUserService activeDirectoryUserService,
-            IIdeaServiceBusSender ideaServiceBusSender)
+            ITopicClient topicClient)
             : base(ideaRepository, wordPressClient)
         {
             _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
             //_activeDirectoryUserService = activeDirectoryUserService ?? throw new ArgumentNullException("activeDirectoryUserService");
-            _ideaServiceBusSender = ideaServiceBusSender;
+            _topicClient = topicClient ?? throw new ArgumentNullException("topicClient");
         }
 
         private readonly IRemedyService _remedyService;
         //private readonly IActiveDirectoryUserService _activeDirectoryUserService;
-        private readonly IIdeaServiceBusSender _ideaServiceBusSender;
+        private readonly ITopicClient _topicClient;
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
         {
@@ -57,10 +58,13 @@ namespace CoE.Ideas.Remedy
 
             var remedyTicketId = await _remedyService.PostNewIdeaAsync(idea, wordPressUser, adUser?.SamAccountName);
 
-            await _ideaServiceBusSender.SendIdeaMessageAsync(idea, IdeaMessageType.WorkItemTicketCreated, headers =>
+            var returnMessage = new Message
             {
-                headers["WorkItemId"] = remedyTicketId;
-            });
+                Label = "Remedy Work Item Created"
+            };
+            returnMessage.UserProperties["IdeaId"] = idea.Id;
+            returnMessage.UserProperties["WorkItemId"] = remedyTicketId;
+            await _topicClient.SendAsync(returnMessage);
         }
     }
 }

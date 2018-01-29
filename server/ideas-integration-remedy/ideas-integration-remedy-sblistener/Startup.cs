@@ -4,6 +4,7 @@ using CoE.Ideas.Core.ServiceBus;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -36,29 +37,31 @@ namespace CoE.Ideas.Remedy.SbListener
                 typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
                 typeof(Microsoft.Extensions.Options.OptionsFactory<>));
 
+            // Add logging
+            services.AddSingleton(new LoggerFactory()
+                .AddConsole(
+                    Enum.Parse<LogLevel>(Configuration["Logging:Debug:LogLevel:Default"]),
+                    bool.Parse(Configuration["Logging:IncludeScopes"]))
+                .AddDebug(
+                    Enum.Parse<LogLevel>(Configuration["Logging:Console:LogLevel:Default"])));
+            services.AddLogging();
+
+            // Add Idea Repository
             services.AddIdeaConfiguration(
                 Configuration.GetConnectionString("IdeaDatabase"),
                 Configuration["Ideas:WordPressUrl"],
                 Configuration.GetConnectionString("IdeaServiceBus"),
                 Configuration["Ideas:ServiceBusTopic"]);
 
-            //services.AddIdeaListener<RemedyItemUpdatedIdeaListener>(
-            //    Configuration["ServiceBus:ConnectionString"],
-            //    Configuration["ServiceBus:TopicName"],
-            //    Configuration["ServiceBus:Subscription"]);
-
+            // Add service to talk to ServiceBus
             services.AddSingleton<ISubscriptionClient>(x =>
             {
                 return new SubscriptionClient(Configuration["ServiceBus:ConnectionString"],
                     Configuration["ServiceBus:TopicName"],
                     Configuration["ServiceBus:Subscription"]);
             });
-            services.AddSingleton(x =>
-            {
-                var ideaRepository = x.GetRequiredService<IIdeaRepository>();
-                var subscriptionClient = x.GetRequiredService<ISubscriptionClient>();
-                return new RemedyItemUpdatedIdeaListener(ideaRepository, subscriptionClient);
-            });
+
+            services.AddSingleton<RemedyItemUpdatedIdeaListener>();
 
             services.AddAutoMapper();
 
