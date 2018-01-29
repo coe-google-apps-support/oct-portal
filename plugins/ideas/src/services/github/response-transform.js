@@ -46,7 +46,24 @@ class ResponseTransform {
       data.push(obj)
     }
 
-    return data
+    let startingIssues = 0
+    let sinceDate = new Date(since)
+    for (let key in byDate) {
+      let date = new Date(key)
+      if (date < sinceDate) {
+        if (byDate[key].workAdded) {
+          startingIssues += byDate[key].workAdded
+        }
+        if (byDate[key].workRemoved) {
+          startingIssues -= byDate[key].workRemoved
+        }
+      }
+    }
+
+    return {
+      data: data,
+      initialWork: startingIssues
+    }
   }
 
   addOne (result, type, date) {

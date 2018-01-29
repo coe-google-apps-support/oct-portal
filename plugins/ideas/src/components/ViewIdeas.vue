@@ -74,11 +74,12 @@ export default {
         weeksBack.setMinutes(0)
         weeksBack.setSeconds(0)
         weeksBack.setMilliseconds(0)
-        let burndown = transform.transformToBurndown(weeksBack)
+        let githubData = transform.transformToBurndown(weeksBack)
         console.log(this.shownSteps)
         stepsData.map((value) => {
           if (value.type === 'burndown') {
-            value.data = burndown
+            value.data = githubData.data
+            value.initialWork = githubData.initialWork
           }
         })
       }).catch((err) => {
