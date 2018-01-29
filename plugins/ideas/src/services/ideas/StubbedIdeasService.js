@@ -275,6 +275,26 @@ let x = class StubbedIdeasService {
       }, QUERY_TIMEOUT)
     })
   }
+
+  /**
+   * Creates a new initiative.
+   * @param {string} title The title of the initiative.
+   * @param {string} description The description of the initiative.
+   * @param {string} businessSponsorEmail The email of the business sponsor.
+   * @param {boolean} hasBudget Whether there is budget for this or not.
+   * @param {Date} expectedTargetDate When should this be delivered?
+   */
+  static createInitiative (title, description, businessSponsorEmail, hasBudget, expectedTargetDate) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({
+          data: {
+            url: 'https://google.com'
+          }
+        })
+      }, QUERY_TIMEOUT)
+    })
+  }
 }
 
 export const StubbedIdeasService = x

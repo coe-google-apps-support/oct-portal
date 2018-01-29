@@ -66,7 +66,6 @@
 
 <script>
 import StolenFromDivi from '@/components/StolenFromDivi'
-import { HTTP } from '../HttpCommon'
 import { validationMixin } from 'vuelidate'
 import {
   required,
@@ -151,13 +150,13 @@ export default {
 
       console.log('saving new idea')
 
-      HTTP.post('', {
-        title: this.form.title,
-        description: this.form.description,
-        businessSponsorEmail: this.form.sponsorEmail,
-        hasBudget: this.form.hasBudget,
-        expectedTargetDate: this.form.deliveryDate
-      }).then(x => {
+      this.services.ideas.createInitiative(
+        this.form.title,
+        this.form.description,
+        this.form.sponsorEmail,
+        this.form.hasBudget,
+        this.form.deliveryDate
+      ).then(x => {
         console.log('new idea saved!')
         this.sending = false
         var idea = x.data
