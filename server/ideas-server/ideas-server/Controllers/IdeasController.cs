@@ -54,14 +54,22 @@ namespace CoE.Ideas.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            var idea = await _repository.GetIdeaAsync(id);
-
-            if (idea == null)
+            if (id <= 0)
             {
                 return NotFound();
             }
+            else
+            {
+                var idea = await _repository.GetIdeaAsync(id);
 
-            return Ok(idea);
+                if (idea == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(idea);
+            }
+
         }
 
         // GET: ideas/wp/5
