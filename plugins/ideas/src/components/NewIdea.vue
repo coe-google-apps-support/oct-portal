@@ -19,40 +19,22 @@
             </div>
             <div class="md-flex md-flex-small-100">
               <md-field :class="getValidationClass('description')">
-                <label for="idea-desc">Description</label>
+                <label for="idea-desc">What is the purpose for this request?</label>
                 <md-textarea name="description" id="idea-desc" v-model="form.description" />
                 <span class="md-error" v-if="!$v.form.description.required">Description is required</span>
                 <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
               </md-field>
             </div>
-            <md-chips name="tags" id="idea-tags" v-model="form.tags" md-placeholder="Add tag..." />
             <div class="md-flex md-flex-small-100">
               <md-field>
-                <label>Attachments</label>
+                <label>Do you have any supporting documents?</label>
                 <md-file v-model="fileAttachments" multiple />
               </md-field>
             </div>
-            <md-button class="md-raised md-primary" @click="setDone('first', 'second')">Continue</md-button>
+            <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea" @click="setDone('first', 'second')">Continue</md-button>
           </md-step>
 
-          <md-step id="second" md-label="Details" :md-done.sync="second">
-            <div class="md-flex md-flex-small-100">
-              <md-checkbox v-model="form.hasSponsorship" class="md-primary">Do you have executive sponsorship for this initiative?</md-checkbox>
-            </div>
-            <div v-if="form.hasSponsorship" class="md-flex md-flex-small-100">
-              <md-field>
-                <label for="idea-sponsor">Sponsor email</label>
-                <md-input name="sponsorEmail" id="idea-sponsor" v-model="form.sponsorEmail" />
-              </md-field>
-            </div>
-            <div class="md-flex md-flex-small-100">
-              <md-checkbox v-model="form.hasBudget" class="md-primary">Do you have a budget for this initiative?</md-checkbox>
-            </div>
-            <md-datepicker v-model="form.deliveryDate" />
-            <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea" :disabled="sending">Submit</md-button>
-          </md-step>
-
-          <md-step id="third" md-label="Finalize" :md-done.sync="third">
+          <md-step id="second" md-label="Finalize" :md-done.sync="second">
             <div id="whats-next">What's next?</div>
             <StolenFromDivi :url="ideaURL"></StolenFromDivi>
           </md-step>
@@ -84,7 +66,6 @@ export default {
     ideaURL: '',
     first: false,
     second: false,
-    third: false,
     firstStepError: null,
     sending: false,
     form: {
@@ -152,10 +133,7 @@ export default {
 
       this.services.ideas.createInitiative(
         this.form.title,
-        this.form.description,
-        this.form.sponsorEmail,
-        this.form.hasBudget,
-        this.form.deliveryDate
+        this.form.description
       ).then(x => {
         console.log('new idea saved!')
         this.sending = false
@@ -163,7 +141,7 @@ export default {
         if (idea && idea.url && idea.url.length > 0) {
           this.ideaURL = idea.url
         }
-        this.setDone('second', 'third')
+        this.setDone('first', 'second')
       }).catch((err, y) => {
         this.sending = false
         console.debug(err)
