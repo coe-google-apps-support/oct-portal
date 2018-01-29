@@ -2,8 +2,10 @@
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security;
 using System.Security.Claims;
@@ -18,16 +20,19 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         private readonly IMapper _mapper;
         private readonly IWordPressClient _wordpressClient;
         private readonly IIdeaServiceBusSender _serviceBusSender;
+        private readonly ILogger<IdeaRepositoryInternal> _logger;
 
         public IdeaRepositoryInternal(IdeaContext context, 
             IMapper mapper, 
             IWordPressClient wordpressClient, 
-            IIdeaServiceBusSender serviceBusSender)
+            IIdeaServiceBusSender serviceBusSender,
+            ILogger<IdeaRepositoryInternal> logger)
         {
             _context = context ?? throw new ArgumentNullException("context");
             _mapper = mapper ?? throw new ArgumentNullException("mapper");
             _wordpressClient = wordpressClient ?? throw new ArgumentNullException("wordpressClient");
             _serviceBusSender = serviceBusSender ?? throw new ArgumentNullException("serviceBusSender");
+            _logger = logger ?? throw new ArgumentNullException("logger");
         }
 
         #region Ideas
@@ -99,6 +104,14 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             if (idea == null)
                 throw new ArgumentNullException("idea");
 
+            _logger.LogInformation("Begin AddIdeaAsync");
+            Stopwatch watch = null;
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                watch = new Stopwatch();
+                watch.Start();
+            }
+
             // get user from WordPress
             WordPressUser wpUser;
             try
@@ -112,12 +125,16 @@ namespace CoE.Ideas.Core.Internal.Initiatives
 
             if (wpUser == null)
             {
+                _logger.LogError("Unable to determine current WordPress user");
                 throw new SecurityException("Unable to determine current WordPress user");
             }
             else if (string.IsNullOrWhiteSpace(wpUser.Email))
             {
+                _logger.LogError($"Current WordPress user ({ wpUser.Name }) does not have an email");
                 throw new InvalidOperationException("Current user does not have an email address registered in WordPress");
             }
+
+            _logger.LogDebug($"Retrieved user { wpUser.Email }");
 
             // User must be authenticated to add new ideas.
             // We'll ensure the current user is added as an "owner" stakeholder.
@@ -129,6 +146,7 @@ namespace CoE.Ideas.Core.Internal.Initiatives
 
             if (existingStakeholder == null)
             {
+                _logger.LogDebug($"Adding current user { wpUser.Email } to stakeholders list as owner");
                 idea.Stakeholders.Add(new Stakeholder()
                 {
                     Email = wpUser.Email,
@@ -140,25 +158,31 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             var ideaInternal = _mapper.Map<Idea, IdeaInternal>(idea);
 
             // default values that cannot be set by users
+            _logger.LogDebug("Setting default values");
             ideaInternal.Status = InitiativeStatusInternal.Initiate;
             ideaInternal.CreatedDate = DateTimeOffset.Now;
 
             // post to WordPress
+            _logger.LogDebug("Posting to WordPress");
             var wordPressIdea = await _wordpressClient.PostIdeaAsync(idea);
             ideaInternal.WordPressKey = wordPressIdea.Id;
             ideaInternal.Url = wordPressIdea.Link;
 
+            _logger.LogDebug("Adding to Ideas database");
             _context.Ideas.Add(ideaInternal);
             await _context.SaveChangesAsync();
 
             var returnValue = _mapper.Map<IdeaInternal, Idea>(ideaInternal);
 
+            _logger.LogDebug("Posting to service bus");
             try
             {
                 await _serviceBusSender.SendIdeaMessageAsync(returnValue, IdeaMessageType.IdeaCreated);
+                _logger.LogDebug("Posted to service bus");
             }
             catch (Exception err)
             {
+                _logger.LogError("Unable to send to service bus: {Error}", err);
                 // should we throw this error???
                 System.Diagnostics.Trace.TraceError($"Idea saved but there was an error sending a message to the service bus: { err.Message }");
             }

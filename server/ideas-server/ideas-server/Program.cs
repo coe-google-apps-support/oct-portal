@@ -29,6 +29,12 @@ namespace CoE.Ideas.Server
             return WebHost.CreateDefaultBuilder(args)
                 .UseUrls("http://0.0.0.0:5000")
                 .UseConfiguration(config)
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                    logging.AddDebug();
+                })
                 .UseKestrel()
                 .UseStartup<Startup>()
                 .Build();

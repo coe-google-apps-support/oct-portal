@@ -37,7 +37,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 if (message == null)
                     throw new ArgumentNullException("message");
 
-                if (ShouldProcessMessage(message))
+                if (ShouldProcessMessage(message) && message.IdeaId > 0)
                 {
                     _logger.LogInformation($"Received New Idea Message for idea with id { message.IdeaId }");
 

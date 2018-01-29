@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace CoE.Ideas.Server.Controllers
 {
@@ -17,10 +19,13 @@ namespace CoE.Ideas.Server.Controllers
     public class IdeasController : Controller
     {
         private readonly IIdeaRepository _repository;
+        private readonly ILogger<IdeasController> _logger;
 
-        public IdeasController(IIdeaRepository repository)
+        public IdeasController(IIdeaRepository repository,
+            ILogger<IdeasController> logger)
         {
-            _repository = repository;
+            _repository = repository ?? throw new ArgumentNullException("repository");
+            _logger = logger ?? throw new ArgumentNullException("logger");
         }
 
         // GET: ideas
@@ -124,7 +129,20 @@ namespace CoE.Ideas.Server.Controllers
                 return BadRequest(ModelState);
             }
 
+            Stopwatch watch = null;
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug("Posting idea");
+                watch = new Stopwatch();
+                watch.Start();
+            }
             var newIdea = await _repository.AddIdeaAsync(idea);
+
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                watch.Stop();
+                _logger.LogDebug($"Posted idea in { watch.ElapsedMilliseconds }ms");
+            }
 
             return CreatedAtAction("GetIdea", new { id = newIdea.Id }, newIdea);
         }
