@@ -183,6 +183,12 @@ namespace CoE.Ideas.Remedy.Watcher
                 int count = 0;
                 foreach (var workItem in workItemsChanged)
                 {
+                    if (workItem.Last_Modified_Date <= lastPollTimeUtc)
+                    {
+                        _logger.LogWarning($"WorkItem { workItem.Last_Modified_Date } has a last modified date less than or equal to our previous poll time, so ignoring");
+                        continue;
+                    }
+
                     var error = await TryProcessWorkItemChanged(workItem);
 
                     if (error == null)

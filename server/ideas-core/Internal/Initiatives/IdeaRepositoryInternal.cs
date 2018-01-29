@@ -138,6 +138,9 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             }
 
             var ideaInternal = _mapper.Map<Idea, IdeaInternal>(idea);
+
+            // default values that cannot be set by users
+            ideaInternal.Status = InitiativeStatusInternal.Initiate;
             ideaInternal.CreatedDate = DateTimeOffset.Now;
 
             // post to WordPress

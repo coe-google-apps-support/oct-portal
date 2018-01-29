@@ -12,7 +12,7 @@ namespace CoE.Ideas.Core.Migrations
                 name: "Status",
                 table: "Ideas",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 2);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
