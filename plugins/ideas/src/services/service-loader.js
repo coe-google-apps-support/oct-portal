@@ -5,6 +5,7 @@
 // Services
 import { IdeasService } from './ideas/IdeasService'
 import { StubbedIdeasService } from './ideas/StubbedIdeasService'
+import { GithubService } from './github/github-service'
 let idea
 
 if (process.env.NODE_ENV === 'development') {
@@ -23,6 +24,7 @@ const ServiceLoader = {
           this.services = {}
         }
         this.services.ideas = idea
+        this.services.github = GithubService
       }
     })
   }
