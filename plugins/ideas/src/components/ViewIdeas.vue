@@ -21,6 +21,7 @@
 import Initiative from '@/components/initiative'
 import InitiativeInfo from '@/components/ViewInitiative'
 import formatNumber from '@/utils/format-number-long'
+import ResponseTransform from '@/services/github/response-transform'
 import Vue from 'Vue'
 
 export default {
@@ -42,6 +43,8 @@ export default {
       console.log('Opening: ' + initiative.id)
       this.setLoading(initiative, true)
 
+      let stepsData = []
+
       this.services.ideas.getInitiativeSteps(initiative.id).then((response) => {
         let steps = response.data
         let active = 'first'
@@ -55,13 +58,35 @@ export default {
         }
 
         this.activeStep = active
-        this.shownSteps = steps
+        // this.shownSteps = steps
+        stepsData = steps
         this.shownInitiative = initiative
-        this.setLoading(initiative, false)
-        this.showDialog = true
       }).catch((err) => {
         this.errors.push(err)
         this.setLoading(initiative, false)
+      }).then(() => {
+        return this.services.github.getAllIssues()
+      }).then((result) => {
+        let transform = new ResponseTransform(result)
+        let weeksBack = new Date()
+        weeksBack.setDate(weeksBack.getDate() - 13)
+        weeksBack.setHours(0)
+        weeksBack.setMinutes(0)
+        weeksBack.setSeconds(0)
+        weeksBack.setMilliseconds(0)
+        let burndown = transform.transformToBurndown(weeksBack)
+        console.log(this.shownSteps)
+        stepsData.map((value) => {
+          if (value.type === 'burndown') {
+            value.data = burndown
+          }
+        })
+      }).catch((err) => {
+        this.errors.push(err)
+      }).then(() => {
+        this.shownSteps = stepsData
+        this.setLoading(initiative, false)
+        this.showDialog = true
       })
     },
     setLoading (initiative, state) {
