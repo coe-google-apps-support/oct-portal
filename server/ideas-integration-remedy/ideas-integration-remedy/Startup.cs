@@ -29,14 +29,7 @@ namespace CoE.Ideas.Remedy
 
         private IServiceCollection ConfigureServices(IServiceCollection services)
         {
-            // basic stuff - there's probably a better way to register these
-            services.AddSingleton(
-                typeof(Microsoft.Extensions.Options.IOptions<>),
-                typeof(Microsoft.Extensions.Options.OptionsManager<>));
-            services.AddSingleton(
-                typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
-                typeof(Microsoft.Extensions.Options.OptionsFactory<>));
-
+            services.AddOptions();         
 
             // Add logging
             services.AddSingleton(new LoggerFactory()
@@ -78,19 +71,7 @@ namespace CoE.Ideas.Remedy
                     new BasicHttpBinding(BasicHttpSecurityMode.None),
                     new EndpointAddress(Configuration["Remedy:ApiUrl"]));
             });
-            services.Configure<RemedyServiceOptions>(options =>
-            {
-                options.CategorizationTier1 = Configuration["Remedy:CategorizationTier1"];
-                options.CategorizationTier2 = Configuration["Remedy:CategorizationTier2"];
-                options.LocationCompany = Configuration["Remedy:LocationCompany"];
-                options.CustomerCompany = Configuration["Remedy:CustomerCompany"];
-                options.ServicePassword = Configuration["Remedy:ServicePassword"];
-                options.ServiceUserName = Configuration["Remedy:ServiceUserName"];
-                options.TemplateId = Configuration["Remedy:TemplateId"];
-                options.CustomerLoginId = Configuration["Remedy:CustomerLoginId"];
-                options.CustomerFirstName = Configuration["Remedy:CustomerFirstName"];
-                options.CustomerLastName = Configuration["Remedy:CustomerLastName"];
-            });
+            services.Configure<RemedyServiceOptions>(Configuration.GetSection("Remedy"));
             services.AddSingleton<IRemedyService, RemedyService>();
 
             return services;
