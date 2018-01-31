@@ -35,12 +35,8 @@ namespace CoE.Ideas.Server
                 .AddCommandLine(args)
                 .Build();
 
-           
-            var loggerConfig = new LoggerConfiguration()
-                .ReadFrom.Configuration(appConfig);
+            ConfigureSerilog(appConfig);
 
-            Log.Logger = loggerConfig
-                .CreateLogger();
 
             var builder = WebHost.CreateDefaultBuilder(args)
                 .UseUrls("http://0.0.0.0:5000")
@@ -53,6 +49,49 @@ namespace CoE.Ideas.Server
             Log.Information("Initiatives service started");
 
             return builder;
+        }
+
+        private static void ConfigureSerilog(IConfigurationRoot config)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(config)
+                .CreateLogger();
+
+            //var serilogConfig = config.GetSection("Serilog");
+            //var writeToConfig = serilogConfig?.GetSection("WriteTo");
+
+
+            //if (writeToConfig != null)
+            //{
+            //    var writeToSinks = writeToConfig.GetChildren();
+            //    if (writeToSinks != null)
+            //    {
+            //        foreach (var sink in writeToSinks)
+            //        {
+            //            var sinkName = sink.GetValue<string>("Name");
+            //            var args = sink.GetSection("Args");
+
+            //            // currently only AzureTableStorage is support for basic logging
+            //            if ("AzureTableStorageWithProperties".Equals(sinkName, StringComparison.OrdinalIgnoreCase))
+            //            {
+            //                // override AzureTableStorageWithProperties to be without properties so we don't get all the noise the framework gives
+            //                loggerConfig.WriteTo.AzureTableStorage(
+            //                    args.GetValue<string>("connectionString"),
+            //                    restrictedToMinimumLevel: args.GetValue("restrictedToMinimumLevel", Serilog.Events.LogEventLevel.Verbose),
+            //                    storageTableName: args.GetValue<string>("storageTableName"),
+            //                    writeInBatches: args.GetValue("writeInBatches", false),
+            //                    batchPostingLimit: args.GetValue<int?>("batchPostingLimit", null));
+            //            }
+            //            else
+            //            {
+            //                // TODO: add regular providers...
+            //            }
+            //        }
+            //    }
+            //}
+
+
+
         }
     }
 }

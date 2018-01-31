@@ -37,9 +37,21 @@ namespace CoE.Ideas.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Idea>> GetIdeas()
         {
-            _logger.Information("Retrieving Initiatives");
+            Stopwatch watch = null;
+            if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+            {
+                _logger.Information("Retrieving Initiatives");
+                watch = new Stopwatch();
+                watch.Start();
+            }
             var ideas = await _repository.GetIdeasAsync();
-            return ideas.OrderByDescending(x => x.Id);
+            var returnValue = ideas.OrderByDescending(x => x.Id);
+            if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+            {
+                watch.Stop();
+                _logger.Information("Retrieving {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
+            }
+            return returnValue;
         }
 
         // GET: ideas/5
@@ -53,15 +65,23 @@ namespace CoE.Ideas.Server.Controllers
         {
             using (LogContext.PushProperty("InitiativeId", id))
             {
-                _logger.Information("Retrieving Initiative {InitiativeId}");
+                Stopwatch watch = null;
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    _logger.Information("Retrieving initiative {InitiativeId}");
+                    watch = new Stopwatch();
+                    watch.Start();
+                }
                 if (!ModelState.IsValid)
                 {
+                    _logger.Warning("Unable to retrieve initiative {InitiativeId} because model state is not valid");
                     return BadRequest(ModelState);
                 }
 
                 if (id <= 0)
                 {
-                    return NotFound();
+                    _logger.Warning("Unable to retrieve initiative {InitiativeId} because id passed in was less than zero");
+                    return BadRequest("id must be greater than zero");
                 }
                 else
                 {
@@ -69,9 +89,15 @@ namespace CoE.Ideas.Server.Controllers
 
                     if (idea == null)
                     {
+                        _logger.Warning("Unable to find an initiative with id {InitiativeId}");
                         return NotFound();
                     }
 
+                    if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                    {
+                        watch.Stop();
+                        _logger.Information("Retrieved initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+                    }
                     return Ok(idea);
                 }
             }
@@ -86,19 +112,35 @@ namespace CoE.Ideas.Server.Controllers
         [HttpGet("wp/{id}")]
         public async Task<IActionResult> GetIdeaByWordpressKey([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            using (LogContext.PushProperty("WordPressId", id))
             {
-                return BadRequest(ModelState);
+                Stopwatch watch = null;
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    _logger.Information("Retrieving initiative by WordPress id {WordPressId}");
+                    watch.Start();
+                }
+                if (!ModelState.IsValid)
+                {
+                    _logger.Warning("Unable to retrieve initiative by WordPress id {WordPressId} because model state is not valid");
+                    return BadRequest(ModelState);
+                }
+
+                var idea = await _repository.GetIdeaByWordpressKeyAsync(id);
+
+                if (idea == null)
+                {
+                    _logger.Warning("Unable to find an initiative with WordPress id {WordPressId}");
+                    return NotFound();
+                }
+
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    watch.Stop();
+                    _logger.Information("Retrieved initiative {InitiativeId} from WordPress id {WordPressId} in {ElapsedMilliseconds}ms", idea.Id, id, watch.ElapsedMilliseconds);
+                }
+                return Ok(idea);
             }
-
-            var idea = await _repository.GetIdeaByWordpressKeyAsync(id);
-
-            if (idea == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(idea);
         }
 
         // PUT: ideas/5
@@ -112,19 +154,47 @@ namespace CoE.Ideas.Server.Controllers
         [Authorize]
         public async Task<IActionResult> PutIdea([FromRoute] long id, [FromBody] Idea idea)
         {
-            if (!ModelState.IsValid)
+            using (LogContext.PushProperty("InitiativeId", id))
             {
-                return BadRequest(ModelState);
+                Stopwatch watch = null;
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    _logger.Information("Updating initiative {InitiativeId}");
+                    watch = new Stopwatch();
+                    watch.Start();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.Warning("Unable to update initiative {InitiativeId} because model state is not valid: {ModelState}", id, ModelState);
+                    return BadRequest(ModelState);
+                }
+
+                if (id != idea.Id)
+                {
+                    _logger.Warning("Unable to retrieve initiative {InitiativeId} because id of initiative retrieved from database was different than the id passed in");
+                    return BadRequest();
+                }
+
+                try
+                {
+                    await _repository.UpdateIdeaAsync(idea);
+
+                    if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                    {
+                        watch.Stop();
+                        _logger.Information("Updated initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+                    }
+                }
+                catch (Exception err)
+                {
+                    Guid correlationId = Guid.NewGuid();
+                    _logger.Error(err, "Unable to save updated initiative {Initiative} to repository. CorrelationId: {CorrelationId}", idea, correlationId);
+                    return base.StatusCode(500, $"Unable to save idea to repository. CorrelationId: { correlationId }");
+                }
+
+                return NoContent();
             }
-
-            if (id != idea.Id)
-            {
-                return BadRequest();
-            }
-
-            await _repository.UpdateIdeaAsync(idea);
-
-            return NoContent();
         }
 
         // POST: ideas
@@ -142,25 +212,35 @@ namespace CoE.Ideas.Server.Controllers
 
             if (!ModelState.IsValid)
             {
+                _logger.Warning("Unable to create initiative because model state is not valid: {ModelState}", ModelState);
                 return BadRequest(ModelState);
             }
 
             Stopwatch watch = null;
             if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
             {
-                _logger.Information("Posting new initiative");
+                _logger.Information("Creating new initiative");
                 watch = new Stopwatch();
                 watch.Start();
             }
-            var newIdea = await _repository.AddIdeaAsync(idea);
-
-            if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+            try
             {
-                watch.Stop();
-                _logger.Information("Posted initiative in { ElapsedMilliseconds }ms", watch.ElapsedMilliseconds);
+                var newIdea = await _repository.AddIdeaAsync(idea);
+
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    watch.Stop();
+                    _logger.Information("Created initiative in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
+                }
+                return CreatedAtAction("GetIdea", new { id = newIdea.Id }, newIdea);
+            }
+            catch (Exception err)
+            {
+                Guid correlationId = Guid.NewGuid();
+                _logger.Error(err, "Unable to save new initiative {Initiative} to repository. CorrelationId: {CorrelationId}", idea, correlationId);
+                return base.StatusCode(500, $"Unable to save idea to repository. CorrelationId: { correlationId }");
             }
 
-            return CreatedAtAction("GetIdea", new { id = newIdea.Id }, newIdea);
         }
 
         // DELETE: ideas/5
@@ -168,19 +248,47 @@ namespace CoE.Ideas.Server.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteIdea([FromRoute] long id)
         {
-            if (!ModelState.IsValid)
+            using (LogContext.PushProperty("InitiativeId", id))
             {
-                return BadRequest(ModelState);
-            }
+                Stopwatch watch = null;
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    _logger.Information("Deleting initiative {InitiativeId}");
+                    watch = new Stopwatch();
+                    watch.Start();
+                }
 
-            var idea = await _repository.DeleteIdeaAsync(id);
-            if (idea == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(idea);
+                if (!ModelState.IsValid)
+                {
+                    _logger.Warning("Unable to delete initiative {InitiativeId} because model state is not valid: {ModelState}", id, ModelState);
+                    return BadRequest(ModelState);
+                }
+
+                try
+                {
+                    var idea = await _repository.DeleteIdeaAsync(id);
+                    if (idea == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                        {
+                            watch.Stop();
+                            _logger.Information("Updated initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+                        }
+                        return Ok(idea);
+                    }
+                }
+                catch (Exception err)
+                {
+                    Guid correlationId = Guid.NewGuid();
+                    _logger.Error(err, "Unable to delete initiative InitiativeId from repository. CorrelationId: {CorrelationId}", id, correlationId);
+                    return base.StatusCode(500, $"Unable to delete initiative from repository. CorrelationId: { correlationId }");
+
+                }
+
             }
         }
 
@@ -196,21 +304,41 @@ namespace CoE.Ideas.Server.Controllers
         [HttpGet("{id}/steps")]
         public IActionResult GetIdeaSteps([FromRoute] long id)
         {
-            if (!ModelState.IsValid)
+            using (LogContext.PushProperty("InitiativeId", id))
             {
-                return BadRequest(ModelState);
+                Stopwatch watch = null;
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    _logger.Information("Retrieving steps from initiative {InitiativeId}");
+                    watch = new Stopwatch();
+                    watch.Start();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.Warning("Unable to retrieve steps from initiative {InitiativeId} because model state is not valid");
+                    return BadRequest(ModelState);
+                }
+
+                //var idea = await _repository.GetIdeaAsync(id);
+
+                //if (idea == null)
+                //{
+                //    return NotFound();
+                //}
+
+                // TODO: replace fake data with real data
+                var fakeData = Newtonsoft.Json.Linq.JObject.Parse(fakeSteps);
+                var returnValue = Json(fakeData);
+
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    watch.Stop();
+                    _logger.Information("Retrieved initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+                }
+
+                return returnValue;
             }
-
-            //var idea = await _repository.GetIdeaAsync(id);
-
-            //if (idea == null)
-            //{
-            //    return NotFound();
-            //}
-
-            // TODO: replace fake data with real data
-            var fakeData = Newtonsoft.Json.Linq.JObject.Parse(fakeSteps);
-            return Json(fakeData);
         }
 
         #region Fake Data
