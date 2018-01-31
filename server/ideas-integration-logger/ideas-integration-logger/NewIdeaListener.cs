@@ -34,7 +34,7 @@ namespace CoE.Ideas.Integration.Logger
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
         {
-            return message.Type == IdeaMessageType.IdeaCreated;
+            return message.Type == IdeaMessageType.IdeaCreated && message.IdeaId > 0;
         }
 
 

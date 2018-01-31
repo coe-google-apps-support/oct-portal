@@ -12,16 +12,16 @@ namespace RemedyServiceReference
 {
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", ConfigurationName = "New_Port_0PortType")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", ConfigurationName = "New_Port_0PortType")]
     public interface New_Port_0PortType
     {
 
-        [System.ServiceModel.OperationContractAttribute(Action = "urn:COE_WOI_WorkOrderInterface_WS/New_Create_Operation_0", ReplyAction = "*")]
+        [System.ServiceModel.OperationContractAttribute(Action = "urn:COE_WOI_WorkOrderInterface_WS_Octavia/New_Create_Operation_0", ReplyAction = "*")]
         [System.ServiceModel.XmlSerializerFormatAttribute()]
         New_Create_Operation_0Response New_Create_Operation_0(New_Create_Operation_0Request request);
 
         // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action = "urn:COE_WOI_WorkOrderInterface_WS/New_Create_Operation_0", ReplyAction = "*")]
+        [System.ServiceModel.OperationContractAttribute(Action = "urn:COE_WOI_WorkOrderInterface_WS_Octavia/New_Create_Operation_0", ReplyAction = "*")]
         System.Threading.Tasks.Task<New_Create_Operation_0Response> New_Create_Operation_0Async(New_Create_Operation_0Request request);
     }
 
@@ -29,7 +29,7 @@ namespace RemedyServiceReference
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public partial class AuthenticationInfo
     {
 
@@ -117,7 +117,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum Set_Manager_usingType
     {
 
@@ -129,7 +129,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum StatusType
     {
 
@@ -166,7 +166,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum SRWorkInfoTypeType
     {
 
@@ -186,7 +186,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum z1D_View_AccessType
     {
 
@@ -200,7 +200,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum Secure_Work_Log2Type
     {
 
@@ -214,7 +214,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum Assignment_Accelerator_AssigneeType
     {
 
@@ -242,7 +242,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum z1D_CommunicationSourceType
     {
 
@@ -280,7 +280,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum CreatedFromBackEndSynchWIType
     {
 
@@ -291,7 +291,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum Status_ReasonType
     {
 
@@ -421,7 +421,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum Work_Order_TypeType
     {
 
@@ -458,7 +458,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum PriorityType
     {
 
@@ -478,7 +478,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum Created_From_flagType
     {
 
@@ -492,7 +492,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum Contact_SensitivityType
     {
 
@@ -506,7 +506,7 @@ namespace RemedyServiceReference
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
     public enum Add_Request_For_Type
     {
 
@@ -524,46 +524,46 @@ namespace RemedyServiceReference
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName = "New_Create_Operation_0", WrapperNamespace = "urn:COE_WOI_WorkOrderInterface_WS", IsWrapped = true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName = "New_Create_Operation_0", WrapperNamespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", IsWrapped = true)]
     public partial class New_Create_Operation_0Request
     {
 
-        [System.ServiceModel.MessageHeaderAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS")]
+        [System.ServiceModel.MessageHeaderAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
         public AuthenticationInfo AuthenticationInfo;
 
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 1)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 1)]
         public string Customer_Company;
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 2)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 2)]
         public string Customer_Login_ID;
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 3)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 3)]
         public string Customer_First_Name;
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 4)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 4)]
         public string Customer_Last_Name;
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 5)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 5)]
         [System.ComponentModel.DefaultValueAttribute("CREATE")]
         public string z1D_Action;
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 6)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 6)]
         public string Summary;
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 7)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 7)]
         public string Location_Company;
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 8)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 8)]
         public string Categorization_Tier_1;
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 9)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 9)]
         public string Categorization_Tier_2;
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 10)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 10)]
         public string TemplateID;
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 11)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 11)]
         public string InstanceId;
 
         public New_Create_Operation_0Request()
@@ -599,11 +599,11 @@ namespace RemedyServiceReference
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName = "New_Create_Operation_0Response", WrapperNamespace = "urn:COE_WOI_WorkOrderInterface_WS", IsWrapped = true)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName = "New_Create_Operation_0Response", WrapperNamespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", IsWrapped = true)]
     public partial class New_Create_Operation_0Response
     {
 
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS", Order = 0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 0)]
         public string InstanceId;
 
         public New_Create_Operation_0Response()

@@ -35,7 +35,7 @@ namespace CoE.Ideas.Remedy
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
         {
-            return message.Type == IdeaMessageType.IdeaCreated;
+            return message.Type == IdeaMessageType.IdeaCreated && message.IdeaId > 0;
         }
 
         protected override async Task ProcessIdeaMessage(IdeaMessage message, Idea idea, WordPressUser wordPressUser)

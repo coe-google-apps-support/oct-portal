@@ -3,6 +3,7 @@ using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Threading;
@@ -24,6 +25,16 @@ namespace CoE.Ideas.Integration.Logger
             services.AddSingleton(
                 typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
                 typeof(Microsoft.Extensions.Options.OptionsFactory<>));
+
+            // Add logging
+            services.AddSingleton(new LoggerFactory()
+                .AddConsole(
+                    Enum.Parse<LogLevel>(config["Logging:Debug:LogLevel:Default"]),
+                    bool.Parse(config["Logging:IncludeScopes"]))
+                .AddDebug(
+                    Enum.Parse<LogLevel>(config["Logging:Console:LogLevel:Default"])));
+            services.AddLogging();
+
 
             services.AddRemoteIdeaConfiguration(config["IdeasApi"],
                 config["WordPressUrl"]);
