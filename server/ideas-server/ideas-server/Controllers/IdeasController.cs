@@ -10,6 +10,7 @@ using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using Serilog.Context;
 
 namespace CoE.Ideas.Server.Controllers
 {
@@ -19,10 +20,10 @@ namespace CoE.Ideas.Server.Controllers
     public class IdeasController : Controller
     {
         private readonly IIdeaRepository _repository;
-        private readonly ILogger<IdeasController> _logger;
+        private readonly Serilog.ILogger _logger;
 
         public IdeasController(IIdeaRepository repository,
-            ILogger<IdeasController> logger)
+           Serilog.ILogger logger)
         {
             _repository = repository ?? throw new ArgumentNullException("repository");
             _logger = logger ?? throw new ArgumentNullException("logger");
@@ -36,7 +37,7 @@ namespace CoE.Ideas.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Idea>> GetIdeas()
         {
-            _logger.LogInformation("Retrieving Ideas");
+            _logger.Information("Retrieving Initiatives");
             var ideas = await _repository.GetIdeasAsync();
             return ideas.OrderByDescending(x => x.Id);
         }
@@ -50,27 +51,30 @@ namespace CoE.Ideas.Server.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetIdea([FromRoute] long id)
         {
-            if (!ModelState.IsValid)
+            using (LogContext.PushProperty("InitiativeId", id))
             {
-                return BadRequest(ModelState);
-            }
+                _logger.Information("Retrieving Initiative {InitiativeId}");
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            if (id <= 0)
-            {
-                return NotFound();
-            }
-            else
-            {
-                var idea = await _repository.GetIdeaAsync(id);
-
-                if (idea == null)
+                if (id <= 0)
                 {
                     return NotFound();
                 }
+                else
+                {
+                    var idea = await _repository.GetIdeaAsync(id);
 
-                return Ok(idea);
+                    if (idea == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return Ok(idea);
+                }
             }
-
         }
 
         // GET: ideas/wp/5
@@ -133,24 +137,27 @@ namespace CoE.Ideas.Server.Controllers
         [Authorize]
         public async Task<IActionResult> PostIdea([FromBody] Idea idea)
         {
+            if (idea == null)
+                throw new ArgumentNullException("idea");
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             Stopwatch watch = null;
-            if (_logger.IsEnabled(LogLevel.Debug))
+            if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
             {
-                _logger.LogDebug("Posting idea");
+                _logger.Information("Posting new initiative");
                 watch = new Stopwatch();
                 watch.Start();
             }
             var newIdea = await _repository.AddIdeaAsync(idea);
 
-            if (_logger.IsEnabled(LogLevel.Debug))
+            if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
             {
                 watch.Stop();
-                _logger.LogDebug($"Posted idea in { watch.ElapsedMilliseconds }ms");
+                _logger.Information("Posted initiative in { ElapsedMilliseconds }ms", watch.ElapsedMilliseconds);
             }
 
             return CreatedAtAction("GetIdea", new { id = newIdea.Id }, newIdea);

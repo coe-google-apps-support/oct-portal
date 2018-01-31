@@ -7,6 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace CoE.Ideas.Server
 {
@@ -26,21 +27,30 @@ namespace CoE.Ideas.Server
                 .AddCommandLine(args)
                 .Build();
 
+            var appConfig = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
+                .AddCommandLine(args)
+                .Build();
+
+           
+            var loggerConfig = new LoggerConfiguration()
+                .ReadFrom.Configuration(appConfig);
+
+            Log.Logger = loggerConfig
+                .CreateLogger();
+
             var builder = WebHost.CreateDefaultBuilder(args)
                 .UseUrls("http://0.0.0.0:5000")
                 .UseConfiguration(config)
-                //.ConfigureLogging((hostingContext, logging) =>
-                //{
-                //    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                //    logging.AddConsole();
-                //    logging.AddDebug();
-                //})
+                .UseSerilog()
                 .UseKestrel()
                 .UseStartup<Startup>()
                 .Build();
 
-            var logger = builder.Services.GetService(typeof(Serilog.ILogger)) as Serilog.ILogger;
-            logger.Information("Initiatives service started");
+            Log.Information("Initiatives service started");
 
             return builder;
         }
