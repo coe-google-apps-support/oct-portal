@@ -26,18 +26,23 @@ namespace CoE.Ideas.Server
                 .AddCommandLine(args)
                 .Build();
 
-            return WebHost.CreateDefaultBuilder(args)
+            var builder = WebHost.CreateDefaultBuilder(args)
                 .UseUrls("http://0.0.0.0:5000")
                 .UseConfiguration(config)
-                .ConfigureLogging((hostingContext, logging) =>
-                {
-                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                    logging.AddConsole();
-                    logging.AddDebug();
-                })
+                //.ConfigureLogging((hostingContext, logging) =>
+                //{
+                //    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                //    logging.AddConsole();
+                //    logging.AddDebug();
+                //})
                 .UseKestrel()
                 .UseStartup<Startup>()
                 .Build();
+
+            var logger = builder.Services.GetService(typeof(Serilog.ILogger)) as Serilog.ILogger;
+            logger.Information("Initiatives service started");
+
+            return builder;
         }
     }
 }

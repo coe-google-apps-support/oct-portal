@@ -36,6 +36,7 @@ namespace CoE.Ideas.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Idea>> GetIdeas()
         {
+            _logger.LogInformation("Retrieving Ideas");
             var ideas = await _repository.GetIdeasAsync();
             return ideas.OrderByDescending(x => x.Id);
         }
