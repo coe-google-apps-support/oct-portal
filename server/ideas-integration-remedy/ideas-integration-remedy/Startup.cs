@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RemedyServiceReference;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
@@ -32,15 +33,20 @@ namespace CoE.Ideas.Remedy
             // basic stuff - there's probably a better way to register these
             services.AddOptions();
 
-            // Add logging
+            // Add logging 
             services.AddSingleton(new LoggerFactory()
-                .AddConsole(
-                    Enum.Parse<LogLevel>(Configuration["Logging:Debug:LogLevel:Default"]),
-                    bool.Parse(Configuration["Logging:IncludeScopes"]))
-                .AddDebug(
-                    Enum.Parse<LogLevel>(Configuration["Logging:Console:LogLevel:Default"])));
+                .AddConsole(Configuration)
+                .AddDebug()
+                .AddSerilog());
             services.AddLogging();
 
+            // configure application specific logging
+            services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithProperty("Application", "Initiatives")
+                .Enrich.WithProperty("Module", "Remedy WO Creator")
+                .ReadFrom.Configuration(Configuration)
+                .CreateLogger());
 
             services.AddRemoteIdeaConfiguration(Configuration["IdeasApi"],
                 Configuration["WordPressUrl"]);
@@ -53,7 +59,8 @@ namespace CoE.Ideas.Remedy
                         x.GetRequiredService<IWordPressClient>(),
                         x.GetRequiredService<IRemedyService>(),
                         new Microsoft.Azure.ServiceBus.TopicClient(Configuration["ServiceBus:ConnectionString"], Configuration["ServiceBus:TopicName"]),
-                        x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<NewIdeaListener>>());
+                        x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<NewIdeaListener>>(), 
+                        x.GetRequiredService<Serilog.ILogger>());
                 });
             //services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
             //{
