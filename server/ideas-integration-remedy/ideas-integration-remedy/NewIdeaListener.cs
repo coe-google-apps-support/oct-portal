@@ -9,6 +9,7 @@ using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
+using Serilog.Context;
 
 namespace CoE.Ideas.Remedy
 {
@@ -19,19 +20,20 @@ namespace CoE.Ideas.Remedy
             IRemedyService remedyService,
             //IActiveDirectoryUserService activeDirectoryUserService,
             ITopicClient topicClient,
-            ILogger<NewIdeaListener> logger)
+            ILogger<NewIdeaListener> logger,
+            Serilog.ILogger seriLogger)
             : base(ideaRepository, wordPressClient, logger)
         {
             _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
             //_activeDirectoryUserService = activeDirectoryUserService ?? throw new ArgumentNullException("activeDirectoryUserService");
             _topicClient = topicClient ?? throw new ArgumentNullException("topicClient");
-            _logger = logger ?? throw new ArgumentNullException("logger");
+            _logger = seriLogger ?? throw new ArgumentNullException("seriLogger");
         }
 
         private readonly IRemedyService _remedyService;
         //private readonly IActiveDirectoryUserService _activeDirectoryUserService;
         private readonly ITopicClient _topicClient;
-        private readonly ILogger<NewIdeaListener> _logger;
+        private readonly Serilog.ILogger _logger;
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
         {
@@ -47,45 +49,62 @@ namespace CoE.Ideas.Remedy
             //if (string.IsNullOrWhiteSpace(wordPressUser.Email))
             //    throw new ArgumentOutOfRangeException("wordpressUser email is empty");
 
-            _logger.LogInformation("Begin ProcessIdeaMessage");
-            Stopwatch watch = null;
-            if (_logger.IsEnabled(LogLevel.Debug))
+            using (LogContext.PushProperty("InitiativeId", idea.Id))
             {
-                watch = new Stopwatch();
+                _logger.Information("Begin ProcessIdeaMessage");
+                Stopwatch rootWatch = new Stopwatch(), watch = new Stopwatch();
+                rootWatch.Start();
                 watch.Start();
+
+                UserPrincipal adUser = null;
+                try
+                {
+                //    adUser = _activeDirectoryUserService.GetADUser(wordPressUser.Email);
+                }
+                //catch (Exception err)
+                //{
+                //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
+                //}
+
+                //if (adUser == null)
+                //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
+                finally
+                {
+                    watch.Restart();
+                }
+
+                string remedyTicketId = null;
+                try
+                {
+                    remedyTicketId = await _remedyService.PostNewIdeaAsync(idea, wordPressUser, adUser?.SamAccountName);
+                    _logger.Information("Created Remedy Work Order in {ElapsedMilliseconds}", watch.ElapsedMilliseconds);
+                }
+                finally
+                {
+                    watch.Restart();
+                }
+
+                try
+                {
+                    var returnMessage = new Message
+                    {
+                        Label = "Remedy Work Item Created"
+                    };
+                    returnMessage.UserProperties["IdeaId"] = idea.Id;
+                    returnMessage.UserProperties["WorkItemId"] = remedyTicketId;
+                    await _topicClient.SendAsync(returnMessage);
+                    _logger.Information("Send remedy work order created message to service bus in {ElapsedMilliseconds}", watch.ElapsedMilliseconds);
+                }
+                finally
+                {
+                    // technically we don't need to do this (https://stackoverflow.com/questions/24140261/should-i-stop-stopwatch-at-the-end-of-the-method)
+                    // but I think it looks clean
+                    watch.Stop();
+                    watch = null;
+                }
+
+                _logger.Information("Processed message in {ElapsedMilliseconds}", rootWatch.ElapsedMilliseconds);
             }
-
-            UserPrincipal adUser = null;
-            //try
-            //{
-            //    adUser = _activeDirectoryUserService.GetADUser(wordPressUser.Email);
-            //}
-            //catch (Exception err)
-            //{
-            //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
-            //}
-
-            //if (adUser == null)
-            //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
-
-
-            var remedyTicketId = await _remedyService.PostNewIdeaAsync(idea, wordPressUser, adUser?.SamAccountName);
-
-            var returnMessage = new Message
-            {
-                Label = "Remedy Work Item Created"
-            };
-            returnMessage.UserProperties["IdeaId"] = idea.Id;
-            returnMessage.UserProperties["WorkItemId"] = remedyTicketId;
-            await _topicClient.SendAsync(returnMessage);
-
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                watch.Stop();
-                _logger.LogDebug($"End ProcessIdeaMessage in { watch.ElapsedMilliseconds }ms");
-            }
-            else
-                _logger.LogInformation("End ProcessIdeaMessage");
         }
     }
 }
