@@ -52,11 +52,15 @@ namespace CoE.Ideas.Integration.Notification
                     string subject = await Render((string)data["subject"], ideaDataSerialized);
                     string body = await Render((string)data["body"], ideaDataSerialized);
 
-                    var smtpClient = new SmtpClient();
-                    smtpClient.Host = _smtpHost;
+                    var smtpClient = new SmtpClient
+                    {
+                        Host = _smtpHost
+                    };
 
-                    MailMessage mailMessage = new MailMessage();
-                    mailMessage.From = new MailAddress(_fromAddress, _fromDisplayName);
+                    MailMessage mailMessage = new MailMessage
+                    {
+                        From = new MailAddress(_fromAddress, _fromDisplayName)
+                    };
                     if (!string.IsNullOrWhiteSpace(to))
                     mailMessage.To.Add(to);
                     if (!string.IsNullOrWhiteSpace(cc))
