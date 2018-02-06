@@ -22,19 +22,15 @@ namespace CoE.Ideas.Integration.Logger
                 .AddEnvironmentVariables()
                 .Build();
 
-            ConfigureSerilog(config);
+            // Configure Serilog here to ensure we capture startup errors
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(config)
+                .CreateLogger();
 
             new Startup(config);
 
             // now block forever
             new ManualResetEvent(false).WaitOne();
-        }
-
-        private static void ConfigureSerilog(IConfigurationRoot config)
-        {
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(config)
-                .CreateLogger();
         }
     }
 }
