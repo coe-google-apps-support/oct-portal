@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-notification", "ideas-integration-notification\ideas-integration-notification.csproj", "{F42CD950-A0B2-404C-9B01-1B0248832804}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "..\ideas-core\ideas-core.csproj", "{03E1B1C3-0174-43DB-8D72-8BE81233386A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "..\ideas-core\ideas-core\ideas-core.csproj", "{03E1B1C3-0174-43DB-8D72-8BE81233386A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

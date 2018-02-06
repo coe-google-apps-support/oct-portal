@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy", "ideas-integration-remedy\ideas-integration-remedy.csproj", "{F1079E7A-4F30-43AE-B01D-39A8D9ED0EB8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "..\ideas-core\ideas-core.csproj", "{F8F69B08-E1E0-4B56-B2CB-C3A3E10CD98F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "..\ideas-core\ideas-core\ideas-core.csproj", "{F8F69B08-E1E0-4B56-B2CB-C3A3E10CD98F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy-tests", "ideas-integration-remedy-tests\ideas-integration-remedy-tests.csproj", "{5FA6347F-20CA-4460-B6D9-37E456338E5A}"
 EndProject

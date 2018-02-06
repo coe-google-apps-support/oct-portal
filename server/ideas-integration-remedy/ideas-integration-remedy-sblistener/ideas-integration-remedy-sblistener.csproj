@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ideas-core\ideas-core.csproj" />
+    <ProjectReference Include="..\..\ideas-core\ideas-core\ideas-core.csproj" />
     <ProjectReference Include="..\ideas-integration-remedy-watcher\ideas-integration-remedy-watcher.csproj" />
   </ItemGroup>
 

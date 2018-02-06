@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-e2e-tests", "ideas-e2e-tests\ideas-e2e-tests.csproj", "{82416B2F-6A11-4016-90D8-C4F21446397C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "..\ideas-core\ideas-core.csproj", "{1250997E-E97E-4109-8144-65A585D364CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "..\ideas-core\ideas-core\ideas-core.csproj", "{1250997E-E97E-4109-8144-65A585D364CE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-server", "..\ideas-server\ideas-server\ideas-server.csproj", "{9B50D838-FF67-4C66-9053-4CC137AC4098}"
 EndProject
