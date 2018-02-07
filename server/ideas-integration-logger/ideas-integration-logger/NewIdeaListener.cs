@@ -2,6 +2,7 @@
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.Extensions.Logging;
+using Serilog.Context;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,19 +19,21 @@ namespace CoE.Ideas.Integration.Logger
             IIdeaLogger ideaLogger,
             //IActiveDirectoryUserService activeDirectoryUserService,
             IIdeaServiceBusSender ideaServiceBusSender, 
-            ILogger<NewIdeaListener> logger)
+            ILogger<NewIdeaListener> logger,
+            Serilog.ILogger seriLogger)
         : base(ideaRepository, wordPressClient, logger)
         {
             _ideaLogger = ideaLogger;
             //_activeDirectoryUserService = activeDirectoryUserService;
             _ideaServiceBusSender = ideaServiceBusSender;
-            _logger = logger;
+            _logger = seriLogger;
         }
 
         private readonly IIdeaLogger _ideaLogger;
         //private readonly IActiveDirectoryUserService _activeDirectoryUserService;
-        private readonly IIdeaServiceBusSender _ideaServiceBusSender;
-        private readonly ILogger<NewIdeaListener> _logger;
+        private readonly IIdeaServiceBusSender _ideaServiceBusSender;        
+        private readonly Serilog.ILogger _logger;
+
 
         protected override bool ShouldProcessMessage(IdeaMessage message)
         {
@@ -47,44 +50,71 @@ namespace CoE.Ideas.Integration.Logger
             if (string.IsNullOrWhiteSpace(wordPressUser.Email))
                 throw new ArgumentOutOfRangeException("wordpressUser email is empty");
 
-            //UserPrincipal adUser;
-            //try
-            //{
-            //    adUser = _activeDirectoryUserService.GetADUser(wordPressUser.Email);
-            //}
-            //catch (Exception err)
-            //{
-            //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
-            //}
+            using (LogContext.PushProperty("InitiativeId", idea.Id))
+            {
+                _logger.Information("Received message that a new initiative has been created with id {InitiativeId}");
+                Stopwatch rootWatch = new Stopwatch(), watch = new Stopwatch();
+                rootWatch.Start();
+                watch.Start();
 
-            //if (adUser == null)
-            //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
+                //UserPrincipal adUser;
+                try
+                {
+                    //    adUser = _activeDirectoryUserService.GetADUser(wordPressUser.Email);
+                }
+                //catch (Exception err)
+                //{
+                //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
+                //}
+                finally
+                {
+                    watch.Restart();
+                }
 
-            Google.Apis.Sheets.v4.Data.AppendValuesResponse loggerResponse;
-            try
-            {
-                loggerResponse = await _ideaLogger.LogIdeaAsync(idea, wordPressUser, adUser: null);
-            }
-            catch (Exception err)
-            {
-                Trace.TraceError($"Unable to log idea: { err.Message}");
-                loggerResponse = null;
-            }
+                //if (adUser == null)
+                //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
 
-            try
-            {
-                await _ideaServiceBusSender.SendIdeaMessageAsync(
-                    idea, 
-                    IdeaMessageType.IdeaLogged, 
-                    headers => 
-                    {
-                        headers["logWasSuccessfull"] = loggerResponse != null;
-                        headers["RangeUpdated"] = loggerResponse?.TableRange;
-                    });
-            }
-            catch (Exception err)
-            {
-                Trace.TraceError($"Unable to send IdeaLogged message: { err.Message }");
+                Google.Apis.Sheets.v4.Data.AppendValuesResponse loggerResponse;
+                try
+                {
+                    loggerResponse = await _ideaLogger.LogIdeaAsync(idea, wordPressUser, adUser: null);
+                    _logger.Information("Logged initiative in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
+                }
+                catch (Exception err)
+                {
+                    _logger.Error(err, "Unable to log initiative {InitiativeId}: {ErrorMessage}", idea.Id, err.Message);
+                    loggerResponse = null;
+                }
+                finally
+                {
+                    watch.Restart();
+                }
+
+                try
+                {
+                    await _ideaServiceBusSender.SendIdeaMessageAsync(
+                        idea, 
+                        IdeaMessageType.IdeaLogged, 
+                        headers => 
+                        {
+                            headers["logWasSuccessfull"] = loggerResponse != null;
+                            headers["RangeUpdated"] = loggerResponse?.TableRange;
+                        });
+                    _logger.Information("Sent message on Service Bus that initiative has been logged in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
+                }
+                catch (Exception err)
+                {
+                    Trace.TraceError($"Unable to send IdeaLogged message: { err.Message }");
+                    _logger.Error(err, "Unable to send message on Service Bus that initiative {InitiativeId}: {ErrorMessage}", idea.Id, err.Message);
+                }
+                finally
+                {
+                    watch.Stop();
+                }
+
+                rootWatch.Stop();
+                _logger.Information("Logger processed message in {ElapsedMilliseconds}ms", rootWatch.ElapsedMilliseconds);
+
             }
 
         }

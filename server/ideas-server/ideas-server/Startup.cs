@@ -13,12 +13,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 namespace CoE.Ideas.Server
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             Configuration = configuration;
         }
@@ -28,6 +29,14 @@ namespace CoE.Ideas.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // configure application specific logging
+            services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithProperty("Application", "Initiatives")
+                .Enrich.WithProperty("Module", "Server")
+                .ReadFrom.Configuration(Configuration)
+                .CreateLogger());
+
             services.AddIdeaConfiguration(
                 Configuration.GetConnectionString("IdeaDatabase"), 
                 Configuration["Ideas:WordPressUrl"],

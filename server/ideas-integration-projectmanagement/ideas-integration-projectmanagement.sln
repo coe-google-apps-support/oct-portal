@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-projectmanagement-core", "ideas-integration-projectmanagement-core\ideas-integration-projectmanagement-core.csproj", "{2B85DB87-F25F-4606-867E-6EF024CDEFC8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "..\ideas-core\ideas-core.csproj", "{94FF3DBE-5F11-426F-B6EF-2EAB2C6E7EB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "..\ideas-core\ideas-core\ideas-core.csproj", "{94FF3DBE-5F11-426F-B6EF-2EAB2C6E7EB0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ideas-integration-projectmanagement-server", "ideas-integration-projectmanagement-server\ideas-integration-projectmanagement-server.csproj", "{5925AA1F-9590-4285-888F-0ADF9EED8D95}"
 EndProject

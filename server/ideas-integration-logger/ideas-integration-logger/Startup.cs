@@ -4,14 +4,13 @@ using CoE.Ideas.Core.WordPress;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RemedyServiceReference;
 using Serilog;
+using Serilog.Extensions;
 using System;
 using System.Collections.Generic;
-using System.ServiceModel;
 using System.Text;
 
-namespace CoE.Ideas.Remedy
+namespace CoE.Ideas.Integration.Logger
 {
     public class Startup
     {
@@ -30,9 +29,10 @@ namespace CoE.Ideas.Remedy
 
         private IServiceCollection ConfigureServices(IServiceCollection services)
         {
-            services.AddOptions();         
+            // basic stuff
+            services.AddOptions();
 
-            // Add logging
+            // Add logging 
             services.AddSingleton(new LoggerFactory()
                 .AddConsole(Configuration)
                 .AddDebug()
@@ -43,24 +43,18 @@ namespace CoE.Ideas.Remedy
             services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("Application", "Initiatives")
-                .Enrich.WithProperty("Module", "Remedy WO Creator")
+                .Enrich.WithProperty("Module", "Logging")
                 .ReadFrom.Configuration(Configuration)
                 .CreateLogger());
+
+
 
             services.AddRemoteIdeaConfiguration(Configuration["IdeasApi"],
                 Configuration["WordPressUrl"]);
             services.AddIdeaListener<NewIdeaListener>(
                 Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],
-                Configuration["ServiceBus:Subscription"], x =>
-                {
-                    return new NewIdeaListener(x.GetRequiredService<IIdeaRepository>(),
-                        x.GetRequiredService<IWordPressClient>(),
-                        x.GetRequiredService<IRemedyService>(),
-                        new Microsoft.Azure.ServiceBus.TopicClient(Configuration["ServiceBus:ConnectionString"], Configuration["ServiceBus:TopicName"]),
-                        x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<NewIdeaListener>>(), 
-                        x.GetRequiredService<Serilog.ILogger>());
-                });
+                Configuration["ServiceBus:Subscription"]);
             //services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
             //{
             //    return new ActiveDirectoryUserService(
@@ -72,14 +66,15 @@ namespace CoE.Ideas.Remedy
                 Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"]);
 
-            services.AddSingleton(x =>
+            services.AddSingleton<IIdeaLogger, IIdeaLogger>(x =>
             {
-                return new New_Port_0PortTypeClient(
-                    new BasicHttpBinding(BasicHttpSecurityMode.None),
-                    new EndpointAddress(Configuration["Remedy:ApiUrl"]));
+                return new GoogleSheetIdeaLogger(
+                    Configuration["Logger:serviceAccountPrivateKey"],
+                    Configuration["Logger:serviceAccountEmail"],
+                    Configuration["Logger:spreadsheetId"],
+                    Configuration["IdeasApi"]);
             });
-            services.Configure<RemedyServiceOptions>(Configuration.GetSection("Remedy"));
-            services.AddSingleton<IRemedyService, RemedyService>();
+
 
             return services;
         }

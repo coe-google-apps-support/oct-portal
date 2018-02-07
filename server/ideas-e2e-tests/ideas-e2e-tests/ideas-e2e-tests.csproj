@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ideas-core\ideas-core.csproj" />
+    <ProjectReference Include="..\..\ideas-core\ideas-core\ideas-core.csproj" />
     <ProjectReference Include="..\..\ideas-integration-remedy\ideas-integration-remedy-watcher\ideas-integration-remedy-watcher.csproj" />
     <ProjectReference Include="..\..\ideas-integration-remedy\ideas-integration-remedy\ideas-integration-remedy.csproj" />
     <ProjectReference Include="..\..\ideas-server\ideas-server\ideas-server.csproj" />
