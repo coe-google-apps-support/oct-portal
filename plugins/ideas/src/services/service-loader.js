@@ -10,10 +10,8 @@ let idea
 
 if (process.env.NODE_ENV === 'development') {
   idea = StubbedIdeasService
-} else if (process.env.NODE_ENV === 'production') {
-  idea = IdeasService
 } else {
-  throw new Error(`Unknown environment: ${process.NODE_ENV}`)
+  idea = IdeasService
 }
 
 const ServiceLoader = {
