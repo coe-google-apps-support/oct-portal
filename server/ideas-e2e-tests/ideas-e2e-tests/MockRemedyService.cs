@@ -28,10 +28,12 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         public Task<string> PostNewIdeaAsync(Idea idea, WordPressUser user, string user3and3)
         {
-            var newRemedyItem = new OutputMapping1GetListValues();
-            newRemedyItem.WorkOrderID = Guid.NewGuid().ToString();
-            newRemedyItem.Description = idea.Title;
-            newRemedyItem.Detailed_Description = idea.Description;
+            var newRemedyItem = new OutputMapping1GetListValues
+            {
+                WorkOrderID = Guid.NewGuid().ToString(),
+                Description = idea.Title,
+                Detailed_Description = idea.Description
+            };
             remedyItems.Add(newRemedyItem);
 
             return Task.FromResult(newRemedyItem.WorkOrderID);

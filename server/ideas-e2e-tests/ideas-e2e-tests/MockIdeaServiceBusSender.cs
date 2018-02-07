@@ -13,9 +13,9 @@ namespace CoE.Ideas.EndToEnd.Tests
     {
         public MockIdeaServiceBusSender(ITopicClient topicClient)
         {
-            topicClient = _topicClient ?? throw new ArgumentNullException("topicClient");
+            _topicClient = topicClient ?? throw new ArgumentNullException("topicClient");
         }
-        private ITopicClient _topicClient;
+        private readonly ITopicClient _topicClient;
 
         protected virtual void SetProperties(Idea idea, IdeaMessageType messageType, IDictionary<string, object> properties)
         {
