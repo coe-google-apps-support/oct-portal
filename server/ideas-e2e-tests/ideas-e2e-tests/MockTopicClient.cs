@@ -11,8 +11,8 @@ namespace CoE.Ideas.EndToEnd.Tests
     {
         //public MockTopicClient(Remedy.NewIdeaListener remedyNewIdeaListener)
         //{
-        //    _remedyNewIdeaListener = remedyNewIdeaListener ?? throw new ArgumentNullException("remedyNewIdeaListener");
-        //}
+        //   _remedyNewIdeaListener = remedyNewIdeaListener ?? throw new ArgumentNullException("remedyNewIdeaListener");
+       // }
 
         private readonly Remedy.NewIdeaListener _remedyNewIdeaListener;
 
@@ -21,7 +21,7 @@ namespace CoE.Ideas.EndToEnd.Tests
         public Task SendAsync(Message message)
         {
             // route the messages appropriately
-            
+            //await _remedyNewIdeaListener.OnMessageRecevied(message);
 
             return Task.CompletedTask;
         }

@@ -8,6 +8,7 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -42,13 +43,7 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         public TestConfiguration ConfigureBasicServices()
         {
-            // basic stuff - there's probably a better way to register these
-            _services.AddSingleton(
-                typeof(Microsoft.Extensions.Options.IOptions<>),
-                typeof(Microsoft.Extensions.Options.OptionsManager<>));
-            _services.AddSingleton(
-                typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
-                typeof(Microsoft.Extensions.Options.OptionsFactory<>));
+            _services.AddOptions();
 
             // Add logging
             
@@ -59,6 +54,15 @@ namespace CoE.Ideas.EndToEnd.Tests
                 .AddDebug(
                     Enum.Parse<LogLevel>(_configuration["Logging:Console:LogLevel:Default"])));
             _services.AddLogging();
+
+            // configure application specific logging
+            _services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithProperty("Application", "Initiatives")
+                .Enrich.WithProperty("Module", "Logging")
+                .ReadFrom.Configuration(_configuration)
+                .CreateLogger());
+
 
             return this;
         }
