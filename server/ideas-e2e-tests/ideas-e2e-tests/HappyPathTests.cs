@@ -35,20 +35,20 @@ namespace CoE.Ideas.EndToEnd.Tests
 
 
 
-        [TestMethod]
-        [TestCategory("End to End")]
-        public async Task CreateInitiative()
-        {
-            var ideasController = serviceProvider.GetRequiredService<IdeasController>();
-            await ideasController.PostIdea(new Idea()
-            {
-                Title = "Happy Path Test - Create Initiative",
-                Description = "Happy Path Test - Create Initiative"
-            });
+        //[TestMethod]
+        //[TestCategory("End to End")]
+        //public async Task CreateInitiative()
+        //{
+        //    var ideasController = serviceProvider.GetRequiredService<IdeasController>();
+        //    await ideasController.PostIdea(new Idea()
+        //    {
+        //        Title = "Happy Path Test - Create Initiative",
+        //        Description = "Happy Path Test - Create Initiative"
+        //    });
 
-            var remedyService = serviceProvider.GetRequiredService<IRemedyService>() as MockRemedyService;
-           // Assert.IsTrue(remedyService.Items.Count > 0, "Item not created in Remedy");
+        //    var remedyService = serviceProvider.GetRequiredService<IRemedyService>() as MockRemedyService;
+        //   // Assert.IsTrue(remedyService.Items.Count > 0, "Item not created in Remedy");
 
-        }
+        //}
     }
 }
