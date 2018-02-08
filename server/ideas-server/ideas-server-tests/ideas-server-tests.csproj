@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ideas-core\ideas-core-tests\ideas-core-tests.csproj" />
     <ProjectReference Include="..\..\ideas-core\ideas-core\ideas-core.csproj" />
     <ProjectReference Include="..\ideas-server\ideas-server.csproj" />
   </ItemGroup>
