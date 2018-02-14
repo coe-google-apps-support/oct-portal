@@ -8,43 +8,45 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RemedyServiceReference
+namespace CoE.Ideas.Remedy.RemedyServiceReference
 {
-
+    
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", ConfigurationName = "New_Port_0PortType")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", ConfigurationName="CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType")]
     public interface New_Port_0PortType
     {
-
-        [System.ServiceModel.OperationContractAttribute(Action = "urn:COE_WOI_WorkOrderInterface_WS_Octavia/New_Create_Operation_0", ReplyAction = "*")]
+        
+        // CODEGEN: Generating message contract since message New_Create_Operation_0Request has headers
+        [System.ServiceModel.OperationContractAttribute(Action="urn:COE_WOI_WorkOrderInterface_WS_Octava/New_Create_Operation_0", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute()]
-        New_Create_Operation_0Response New_Create_Operation_0(New_Create_Operation_0Request request);
-
-        // CODEGEN: Generating message contract since the operation has multiple return values.
-        [System.ServiceModel.OperationContractAttribute(Action = "urn:COE_WOI_WorkOrderInterface_WS_Octavia/New_Create_Operation_0", ReplyAction = "*")]
-        System.Threading.Tasks.Task<New_Create_Operation_0Response> New_Create_Operation_0Async(New_Create_Operation_0Request request);
+        CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Response New_Create_Operation_0(CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="urn:COE_WOI_WorkOrderInterface_WS_Octava/New_Create_Operation_0", ReplyAction="*")]
+        System.Threading.Tasks.Task<CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Response> New_Create_Operation_0Async(CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request request);
     }
-
+    
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava")]
     public partial class AuthenticationInfo
     {
-
+        
         private string userNameField;
-
+        
         private string passwordField;
-
+        
         private string authenticationField;
-
+        
         private string localeField;
-
+        
         private string timeZoneField;
-
+        
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public string userName
         {
             get
@@ -56,9 +58,9 @@ namespace RemedyServiceReference
                 this.userNameField = value;
             }
         }
-
+        
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public string password
         {
             get
@@ -70,9 +72,9 @@ namespace RemedyServiceReference
                 this.passwordField = value;
             }
         }
-
+        
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public string authentication
         {
             get
@@ -84,9 +86,9 @@ namespace RemedyServiceReference
                 this.authenticationField = value;
             }
         }
-
+        
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 3)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=3)]
         public string locale
         {
             get
@@ -98,9 +100,9 @@ namespace RemedyServiceReference
                 this.localeField = value;
             }
         }
-
+        
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 4)]
+        [System.Xml.Serialization.XmlElementAttribute(Order=4)]
         public string timeZone
         {
             get
@@ -113,584 +115,181 @@ namespace RemedyServiceReference
             }
         }
     }
-
+    
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum Set_Manager_usingType
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava")]
+    public enum Requested_ForType
     {
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Auto Assign")]
-        AutoAssign,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum StatusType
-    {
-
-        /// <remarks/>
-        Assigned,
-
-        /// <remarks/>
-        Pending,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Waiting Approval")]
-        WaitingApproval,
-
-        /// <remarks/>
-        Planning,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("In Progress")]
-        InProgress,
-
-        /// <remarks/>
-        Completed,
-
-        /// <remarks/>
-        Rejected,
-
-        /// <remarks/>
-        Cancelled,
-
-        /// <remarks/>
-        Closed,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum SRWorkInfoTypeType
-    {
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Request Primary Attachment")]
-        RequestPrimaryAttachment,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("WorkInfo created Before SR Submit")]
-        WorkInfocreatedBeforeSRSubmit,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("WorkInfo created After SR Submit")]
-        WorkInfocreatedAfterSRSubmit,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum z1D_View_AccessType
-    {
-
-        /// <remarks/>
-        Internal,
-
-        /// <remarks/>
-        Public,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum Secure_Work_Log2Type
-    {
-
-        /// <remarks/>
-        Yes,
-
-        /// <remarks/>
-        No,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum Assignment_Accelerator_AssigneeType
-    {
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("My Default Group")]
-        MyDefaultGroup,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("My Group List")]
-        MyGroupList,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Favorite Group(s)")]
-        FavoriteGroups,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Auto Assign")]
-        AutoAssign,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Change Manager")]
-        ChangeManager,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum z1D_CommunicationSourceType
-    {
-
-        /// <remarks/>
-        Email,
-
-        /// <remarks/>
-        Fax,
-
-        /// <remarks/>
-        Phone,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Voice Mail")]
-        VoiceMail,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Walk In")]
-        WalkIn,
-
-        /// <remarks/>
-        Pager,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("System Assignment")]
-        SystemAssignment,
-
-        /// <remarks/>
-        Web,
-
-        /// <remarks/>
-        Other,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum CreatedFromBackEndSynchWIType
-    {
-
-        /// <remarks/>
-        Yes,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum Status_ReasonType
-    {
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("No Longer Required")]
-        NoLongerRequired,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Funding Not Available")]
-        FundingNotAvailable,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("To Be Re-Scheduled")]
-        ToBeReScheduled,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Resources Not Available")]
-        ResourcesNotAvailable,
-
-        /// <remarks/>
-        Successful,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Successful with Issues")]
-        SuccessfulwithIssues,
-
-        /// <remarks/>
-        Unsuccessful,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Backed Out")]
-        BackedOut,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Final Review Complete")]
-        FinalReviewComplete,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Final Review Required")]
-        FinalReviewRequired,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Additional Coding Required")]
-        AdditionalCodingRequired,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Insufficient Task Data")]
-        InsufficientTaskData,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("In Verification")]
-        InVerification,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("In Rollout")]
-        InRollout,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Insufficient Change Data")]
-        InsufficientChangeData,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Schedule Conflicts")]
-        ScheduleConflicts,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("In Development")]
-        InDevelopment,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("In Test")]
-        InTest,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("In Build")]
-        InBuild,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("In Rollback")]
-        InRollback,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("In Documentation")]
-        InDocumentation,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Vendor Purchase")]
-        VendorPurchase,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Support Group Communication")]
-        SupportGroupCommunication,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Task Review")]
-        TaskReview,
-
-        /// <remarks/>
-        Miscellaneous,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Future Enhancement")]
-        FutureEnhancement,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Manager Intervention")]
-        ManagerIntervention,
-
-        /// <remarks/>
-        Accepted,
-
-        /// <remarks/>
-        Assigned,
-
-        /// <remarks/>
-        Built,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("On Hold")]
-        OnHold,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Automatically Closed")]
-        AutomaticallyClosed,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum Work_Order_TypeType
-    {
-
-        /// <remarks/>
-        Project,
-
-        /// <remarks/>
-        General,
-
-        /// <remarks/>
-        Release,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Asset Configuration")]
-        AssetConfiguration,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Asset Management")]
-        AssetManagement,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Asset Lease")]
-        AssetLease,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Purchase Requisition")]
-        PurchaseRequisition,
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Asset Maintenance")]
-        AssetMaintenance,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum PriorityType
-    {
-
-        /// <remarks/>
-        Critical,
-
-        /// <remarks/>
-        High,
-
-        /// <remarks/>
-        Medium,
-
-        /// <remarks/>
-        Low,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum Created_From_flagType
-    {
-
-        /// <remarks/>
-        Change,
-
-        /// <remarks/>
-        Request,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum Contact_SensitivityType
-    {
-
-        /// <remarks/>
-        Sensitive,
-
-        /// <remarks/>
-        Standard,
-    }
-
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("svcutil", "4.6.1055.0")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-    public enum Add_Request_For_Type
-    {
-
+        
         /// <remarks/>
         Individual,
-
+        
         /// <remarks/>
         Organization,
-
+        
         /// <remarks/>
         Department,
-
+        
         /// <remarks/>
         Company,
     }
-
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName = "New_Create_Operation_0", WrapperNamespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", IsWrapped = true)]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="New_Create_Operation_0", WrapperNamespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", IsWrapped=true)]
     public partial class New_Create_Operation_0Request
     {
-
-        [System.ServiceModel.MessageHeaderAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia")]
-        public AuthenticationInfo AuthenticationInfo;
-
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 1)]
+        
+        [System.ServiceModel.MessageHeaderAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava")]
+        public CoE.Ideas.Remedy.RemedyServiceReference.AuthenticationInfo AuthenticationInfo;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=0)]
         public string Customer_Company;
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 2)]
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=1)]
         public string Customer_Login_ID;
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 3)]
-        public string Customer_First_Name;
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 4)]
-        public string Customer_Last_Name;
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 5)]
-        [System.ComponentModel.DefaultValueAttribute("CREATE")]
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=2)]
         public string z1D_Action;
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 6)]
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=3)]
         public string Summary;
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 7)]
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=4)]
+        public string Description;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
+        public System.Nullable<Requested_ForType> Requested_For;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=6)]
         public string Location_Company;
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 8)]
-        public string Categorization_Tier_1;
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 9)]
-        public string Categorization_Tier_2;
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 10)]
-        public string TemplateID;
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 11)]
-        public string InstanceId;
-
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=7)]
+        public string Work_Order_Template_Used;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=8)]
+        public string TemplateName;
+        
         public New_Create_Operation_0Request()
         {
         }
-
-        public New_Create_Operation_0Request(
-                    AuthenticationInfo AuthenticationInfo,
-                    string Customer_Company,
-                    string Customer_Login_ID,
-                    string Customer_First_Name,
-                    string Customer_Last_Name,
-                    string z1D_Action,
-                    string Summary,
-                    string Location_Company,
-                    string Categorization_Tier_1,
-                    string Categorization_Tier_2,
-                    string TemplateID)
+        
+        public New_Create_Operation_0Request(CoE.Ideas.Remedy.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Customer_Company, string Customer_Login_ID, string z1D_Action, string Summary, string Description, System.Nullable<Requested_ForType> Requested_For, string Location_Company, string Work_Order_Template_Used, string TemplateName)
         {
             this.AuthenticationInfo = AuthenticationInfo;
             this.Customer_Company = Customer_Company;
             this.Customer_Login_ID = Customer_Login_ID;
-            this.Customer_First_Name = Customer_First_Name;
-            this.Customer_Last_Name = Customer_Last_Name;
             this.z1D_Action = z1D_Action;
             this.Summary = Summary;
+            this.Description = Description;
+            this.Requested_For = Requested_For;
             this.Location_Company = Location_Company;
-            this.Categorization_Tier_1 = Categorization_Tier_1;
-            this.Categorization_Tier_2 = Categorization_Tier_2;
-            this.TemplateID = TemplateID;
-
+            this.Work_Order_Template_Used = Work_Order_Template_Used;
+            this.TemplateName = TemplateName;
         }
     }
-
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.MessageContractAttribute(WrapperName = "New_Create_Operation_0Response", WrapperNamespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", IsWrapped = true)]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="New_Create_Operation_0Response", WrapperNamespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", IsWrapped=true)]
     public partial class New_Create_Operation_0Response
     {
-
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace = "urn:COE_WOI_WorkOrderInterface_WS_Octavia", Order = 0)]
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=0)]
         public string InstanceId;
-
+        
         public New_Create_Operation_0Response()
         {
         }
-
+        
         public New_Create_Operation_0Response(string InstanceId)
         {
             this.InstanceId = InstanceId;
         }
     }
-
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface New_Port_0PortTypeChannel : New_Port_0PortType, System.ServiceModel.IClientChannel
+    public interface New_Port_0PortTypeChannel : CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType, System.ServiceModel.IClientChannel
     {
     }
-
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class New_Port_0PortTypeClient : System.ServiceModel.ClientBase<New_Port_0PortType>, New_Port_0PortType
+    public partial class New_Port_0PortTypeClient : System.ServiceModel.ClientBase<CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType>, CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType
     {
-
+        
         public New_Port_0PortTypeClient()
         {
         }
-
-        public New_Port_0PortTypeClient(string endpointConfigurationName) :
+        
+        public New_Port_0PortTypeClient(string endpointConfigurationName) : 
                 base(endpointConfigurationName)
         {
         }
-
-        public New_Port_0PortTypeClient(string endpointConfigurationName, string remoteAddress) :
+        
+        public New_Port_0PortTypeClient(string endpointConfigurationName, string remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress)
         {
         }
-
-        public New_Port_0PortTypeClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) :
+        
+        public New_Port_0PortTypeClient(string endpointConfigurationName, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(endpointConfigurationName, remoteAddress)
         {
         }
-
-        public New_Port_0PortTypeClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) :
+        
+        public New_Port_0PortTypeClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress)
         {
         }
-
+        
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        New_Create_Operation_0Response New_Port_0PortType.New_Create_Operation_0(New_Create_Operation_0Request request)
+        CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Response CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType.New_Create_Operation_0(CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request request)
         {
             return base.Channel.New_Create_Operation_0(request);
         }
-
-        public void New_Create_Operation_0(
-                    AuthenticationInfo AuthenticationInfo,
-                    string Customer_Company,
-                    string Customer_Login_ID,
-                    string Customer_First_Name,
-                    string Customer_Last_Name,
-                    string z1D_Action,
-                    string Summary,
-                    string Location_Company,
-                    string Categorization_Tier_1,
-                    string Categorization_Tier_2,
-                    string TemplateID,
-                    ref string InstanceId)
+        
+        public string New_Create_Operation_0(CoE.Ideas.Remedy.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Customer_Company, string Customer_Login_ID, string z1D_Action, string Summary, string Description, System.Nullable<Requested_ForType> Requested_For, string Location_Company, string Work_Order_Template_Used, string TemplateName)
         {
-            New_Create_Operation_0Request inValue = new New_Create_Operation_0Request();
+            CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request inValue = new CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request();
             inValue.AuthenticationInfo = AuthenticationInfo;
             inValue.Customer_Company = Customer_Company;
             inValue.Customer_Login_ID = Customer_Login_ID;
-            inValue.Customer_First_Name = Customer_First_Name;
-            inValue.Customer_Last_Name = Customer_Last_Name;
             inValue.z1D_Action = z1D_Action;
             inValue.Summary = Summary;
+            inValue.Description = Description;
+            inValue.Requested_For = Requested_For;
             inValue.Location_Company = Location_Company;
-            inValue.Categorization_Tier_1 = Categorization_Tier_1;
-            inValue.Categorization_Tier_2 = Categorization_Tier_2;
-            inValue.TemplateID = TemplateID;
-
-
-            New_Create_Operation_0Response retVal = ((New_Port_0PortType)(this)).New_Create_Operation_0(inValue);
-            InstanceId = retVal.InstanceId;
+            inValue.Work_Order_Template_Used = Work_Order_Template_Used;
+            inValue.TemplateName = TemplateName;
+            CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Response retVal = ((CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType)(this)).New_Create_Operation_0(inValue);
+            return retVal.InstanceId;
         }
-
-        public System.Threading.Tasks.Task<New_Create_Operation_0Response> New_Create_Operation_0Async(New_Create_Operation_0Request request)
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.Threading.Tasks.Task<CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Response> CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType.New_Create_Operation_0Async(CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request request)
         {
             return base.Channel.New_Create_Operation_0Async(request);
         }
+        
+        public System.Threading.Tasks.Task<CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Response> New_Create_Operation_0Async(CoE.Ideas.Remedy.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Customer_Company, string Customer_Login_ID, string z1D_Action, string Summary, string Description, System.Nullable<Requested_ForType> Requested_For, string Location_Company, string Work_Order_Template_Used, string TemplateName)
+        {
+            CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request inValue = new CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request();
+            inValue.AuthenticationInfo = AuthenticationInfo;
+            inValue.Customer_Company = Customer_Company;
+            inValue.Customer_Login_ID = Customer_Login_ID;
+            inValue.z1D_Action = z1D_Action;
+            inValue.Summary = Summary;
+            inValue.Description = Description;
+            inValue.Requested_For = Requested_For;
+            inValue.Location_Company = Location_Company;
+            inValue.Work_Order_Template_Used = Work_Order_Template_Used;
+            inValue.TemplateName = TemplateName;
+            return ((CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType)(this)).New_Create_Operation_0Async(inValue);
+        }
     }
-
 }

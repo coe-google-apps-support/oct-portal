@@ -17,7 +17,7 @@ namespace CoE.Ideas.Remedy.SbListener
     public class RemedyItemUpdatedIdeaListener
     {
         public RemedyItemUpdatedIdeaListener(
-            IIdeaRepository ideaRepository,
+            IUpdatableIdeaRepository ideaRepository,
             ISubscriptionClient subscriptionClient,
             ILogger<RemedyItemUpdatedIdeaListener> logger)
         {
@@ -28,7 +28,7 @@ namespace CoE.Ideas.Remedy.SbListener
             subscriptionClient.RegisterMessageHandler(OnMessageReceived, OnMessageError);
         }
 
-        private readonly IIdeaRepository _ideaRepository;
+        private readonly IUpdatableIdeaRepository _ideaRepository;
         private readonly ISubscriptionClient _subscriptionClient;
         private readonly ILogger<RemedyItemUpdatedIdeaListener> _logger;
 

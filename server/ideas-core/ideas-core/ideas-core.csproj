@@ -11,11 +11,6 @@
     <Compile Remove="Migrations\20180118145608_MoreSecondaryFields.cs" />
     <Compile Remove="Migrations\20180119141304_MoreSecondaryFields.cs" />
     <Compile Remove="Migrations\20180129053136_Temp.cs" />
-    <Compile Remove="ServiceBus\IdeaQueue.cs" />
-    <Compile Remove="ServiceBus\IQueueSender.cs" />
-    <Compile Remove="ServiceBus\QueueReceiver.cs" />
-    <Compile Remove="ServiceBus\QueueSender.cs" />
-    <Compile Remove="ServiceBus\QueueSettings.cs" />
   </ItemGroup>
 
   <ItemGroup>

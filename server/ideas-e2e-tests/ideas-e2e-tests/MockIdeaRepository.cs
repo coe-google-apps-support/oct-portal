@@ -1,5 +1,6 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Core.WordPress;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,24 +9,28 @@ using System.Threading.Tasks;
 
 namespace CoE.Ideas.EndToEnd.Tests
 {
-    internal class MockIdeaRepository : IIdeaRepository
+    internal class MockIdeaRepository : IUpdatableIdeaRepository
     {
-        public MockIdeaRepository(IIdeaServiceBusSender serviceBusSender)
-        {
-            _serviceBusSender = serviceBusSender ?? throw new ArgumentNullException("serviceBusSender");
-        }
-        private IIdeaServiceBusSender _serviceBusSender;
+        //public MockIdeaRepository(IIdeaServiceBusSender serviceBusSender)
+        //{
+        //    _serviceBusSender = serviceBusSender ?? throw new ArgumentNullException("serviceBusSender");
+        //}
+        //private IIdeaServiceBusSender _serviceBusSender;
 
         #region Ideas
         private ICollection<Idea> ideas = new HashSet<Idea>();
 
-        public Task<Idea> AddIdeaAsync(Idea idea)
+        public Task<Idea> AddIdeaAsync(Idea idea, Stakeholder owner)
         {
             ideas.Add(idea);
             idea.Id = ideas.Count;
-            idea.WordPressKey = (int)idea.Id;
 
-            _serviceBusSender.SendIdeaMessageAsync(idea, IdeaMessageType.IdeaCreated);
+            if (idea.Stakeholders == null)
+                idea.Stakeholders = new List<Stakeholder>();
+
+            if (!idea.Stakeholders.Contains(owner))
+                idea.Stakeholders.Add(owner);
+
             return Task.FromResult(idea); ;
         }
         public Task<IEnumerable<Idea>> GetIdeasAsync()
@@ -136,6 +141,16 @@ namespace CoE.Ideas.EndToEnd.Tests
         }
 
         public Task<IEnumerable<Department>> GetDepartmentsForBranchAsync(long branchId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Idea> SetWordPressItemAsync(long ideaId, WordPressPost post)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Stakeholder> GetStakeholderByEmailAsync(string email)
         {
             throw new NotImplementedException();
         }

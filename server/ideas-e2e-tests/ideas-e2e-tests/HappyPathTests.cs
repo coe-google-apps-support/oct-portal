@@ -26,7 +26,7 @@ namespace CoE.Ideas.EndToEnd.Tests
 
             serviceProvider = new TestConfiguration(config)
                 .ConfigureBasicServices()
-                .ConfigureServiceBus()
+                .ConfigureIdeaMessaging()
                 .ConfigureIdeaServices()
                 .ConfigureRemedyServices()
                 .BuildServiceProvider();
@@ -47,7 +47,7 @@ namespace CoE.Ideas.EndToEnd.Tests
             });
 
             var remedyService = serviceProvider.GetRequiredService<IRemedyService>() as MockRemedyService;
-           // Assert.IsTrue(remedyService.Items.Count > 0, "Item not created in Remedy");
+            Assert.IsTrue(remedyService.Items.Count > 0, "Item not created in Remedy");
 
         }
     }

@@ -14,7 +14,7 @@ namespace CoE.Ideas.Core
         /// The unique identifier of an idea (blog post) in WordPress
         /// </summary>
         [Required]
-        public int WordPressKey { get; set; }
+        public int WordPressKey { get; internal set; }
 
         /// <summary>
         /// The short title of the idea
@@ -47,7 +47,7 @@ namespace CoE.Ideas.Core
         /// <summary>
         /// The date and time the issue was created
         /// </summary>
-        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get;  }
 
         /// <summary>
         /// The department where the initiative is a part of. Can be different

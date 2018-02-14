@@ -70,15 +70,22 @@ namespace CoE.Ideas.EndToEnd.Tests
         public TestConfiguration ConfigureIdeaServices()
         {
             _services.AddScoped<IWordPressClient, MockWordPressClient>();
-            _services.AddSingleton<IIdeaServiceBusSender, MockIdeaServiceBusSender>();
             _services.AddScoped<IIdeaRepository, MockIdeaRepository>();
+            _services.AddScoped<IUpdatableIdeaRepository, MockIdeaRepository>();
             _services.AddScoped<IdeasController>();
             return this;
         }
 
-        public TestConfiguration ConfigureServiceBus()
+        public TestConfiguration ConfigureIdeaMessaging()
         {
-            _services.AddSingleton<ITopicClient, MockTopicClient>();
+
+            _services.AddSingleton<MockInitiativeMessageReceiver>();
+            _services.AddSingleton<IInitiativeMessageReceiver>(x =>
+            {
+                return x.GetRequiredService<MockInitiativeMessageReceiver>();
+            });
+            _services.AddSingleton<IInitiativeMessageSender, MockInitiativeMessageSender>();
+
             return this;
         }
 

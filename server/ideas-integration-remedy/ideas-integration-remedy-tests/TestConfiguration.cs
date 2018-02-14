@@ -1,7 +1,8 @@
 ﻿using CoE.Ideas.Core;
+using CoE.Ideas.Remedy.RemedyServiceReference;
+using CoE.Ideas.Remedy.Watcher;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RemedyServiceReference;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
@@ -72,23 +73,21 @@ namespace CoE.Ideas.Remedy.Tests
             _services.AddSingleton(x =>
             {
                 return new New_Port_0PortTypeClient(
-                    new BasicHttpBinding(BasicHttpSecurityMode.None),
+                    new BasicHttpBinding(BasicHttpSecurityMode.None)
+                    {
+                        MaxReceivedMessageSize = 16777216L // 16 MB, default it 65kb
+                    },
                     new EndpointAddress(_configuration["Remedy:ApiUrl"]));
             });
-            _services.Configure<RemedyServiceOptions>(options =>
-            {
-                options.CategorizationTier1 = _configuration["Remedy:CategorizationTier1"];
-                options.CategorizationTier2 = _configuration["Remedy:CategorizationTier2"];
-                options.LocationCompany = _configuration["Remedy:LocationCompany"];
-                options.CustomerCompany = _configuration["Remedy:CustomerCompany"];
-                options.ServicePassword = _configuration["Remedy:ServicePassword"];
-                options.ServiceUserName = _configuration["Remedy:ServiceUserName"];
-                options.TemplateId = _configuration["Remedy:TemplateId"];
-                options.CustomerLoginId = _configuration["Remedy:CustomerLoginId"];
-                options.CustomerFirstName = _configuration["Remedy:CustomerFirstName"];
-                options.CustomerLastName = _configuration["Remedy:CustomerLastName"];
-            });
+
+
+
+            _services.Configure<RemedyServiceOptions>(_configuration.GetSection("Remedy"));
             _services.AddSingleton<IRemedyService, RemedyService>();
+
+          //  _services.AddSingleton<New_Port_0PortType>
+
+            _services.AddSingleton<IRemedyChecker, RemedyChecker>();
 
             return this;
         }

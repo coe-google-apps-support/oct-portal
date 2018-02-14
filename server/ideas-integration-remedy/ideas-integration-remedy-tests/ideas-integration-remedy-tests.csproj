@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ideas-core\ideas-core\ideas-core.csproj" />
+    <ProjectReference Include="..\ideas-integration-remedy-sblistener\ideas-integration-remedy-sblistener.csproj" />
+    <ProjectReference Include="..\ideas-integration-remedy-watcher\ideas-integration-remedy-watcher.csproj" />
     <ProjectReference Include="..\ideas-integration-remedy\ideas-integration-remedy.csproj" />
   </ItemGroup>
 

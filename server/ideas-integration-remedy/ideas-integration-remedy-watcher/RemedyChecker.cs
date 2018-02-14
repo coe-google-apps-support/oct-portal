@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace CoE.Ideas.Remedy.Watcher
 {
-    public class RemedyChecker
+    public class RemedyChecker : IRemedyChecker
     {
         public RemedyChecker(New_Port_0PortType remedyClient,
             ITopicClient topiClient,
@@ -75,19 +75,19 @@ namespace CoE.Ideas.Remedy.Watcher
 
         public async Task<RemedyPollResult> Poll()
         {
-            Stopwatch watch = null;
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                watch = new Stopwatch();
-                _logger.LogDebug($"Polling Remedy using start time of { lastPollTimeUtc } (UTC) ");
-                watch.Start();
-            }
-            else
-                _logger.LogInformation("Polling Remedy");
+            var result = await PollAsync(lastPollTimeUtc);
+            SaveResult(result);
+            return result;
+        }
 
-            var result = new RemedyPollResult(lastPollTimeUtc);
+
+        public async Task<RemedyPollResult> PollAsync(DateTime fromUtc)
+        {
+            Stopwatch watch = new Stopwatch();
+
+            var result = new RemedyPollResult(fromUtc);
             IEnumerable<OutputMapping1GetListValues> workItemsChanged = null;
-            try { workItemsChanged = await TryGetRemedyChangedWorkItems(); }
+            try { workItemsChanged = await TryGetRemedyChangedWorkItems(fromUtc); }
             catch (Exception err)
             {
                 result.ProcessErrors.Add(new ProcessError() { ErrorMessage = err.Message });
@@ -100,14 +100,7 @@ namespace CoE.Ideas.Remedy.Watcher
                 ? result.RecordsProcesed.Max(x => x.Last_Modified_Date)
                 : lastPollTimeUtc;
 
-            SaveResult(result);
-
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                _logger.LogDebug($"Finished Polling Remedy in { watch.Elapsed.TotalSeconds}s");
-            }
-            else
-                _logger.LogInformation("Finished Polling Remedy");
+            _logger.LogInformation($"Finished Polling Remedy in { watch.Elapsed.TotalSeconds}s");
 
             return result;
         }
@@ -122,7 +115,7 @@ namespace CoE.Ideas.Remedy.Watcher
             }
         }
 
-        private async Task<IEnumerable<OutputMapping1GetListValues>> TryGetRemedyChangedWorkItems()
+        private async Task<IEnumerable<OutputMapping1GetListValues>> TryGetRemedyChangedWorkItems(DateTime fromUtc)
         {
             Stopwatch watch = null;
             if (_logger.IsEnabled(LogLevel.Debug))
@@ -144,8 +137,8 @@ namespace CoE.Ideas.Remedy.Watcher
                 var remedyResponse = await _remedyClient.New_Get_Operation_0Async(
                     new New_Get_Operation_0Request(
                         authInfo, 
-                        _options.TemplateName, 
-                        lastPollTimeUtc.ToString("O"))); // TODO: apply time component - like format "O" or "yyyy-MM-dd"
+                        _options.TemplateName,
+                        fromUtc.ToString("O"))); // TODO: apply time component - like format "O" or "yyyy-MM-dd"
                 if (_logger.IsEnabled(LogLevel.Debug))
                 {
                     int count = 0;
@@ -252,5 +245,6 @@ namespace CoE.Ideas.Remedy.Watcher
                 return e;
             }
     }
+
     }
 }
