@@ -16,6 +16,7 @@ var env;
   switch(process.env.NODE_ENV) {
     case "testing": env = require('../config/test.env'); break;
     case "integration": env = require('../config/int.env'); break;
+    case "local": env = require('../config/local.env'); break;
     default: env = require('../config/prod.env');
   }
 

@@ -11,6 +11,7 @@ exports.assetsPath = function (_path) {
     case 'integration':
     case 'staging':
     case 'uat':
+    case 'local':
       assetsSubDirectory = config.build.assetsSubDirectory;
       break;
     default:
