@@ -11,6 +11,7 @@ using CoE.Ideas.Core.ServiceBus;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using Serilog.Context;
+using CoE.Ideas.Server.Models;
 
 namespace CoE.Ideas.Server.Controllers
 {
@@ -35,7 +36,7 @@ namespace CoE.Ideas.Server.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IEnumerable<Idea>> GetIdeas()
+        public async Task<IEnumerable<Idea>> GetIdeas([FromQuery]ViewOptions view = ViewOptions.All)
         {
             Stopwatch watch = null;
             if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
@@ -44,7 +45,13 @@ namespace CoE.Ideas.Server.Controllers
                 watch = new Stopwatch();
                 watch.Start();
             }
-            var ideas = await _repository.GetIdeasAsync();
+            IEnumerable<Idea> ideas;
+            if (view == ViewOptions.Mine)
+            {
+                ideas = await _repository.GetIdeasAsync();
+            }
+            else
+                ideas = await _repository.GetIdeasAsync();
             var returnValue = ideas.OrderByDescending(x => x.Id);
             if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
             {
@@ -295,7 +302,7 @@ namespace CoE.Ideas.Server.Controllers
 
 
 
-        // GET: ideas/5
+        // GET: ideas/5/steps
         /// <summary>
         /// Retrieves a single Idea based on its Id
         /// </summary>
@@ -334,7 +341,54 @@ namespace CoE.Ideas.Server.Controllers
                 if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
                 {
                     watch.Stop();
-                    _logger.Information("Retrieved initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+                    _logger.Information("Retrieved steps for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+                }
+
+                return returnValue;
+            }
+        }
+
+        // GET: ideas/5
+        /// <summary>
+        /// Retrieves a single Idea based on its Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/assignee")]
+
+        public IActionResult GetInitiativeAssignee([FromRoute] long id)
+        {
+            using (LogContext.PushProperty("InitiativeId", id))
+            {
+                Stopwatch watch = null;
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    _logger.Information("Retrieving assignee for initiative {InitiativeId}");
+                    watch = new Stopwatch();
+                    watch.Start();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.Warning("Unable to retrieve assignee from initiative {InitiativeId} because model state is not valid");
+                    return BadRequest(ModelState);
+                }
+
+                //var idea = await _repository.GetIdeaAsync(id);
+
+                //if (idea == null)
+                //{
+                //    return NotFound();
+                //}
+
+                // TODO: replace fake data with real data
+                var fakeData = Newtonsoft.Json.Linq.JObject.Parse(fakeAssignee);
+                var returnValue = Json(fakeData);
+
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    watch.Stop();
+                    _logger.Information("Retrieved assignee for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
                 }
 
                 return returnValue;
@@ -342,6 +396,14 @@ namespace CoE.Ideas.Server.Controllers
         }
 
         #region Fake Data
+
+        private const string fakeAssignee = @"{
+  name: 'Super BA',
+  email: 'super.ba@edmonton.ca',
+  phoneNumber: '555-555-5555',
+  avatarURL: 'https://www.iconexperience.com/v_collection/icons/?icon=user_generic2_black'
+}";
+
         private const string fakeSteps = @"{
   data: [{
     step: 1,

@@ -61,6 +61,18 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             return _mapper.Map<IEnumerable<IdeaInternal>, IEnumerable<Idea>>(ideas);
         }
 
+
+        public async Task<IEnumerable<Idea>> GetIdeasByStakeholderAsync(long stakeholderId)
+        {
+            // get stakeholder
+            var stakeholder = await _context.Stakeholders.FindAsync(stakeholderId);
+            if (stakeholder == null)
+                throw new ArgumentOutOfRangeException($"Unable to find a stakeholder with id { stakeholderId }");
+
+            var ideas = await IdeaCollection.Where(x => x.Stakeholders.Any(y => y.Email == stakeholder.Email)).ToListAsync();
+            return _mapper.Map<IEnumerable<IdeaInternal>, IEnumerable<Idea>>(ideas);
+        }
+
         public async Task<Core.Idea> GetIdeaAsync(long id)
         {
             if (id <= 0)
@@ -384,6 +396,7 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             var branch = await _context.Branches.FindAsync(id);
             return _mapper.Map<BranchInternal, Branch>(branch);
         }
+
 
         #endregion
     }

@@ -21,6 +21,12 @@ namespace CoE.Ideas.Core
         Task<IEnumerable<Idea>> GetIdeasAsync();
 
         /// <summary>
+        /// Retrieves all ideas where the current user is a stakeholder
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<Idea>> GetIdeasByStakeholderAsync(long stakeholderId);
+
+        /// <summary>
         /// Retrieves a single idea from the database.
         /// </summary>
         /// <param name="id">The Idea id to get</param>

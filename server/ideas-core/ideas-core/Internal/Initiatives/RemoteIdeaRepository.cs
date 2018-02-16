@@ -55,6 +55,12 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             }
         }
 
+
+        public Task<IEnumerable<Idea>> GetIdeasByStakeholderAsync(long stakeholderId)
+        {
+            throw new NotSupportedException();
+        }
+
         public async Task<Idea> GetIdeaAsync(long id)
         {
             var client = GetHttpClient();
@@ -160,6 +166,7 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         {
             throw new NotImplementedException();
         }
+
         #endregion
 
     }

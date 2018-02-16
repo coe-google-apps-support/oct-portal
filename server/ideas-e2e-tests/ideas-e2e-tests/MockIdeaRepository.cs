@@ -33,6 +33,10 @@ namespace CoE.Ideas.EndToEnd.Tests
             return Task.FromResult(ideas.AsEnumerable());
         }
 
+        public Task<IEnumerable<Idea>> GetIdeasByStakeholderAsync(long stakeholderId)
+        {
+            throw new NotImplementedException();
+        }
 
         public Task<Idea> GetIdeaAsync(long id)
         {
@@ -139,6 +143,7 @@ namespace CoE.Ideas.EndToEnd.Tests
         {
             throw new NotImplementedException();
         }
+
         #endregion
     }
 }
