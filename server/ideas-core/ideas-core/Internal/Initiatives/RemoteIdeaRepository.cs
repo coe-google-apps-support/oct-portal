@@ -112,6 +112,15 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         }
         #endregion
 
+        #region Stakeholders
+
+        public Task<Stakeholder> GetStakeholderByEmailAsync(string email)
+        {
+            throw new NotSupportedException();
+        }
+
+        #endregion  
+
         #region Tags
         public async Task<IEnumerable<Tag>> GetTagsAsync()
         {

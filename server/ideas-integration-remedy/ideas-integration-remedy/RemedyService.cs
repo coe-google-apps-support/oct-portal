@@ -1,7 +1,7 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.WordPress;
+using CoE.Ideas.Remedy.RemedyServiceReference;
 using Microsoft.Extensions.Options;
-using RemedyServiceReference;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,32 +26,28 @@ namespace CoE.Ideas.Remedy
         private readonly RemedyServiceOptions _options;
 
 
-        public async Task<string> PostNewIdeaAsync(Idea idea, WordPressUser user, string user3and3)
+        public async Task<string> PostNewIdeaAsync(Idea idea, string user3and3)
         {
-            var request = new New_Create_Operation_0Request()
-            {
-                AuthenticationInfo = new AuthenticationInfo()
-                {
-                    userName = _options.ServiceUserName,
-                    password = _options.ServicePassword
-                },
-                Customer_Login_ID = _options.CustomerLoginId,
-                Summary = idea.Title,
-                //Description = idea.Description, // should this be Long_Description?
-                Location_Company = _options.LocationCompany,
-                Customer_Company = _options.CustomerCompany,
-                TemplateID = _options.TemplateId,
-                Customer_First_Name = _options.CustomerFirstName,
-                Customer_Last_Name = _options.CustomerLastName,
-                Categorization_Tier_1 = _options.CategorizationTier1,
-                Categorization_Tier_2 = _options.CategorizationTier2,
-                z1D_Action = "Create"
-            };
-
-
             try
             {
-                var response = await _remedyClient.New_Create_Operation_0Async(request);
+                var response = await _remedyClient.New_Create_Operation_0Async(
+                    AuthenticationInfo: new AuthenticationInfo()
+                    {
+                        userName = _options.ServiceUserName,
+                        password = _options.ServicePassword
+                    },
+                    Customer_Company: _options.CustomerCompany, 
+                    Customer_Login_ID: _options.CustomerLoginId,
+                    //Customer_First_Name: _options.CustomerFirstName,
+                    //Customer_Last_Name: _options.CustomerLastName,
+                    z1D_Action: "Create", 
+                    Summary: idea.Title, 
+                    Description: idea.Description, 
+                    Requested_For: Requested_ForType.Individual, 
+                    Location_Company: _options.LocationCompany, 
+                    Work_Order_Template_Used: _options.WorkOrderTemplateUsed,
+                    TemplateName: _options.TemplateName
+                );
                 return response.InstanceId;
             }
             catch (Exception err)

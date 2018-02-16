@@ -21,8 +21,8 @@ namespace CoE.Ideas.Integration.Logger
 
             var serviceProvider = services.BuildServiceProvider();
 
-            // TODO: eliminate the need to ask for IIdeaServiceBusReceiver to make sure we're listening
-            serviceProvider.GetRequiredService<IIdeaServiceBusReceiver>();
+            // Ensure NewIdeaListener is created to start the message pump (in it's constructor)
+            serviceProvider.GetRequiredService<NewIdeaListener>();
         }
 
         private readonly IConfigurationRoot Configuration;
@@ -48,23 +48,12 @@ namespace CoE.Ideas.Integration.Logger
                 .CreateLogger());
 
 
-
             services.AddRemoteIdeaConfiguration(Configuration["IdeasApi"],
                 Configuration["WordPressUrl"]);
-            services.AddIdeaListener<NewIdeaListener>(
-                Configuration["ServiceBus:ConnectionString"],
+
+            services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],
                 Configuration["ServiceBus:Subscription"]);
-            //services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
-            //{
-            //    return new ActiveDirectoryUserService(
-            //        Configuration["ActiveDirectory:Domain"],
-            //        Configuration["ActiveDirectory:ServiceUserName"],
-            //        Configuration["ActiveDirectory:ServicePassword"]);
-            //});
-            services.AddIdeaServiceBusSender(
-                Configuration["ServiceBus:ConnectionString"],
-                Configuration["ServiceBus:TopicName"]);
 
             services.AddSingleton<IIdeaLogger, IIdeaLogger>(x =>
             {

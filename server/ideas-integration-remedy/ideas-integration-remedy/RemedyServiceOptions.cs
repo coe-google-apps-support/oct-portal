@@ -17,5 +17,7 @@ namespace CoE.Ideas.Remedy
         public string CustomerLoginId { get; set; }
         public string CustomerFirstName { get; set; }
         public string CustomerLastName { get; set; }
+        public string TemplateName { get; set; }
+        public string WorkOrderTemplateUsed { get; set; }
     }
 }

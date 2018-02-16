@@ -54,5 +54,12 @@ namespace CoE.Ideas.Remedy.Tests
             var remedyService = serviceProvider.GetRequiredService<IRemedyService>();
             await remedyService.PostNewIdeaAsync(newIdea, newUser, "COE\\fakeuser");
         }
+
+        [TestMethod]
+        [TestCategory("Integration")]
+        public async Task TestReadRemedyWorkOrders()
+        {
+
+        }
     }
 }

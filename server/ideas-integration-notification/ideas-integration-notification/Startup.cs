@@ -22,8 +22,9 @@ namespace CoE.Ideas.Integration.Notification
 
             var serviceProvider = services.BuildServiceProvider();
 
-            // TODO: eliminate the need to ask for IIdeaServiceBusReceiver to make sure we're listening
-            serviceProvider.GetRequiredService<IIdeaServiceBusReceiver>();
+            // ensure the listener is created at least once so that the message pump 
+            // 
+            serviceProvider.GetRequiredService<IdeaLoggedListener>();
         }
 
         private readonly IConfigurationRoot Configuration;
@@ -50,20 +51,17 @@ namespace CoE.Ideas.Integration.Notification
 
             services.AddRemoteIdeaConfiguration(Configuration["IdeasApi"],
                 Configuration["WordPressUrl"]);
-            services.AddIdeaListener<IdeaLoggedListener>(
-                Configuration["ServiceBus:ConnectionString"],
+            services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],
-                Configuration["ServiceBus:Subscription"], x =>
-                {
-                    return new IdeaLoggedListener(
-                        x.GetRequiredService<IIdeaRepository>(),
-                        x.GetRequiredService<IWordPressClient>(),
-                        x.GetRequiredService<IMailmanEnabledSheetReader>(),
-                        x.GetRequiredService<IEmailService>(),
-                        x.GetRequiredService<ILogger<IdeaLoggedListener>>(),
-                        x.GetRequiredService<Serilog.ILogger>(),
-                        Configuration["Notification:MergeTemplate"]);
-                });
+                Configuration["ServiceBus:Subscription"]);
+            services.AddSingleton( x =>
+                new IdeaLoggedListener(
+                    x.GetRequiredService<IMailmanEnabledSheetReader>(),
+                    x.GetRequiredService<IEmailService>(),
+                    x.GetRequiredService<IInitiativeMessageReceiver>(),
+                    x.GetRequiredService<Serilog.ILogger>(),
+                    Configuration["Notification:MergeTemplate"])
+                );
 
             services.AddSingleton<IEmailService, EmailService>(x =>
             {

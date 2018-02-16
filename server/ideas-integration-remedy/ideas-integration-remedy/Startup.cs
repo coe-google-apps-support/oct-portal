@@ -1,10 +1,10 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
+using CoE.Ideas.Remedy.RemedyServiceReference;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RemedyServiceReference;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -22,8 +22,8 @@ namespace CoE.Ideas.Remedy
 
             var serviceProvider = services.BuildServiceProvider();
 
-            // TODO: eliminate the need to ask for IIdeaServiceBusReceiver to make sure we're listening
-            serviceProvider.GetRequiredService<IIdeaServiceBusReceiver>();
+            // instantiate the NewIdeaListener at least once to start the message pump
+            serviceProvider.GetRequiredService<NewIdeaListener>();
         }
 
         private readonly IConfigurationRoot Configuration;
@@ -49,18 +49,12 @@ namespace CoE.Ideas.Remedy
 
             services.AddRemoteIdeaConfiguration(Configuration["IdeasApi"],
                 Configuration["WordPressUrl"]);
-            services.AddIdeaListener<NewIdeaListener>(
-                Configuration["ServiceBus:ConnectionString"],
+
+
+            services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],
-                Configuration["ServiceBus:Subscription"], x =>
-                {
-                    return new NewIdeaListener(x.GetRequiredService<IIdeaRepository>(),
-                        x.GetRequiredService<IWordPressClient>(),
-                        x.GetRequiredService<IRemedyService>(),
-                        new Microsoft.Azure.ServiceBus.TopicClient(Configuration["ServiceBus:ConnectionString"], Configuration["ServiceBus:TopicName"]),
-                        x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<NewIdeaListener>>(), 
-                        x.GetRequiredService<Serilog.ILogger>());
-                });
+                Configuration["ServiceBus:Subscription"]);
+
             //services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
             //{
             //    return new ActiveDirectoryUserService(
@@ -68,9 +62,6 @@ namespace CoE.Ideas.Remedy
             //        Configuration["ActiveDirectory:ServiceUserName"],
             //        Configuration["ActiveDirectory:ServicePassword"]);
             //});
-            services.AddIdeaServiceBusSender(
-                Configuration["ServiceBus:ConnectionString"],
-                Configuration["ServiceBus:TopicName"]);
 
             services.AddSingleton(x =>
             {

@@ -26,7 +26,7 @@ namespace CoE.Ideas.EndToEnd.Tests
             }
         }
 
-        public Task<string> PostNewIdeaAsync(Idea idea, WordPressUser user, string user3and3)
+        public Task<string> PostNewIdeaAsync(Idea idea, string user3and3)
         {
             var newRemedyItem = new OutputMapping1GetListValues
             {

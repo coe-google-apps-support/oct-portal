@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using Serilog.Context;
 using CoE.Ideas.Server.Models;
+using CoE.Ideas.Core.WordPress;
 
 namespace CoE.Ideas.Server.Controllers
 {
@@ -20,13 +21,19 @@ namespace CoE.Ideas.Server.Controllers
     [Route("Initiatives")]
     public class IdeasController : Controller
     {
-        private readonly IIdeaRepository _repository;
+        private readonly IUpdatableIdeaRepository _repository;
+        private readonly IWordPressClient _wordpressClient;
+        private readonly IInitiativeMessageSender _initiativeMessageSender;
         private readonly Serilog.ILogger _logger;
 
-        public IdeasController(IIdeaRepository repository,
-           Serilog.ILogger logger)
+        public IdeasController(IUpdatableIdeaRepository repository,
+            IWordPressClient wordpressClient,
+            IInitiativeMessageSender initiativeMessageSender,
+            Serilog.ILogger logger)
         {
             _repository = repository ?? throw new ArgumentNullException("repository");
+            _wordpressClient = wordpressClient ?? throw new ArgumentNullException("wordpressClient");
+            _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
             _logger = logger ?? throw new ArgumentNullException("logger");
         }
 
@@ -38,26 +45,14 @@ namespace CoE.Ideas.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<Idea>> GetIdeas([FromQuery]ViewOptions view = ViewOptions.All)
         {
-            Stopwatch watch = null;
-            if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-            {
-                _logger.Information("Retrieving Initiatives");
-                watch = new Stopwatch();
-                watch.Start();
-            }
-            IEnumerable<Idea> ideas;
-            if (view == ViewOptions.Mine)
-            {
-                ideas = await _repository.GetIdeasAsync();
-            }
-            else
-                ideas = await _repository.GetIdeasAsync();
+            _logger.Information("Retrieving Initiatives");
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+
+            var ideas = await _repository.GetIdeasAsync();
             var returnValue = ideas.OrderByDescending(x => x.Id);
-            if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-            {
-                watch.Stop();
-                _logger.Information("Retrieving {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
-            }
+            watch.Stop();
+            _logger.Information("Retried {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
             return returnValue;
         }
 
@@ -72,13 +67,10 @@ namespace CoE.Ideas.Server.Controllers
         {
             using (LogContext.PushProperty("InitiativeId", id))
             {
-                Stopwatch watch = null;
-                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                {
-                    _logger.Information("Retrieving initiative {InitiativeId}");
-                    watch = new Stopwatch();
-                    watch.Start();
-                }
+                _logger.Information("Retrieving initiative {InitiativeId}");
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
+
                 if (!ModelState.IsValid)
                 {
                     _logger.Warning("Unable to retrieve initiative {InitiativeId} because model state is not valid");
@@ -100,11 +92,8 @@ namespace CoE.Ideas.Server.Controllers
                         return NotFound();
                     }
 
-                    if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                    {
-                        watch.Stop();
-                        _logger.Information("Retrieved initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
-                    }
+                    watch.Stop();
+                    _logger.Information("Retrieved initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
                     return Ok(idea);
                 }
             }
@@ -121,12 +110,9 @@ namespace CoE.Ideas.Server.Controllers
         {
             using (LogContext.PushProperty("WordPressId", id))
             {
-                Stopwatch watch = null;
-                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                {
-                    _logger.Information("Retrieving initiative by WordPress id {WordPressId}");
-                    watch.Start();
-                }
+                _logger.Information("Retrieving initiative by WordPress id {WordPressId}");
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
                 if (!ModelState.IsValid)
                 {
                     _logger.Warning("Unable to retrieve initiative by WordPress id {WordPressId} because model state is not valid");
@@ -141,11 +127,8 @@ namespace CoE.Ideas.Server.Controllers
                     return NotFound();
                 }
 
-                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                {
-                    watch.Stop();
-                    _logger.Information("Retrieved initiative {InitiativeId} from WordPress id {WordPressId} in {ElapsedMilliseconds}ms", idea.Id, id, watch.ElapsedMilliseconds);
-                }
+                watch.Stop();
+                _logger.Information("Retrieved initiative {InitiativeId} from WordPress id {WordPressId} in {ElapsedMilliseconds}ms", idea.Id, id, watch.ElapsedMilliseconds);
                 return Ok(idea);
             }
         }
@@ -163,13 +146,9 @@ namespace CoE.Ideas.Server.Controllers
         {
             using (LogContext.PushProperty("InitiativeId", id))
             {
-                Stopwatch watch = null;
-                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                {
-                    _logger.Information("Updating initiative {InitiativeId}");
-                    watch = new Stopwatch();
-                    watch.Start();
-                }
+                _logger.Information("Updating initiative {InitiativeId}");
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
 
                 if (!ModelState.IsValid)
                 {
@@ -187,11 +166,8 @@ namespace CoE.Ideas.Server.Controllers
                 {
                     await _repository.UpdateIdeaAsync(idea);
 
-                    if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                    {
-                        watch.Stop();
-                        _logger.Information("Updated initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
-                    }
+                    watch.Stop();
+                    _logger.Information("Updated initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
                 }
                 catch (Exception err)
                 {
@@ -223,23 +199,44 @@ namespace CoE.Ideas.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            Stopwatch watch = null;
-            if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-            {
-                _logger.Information("Creating new initiative");
-                watch = new Stopwatch();
-                watch.Start();
-            }
+            _logger.Information("Creating new initiative");
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
             try
             {
-                var newIdea = await _repository.AddIdeaAsync(idea);
+                // post to WordPress
+                //_logger.LogDebug("Posting to WordPress");
+
+                var currentUserTask = _repository.GetStakeholderByEmailAsync(User.GetEmail());
+
+                var wordPressIdeaTask = _wordpressClient.PostIdeaAsync(idea);
+                var currentUser = await currentUserTask;
+
+                var newIdeaTask = _repository.AddIdeaAsync(idea, currentUser);
+
+                Task.WaitAll(newIdeaTask, wordPressIdeaTask);
+
+                var updateIdeaTask = _repository.SetWordPressItemAsync(newIdeaTask.Result.Id, wordPressIdeaTask.Result);
+
+                _logger.Information("Posting to service bus");
+                var sendToServiceBusTask = _initiativeMessageSender.SendInitiativeCreatedAsync(
+                    new InitiativeCreatedEventArgs()
+                    {
+                        Initiative =
+                        newIdeaTask.Result,
+                        Owner =
+                        User
+                    });
+
+                Task.WaitAll(updateIdeaTask, sendToServiceBusTask);
+                _logger.Information("Posted to service bus");
 
                 if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
                 {
                     watch.Stop();
                     _logger.Information("Created initiative in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
                 }
-                return CreatedAtAction("GetIdea", new { id = newIdea.Id }, newIdea);
+                return CreatedAtAction("GetIdea", new { id = newIdeaTask.Result.Id }, newIdeaTask.Result);
             }
             catch (Exception err)
             {

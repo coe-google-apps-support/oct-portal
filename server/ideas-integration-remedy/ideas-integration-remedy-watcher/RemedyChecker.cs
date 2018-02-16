@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.ServiceBus;
+﻿using CoE.Ideas.Core.ServiceBus;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -13,15 +14,15 @@ using System.Threading.Tasks;
 
 namespace CoE.Ideas.Remedy.Watcher
 {
-    public class RemedyChecker
+    public class RemedyChecker : IRemedyChecker
     {
         public RemedyChecker(New_Port_0PortType remedyClient,
-            ITopicClient topiClient,
-            ILogger<RemedyChecker> logger,
+            IInitiativeMessageSender initiativeMessageSender,
+            Serilog.ILogger logger,
             IOptions<RemedyCheckerOptions> options)
         {
             _remedyClient = remedyClient ?? throw new ArgumentNullException("remedyClient");
-            _topicClient = topiClient ?? throw new ArgumentNullException("topiClient");
+            _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
             _logger = logger ?? throw new ArgumentException("logger");
 
             if (options == null || options.Value == null)
@@ -33,8 +34,8 @@ namespace CoE.Ideas.Remedy.Watcher
 
 
         private readonly New_Port_0PortType _remedyClient;
-        private readonly ITopicClient _topicClient;
-        private readonly ILogger<RemedyChecker> _logger;
+        private readonly IInitiativeMessageSender _initiativeMessageSender;
+        private readonly Serilog.ILogger _logger;
         private readonly RemedyCheckerOptions _options;
 
         private const string ResultFilePrefix = "RemedyCheckerLog";
@@ -65,7 +66,7 @@ namespace CoE.Ideas.Remedy.Watcher
                     catch (Exception err)
                     {
                         // TODO: keep going through files until we find a good one?
-                        _logger.LogCritical($"Unable to get last time we polled remedy for work item changes: { err.Message }");
+                        _logger.Error($"Unable to get last time we polled remedy for work item changes: { err.Message }");
                     }
                 }
             }
@@ -75,19 +76,19 @@ namespace CoE.Ideas.Remedy.Watcher
 
         public async Task<RemedyPollResult> Poll()
         {
-            Stopwatch watch = null;
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                watch = new Stopwatch();
-                _logger.LogDebug($"Polling Remedy using start time of { lastPollTimeUtc } (UTC) ");
-                watch.Start();
-            }
-            else
-                _logger.LogInformation("Polling Remedy");
+            var result = await PollAsync(lastPollTimeUtc);
+            SaveResult(result);
+            return result;
+        }
 
-            var result = new RemedyPollResult(lastPollTimeUtc);
+
+        public async Task<RemedyPollResult> PollAsync(DateTime fromUtc)
+        {
+            Stopwatch watch = new Stopwatch();
+
+            var result = new RemedyPollResult(fromUtc);
             IEnumerable<OutputMapping1GetListValues> workItemsChanged = null;
-            try { workItemsChanged = await TryGetRemedyChangedWorkItems(); }
+            try { workItemsChanged = await TryGetRemedyChangedWorkItems(fromUtc); }
             catch (Exception err)
             {
                 result.ProcessErrors.Add(new ProcessError() { ErrorMessage = err.Message });
@@ -100,14 +101,7 @@ namespace CoE.Ideas.Remedy.Watcher
                 ? result.RecordsProcesed.Max(x => x.Last_Modified_Date)
                 : lastPollTimeUtc;
 
-            SaveResult(result);
-
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                _logger.LogDebug($"Finished Polling Remedy in { watch.Elapsed.TotalSeconds}s");
-            }
-            else
-                _logger.LogInformation("Finished Polling Remedy");
+            _logger.Information($"Finished Polling Remedy in { watch.Elapsed.TotalSeconds}s");
 
             return result;
         }
@@ -122,14 +116,11 @@ namespace CoE.Ideas.Remedy.Watcher
             }
         }
 
-        private async Task<IEnumerable<OutputMapping1GetListValues>> TryGetRemedyChangedWorkItems()
+        private async Task<IEnumerable<OutputMapping1GetListValues>> TryGetRemedyChangedWorkItems(DateTime fromUtc)
         {
-            Stopwatch watch = null;
-            if (_logger.IsEnabled(LogLevel.Debug))
-            {
-                watch = new Stopwatch();
-                watch.Start();
-            }
+            Stopwatch watch =  new Stopwatch();
+            watch.Start();
+
             try
             {
                 var authInfo = new AuthenticationInfo()
@@ -144,81 +135,55 @@ namespace CoE.Ideas.Remedy.Watcher
                 var remedyResponse = await _remedyClient.New_Get_Operation_0Async(
                     new New_Get_Operation_0Request(
                         authInfo, 
-                        _options.TemplateName, 
-                        lastPollTimeUtc.ToString("O"))); // TODO: apply time component - like format "O" or "yyyy-MM-dd"
-                if (_logger.IsEnabled(LogLevel.Debug))
-                {
-                    int count = 0;
-                    if (remedyResponse != null && remedyResponse.getListValues != null)
-                        count = remedyResponse.getListValues.Length;
-                    _logger.LogDebug($"Remedy returned { count } changed work item records in { watch.Elapsed.TotalMilliseconds }ms");
-                }
+                        _options.TemplateName,
+                        fromUtc.ToString("O"))); // TODO: apply time component - like format "O" or "yyyy-MM-dd"
+                int count = 0;
+                if (remedyResponse != null && remedyResponse.getListValues != null)
+                    count = remedyResponse.getListValues.Length;
+                _logger.Information($"Remedy returned { count } changed work item records in { watch.Elapsed.TotalMilliseconds }ms");
 
                 return remedyResponse.getListValues;
             }
             catch (Exception err)
             {
-                _logger.LogCritical(err, $"Unable to get response from Remedy: { err.Message }");
+                _logger.Error(err, $"Unable to get response from Remedy: { err.Message }");
                 throw;
-            }
-            finally
-            {
-                if (_logger.IsEnabled(LogLevel.Debug))
-                    watch.Stop();
             }
         }
 
         private async Task ProcessWorkItemsChanged(IEnumerable<OutputMapping1GetListValues> workItemsChanged,
             RemedyPollResult result)
         {
-            Stopwatch watch = null;
-            if (_logger.IsEnabled(LogLevel.Debug))
+            Stopwatch watch =  new Stopwatch();
+            watch.Start();
+
+            int count = 0;
+            foreach (var workItem in workItemsChanged)
             {
-                watch = new Stopwatch();
-                watch.Start();
-            }
-
-            try
-            {
-                int count = 0;
-                foreach (var workItem in workItemsChanged)
+                if (workItem.Last_Modified_Date <= lastPollTimeUtc)
                 {
-                    if (workItem.Last_Modified_Date <= lastPollTimeUtc)
-                    {
-                        _logger.LogWarning($"WorkItem { workItem.Last_Modified_Date } has a last modified date less than or equal to our previous poll time, so ignoring");
-                        continue;
-                    }
-
-                    var error = await TryProcessWorkItemChanged(workItem);
-
-                    if (error == null)
-                    {
-                        result.RecordsProcesed.Add(workItem);
-                    }
-                    else
-                    {
-                        result.ProcessErrors.Add(new ProcessError()
-                        {
-                            WorkItem = workItem,
-                            ErrorMessage = error.Message
-                        });
-                    }
-                    count++;
+                    _logger.Warning($"WorkItem { workItem.Last_Modified_Date } has a last modified date less than or equal to our previous poll time, so ignoring");
+                    continue;
                 }
-                if (_logger.IsEnabled(LogLevel.Debug))
+
+                var error = await TryProcessWorkItemChanged(workItem);
+
+                if (error == null)
                 {
-                    TimeSpan avg = count > 0 ? watch.Elapsed / count : TimeSpan.Zero;
-                    _logger.LogDebug($"Processed { count } work item changes in { watch.Elapsed }. Average = { avg.TotalMilliseconds }ms/record ");
+                    result.RecordsProcesed.Add(workItem);
                 }
-            }
-            finally
-            {
-                if (_logger.IsEnabled(LogLevel.Debug))
+                else
                 {
-                    watch.Stop();
+                    result.ProcessErrors.Add(new ProcessError()
+                    {
+                        WorkItem = workItem,
+                        ErrorMessage = error.Message
+                    });
                 }
+                count++;
             }
-
+            TimeSpan avg = count > 0 ? watch.Elapsed / count : TimeSpan.Zero;
+            _logger.Information($"Processed { count } work item changes in { watch.Elapsed }. Average = { avg.TotalMilliseconds }ms/record ");
         }
 
         private async Task<Exception> TryProcessWorkItemChanged(
@@ -226,31 +191,23 @@ namespace CoE.Ideas.Remedy.Watcher
         {
             try
             {
-                var message = new Message
+                await _initiativeMessageSender.SendWorkOrderUpdatedAsync(new WorkOrderUpdatedEventArgs()
                 {
-                    Label = "Remedy Work Item Changed"
-                };
-                message.UserProperties.Add("Event", "StatusUpdated");
-                message.UserProperties.Add("WorkItemId", workItem.WorkOrderID);
-                message.UserProperties.Add("WorkItemStatus", workItem.Status.ToString());
-
-                string value =  JsonConvert.SerializeObject(workItem);
-                message.Body = Encoding.UTF8.GetBytes(value);
-
-                await _topicClient.SendAsync(message);
+                    WorkOrderId = workItem.WorkOrderID,
+                    UpdatedStatus = workItem.Status.ToString(),
+                    UpdatedDateUtc = workItem.Last_Modified_Date
+                });
                 return null;
             }
             catch (Exception e)
             {
                 Guid correlationId = Guid.NewGuid();
-                _logger.LogError(e, $"Unable to process work item changed (correlationId {correlationId}): {e.Message}");
-                if (_logger.IsEnabled(LogLevel.Debug))
-                {
-                    _logger.LogDebug($"Work item change that caused processing error (correlationId {correlationId}): { workItem }");
-                }
+                _logger.Error(e, $"Unable to process work item changed (correlationId {correlationId}): {e.Message}");
+                _logger.Debug($"Work item change that caused processing error (correlationId {correlationId}): { workItem }");
 
                 return e;
             }
     }
+
     }
 }

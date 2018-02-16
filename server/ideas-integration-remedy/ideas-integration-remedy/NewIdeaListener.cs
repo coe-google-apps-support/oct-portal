@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.DirectoryServices.AccountManagement;
+using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
@@ -13,98 +14,106 @@ using Serilog.Context;
 
 namespace CoE.Ideas.Remedy
 {
-    public class NewIdeaListener : IdeaListener
+    public class NewIdeaListener
     {
-        public NewIdeaListener(IIdeaRepository ideaRepository, 
-            IWordPressClient wordPressClient,
+        public NewIdeaListener(IInitiativeMessageReceiver initiativeMessageReceiver,
+            IInitiativeMessageSender initiativeMessageSender,
             IRemedyService remedyService,
             //IActiveDirectoryUserService activeDirectoryUserService,
-            ITopicClient topicClient,
-            ILogger<NewIdeaListener> logger,
-            Serilog.ILogger seriLogger)
-            : base(ideaRepository, wordPressClient, logger)
+            Serilog.ILogger logger)
         {
+            _initiativeMessageReceiver = initiativeMessageReceiver ?? throw new ArgumentNullException("initiativeMessageReceiver");
+            _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
             _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
             //_activeDirectoryUserService = activeDirectoryUserService ?? throw new ArgumentNullException("activeDirectoryUserService");
-            _topicClient = topicClient ?? throw new ArgumentNullException("topicClient");
-            _logger = seriLogger ?? throw new ArgumentNullException("seriLogger");
+            _logger = logger ?? throw new ArgumentNullException("logger");
+
+            _logger.Information("Starting messsage pump for New Initiatives");
+            _initiativeMessageReceiver.ReceiveInitiativeCreated(OnNewInitiative,
+                new MessageHandlerOptions(OnError)
+                {
+                    MaxConcurrentCalls = 30
+                });
         }
 
+        private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
+        private readonly IInitiativeMessageSender _initiativeMessageSender;
         private readonly IRemedyService _remedyService;
         //private readonly IActiveDirectoryUserService _activeDirectoryUserService;
-        private readonly ITopicClient _topicClient;
         private readonly Serilog.ILogger _logger;
 
-        protected override bool ShouldProcessMessage(IdeaMessage message)
+        protected virtual Task OnError(ExceptionReceivedEventArgs err)
         {
-            return message.Type == IdeaMessageType.IdeaCreated && message.IdeaId > 0;
+            _logger.Error(err.Exception, "Error receiving message");
+            return Task.CompletedTask;
         }
 
-        protected override async Task ProcessIdeaMessage(IdeaMessage message, Idea idea, WordPressUser wordPressUser)
+        public virtual async Task OnNewInitiative(InitiativeCreatedEventArgs e, CancellationToken token)
         {
-            if (idea == null)
-                throw new ArgumentNullException("idea");
-            //if (wordPressUser == null)
-            //    throw new ArgumentNullException("wordPressUser");
-            //if (string.IsNullOrWhiteSpace(wordPressUser.Email))
-            //    throw new ArgumentOutOfRangeException("wordpressUser email is empty");
-
-            using (LogContext.PushProperty("InitiativeId", idea.Id))
+            var initiative = e.Initiative;
+            var owner = e.Owner;
+            using (LogContext.PushProperty("InitiativeId", initiative.Id))
             {
-                _logger.Information("Begin ProcessIdeaMessage");
-                Stopwatch rootWatch = new Stopwatch(), watch = new Stopwatch();
-                rootWatch.Start();
+                _logger.Information("Begin OnNewInitiative");
+                Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                UserPrincipal adUser = null;
-                try
-                {
-                //    adUser = _activeDirectoryUserService.GetADUser(wordPressUser.Email);
-                }
-                //catch (Exception err)
-                //{
-                //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
-                //}
+                string user3and3 = await GetUser3and3(owner.GetEmail());
+                string workOrderId = await CreateWorkOrder(initiative, user3and3);
+                await SendWorkOrderCreatedMessage(initiative, owner, workOrderId);
 
-                //if (adUser == null)
-                //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
-                finally
-                {
-                    watch.Restart();
-                }
-
-                string remedyTicketId = null;
-                try
-                {
-                    remedyTicketId = await _remedyService.PostNewIdeaAsync(idea, wordPressUser, adUser?.SamAccountName);
-                    _logger.Information("Created Remedy Work Order in {ElapsedMilliseconds}", watch.ElapsedMilliseconds);
-                }
-                finally
-                {
-                    watch.Restart();
-                }
-
-                try
-                {
-                    var returnMessage = new Message
-                    {
-                        Label = "Remedy Work Item Created"
-                    };
-                    returnMessage.UserProperties["IdeaId"] = idea.Id;
-                    returnMessage.UserProperties["WorkItemId"] = remedyTicketId;
-                    await _topicClient.SendAsync(returnMessage);
-                    _logger.Information("Send remedy work order created message to service bus in {ElapsedMilliseconds}", watch.ElapsedMilliseconds);
-                }
-                finally
-                {
-                    // technically we don't need to do this (https://stackoverflow.com/questions/24140261/should-i-stop-stopwatch-at-the-end-of-the-method)
-                    // but I think it looks clean
-                    watch.Stop();
-                    watch = null;
-                }
-
-                _logger.Information("Processed message in {ElapsedMilliseconds}", rootWatch.ElapsedMilliseconds);
+                _logger.Information("Processed OnNewInitiative in {ElapsedMilliseconds}", watch.ElapsedMilliseconds);
             }
+        }
+
+        protected virtual async Task<string> GetUser3and3(string email)
+        {
+            //Stopwatch watch = new Stopwatch();
+            //UserPrincipal adUser = null;
+            //try
+            //{
+            //    //    adUser = _activeDirectoryUserService.GetADUser(wordPressUser.Email);
+            //}
+            ////catch (Exception err)
+            ////{
+            ////    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
+            ////}
+
+            ////if (adUser == null)
+            ////    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
+            //finally
+            //{
+            //    watch.Restart();
+            //}
+            // return adUser?.SamAccountName;
+
+            return await Task.FromResult<string>(null);
+        }
+
+        protected virtual async Task<string> CreateWorkOrder(Idea initiative, string user3And3)
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            string remedyTicketId = null;
+            remedyTicketId = await _remedyService.PostNewIdeaAsync(initiative, user3And3);
+            _logger.Information("Created Remedy Work Order in {ElapsedMilliseconds}", watch.ElapsedMilliseconds);
+            return remedyTicketId;
+        }
+
+        protected virtual async Task SendWorkOrderCreatedMessage(Idea initiative, ClaimsPrincipal owner, string workOrderId)
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+
+            await _initiativeMessageSender.SendInitiativeWorkOrderCreatedAsync(
+                new WorkOrderCreatedEventArgs()
+                {
+                    Initiative = initiative,
+                    Owner = owner,
+                    WorkOrderId = workOrderId
+                });
+
+            _logger.Information("Send remedy work order created message to service bus in {ElapsedMilliseconds}", watch.ElapsedMilliseconds);
         }
     }
 }

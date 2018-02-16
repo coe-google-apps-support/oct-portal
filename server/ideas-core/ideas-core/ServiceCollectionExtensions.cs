@@ -1,11 +1,13 @@
 ﻿using CoE.Ideas.Core.Internal;
 using CoE.Ideas.Core.Internal.Initiatives;
 using CoE.Ideas.Core.ProjectManagement;
+using CoE.Ideas.Core.Security;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
 using CoE.Ideas.ProjectManagement.Core.Internal;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -57,21 +59,45 @@ namespace CoE.Ideas.Core
             services.Configure<WordPressClientOptions>(options => options.Url = wordPressUri);
             services.AddSingleton<IWordPressClient, WordPressClient>();
 
-            // Add Service Bus Queue
-            if (string.IsNullOrWhiteSpace(serviceBusConnectionString) || string.IsNullOrWhiteSpace(serviceBusTopicName))
+            //// Add Service Bus Queue
+            //if (string.IsNullOrWhiteSpace(serviceBusConnectionString) || string.IsNullOrWhiteSpace(serviceBusTopicName))
+            //{
+            //    services.AddSingleton<ITopicSender<IdeaMessage>, NullTopicSender<IdeaMessage>>();
+            //}
+            //else
+            //{
+            //    services.Configure<TopicSettings>(settings =>
+            //    {
+            //        settings.ConnectionString = serviceBusConnectionString;
+            //        settings.TopicName = serviceBusTopicName;
+            //    });
+            //    services.AddSingleton<ITopicSender<IdeaMessage>, TopicSender<IdeaMessage>>();
+            //}
+            //services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
+            string serviceBusConnectionString,
+            string serviceBusTopicName,
+            string serviceBusSubscription = null)
+        {
+            services.AddSingleton<IJwtTokenizer, JwtTokenizer>();
+            services.AddSingleton<ITopicClient, TopicClient>(x =>
             {
-                services.AddSingleton<ITopicSender<IdeaMessage>, NullTopicSender<IdeaMessage>>();
-            }
-            else
+                return new TopicClient(serviceBusConnectionString, serviceBusTopicName);
+            });
+            services.AddSingleton<IInitiativeMessageSender, InitiativeMessageSender>();
+
+            if (!string.IsNullOrWhiteSpace(serviceBusSubscription))
             {
-                services.Configure<TopicSettings>(settings =>
+                services.AddSingleton<ISubscriptionClient, SubscriptionClient>(x =>
                 {
-                    settings.ConnectionString = serviceBusConnectionString;
-                    settings.TopicName = serviceBusTopicName;
+                    return new SubscriptionClient(serviceBusConnectionString, serviceBusTopicName, serviceBusSubscription);
                 });
-                services.AddSingleton<ITopicSender<IdeaMessage>, TopicSender<IdeaMessage>>();
+                services.AddSingleton<IInitiativeMessageReceiver, InitiativeMessageReceiver>();
             }
-            services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
 
             return services;
         }
@@ -114,67 +140,6 @@ namespace CoE.Ideas.Core
             services.AddScoped<IWordPressClient, WordPressClient>();
             return services;
         }
-
-        public static IServiceCollection AddIdeaListener<T>(this IServiceCollection services,
-            string connectionString,
-            string topicName,
-            string subscriptionName) where T : IdeaListener
-        {
-            return AddIdeaListener<T>(services, connectionString, topicName, subscriptionName, null);
-        }
-
-        public static IServiceCollection AddIdeaListener<T>(this IServiceCollection services,
-            string connectionString,
-            string topicName,
-            string subscriptionName,
-            Func<IServiceProvider, T> implmentationFactory) where T : IdeaListener
-        {
-            if (implmentationFactory == null)
-                services.AddSingleton<IIdeaListener, T>();
-            else
-                services.AddSingleton<IIdeaListener, T>(implmentationFactory);
-
-
-            services.AddSingleton<ISubscriptionReceiver<IdeaMessage>, SubscriptionReceiver<IdeaMessage>>(x =>
-            {
-                var options = new SubscriptionSettings
-                {
-                    ConnectionString = connectionString,
-                    TopicName = topicName,
-                    SubscriptionName = subscriptionName
-                };
-
-                var returnValue = new SubscriptionReceiver<IdeaMessage>(
-                    new SimpleOptions<SubscriptionSettings>() { Value = options });
-
-                var svc = x.GetRequiredService<IIdeaListener>();
-                returnValue.Receive(svc.OnMessageRecevied, svc.OnError, svc.OnWait);
-
-                return returnValue;
-            });
-
-            services.AddSingleton<IIdeaServiceBusReceiver, IdeaServiceBusReceiver>();
-
-            return services;
-        }
-
-
-        public static IServiceCollection AddIdeaServiceBusSender(
-            this IServiceCollection services,
-            string connectionString,
-            string topicName)
-        {
-            services.Configure<TopicSettings>(x =>
-            {
-                x.ConnectionString = connectionString;
-                x.TopicName = topicName;
-            });
-            services.AddSingleton<ITopicSender<IdeaMessage>, TopicSender<IdeaMessage>>();
-
-            services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
-            return services;
-        }
-
 
 
         /// <summary>
