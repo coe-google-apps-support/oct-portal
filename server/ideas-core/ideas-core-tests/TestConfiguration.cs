@@ -57,9 +57,9 @@ namespace CoE.Ideas.Core.Tests
             _services.AddScoped<IIdeaRepository, IdeaRepositoryInternal>();
 
             _services.AddSingleton<IWordPressClient, MockWordPressClient>();
-            _services.AddSingleton<ITopicSender<IdeaMessage>, NullTopicSender<IdeaMessage>>();
+            //_services.AddSingleton<ITopicSender<IdeaMessage>, NullTopicSender<IdeaMessage>>();
 
-            _services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
+            //_services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
 
             _services.AddAutoMapper();
             return this;

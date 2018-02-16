@@ -29,16 +29,16 @@ namespace CoE.Ideas.Core.Tests
         private static ServiceProvider serviceProvider;
 
 
-        [TestMethod]
-        public async Task CreateInitiative()
-        {
-            var initiativeRepository = serviceProvider.GetRequiredService<IIdeaRepository>();
-            var newInitiative = await initiativeRepository.AddIdeaAsync(new Idea()
-            {
-                Title = "Test Idea",
-                Description = "Test creating initiatives"
-            });
-            Assert.IsTrue(newInitiative.Id > 0, "Could not create initiative");
-        }
+        //[TestMethod]
+        //public async Task CreateInitiative()
+        //{
+        //    var initiativeRepository = serviceProvider.GetRequiredService<IIdeaRepository>();
+        //    var newInitiative = await initiativeRepository.AddIdeaAsync(new Idea()
+        //    {
+        //        Title = "Test Idea",
+        //        Description = "Test creating initiatives"
+        //    });
+        //    Assert.IsTrue(newInitiative.Id > 0, "Could not create initiative");
+        //}
     }
 }
