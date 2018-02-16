@@ -15,17 +15,17 @@ namespace CoE.Ideas.EndToEnd.Tests
         public MockInitiativeMessageReceiver()
         {
             CreatedHandlers = new List<Func<InitiativeCreatedEventArgs, CancellationToken, Task>>();
-            WorkOrderCreatedHandlers = new List<Func<WorkOderCreatedEventArgs, CancellationToken, Task>>();
+            WorkOrderCreatedHandlers = new List<Func<WorkOrderCreatedEventArgs, CancellationToken, Task>>();
+            WorkOrderUpdatedHandlers = new List<Func<WorkOrderUpdatedEventArgs, CancellationToken, Task>>();
+            InitiativeLoggedHandlers = new List<Func<InitiativeLoggedEventArgs, CancellationToken, Task>>();
         }
 
-        internal IList<Func<InitiativeCreatedEventArgs, CancellationToken, Task>> CreatedHandlers
-        {
-            get;
-            private set;
-        }
+        internal IList<Func<InitiativeCreatedEventArgs, CancellationToken, Task>> CreatedHandlers { get; private set; }
 
-        internal IList<Func<WorkOderCreatedEventArgs, CancellationToken, Task>> WorkOrderCreatedHandlers;
+        internal IList<Func<WorkOrderCreatedEventArgs, CancellationToken, Task>> WorkOrderCreatedHandlers { get; private set; }
+        internal IList<Func<WorkOrderUpdatedEventArgs, CancellationToken, Task>> WorkOrderUpdatedHandlers { get; private set; }
 
+        internal IList<Func<InitiativeLoggedEventArgs, CancellationToken, Task>> InitiativeLoggedHandlers { get; private set; }
 
 
         public void ReceiveInitiativeCreated(Func<InitiativeCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
@@ -38,14 +38,24 @@ namespace CoE.Ideas.EndToEnd.Tests
             CreatedHandlers.Add(handler);
         }
 
-        public void ReceiveInitiativeWorkItemCreated(Func<WorkOderCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
+        public void ReceiveInitiativeLogged(Func<InitiativeLoggedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
+        {
+            InitiativeLoggedHandlers.Add(handler);
+        }
+
+        public void ReceiveInitiativeWorkItemCreated(Func<WorkOrderCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
         {
             WorkOrderCreatedHandlers.Add(handler);
         }
 
-        public void ReceiveInitiativeWorkItemCreated(Func<WorkOderCreatedEventArgs, CancellationToken, Task> handler, Func<ExceptionReceivedEventArgs, Task> exceptionReceivedHandler)
+        public void ReceiveInitiativeWorkItemCreated(Func<WorkOrderCreatedEventArgs, CancellationToken, Task> handler, Func<ExceptionReceivedEventArgs, Task> exceptionReceivedHandler)
         {
             WorkOrderCreatedHandlers.Add(handler);
+        }
+
+        public void ReceiveWorkOrderUpdated(Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
+        {
+            WorkOrderUpdatedHandlers.Add(handler);
         }
     }
 }

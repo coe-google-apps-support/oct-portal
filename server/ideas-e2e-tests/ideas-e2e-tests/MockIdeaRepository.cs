@@ -147,12 +147,24 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         public Task<Idea> SetWordPressItemAsync(long ideaId, WordPressPost post)
         {
-            throw new NotImplementedException();
+            if (post == null)
+                throw new ArgumentNullException("post");
+
+            var idea = ideas.FirstOrDefault(x => x.Id == ideaId);
+            if (idea == null)
+                throw new InvalidOperationException($"Unable to find an idea with id { ideaId }");
+
+            // unfortunately not public setter
+            idea.GetType().GetProperty("WordPressKey").GetSetMethod(true).Invoke(idea, new object[] { post.Id });
+
+            idea.Url = post.Link;
+
+            return Task.FromResult(idea);
         }
 
         public Task<Stakeholder> GetStakeholderByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(ideas.SelectMany(x => x.Stakeholders).FirstOrDefault(x => x.Email == email));
         }
         #endregion
     }

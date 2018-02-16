@@ -1,122 +1,127 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
+using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
+using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Integration.Logger
 {
-    public class NewIdeaListener : IdeaListener
+    public class NewIdeaListener
     {
-        public NewIdeaListener(IIdeaRepository ideaRepository,
-            IWordPressClient wordPressClient,
-            IIdeaLogger ideaLogger,
+        public NewIdeaListener(IIdeaLogger ideaLogger,
             //IActiveDirectoryUserService activeDirectoryUserService,
-            IIdeaServiceBusSender ideaServiceBusSender, 
-            ILogger<NewIdeaListener> logger,
-            Serilog.ILogger seriLogger)
-        : base(ideaRepository, wordPressClient, logger)
+            IInitiativeMessageSender initiativeMessageSender,
+            IInitiativeMessageReceiver initiativeMessageReceiver,
+            Serilog.ILogger logger)
         {
-            _ideaLogger = ideaLogger;
+            _ideaLogger = ideaLogger ?? throw new ArgumentNullException("ideaLogger") ;
             //_activeDirectoryUserService = activeDirectoryUserService;
-            _ideaServiceBusSender = ideaServiceBusSender;
-            _logger = seriLogger;
+            _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
+            _initiativeMessageReceiver = initiativeMessageReceiver ?? throw new ArgumentNullException("initiativeMessageReceiver");
+            _logger = logger ?? throw new ArgumentNullException("logger");
+
+            _initiativeMessageReceiver.ReceiveInitiativeWorkItemCreated(OnInitiativeWorkItemCreated,
+                new MessageHandlerOptions(OnError)
+                {
+                    MaxConcurrentCalls = 30
+                });
         }
 
         private readonly IIdeaLogger _ideaLogger;
         //private readonly IActiveDirectoryUserService _activeDirectoryUserService;
-        private readonly IIdeaServiceBusSender _ideaServiceBusSender;        
+        private readonly IInitiativeMessageSender _initiativeMessageSender;
+        private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
         private readonly Serilog.ILogger _logger;
 
-
-        protected override bool ShouldProcessMessage(IdeaMessage message)
+        protected virtual Task OnError(ExceptionReceivedEventArgs err)
         {
-            return message.Type == IdeaMessageType.IdeaCreated && message.IdeaId > 0;
+            _logger.Error(err.Exception, "Error receiving message");
+            return Task.CompletedTask;
         }
 
-
-        protected override async Task ProcessIdeaMessage(IdeaMessage message, Idea idea, WordPressUser wordPressUser)
+ 
+        protected virtual async Task OnInitiativeWorkItemCreated(WorkOrderCreatedEventArgs args, CancellationToken token)
         {
+            if (args == null)
+                throw new ArgumentNullException("args");
+
+            var idea = args.Initiative;
+            var owner = args.Owner;
+
             if (idea == null)
-                throw new ArgumentNullException("idea");
-            if (wordPressUser == null)
-                throw new ArgumentNullException("wordPressUser");
-            if (string.IsNullOrWhiteSpace(wordPressUser.Email))
-                throw new ArgumentOutOfRangeException("wordpressUser email is empty");
+                throw new ArgumentException("Initiative cannot be null");
+            if (owner == null)
+                throw new ArgumentNullException("Owner cannot be null");
+            var email = owner.GetEmail();
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentOutOfRangeException("Initiative Owner Email cannot be empty");
+
+            var watch = new Stopwatch();
+            watch.Start();
 
             using (LogContext.PushProperty("InitiativeId", idea.Id))
             {
                 _logger.Information("Received message that a new initiative has been created with id {InitiativeId}");
-                Stopwatch rootWatch = new Stopwatch(), watch = new Stopwatch();
-                rootWatch.Start();
-                watch.Start();
 
-                //UserPrincipal adUser;
-                try
-                {
-                    //    adUser = _activeDirectoryUserService.GetADUser(wordPressUser.Email);
-                }
-                //catch (Exception err)
-                //{
-                //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
-                //}
-                finally
-                {
-                    watch.Restart();
-                }
-
-                //if (adUser == null)
-                //    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
-
-                Google.Apis.Sheets.v4.Data.AppendValuesResponse loggerResponse;
-                try
-                {
-                    loggerResponse = await _ideaLogger.LogIdeaAsync(idea, wordPressUser, adUser: null);
-                    _logger.Information("Logged initiative in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
-                }
-                catch (Exception err)
-                {
-                    _logger.Error(err, "Unable to log initiative {InitiativeId}: {ErrorMessage}", idea.Id, err.Message);
-                    loggerResponse = null;
-                }
-                finally
-                {
-                    watch.Restart();
-                }
-
-                try
-                {
-                    await _ideaServiceBusSender.SendIdeaMessageAsync(
-                        idea, 
-                        IdeaMessageType.IdeaLogged, 
-                        headers => 
-                        {
-                            headers["logWasSuccessfull"] = loggerResponse != null;
-                            headers["RangeUpdated"] = loggerResponse?.TableRange;
-                        });
-                    _logger.Information("Sent message on Service Bus that initiative has been logged in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
-                }
-                catch (Exception err)
-                {
-                    Trace.TraceError($"Unable to send IdeaLogged message: { err.Message }");
-                    _logger.Error(err, "Unable to send message on Service Bus that initiative {InitiativeId}: {ErrorMessage}", idea.Id, err.Message);
-                }
-                finally
-                {
-                    watch.Stop();
-                }
-
-                rootWatch.Stop();
-                _logger.Information("Logger processed message in {ElapsedMilliseconds}ms", rootWatch.ElapsedMilliseconds);
-
+                var loggerResponse = await LogNewInitiative(idea, owner);
+                await SendInitiativeLoggerMessage(idea, owner, loggerResponse);
+                watch.Stop();
+                _logger.Information("Logger processed message in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
             }
 
+        }
+
+        protected virtual async Task<Google.Apis.Sheets.v4.Data.AppendValuesResponse> LogNewInitiative(Idea initiative, ClaimsPrincipal owner)
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+
+            Google.Apis.Sheets.v4.Data.AppendValuesResponse loggerResponse;
+            try
+            {
+                loggerResponse = await _ideaLogger.LogIdeaAsync(initiative, owner, adUser: null);
+                _logger.Information("Logged initiative in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err, "Unable to log initiative {InitiativeId}: {ErrorMessage}", initiative.Id, err.Message);
+                loggerResponse = null;
+            }
+
+            return loggerResponse;
+        }
+
+        protected virtual async Task SendInitiativeLoggerMessage(Idea initiative, 
+            ClaimsPrincipal owner, 
+            Google.Apis.Sheets.v4.Data.AppendValuesResponse loggerResponse)
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+
+            try
+            {
+                await _initiativeMessageSender.SendInitiativeLoggedAsync(new InitiativeLoggedEventArgs()
+                {
+                    Initiative = initiative,
+                    Owner = owner,
+                    RangeUpdated = loggerResponse?.TableRange
+                });
+                _logger.Information("Sent message on Service Bus that initiative has been logged in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
+            }
+            catch (Exception err)
+            {
+                Trace.TraceError($"Unable to send IdeaLogged message: { err.Message }");
+                _logger.Error(err, "Unable to send message on Service Bus that initiative {InitiativeId}: {ErrorMessage}", initiative.Id, err.Message);
+            }
         }
     }
 }

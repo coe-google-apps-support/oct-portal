@@ -219,8 +219,13 @@ namespace CoE.Ideas.Server.Controllers
 
                 _logger.Information("Posting to service bus");
                 var sendToServiceBusTask = _initiativeMessageSender.SendInitiativeCreatedAsync(
-                    newIdeaTask.Result, 
-                    User);
+                    new InitiativeCreatedEventArgs()
+                    {
+                        Initiative =
+                        newIdeaTask.Result,
+                        Owner =
+                        User
+                    });
 
                 Task.WaitAll(updateIdeaTask, sendToServiceBusTask);
                 _logger.Information("Posted to service bus");

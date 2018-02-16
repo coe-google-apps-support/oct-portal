@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using CoE.Ideas.Core;
@@ -90,7 +91,7 @@ namespace CoE.Ideas.Integration.Logger
         }
 
 
-        public async Task<AppendValuesResponse> LogIdeaAsync(Idea idea, WordPressUser wordPressUser, UserPrincipal adUser)
+        public async Task<AppendValuesResponse> LogIdeaAsync(Idea idea, ClaimsPrincipal owner, UserPrincipal adUser)
         {
             var values = new ValueRange() { MajorDimension = "ROWS" };
             IList<object> rowData = new List<object>()
@@ -100,8 +101,8 @@ namespace CoE.Ideas.Integration.Logger
                 idea.Description,
                 idea.Url,
                 $"{_ideasApiBaseUrl}/{idea.Id}",
-                wordPressUser?.Name,
-                wordPressUser?.Email,
+                owner.GetDisplayName(),
+                owner.GetEmail(),
                 adUser?.SamAccountName,
                 idea.CreatedDate
             };

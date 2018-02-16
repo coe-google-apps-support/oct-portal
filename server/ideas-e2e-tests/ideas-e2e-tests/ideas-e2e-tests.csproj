@@ -15,10 +15,14 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.2.0" />
     <PackageReference Include="MSTest.TestFramework" Version="1.2.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\ideas-core\ideas-core\ideas-core.csproj" />
+    <ProjectReference Include="..\..\ideas-integration-logger\ideas-integration-logger\ideas-integration-logger.csproj" />
+    <ProjectReference Include="..\..\ideas-integration-notification\ideas-integration-notification\ideas-integration-notification.csproj" />
+    <ProjectReference Include="..\..\ideas-integration-remedy\ideas-integration-remedy-sblistener\ideas-integration-remedy-sblistener.csproj" />
     <ProjectReference Include="..\..\ideas-integration-remedy\ideas-integration-remedy-watcher\ideas-integration-remedy-watcher.csproj" />
     <ProjectReference Include="..\..\ideas-integration-remedy\ideas-integration-remedy\ideas-integration-remedy.csproj" />
     <ProjectReference Include="..\..\ideas-server\ideas-server\ideas-server.csproj" />

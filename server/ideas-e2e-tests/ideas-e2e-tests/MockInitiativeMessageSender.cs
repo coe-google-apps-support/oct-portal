@@ -17,30 +17,36 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         private readonly MockInitiativeMessageReceiver _receiver;
 
-        public async Task SendInitiativeCreatedAsync(Idea initiative, ClaimsPrincipal ownerPrincipal)
+
+        public async Task SendInitiativeCreatedAsync(InitiativeCreatedEventArgs args)
         {
             foreach (var handler in _receiver.CreatedHandlers)
             {
-                await handler(new InitiativeCreatedEventArgs()
-                    {
-                        Initiative = initiative,
-                        Owner = ownerPrincipal
-                    },
-                    new System.Threading.CancellationToken());
+                await handler(args, new System.Threading.CancellationToken());
             }
         }
 
-        public async Task SendInitiativeWorkItemCreatedAsync(Idea initiative, ClaimsPrincipal ownerPrincipal, string workOrderId)
+        public async Task SendInitiativeWorkOrderCreatedAsync(WorkOrderCreatedEventArgs args)
         {
             foreach (var handler in _receiver.WorkOrderCreatedHandlers)
             {
-                await handler(new WorkOderCreatedEventArgs()
-                    {
-                        Initiative = initiative,
-                        Owner = ownerPrincipal,
-                        WorkOrderId = workOrderId
-                    }, 
-                    new System.Threading.CancellationToken());
+                await handler(args, new System.Threading.CancellationToken());
+            }
+        }
+
+        public async Task SendWorkOrderUpdatedAsync(WorkOrderUpdatedEventArgs args)
+        {
+            foreach (var handler in _receiver.WorkOrderUpdatedHandlers)
+            {
+                await handler(args, new System.Threading.CancellationToken());
+            }
+        }
+
+        public async Task SendInitiativeLoggedAsync(InitiativeLoggedEventArgs args)
+        {
+            foreach (var handler in _receiver.InitiativeLoggedHandlers)
+            {
+                await handler(args, new System.Threading.CancellationToken());
             }
         }
     }

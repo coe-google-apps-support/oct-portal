@@ -24,29 +24,91 @@ namespace CoE.Ideas.Core.ServiceBus
         private readonly IJwtTokenizer _jwtTokenizer;
 
 
-        public Task SendInitiativeCreatedAsync(Idea initiative, ClaimsPrincipal ownerPrincipal)
+        public Task SendInitiativeCreatedAsync(InitiativeCreatedEventArgs args)
         {
+            if (args == null)
+                throw new ArgumentNullException("args");
+            if (args.Initiative == null)
+                throw new ArgumentException("Initiative cannot be null");
+            if (args.Owner == null)
+                throw new ArgumentException("Owner cannot be null");
+
             var message = new Message
             {
-                Label = "InitiativeCreated"
+                Label = "Initiative Created"
             };
-            message.UserProperties["InitiativeId"] = initiative.Id;
+            message.UserProperties["InitiativeId"] = args.Initiative.Id;
             //message.UserProperties["OwnerClaims"] = ownerPrincipal.Claims;
-            message.UserProperties["OwnerToken"] = _jwtTokenizer.CreateJwt(ownerPrincipal);
+            message.UserProperties["OwnerToken"] = _jwtTokenizer.CreateJwt(args.Owner);
 
             return _topicClient.SendAsync(message);
         }
 
-        public async Task SendInitiativeWorkItemCreatedAsync(Idea initiative, ClaimsPrincipal ownerPrincipal, string workOrderId)
+
+        public Task SendInitiativeWorkOrderCreatedAsync(WorkOrderCreatedEventArgs args)
         {
+            if (args == null)
+                throw new ArgumentNullException("args");
+            if (args.Initiative == null)
+                throw new ArgumentException("Initiative cannot be null");
+            if (args.Owner == null)
+                throw new ArgumentException("Owner cannot be null");
+            if (string.IsNullOrWhiteSpace(args.WorkOrderId))
+                throw new ArgumentException("WorkOrderId cannot be null or empty");
+
             var returnMessage = new Message
             {
                 Label = "Remedy Work Item Created"
             };
-            returnMessage.UserProperties["InitiativeId"] = initiative.Id;
-            returnMessage.UserProperties["OwnerToken"] = _jwtTokenizer.CreateJwt(ownerPrincipal);
-            returnMessage.UserProperties["WorkOrderId"] = workOrderId;
-            await _topicClient.SendAsync(returnMessage);
+            returnMessage.UserProperties["InitiativeId"] = args.Initiative.Id;
+            returnMessage.UserProperties["OwnerToken"] = _jwtTokenizer.CreateJwt(args.Owner);
+            returnMessage.UserProperties["WorkOrderId"] = args.WorkOrderId;
+            return _topicClient.SendAsync(returnMessage);
+        }
+
+        public Task SendWorkOrderUpdatedAsync(WorkOrderUpdatedEventArgs args)
+        {
+            if (args == null)
+                throw new ArgumentNullException("args");
+            if (string.IsNullOrWhiteSpace(args.WorkOrderId))
+                throw new ArgumentException("WorkOrderId cannot be null");
+            if (string.IsNullOrWhiteSpace(args.UpdatedStatus))
+                throw new ArgumentException("UpdatedStatus cannot be null");
+
+            if (args.UpdatedDateUtc > DateTime.UtcNow)
+                throw new ArgumentOutOfRangeException($"UpdatedDateUtc cannot be in the future ({ args.UpdatedDateUtc.ToLocalTime() })");
+
+
+            var message = new Message
+            {
+                Label = "Work Order Updated"
+            };
+            message.UserProperties["WorkOrderId"] = args.WorkOrderId;
+            message.UserProperties["WorkOrderStatus"] = args.UpdatedStatus;
+            message.UserProperties["WorkOrderUpdateTimeUtc"] = args.UpdatedDateUtc;
+
+            return _topicClient.SendAsync(message);
+        }
+
+        public Task SendInitiativeLoggedAsync(InitiativeLoggedEventArgs args)
+        {
+            if (args == null)
+                throw new ArgumentNullException("args");
+            if (args.Initiative == null)
+                throw new ArgumentException("Initiative cannot be null");
+            if (args.Owner == null)
+                throw new ArgumentException("Owner cannot be null");
+
+            // note args.RangeUpdated is allowed to be null
+
+            var message = new Message()
+            {
+                Label = "Initiative Logged"
+            };
+            message.UserProperties["InitiativeId"] = args.Initiative.Id;
+            message.UserProperties["OwnerToken"] = _jwtTokenizer.CreateJwt(args.Owner);
+            message.UserProperties["RangeUpdated"] = args.RangeUpdated;
+            return _topicClient.SendAsync(message);
         }
     }
 }

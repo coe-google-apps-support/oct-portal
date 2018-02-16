@@ -9,8 +9,10 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     public interface IInitiativeMessageSender
     {
-        Task SendInitiativeCreatedAsync(Idea initiative, ClaimsPrincipal ownerPrincipal);
-        Task SendInitiativeWorkItemCreatedAsync(Idea initiative, ClaimsPrincipal ownerPrincipal, string workOrderId);
-       
+        Task SendInitiativeCreatedAsync(InitiativeCreatedEventArgs args);
+        Task SendInitiativeWorkOrderCreatedAsync(WorkOrderCreatedEventArgs args);
+        Task SendWorkOrderUpdatedAsync(WorkOrderUpdatedEventArgs args);
+
+        Task SendInitiativeLoggedAsync(InitiativeLoggedEventArgs args);
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CoE.Ideas.Core.ServiceBus
 {
-    public class WorkOderCreatedEventArgs : InitiativeCreatedEventArgs
+    public class WorkOrderCreatedEventArgs : InitiativeCreatedEventArgs
     {
         public string WorkOrderId { get; set; }
     }

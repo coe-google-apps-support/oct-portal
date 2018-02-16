@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.DirectoryServices.AccountManagement;
 using System.Security.Claims;
 using System.Text;
 using System.Threading;
@@ -21,15 +20,15 @@ namespace CoE.Ideas.Remedy
             IInitiativeMessageSender initiativeMessageSender,
             IRemedyService remedyService,
             //IActiveDirectoryUserService activeDirectoryUserService,
-            ILogger<NewIdeaListener> logger,
-            Serilog.ILogger seriLogger)
+            Serilog.ILogger logger)
         {
             _initiativeMessageReceiver = initiativeMessageReceiver ?? throw new ArgumentNullException("initiativeMessageReceiver");
             _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
             _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
             //_activeDirectoryUserService = activeDirectoryUserService ?? throw new ArgumentNullException("activeDirectoryUserService");
-            _logger = seriLogger ?? throw new ArgumentNullException("seriLogger");
+            _logger = logger ?? throw new ArgumentNullException("logger");
 
+            _logger.Information("Starting messsage pump for New Initiatives");
             _initiativeMessageReceiver.ReceiveInitiativeCreated(OnNewInitiative,
                 new MessageHandlerOptions(OnError)
                 {
@@ -106,7 +105,13 @@ namespace CoE.Ideas.Remedy
             Stopwatch watch = new Stopwatch();
             watch.Start();
 
-            await _initiativeMessageSender.SendInitiativeWorkItemCreatedAsync(initiative, owner, workOrderId);
+            await _initiativeMessageSender.SendInitiativeWorkOrderCreatedAsync(
+                new WorkOrderCreatedEventArgs()
+                {
+                    Initiative = initiative,
+                    Owner = owner,
+                    WorkOrderId = workOrderId
+                });
 
             _logger.Information("Send remedy work order created message to service bus in {ElapsedMilliseconds}", watch.ElapsedMilliseconds);
         }
