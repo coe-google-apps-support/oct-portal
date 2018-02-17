@@ -53,10 +53,10 @@ namespace CoE.Ideas.Remedy.Tests
         {
             _services.AddRemoteIdeaConfiguration(_configuration["IdeasApi"],
                 _configuration["WordPressUrl"]);
-            _services.AddIdeaListener<NewIdeaListener>(
-                _configuration["ServiceBus:ConnectionString"],
-                _configuration["ServiceBus:TopicName"],
-                _configuration["ServiceBus:Subscription"]);
+            //_services.AddIdeaListener<NewIdeaListener>(
+            //    _configuration["ServiceBus:ConnectionString"],
+            //    _configuration["ServiceBus:TopicName"],
+            //    _configuration["ServiceBus:Subscription"]);
             _services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
             {
                 return new ActiveDirectoryUserService(

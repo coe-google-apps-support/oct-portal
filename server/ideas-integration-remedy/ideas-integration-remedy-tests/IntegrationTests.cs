@@ -37,22 +37,22 @@ namespace CoE.Ideas.Remedy.Tests
         [TestCategory("Integration")]
         public async Task TestCreateRemedyWorkOrder()
         {
-            // mock Idea
-            var newIdea = new Idea()
-            {
-                Title = "Test Idea 1",
-                Description = "Test Idea 1 Contents"
-            };
+            //// mock Idea
+            //var newIdea = new Idea()
+            //{
+            //    Title = "Test Idea 1",
+            //    Description = "Test Idea 1 Contents"
+            //};
 
-            // mock user 
-            var newUser = new WordPressUser()
-            {
-                FirstName = "Jane",
-                LastName = "Doe"
-            };
+            //// mock user 
+            //var newUser = new WordPressUser()
+            //{
+            //    FirstName = "Jane",
+            //    LastName = "Doe"
+            //};
 
-            var remedyService = serviceProvider.GetRequiredService<IRemedyService>();
-            await remedyService.PostNewIdeaAsync(newIdea, newUser, "COE\\fakeuser");
+            //var remedyService = serviceProvider.GetRequiredService<IRemedyService>();
+            ////await remedyService.PostNewIdeaAsync(newIdea, newUser, "COE\\fakeuser");
         }
 
         [TestMethod]
