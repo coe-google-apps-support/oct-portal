@@ -1,10 +1,10 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RemedyServiceReference;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;

@@ -1,4 +1,4 @@
-﻿using RemedyServiceReference;
+﻿using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
 using System;
 using System.Collections.Generic;
 using System.Text;

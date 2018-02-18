@@ -174,11 +174,46 @@ namespace CoE.Ideas.Remedy.RemedyServiceReference
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=8)]
         public string TemplateName;
         
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=9)]
+        [System.ComponentModel.DefaultValueAttribute("Categorization_Tier_1")]
+        public string Categorization_Tier_1;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=10)]
+        public string Categorization_Tier_2;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=11)]
+        public string Categorization_Tier_3;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=12)]
+        public string TemplateID;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=13)]
+        public string Customer_First_Name;
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrderInterface_WS_Octava", Order=14)]
+        public string Customer_Last_Name;
+        
         public New_Create_Operation_0Request()
         {
         }
         
-        public New_Create_Operation_0Request(CoE.Ideas.Remedy.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Customer_Company, string Customer_Login_ID, string z1D_Action, string Summary, string Description, System.Nullable<Requested_ForType> Requested_For, string Location_Company, string Work_Order_Template_Used, string TemplateName)
+        public New_Create_Operation_0Request(
+                    CoE.Ideas.Remedy.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, 
+                    string Customer_Company, 
+                    string Customer_Login_ID, 
+                    string z1D_Action, 
+                    string Summary, 
+                    string Description, 
+                    System.Nullable<Requested_ForType> Requested_For, 
+                    string Location_Company, 
+                    string Work_Order_Template_Used, 
+                    string TemplateName, 
+                    string Categorization_Tier_1, 
+                    string Categorization_Tier_2, 
+                    string Categorization_Tier_3, 
+                    string TemplateID, 
+                    string Customer_First_Name, 
+                    string Customer_Last_Name)
         {
             this.AuthenticationInfo = AuthenticationInfo;
             this.Customer_Company = Customer_Company;
@@ -190,6 +225,12 @@ namespace CoE.Ideas.Remedy.RemedyServiceReference
             this.Location_Company = Location_Company;
             this.Work_Order_Template_Used = Work_Order_Template_Used;
             this.TemplateName = TemplateName;
+            this.Categorization_Tier_1 = Categorization_Tier_1;
+            this.Categorization_Tier_2 = Categorization_Tier_2;
+            this.Categorization_Tier_3 = Categorization_Tier_3;
+            this.TemplateID = TemplateID;
+            this.Customer_First_Name = Customer_First_Name;
+            this.Customer_Last_Name = Customer_Last_Name;
         }
     }
     
@@ -253,7 +294,23 @@ namespace CoE.Ideas.Remedy.RemedyServiceReference
             return base.Channel.New_Create_Operation_0(request);
         }
         
-        public string New_Create_Operation_0(CoE.Ideas.Remedy.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Customer_Company, string Customer_Login_ID, string z1D_Action, string Summary, string Description, System.Nullable<Requested_ForType> Requested_For, string Location_Company, string Work_Order_Template_Used, string TemplateName)
+        public string New_Create_Operation_0(
+                    CoE.Ideas.Remedy.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, 
+                    string Customer_Company, 
+                    string Customer_Login_ID, 
+                    string z1D_Action, 
+                    string Summary, 
+                    string Description, 
+                    System.Nullable<Requested_ForType> Requested_For, 
+                    string Location_Company, 
+                    string Work_Order_Template_Used, 
+                    string TemplateName, 
+                    string Categorization_Tier_1, 
+                    string Categorization_Tier_2, 
+                    string Categorization_Tier_3, 
+                    string TemplateID, 
+                    string Customer_First_Name, 
+                    string Customer_Last_Name)
         {
             CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request inValue = new CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request();
             inValue.AuthenticationInfo = AuthenticationInfo;
@@ -266,6 +323,12 @@ namespace CoE.Ideas.Remedy.RemedyServiceReference
             inValue.Location_Company = Location_Company;
             inValue.Work_Order_Template_Used = Work_Order_Template_Used;
             inValue.TemplateName = TemplateName;
+            inValue.Categorization_Tier_1 = Categorization_Tier_1;
+            inValue.Categorization_Tier_2 = Categorization_Tier_2;
+            inValue.Categorization_Tier_3 = Categorization_Tier_3;
+            inValue.TemplateID = TemplateID;
+            inValue.Customer_First_Name = Customer_First_Name;
+            inValue.Customer_Last_Name = Customer_Last_Name;
             CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Response retVal = ((CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType)(this)).New_Create_Operation_0(inValue);
             return retVal.InstanceId;
         }
@@ -276,7 +339,23 @@ namespace CoE.Ideas.Remedy.RemedyServiceReference
             return base.Channel.New_Create_Operation_0Async(request);
         }
         
-        public System.Threading.Tasks.Task<CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Response> New_Create_Operation_0Async(CoE.Ideas.Remedy.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Customer_Company, string Customer_Login_ID, string z1D_Action, string Summary, string Description, System.Nullable<Requested_ForType> Requested_For, string Location_Company, string Work_Order_Template_Used, string TemplateName)
+        public System.Threading.Tasks.Task<CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Response> New_Create_Operation_0Async(
+                    CoE.Ideas.Remedy.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, 
+                    string Customer_Company, 
+                    string Customer_Login_ID, 
+                    string z1D_Action, 
+                    string Summary, 
+                    string Description, 
+                    System.Nullable<Requested_ForType> Requested_For, 
+                    string Location_Company, 
+                    string Work_Order_Template_Used, 
+                    string TemplateName, 
+                    string Categorization_Tier_1, 
+                    string Categorization_Tier_2, 
+                    string Categorization_Tier_3, 
+                    string TemplateID, 
+                    string Customer_First_Name, 
+                    string Customer_Last_Name)
         {
             CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request inValue = new CoE.Ideas.Remedy.RemedyServiceReference.New_Create_Operation_0Request();
             inValue.AuthenticationInfo = AuthenticationInfo;
@@ -289,6 +368,12 @@ namespace CoE.Ideas.Remedy.RemedyServiceReference
             inValue.Location_Company = Location_Company;
             inValue.Work_Order_Template_Used = Work_Order_Template_Used;
             inValue.TemplateName = TemplateName;
+            inValue.Categorization_Tier_1 = Categorization_Tier_1;
+            inValue.Categorization_Tier_2 = Categorization_Tier_2;
+            inValue.Categorization_Tier_3 = Categorization_Tier_3;
+            inValue.TemplateID = TemplateID;
+            inValue.Customer_First_Name = Customer_First_Name;
+            inValue.Customer_Last_Name = Customer_Last_Name;
             return ((CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType)(this)).New_Create_Operation_0Async(inValue);
         }
     }

@@ -1,9 +1,9 @@
 ﻿using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using RemedyServiceReference;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,12 +16,12 @@ namespace CoE.Ideas.Remedy.Watcher
 {
     public class RemedyChecker : IRemedyChecker
     {
-        public RemedyChecker(New_Port_0PortType remedyClient,
+        public RemedyChecker(IRemedyService remedyService,
             IInitiativeMessageSender initiativeMessageSender,
             Serilog.ILogger logger,
             IOptions<RemedyCheckerOptions> options)
         {
-            _remedyClient = remedyClient ?? throw new ArgumentNullException("remedyClient");
+            _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
             _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
             _logger = logger ?? throw new ArgumentException("logger");
 
@@ -29,14 +29,15 @@ namespace CoE.Ideas.Remedy.Watcher
                 throw new ArgumentNullException("options");
             _options = options.Value;
 
+
             TryReadLastPollTime();
         }
 
 
-        private readonly New_Port_0PortType _remedyClient;
+        private readonly IRemedyService _remedyService;
         private readonly IInitiativeMessageSender _initiativeMessageSender;
         private readonly Serilog.ILogger _logger;
-        private readonly RemedyCheckerOptions _options;
+        private RemedyCheckerOptions _options;
 
         private const string ResultFilePrefix = "RemedyCheckerLog";
 
@@ -88,7 +89,7 @@ namespace CoE.Ideas.Remedy.Watcher
 
             var result = new RemedyPollResult(fromUtc);
             IEnumerable<OutputMapping1GetListValues> workItemsChanged = null;
-            try { workItemsChanged = await TryGetRemedyChangedWorkItems(fromUtc); }
+            try { workItemsChanged = await _remedyService.GetRemedyChangedWorkItems(fromUtc); }
             catch (Exception err)
             {
                 result.ProcessErrors.Add(new ProcessError() { ErrorMessage = err.Message });
@@ -116,40 +117,7 @@ namespace CoE.Ideas.Remedy.Watcher
             }
         }
 
-        private async Task<IEnumerable<OutputMapping1GetListValues>> TryGetRemedyChangedWorkItems(DateTime fromUtc)
-        {
-            Stopwatch watch =  new Stopwatch();
-            watch.Start();
 
-            try
-            {
-                var authInfo = new AuthenticationInfo()
-                {
-                    userName = _options.ServiceUserName,
-                    password = _options.ServicePassword,
-                    authentication = "?",
-                    locale = "?",
-                    timeZone = "?"
-                };
-
-                var remedyResponse = await _remedyClient.New_Get_Operation_0Async(
-                    new New_Get_Operation_0Request(
-                        authInfo, 
-                        _options.TemplateName,
-                        fromUtc.ToString("O"))); // TODO: apply time component - like format "O" or "yyyy-MM-dd"
-                int count = 0;
-                if (remedyResponse != null && remedyResponse.getListValues != null)
-                    count = remedyResponse.getListValues.Length;
-                _logger.Information($"Remedy returned { count } changed work item records in { watch.Elapsed.TotalMilliseconds }ms");
-
-                return remedyResponse.getListValues;
-            }
-            catch (Exception err)
-            {
-                _logger.Error(err, $"Unable to get response from Remedy: { err.Message }");
-                throw;
-            }
-        }
 
         private async Task ProcessWorkItemsChanged(IEnumerable<OutputMapping1GetListValues> workItemsChanged,
             RemedyPollResult result)

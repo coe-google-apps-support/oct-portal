@@ -1,10 +1,10 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.WordPress;
+using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using RemedyServiceReference;
 using Serilog.Context;
 using System;
 using System.Collections.Generic;

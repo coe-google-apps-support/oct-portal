@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+using System.Linq;
 using System.ServiceModel;
 using System.Threading.Tasks;
 
@@ -25,8 +26,9 @@ namespace CoE.Ideas.Remedy.Tests
                 .AddEnvironmentVariables()
                 .Build();
 
-            serviceProvider = new TestConfiguration(config)
+            serviceProvider = new IntegrationTestConfiguration(config)
                 .ConfigureBasicServices()
+                .ConfigureIdeaServices()
                 .ConfigureRemedyServices()
                 .BuildServiceProvider();
         }
@@ -37,28 +39,35 @@ namespace CoE.Ideas.Remedy.Tests
         [TestCategory("Integration")]
         public async Task TestCreateRemedyWorkOrder()
         {
-            //// mock Idea
-            //var newIdea = new Idea()
-            //{
-            //    Title = "Test Idea 1",
-            //    Description = "Test Idea 1 Contents"
-            //};
+            // mock Idea
+            var newIdea = new Idea()
+            {
+                Title = "Test Idea 2",
+                Description = "Test Idea 2 Contents"
+            };
 
-            //// mock user 
-            //var newUser = new WordPressUser()
-            //{
-            //    FirstName = "Jane",
-            //    LastName = "Doe"
-            //};
+            // mock user 
+            var newUser = new WordPressUser()
+            {
+                FirstName = "Jane",
+                LastName = "Doe"
+            };
 
-            //var remedyService = serviceProvider.GetRequiredService<IRemedyService>();
-            ////await remedyService.PostNewIdeaAsync(newIdea, newUser, "COE\\fakeuser");
+            var remedyService = serviceProvider.GetRequiredService<IRemedyService>();
+            await remedyService.PostNewIdeaAsync(newIdea, "COE\\fakeuser");
         }
 
         [TestMethod]
         [TestCategory("Integration")]
         public async Task TestReadRemedyWorkOrders()
         {
+            var remedyChecker = serviceProvider.GetRequiredService<Watcher.IRemedyChecker>();
+
+            var items = await remedyChecker.PollAsync(DateTime.MinValue);
+
+            Assert.IsTrue(items.ProcessErrors.Count == 0, $"{ items.ProcessErrors.Count } Errors encountered while polling remedy. First error was: { items.ProcessErrors.FirstOrDefault()?.ErrorMessage }");
+            Assert.IsTrue(items.RecordsProcesed.Count > 0, "Expected at least one record processed");
+
 
         }
     }
