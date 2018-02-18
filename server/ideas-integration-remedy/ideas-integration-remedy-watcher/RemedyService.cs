@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace CoE.Ideas.Remedy.Watcher
 {
-    internal class RemedyService : IRemedyService
+    public class RemedyService : IRemedyService
     {
         public RemedyService(New_Port_0PortType remedyClient,
             Serilog.ILogger logger,

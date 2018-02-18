@@ -106,6 +106,7 @@ namespace CoE.Ideas.Remedy.Tests
             _services.AddSingleton<IRemedyService, RemedyService>();
 
             // Remedy Checker
+            _services.AddSingleton<Watcher.IRemedyService, Watcher.RemedyService>();
             _services.Configure<Watcher.RemedyCheckerOptions>(_configuration.GetSection("Remedy"));
             _services.AddSingleton<Watcher.RemedyServiceReference.New_Port_0PortType>(x =>
             {

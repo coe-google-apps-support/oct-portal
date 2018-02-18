@@ -1,7 +1,7 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.WordPress;
 using CoE.Ideas.Remedy;
-using RemedyServiceReference;
+using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
 using System;
 using System.Collections.Generic;
 using System.Linq;
