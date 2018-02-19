@@ -140,6 +140,15 @@ const steps2 = {
   ]
 }
 
+const fakeAssignee = {
+  data: {
+    'name': 'Super BA',
+    'email': 'super.ba@edmonton.ca',
+    'phoneNumber': '555-555-5555',
+    'avatarURL': 'https://i.imgur.com/FD51R30.png'
+  }
+}
+
 const QUERY_TIMEOUT = 1000
 
 /**
@@ -222,6 +231,19 @@ let x = class StubbedIdeasService {
             url: 'https://google.com'
           }
         })
+      }, QUERY_TIMEOUT)
+    })
+  }
+
+  /**
+   * Gets the assignee for the given initiative.
+   * @param {string} id The id of the initiative.
+   * @return {Promise} A Promise that resolves with the information of the assignee.
+   */
+  static getAssignee (id) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(fakeAssignee)
       }, QUERY_TIMEOUT)
     })
   }

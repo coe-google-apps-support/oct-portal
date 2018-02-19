@@ -199,6 +199,15 @@ let x = class IdeasService {
       expectedTargetDate
     })
   }
+
+  /**
+   * Gets the assignee for the given initiative.
+   * @param {string} id The id of the initiative.
+   * @return {Promise} A Promise that resolves with the information of the assignee.
+   */
+  static getAssignee (id) {
+    return HTTP.get(`${id}/assignee`)
+  }
 }
 
 export const IdeasService = x
