@@ -1,3 +1,5 @@
+import getRandom from '@/utils/array-random'
+
 const fakeIdeas = {
   data: [{
     id: 1,
@@ -82,135 +84,58 @@ const fakeIdeas = {
   ]
 }
 
-const fakeInitiativeSteps = {
+const steps1 = {
   data: [{
-    step: 1,
-    name: 'Submit',
-    status: 'done',
-    completedDate: 'Jan 14 2018 9:17:00 GMT-0700 (Mountain Standard Time)',
-    type: 'text',
-    data: 'Congrats! You submitted this on January 14th, 2018.'
+    'title': 'Submitted',
+    'description': 'Proin auctor pretium sem, ut malesuada dolor porttitor vel. Donec at auctor libero. Nunc nec massa condimentum, mattis diam vel, rutrum ante. Nam sed semper metus.',
+    'startDate': 'Jan 28 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
+    'completionDate': 'Jan 29 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
   },
   {
-    step: 2,
-    name: 'Review',
-    status: 'done',
-    completedDate: 'Jan 14 2018 11:17:00 GMT-0700 (Mountain Standard Time)',
-    type: 'resource',
-    data: [{
-      user: 'super.ba@edmonton.ca',
-      assignedOn: 'Jan 14 2018 10:55:32 GMT-0700 (Mountain Standard Time)',
-      avatarURL: `${process.env.STATIC_ASSETS}/assets/avatar/avatar1.png`
-    }
-    ]
+    'title': 'In Review',
+    'description': 'Etiam id vehicula metus. Fusce tristique vestibulum nulla, vitae vestibulum mi scelerisque ut. Sed consequat elit in lacus tristique, id mattis elit eleifend. Vestibulum nec augue maximus, feugiat justo sollicitudin, interdum metus.',
+    'startDate': 'Jan 29 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
+    'completionDate': null
   },
   {
-    step: 3,
-    name: 'Collaborate',
-    status: 'done',
-    completedDate: 'Jan 18 2018 11:17:00 GMT-0700 (Mountain Standard Time)',
-    type: 'resource',
-    data: [{
-      user: 'super.ba@edmonton.ca',
-      assignedOn: 'Jan 14 2018 12:31:55 GMT-0700 (Mountain Standard Time)',
-      avatarURL: `${process.env.STATIC_ASSETS}/assets/avatar/avatar1.png`
-    }
-    ]
+    'title': 'In Collaboration',
+    'description': 'Maecenas non enim a eros imperdiet scelerisque et a urna. Nunc at tincidunt massa, sit amet faucibus neque.',
+    'startDate': null,
+    'completionDate': null
   },
   {
-    step: 4,
-    name: 'Deliver',
-    status: 'ongoing',
-    completedDate: null,
-    type: 'burndown',
-    url: 'https://github.com/coe-google-apps-support/oct-portal',
-    initialWork: 24,
-    data: [
-      {
-        date: 'Jan 18 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 0,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-18..2018-01-18&type=Issues'
-      },
-      {
-        date: 'Jan 19 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 2,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-19..2018-01-19&type=Issues'
-      },
-      {
-        date: 'Jan 20 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 1,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-20..2018-01-20&type=Issues'
-      },
-      {
-        date: 'Jan 21 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 1,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-21..2018-01-21&type=Issues'
-      },
-      {
-        date: 'Jan 22 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 1,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-22..2018-01-22&type=Issues'
-      },
-      {
-        date: 'Jan 23 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 1,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-23..2018-01-23&type=Issues'
-      },
-      {
-        date: 'Jan 24 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-24..2018-01-24&type=Issues'
-      },
-      {
-        date: 'Jan 25 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-25..2018-01-25&type=Issues'
-      },
-      {
-        date: 'Jan 26 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-26..2018-01-26&type=Issues'
-      },
-      {
-        date: 'Jan 27 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-27..2018-01-27&type=Issues'
-      },
-      {
-        date: 'Jan 28 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-28..2018-01-28&type=Issues'
-      },
-      {
-        date: 'Jan 29 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 23,
-        workRemoved: 0,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-29..2018-01-29&type=Issues'
-      },
-      {
-        date: 'Jan 30 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 1,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-30..2018-01-30&type=Issues'
-      },
-      {
-        date: 'Jan 31 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 5,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-31..2018-02-31&type=Issues'
-      }
-    ]
+    'title': 'In Delivery',
+    'description': 'Pellentesque ut neque tempus, placerat purus volutpat, scelerisque velit. Vivamus porta urna vel ligula lobortis, id porttitor quam maximus.',
+    'startDate': null,
+    'completionDate': null
+  }
+  ]
+}
+
+const steps2 = {
+  data: [{
+    'title': 'Submitted',
+    'description': 'Proin auctor pretium sem, ut malesuada dolor porttitor vel. Donec at auctor libero. Nunc nec massa condimentum, mattis diam vel, rutrum ante. Nam sed semper metus.',
+    'startDate': 'Feb 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
+    'completionDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
+  },
+  {
+    'title': 'In Review',
+    'description': 'Etiam id vehicula metus. Fusce tristique vestibulum nulla, vitae vestibulum mi scelerisque ut. Sed consequat elit in lacus tristique, id mattis elit eleifend. Vestibulum nec augue maximus, feugiat justo sollicitudin, interdum metus.',
+    'startDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
+    'completionDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
+  },
+  {
+    'title': 'In Collaboration',
+    'description': 'Maecenas non enim a eros imperdiet scelerisque et a urna. Nunc at tincidunt massa, sit amet faucibus neque.',
+    'startDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
+    'completionDate': null
+  },
+  {
+    'title': 'In Delivery',
+    'description': 'Pellentesque ut neque tempus, placerat purus volutpat, scelerisque velit. Vivamus porta urna vel ligula lobortis, id porttitor quam maximus.',
+    'startDate': null,
+    'completionDate': null
   }
   ]
 }
@@ -269,9 +194,14 @@ let x = class StubbedIdeasService {
    * @returns {Promise} Resolved with an initiatives steps.
    */
   static getInitiativeSteps (id) {
+    let steps = [
+      steps1,
+      steps2
+    ]
+
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(fakeInitiativeSteps)
+        resolve(getRandom(steps))
       }, QUERY_TIMEOUT)
     })
   }
