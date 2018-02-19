@@ -37,9 +37,7 @@ namespace CoE.Ideas.Core
         /// <returns>The passed in services, for chaining</returns>
         public static IServiceCollection AddIdeaConfiguration(this IServiceCollection services,
             string dbConnectionString, 
-            string wordPressUrl,
-            string serviceBusConnectionString = null,
-            string serviceBusTopicName = null)
+            string wordPressUrl)
         {
             if (string.IsNullOrWhiteSpace(dbConnectionString))
                 throw new ArgumentNullException("dbConnectionString");
@@ -51,6 +49,7 @@ namespace CoE.Ideas.Core
                 options.UseMySql(dbConnectionString));
 
             services.AddScoped<IIdeaRepository, IdeaRepositoryInternal>();
+            services.AddScoped<IUpdatableIdeaRepository, IdeaRepositoryInternal>();
 
             // IHttpContextAccessor is used in WordpressClient
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -58,22 +57,6 @@ namespace CoE.Ideas.Core
             var wordPressUri = new Uri(wordPressUrl);
             services.Configure<WordPressClientOptions>(options => options.Url = wordPressUri);
             services.AddSingleton<IWordPressClient, WordPressClient>();
-
-            //// Add Service Bus Queue
-            //if (string.IsNullOrWhiteSpace(serviceBusConnectionString) || string.IsNullOrWhiteSpace(serviceBusTopicName))
-            //{
-            //    services.AddSingleton<ITopicSender<IdeaMessage>, NullTopicSender<IdeaMessage>>();
-            //}
-            //else
-            //{
-            //    services.Configure<TopicSettings>(settings =>
-            //    {
-            //        settings.ConnectionString = serviceBusConnectionString;
-            //        settings.TopicName = serviceBusTopicName;
-            //    });
-            //    services.AddSingleton<ITopicSender<IdeaMessage>, TopicSender<IdeaMessage>>();
-            //}
-            //services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
 
             return services;
         }

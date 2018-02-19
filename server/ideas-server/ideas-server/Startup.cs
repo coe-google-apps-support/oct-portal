@@ -39,8 +39,9 @@ namespace CoE.Ideas.Server
 
             services.AddIdeaConfiguration(
                 Configuration.GetConnectionString("IdeaDatabase"), 
-                Configuration["Ideas:WordPressUrl"],
-                Configuration.GetConnectionString("IdeaServiceBus"),
+                Configuration["Ideas:WordPressUrl"]);
+
+            services.AddInitiativeMessaging(Configuration.GetConnectionString("IdeaServiceBus"),
                 Configuration["Ideas:ServiceBusTopic"]);
 
 

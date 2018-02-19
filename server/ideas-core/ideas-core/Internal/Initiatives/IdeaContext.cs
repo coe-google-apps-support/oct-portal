@@ -18,7 +18,7 @@ namespace CoE.Ideas.Core.Internal.Initiatives
 
         public DbSet<DepartmentInternal> Departments { get; set; }
 
-        public DbSet<Stakeholder> Stakeholders { get; set; }
+        public DbSet<StakeholderInternal> Stakeholders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

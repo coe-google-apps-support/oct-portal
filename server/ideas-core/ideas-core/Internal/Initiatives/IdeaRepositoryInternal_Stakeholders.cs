@@ -8,9 +8,10 @@ namespace CoE.Ideas.Core.Internal.Initiatives
 {
     internal partial class IdeaRepositoryInternal : IUpdatableIdeaRepository
     {
-        public Task<Stakeholder> GetStakeholderByEmailAsync(string email)
+        public async Task<Stakeholder> GetStakeholderByEmailAsync(string email)
         {
-            return _context.Stakeholders.FirstOrDefaultAsync(x => x.Email == email);
+            var stakeholders = await _context.Stakeholders.FirstOrDefaultAsync(x => x.Email == email);
+            return _mapper.Map<StakeholderInternal, Stakeholder>(stakeholders);
         }
     }
 }

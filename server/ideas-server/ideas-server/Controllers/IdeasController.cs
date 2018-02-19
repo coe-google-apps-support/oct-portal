@@ -17,6 +17,7 @@ using CoE.Ideas.Core.WordPress;
 namespace CoE.Ideas.Server.Controllers
 {
     [Produces("application/json")]
+    [Route("")]
     [Route("Ideas")]
     [Route("Initiatives")]
     public class IdeasController : Controller
