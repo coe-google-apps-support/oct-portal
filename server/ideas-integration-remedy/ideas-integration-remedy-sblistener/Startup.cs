@@ -49,9 +49,7 @@ namespace CoE.Ideas.Remedy.SbListener
             // Add Idea Repository
             services.AddIdeaConfiguration(
                 Configuration.GetConnectionString("IdeaDatabase"),
-                Configuration["Ideas:WordPressUrl"],
-                Configuration.GetConnectionString("IdeaServiceBus"),
-                Configuration["Ideas:ServiceBusTopic"]);
+                Configuration["Ideas:WordPressUrl"]);
 
             // Add service to talk to ServiceBus
             services.AddSingleton<ISubscriptionClient>(x =>
