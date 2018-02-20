@@ -151,7 +151,13 @@ namespace CoE.Ideas.Core
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
+            })
+            // TODO: Read in Wordpress Cookie
+            //.AddCookie(options =>
+            //{
+            //    //options.
+            //})
+            .AddJwtBearer(options =>
             {
                 var secretKey = jwtSecretKey;
                 options.Events = new JwtBearerEvents()

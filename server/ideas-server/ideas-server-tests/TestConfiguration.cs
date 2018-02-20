@@ -71,5 +71,11 @@ namespace CoE.Ideas.Server.Tests
         }
 
 
+        public TestConfiguration SetupMockData()
+        {
+
+
+            return this;
+        }
     }
 }

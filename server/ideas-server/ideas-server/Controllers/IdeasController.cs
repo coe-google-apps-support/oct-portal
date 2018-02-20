@@ -50,7 +50,20 @@ namespace CoE.Ideas.Server.Controllers
             Stopwatch watch = new Stopwatch();
             watch.Start();
 
-            var ideas = await _repository.GetIdeasAsync();
+            IEnumerable<Idea> ideas;
+            if (view == ViewOptions.Mine)
+            {
+                var currentUser = await _repository.GetStakeholderByEmailAsync(User.GetEmail());
+                if (currentUser == null)
+                {
+                    // currentUser does not exist or has no ideas.
+                    ideas = new Idea[] { };
+                }
+                else
+                    ideas = await _repository.GetIdeasByStakeholderAsync(currentUser.Id);
+            }
+            else
+                ideas = await _repository.GetIdeasAsync();
             var returnValue = ideas.OrderByDescending(x => x.Id);
             watch.Stop();
             _logger.Information("Retried {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
