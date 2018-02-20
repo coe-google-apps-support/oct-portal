@@ -12,10 +12,12 @@ if (process.env.NODE_ENV === 'development') {
   idea = StubbedIdeasService
 } else if (process.env.NODE_ENV === 'production') {
   idea = IdeasService
+} else if (process.env.NODE_ENV === 'integration') {
+  idea = IdeasService
 } else if (process.env.NODE_ENV === 'local') {
   idea = IdeasService
 } else {
-  throw new Error(`Unknown environment: ${process.NODE_ENV}`)
+  throw new Error(`Unknown environment: ${process.env.NODE_ENV}`)
 }
 
 const ServiceLoader = {
