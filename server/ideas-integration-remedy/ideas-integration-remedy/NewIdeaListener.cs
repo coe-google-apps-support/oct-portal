@@ -20,7 +20,7 @@ namespace CoE.Ideas.Remedy
             IInitiativeMessageSender initiativeMessageSender,
             IRemedyService remedyService,
             //IActiveDirectoryUserService activeDirectoryUserService,
-            Serilog.ILogger logger)
+            Serilog.ILogger logger) 
         {
             _initiativeMessageReceiver = initiativeMessageReceiver ?? throw new ArgumentNullException("initiativeMessageReceiver");
             _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
@@ -48,7 +48,7 @@ namespace CoE.Ideas.Remedy
             return Task.CompletedTask;
         }
 
-        public virtual async Task OnNewInitiative(InitiativeCreatedEventArgs e, CancellationToken token)
+        protected virtual async Task OnNewInitiative(InitiativeCreatedEventArgs e, CancellationToken token)
         {
             var initiative = e.Initiative;
             var owner = e.Owner;
@@ -62,7 +62,7 @@ namespace CoE.Ideas.Remedy
                 string workOrderId = await CreateWorkOrder(initiative, user3and3);
                 await SendWorkOrderCreatedMessage(initiative, owner, workOrderId);
 
-                _logger.Information("Processed OnNewInitiative in {ElapsedMilliseconds}", watch.ElapsedMilliseconds);
+                _logger.Information("Processed OnNewInitiative in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
             }
         }
 
@@ -96,7 +96,7 @@ namespace CoE.Ideas.Remedy
             watch.Start();
             string remedyTicketId = null;
             remedyTicketId = await _remedyService.PostNewIdeaAsync(initiative, user3And3);
-            _logger.Information("Created Remedy Work Order in {ElapsedMilliseconds}", watch.ElapsedMilliseconds);
+            _logger.Information("Created Remedy Work Order in {ElapsedMilliseconds}ms. Initiative Id { InitiativeId }, WorkOrderId { WorkOrderId }", watch.ElapsedMilliseconds, initiative.Id, remedyTicketId);
             return remedyTicketId;
         }
 
@@ -113,7 +113,13 @@ namespace CoE.Ideas.Remedy
                     WorkOrderId = workOrderId
                 });
 
-            _logger.Information("Send remedy work order created message to service bus in {ElapsedMilliseconds}", watch.ElapsedMilliseconds);
+            _logger.Information("Send remedy work order created message to service bus in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
         }
+
+        public Task CloseAsync()
+        {
+            return _initiativeMessageReceiver.CloseAsync();
+        }
+
     }
 }

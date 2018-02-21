@@ -9,6 +9,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\..\ideas-core\ideas-core-tests\MockIdeaRepository.cs" Link="MockIdeaRepository.cs" />
+    <Compile Include="..\..\ideas-core\ideas-core-tests\MockInitiativeMessageReceiver.cs" Link="MockInitiativeMessageReceiver.cs" />
+    <Compile Include="..\..\ideas-core\ideas-core-tests\MockInitiativeMessageSender.cs" Link="MockInitiativeMessageSender.cs" />
+    <Compile Include="..\..\ideas-core\ideas-core-tests\MockWordPressClient.cs" Link="MockWordPressClient.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />
@@ -29,6 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="appsettings.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

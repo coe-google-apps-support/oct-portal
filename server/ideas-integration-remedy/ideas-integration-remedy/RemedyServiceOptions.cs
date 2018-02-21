@@ -20,5 +20,6 @@ namespace CoE.Ideas.Remedy
         public string CategorizationTier1 { get; set; }
         public string CategorizationTier2 { get; set; }
         public string CategorizationTier3 { get; set; }
+        public string Z1D_Action { get; set; }
     }
 }

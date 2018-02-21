@@ -37,7 +37,8 @@ namespace CoE.Ideas.Core
         /// <returns>The passed in services, for chaining</returns>
         public static IServiceCollection AddIdeaConfiguration(this IServiceCollection services,
             string dbConnectionString, 
-            string wordPressUrl)
+            string wordPressUrl,
+            string jwtSecretKey = null)
         {
             if (string.IsNullOrWhiteSpace(dbConnectionString))
                 throw new ArgumentNullException("dbConnectionString");
@@ -55,8 +56,19 @@ namespace CoE.Ideas.Core
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             var wordPressUri = new Uri(wordPressUrl);
-            services.Configure<WordPressClientOptions>(options => options.Url = wordPressUri);
+            services.Configure<WordPressClientOptions>(options => 
+            {
+                options.Url = wordPressUri;
+            });
             services.AddSingleton<IWordPressClient, WordPressClient>();
+
+            services.Configure<JwtTokenizerOptions>(x =>
+            {
+                x.WordPressUrl = wordPressUri;
+                x.JwtSecretKey = jwtSecretKey;
+            });
+            services.AddSingleton<IJwtTokenizer, JwtTokenizer>();
+
 
             return services;
         }
@@ -66,7 +78,7 @@ namespace CoE.Ideas.Core
             string serviceBusTopicName,
             string serviceBusSubscription = null)
         {
-            services.AddSingleton<IJwtTokenizer, JwtTokenizer>();
+
             services.AddSingleton<ITopicClient, TopicClient>(x =>
             {
                 return new TopicClient(serviceBusConnectionString, serviceBusTopicName);

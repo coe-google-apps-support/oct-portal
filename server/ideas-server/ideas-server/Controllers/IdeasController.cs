@@ -226,6 +226,9 @@ namespace CoE.Ideas.Server.Controllers
                 var wordPressIdeaTask = _wordpressClient.PostIdeaAsync(idea);
                 var currentUser = await currentUserTask;
 
+                if (currentUser == null)
+                    currentUser = new Stakeholder() { Email = User.GetEmail(), UserName = User.GetDisplayName() };
+
                 var newIdeaTask = _repository.AddIdeaAsync(idea, currentUser);
 
                 Task.WaitAll(newIdeaTask, wordPressIdeaTask);

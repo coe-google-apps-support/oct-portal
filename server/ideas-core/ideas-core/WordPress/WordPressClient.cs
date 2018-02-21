@@ -1,9 +1,11 @@
-﻿using CoE.Ideas.Core.WordPress;
+﻿using CoE.Ideas.Core.Security;
+using CoE.Ideas.Core.WordPress;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -16,8 +18,32 @@ namespace CoE.Ideas.Core.WordPress
 {
     internal class WordPressClient : IWordPressClient
     {
+        public WordPressClient(IOptions<WordPressClientOptions> options, IJwtTokenizer jwtTokenizer) : this(options, jwtTokenizer, null)
+        {
+        }
+
+
+        public WordPressClient(IOptions<WordPressClientOptions> options,
+            IJwtTokenizer jwtTokenizer,
+            IHttpContextAccessor httpContextAccessor)
+        {
+            _jwtTokenizer = jwtTokenizer ?? throw new ArgumentNullException("jwtTokenizer");
+
+            if (options == null)
+                throw new ArgumentNullException("options");
+            string wordPressUrl = options.Value.Url.ToString();
+            if (!wordPressUrl.EndsWith("/"))
+                wordPressUrl += "/";
+            _wordPressUrl = new Uri(wordPressUrl);
+
+            _httpContextAccessor = httpContextAccessor; // allowed to be null
+        }
+
+
+
         // _httpContextAccessor is used to get the current user; set by Dependency Injection
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IJwtTokenizer _jwtTokenizer;
         private readonly Uri _wordPressUrl;
 
         private string jwtCredentials;
@@ -38,7 +64,8 @@ namespace CoE.Ideas.Core.WordPress
 
                     if (string.IsNullOrWhiteSpace(authToken))
                     {
-                        throw new SecurityException("Unable to get current JWT Authorization token");
+                        return null;
+                        //throw new SecurityException("Unable to get current JWT Authorization token");
                     }
                     else
                     {
@@ -65,25 +92,6 @@ namespace CoE.Ideas.Core.WordPress
                 else
                     jwtCredentials = value;
             }
-        }
-
-        public WordPressClient(IOptions<WordPressClientOptions> options) : this(options, null)
-        {
-
-        }
-
-
-        public WordPressClient(IOptions<WordPressClientOptions> options, 
-            IHttpContextAccessor httpContextAccessor)
-        {
-            if (options == null)
-                throw new ArgumentNullException("options");
-
-            _httpContextAccessor = httpContextAccessor; // allowed to be null
-            string wordPressUrl = options.Value.Url.ToString();
-            if (!wordPressUrl.EndsWith("/"))
-                wordPressUrl += "/";
-            _wordPressUrl = new Uri(wordPressUrl);
         }
 
         public async Task<WordPressUser> GetCurrentUserAsync()
@@ -180,16 +188,25 @@ namespace CoE.Ideas.Core.WordPress
         //    }
         //}
 
+
         protected virtual HttpClient GetHttpClient()
         {
+
             var client = new HttpClient();
 
             if (string.IsNullOrWhiteSpace(JwtCredentials))
             {
-                throw new SecurityException("JWTCredentials must be set or obtainable from HTTP Request headers");
+                bool? userIsAuthenticated = _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated;
+                if (!(userIsAuthenticated.HasValue && userIsAuthenticated.Value))
+                    throw new InvalidOperationException("JwtCredentials must be set or httpContextAccessor must have an authenticated user");
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtTokenizer.CreateJwt(_httpContextAccessor.HttpContext.User));
+            }
+            else
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", JwtCredentials);
             }
 
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", JwtCredentials);
 
             client.BaseAddress = new Uri(_wordPressUrl, "wp-json/wp/v2/");
 

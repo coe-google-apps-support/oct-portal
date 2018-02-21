@@ -2,6 +2,7 @@
 using CoE.Ideas.Core.WordPress;
 using CoE.Ideas.Remedy.RemedyServiceReference;
 using Microsoft.Extensions.Options;
+using Serilog.Context;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,19 +15,22 @@ namespace CoE.Ideas.Remedy
     public class RemedyService : IRemedyService
     {
         public RemedyService(New_Port_0PortType remedyClient,
-            IOptions<RemedyServiceOptions> options)
+            IOptions<RemedyServiceOptions> options,
+            Serilog.ILogger logger)
         {
             _remedyClient = remedyClient ?? throw new ArgumentNullException("remedyClient");
             if (options == null)
                 throw new ArgumentNullException("options");
             _options = options?.Value;
+            _logger = logger ?? throw new ArgumentNullException("logger");
         }
 
         private readonly New_Port_0PortType _remedyClient;
         private readonly RemedyServiceOptions _options;
+        private readonly Serilog.ILogger _logger;
 
 
-        public async Task<string> PostNewIdeaAsync(Idea idea, string user3and3)
+        public virtual async Task<string> PostNewIdeaAsync(Idea idea, string user3and3)
         {
             try
             {
@@ -38,7 +42,7 @@ namespace CoE.Ideas.Remedy
                     },
                     Customer_Company: _options.CustomerCompany,
                     Customer_Login_ID: _options.CustomerLoginId,
-                    z1D_Action: "Create",
+                    z1D_Action: _options.Z1D_Action,
                     Summary: idea.Title,
                     Description: idea.Description,
                     Requested_For: Requested_ForType.Individual,
@@ -57,10 +61,9 @@ namespace CoE.Ideas.Remedy
             }
             catch (Exception err)
             {
-                Trace.TraceError($"Unable to create ticket in Remedy: { err.Message }");
+                _logger.Error(err, "Unable to create work order in Remedy for Initiative { InitiativeId }: { ErrorMessage} ", idea.Id, err.Message);
                 throw;
             }
-
         }
     }
 }

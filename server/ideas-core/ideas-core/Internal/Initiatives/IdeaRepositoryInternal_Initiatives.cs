@@ -94,7 +94,7 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             if (idea.Stakeholders == null)
                 idea.Stakeholders = new List<Stakeholder>();
 
-            var existingStakeholder = idea.Stakeholders
+            var existingStakeholder = _context.Stakeholders
                 .FirstOrDefault(x => owner.Email.Equals(x.Email, StringComparison.InvariantCultureIgnoreCase));
 
             if (existingStakeholder == null)

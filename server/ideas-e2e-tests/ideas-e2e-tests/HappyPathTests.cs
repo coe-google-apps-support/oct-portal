@@ -39,21 +39,11 @@ namespace CoE.Ideas.EndToEnd.Tests
         private static ServiceProvider serviceProvider;
 
 
-
-        [TestMethod]
-        [TestCategory("End to End")]
-        public async Task CreateInitiative()
+        [TestInitialize]
+        public void Initialize()
         {
-            var logger = serviceProvider.GetRequiredService<Serilog.ILogger>();
-            var ideasController = serviceProvider.GetRequiredService<IdeasController>();
-
-            // mock services
-            var mockRemedyService = serviceProvider.GetRequiredService<MockRemedyService>();
-            var mockLoggerService = serviceProvider.GetRequiredService<MockIdeaLogger>();
-            var mockEmailService = serviceProvider.GetRequiredService<MockEmailService>();
-
-            int initialIdeasLogged = mockLoggerService.InitiativesLogged.Count();
-            int initialEmailsSent = mockEmailService.EmailsSent.Count();
+            logger = serviceProvider.GetRequiredService<Serilog.ILogger>();
+            ideasController = serviceProvider.GetRequiredService<IdeasController>();
 
             // service bus listeners - we need to get them to ensure they set up their message pumps
             // (in their respective constructors)
@@ -61,6 +51,24 @@ namespace CoE.Ideas.EndToEnd.Tests
             var remedySblistenerService = serviceProvider.GetRequiredService<RemedyItemUpdatedIdeaListener>();
             var loggerService = serviceProvider.GetRequiredService<Integration.Logger.NewIdeaListener>();
             var notificationService = serviceProvider.GetRequiredService<IdeaLoggedListener>();
+
+        }
+
+        private Serilog.ILogger logger;
+        private IdeasController ideasController;
+
+
+        [TestMethod]
+        [TestCategory("End to End")]
+        public async Task CreateInitiative()
+        {
+            // mock services
+            var mockRemedyService = serviceProvider.GetRequiredService<MockRemedyService>();
+            var mockLoggerService = serviceProvider.GetRequiredService<MockIdeaLogger>();
+            var mockEmailService = serviceProvider.GetRequiredService<MockEmailService>();
+
+            int initialIdeasLogged = mockLoggerService.InitiativesLogged.Count();
+            int initialEmailsSent = mockEmailService.EmailsSent.Count();
 
             logger.Information("Starting Test CreateInitiative...");
 
@@ -77,7 +85,7 @@ namespace CoE.Ideas.EndToEnd.Tests
             // call the remote services, we just pretend to (mocking).
 
             // ensure we tried to create an item in "Remedy"
-            Assert.IsTrue(mockRemedyService.Items.Count > 0, "Item not created in Remedy");
+            Assert.IsTrue(mockRemedyService.WorkOrdersAdded.Count > 0, "Item not created in Remedy");
 
             // ensure our idea has the right WorkItemId
             Assert.IsTrue(!string.IsNullOrWhiteSpace(newIdea.WorkItemId), "Remedy did not assign a WorkOrderId");

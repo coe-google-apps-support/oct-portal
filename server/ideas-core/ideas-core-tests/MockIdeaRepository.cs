@@ -1,21 +1,14 @@
-﻿using CoE.Ideas.Core;
-using CoE.Ideas.Core.ServiceBus;
-using CoE.Ideas.Core.WordPress;
+﻿using CoE.Ideas.Core.WordPress;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoE.Ideas.EndToEnd.Tests
+namespace CoE.Ideas.Core.Tests
 {
     internal class MockIdeaRepository : IUpdatableIdeaRepository
     {
-        //public MockIdeaRepository(IIdeaServiceBusSender serviceBusSender)
-        //{
-        //    _serviceBusSender = serviceBusSender ?? throw new ArgumentNullException("serviceBusSender");
-        //}
-        //private IIdeaServiceBusSender _serviceBusSender;
 
         #region Ideas
         private ICollection<Idea> ideas = new HashSet<Idea>();
@@ -40,7 +33,7 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         public Task<IEnumerable<Idea>> GetIdeasByStakeholderAsync(long stakeholderId)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(ideas.Where(x => x.Stakeholders.Any(y => y.Id == stakeholderId)).AsEnumerable());
         }
 
         public Task<Idea> GetIdeaAsync(long id)

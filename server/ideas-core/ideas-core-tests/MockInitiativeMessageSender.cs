@@ -1,12 +1,10 @@
-﻿using CoE.Ideas.Core;
-using CoE.Ideas.Core.ServiceBus;
+﻿using CoE.Ideas.Core.ServiceBus;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoE.Ideas.EndToEnd.Tests
+namespace CoE.Ideas.Core.Tests
 {
     internal class MockInitiativeMessageSender : IInitiativeMessageSender
     {
@@ -50,4 +48,5 @@ namespace CoE.Ideas.EndToEnd.Tests
             }
         }
     }
+
 }

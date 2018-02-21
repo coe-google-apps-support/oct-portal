@@ -14,29 +14,19 @@ namespace CoE.Ideas.EndToEnd.Tests
     {
         public MockRemedyService()
         {
-
+            WorkOrdersAdded = new List<RemedyWorkOrder>();
         }
 
-        private ICollection<OutputMapping1GetListValues> remedyItems = new List<OutputMapping1GetListValues>();
-        public ICollection<OutputMapping1GetListValues> Items
-        {
-            get
-            {
-                return remedyItems;
-            }
-        }
+        public ICollection<RemedyWorkOrder> WorkOrdersAdded { get; internal set; }
+
 
         public Task<string> PostNewIdeaAsync(Idea idea, string user3and3)
         {
-            var newRemedyItem = new OutputMapping1GetListValues
-            {
-                WorkOrderID = Guid.NewGuid().ToString(),
-                Description = idea.Title,
-                Detailed_Description = idea.Description
-            };
-            remedyItems.Add(newRemedyItem);
 
-            return Task.FromResult(newRemedyItem.WorkOrderID);
+            string workOrderID = Guid.NewGuid().ToString();
+            WorkOrdersAdded.Add(new RemedyWorkOrder() { WorkOrderId = workOrderID, Idea = idea });
+
+            return Task.FromResult(workOrderID);
         }
 
     }

@@ -20,109 +20,57 @@ using System.Text;
 
 namespace CoE.Ideas.EndToEnd.Tests
 {
-    public class TestConfiguration
+    public class TestConfiguration : BaseTestConfiguration
     {
-        public TestConfiguration(IConfigurationRoot configuration)
+        public TestConfiguration(IConfigurationRoot configuration) : base(configuration)
         {
-            _configuration = configuration ?? throw new ArgumentNullException("configuration");
-            _services = new ServiceCollection();
         }
 
         public TestConfiguration(IConfigurationRoot configuration,
-            IServiceCollection services)
+            IServiceCollection services) : base(configuration, services)
         {
-            _configuration = configuration ?? throw new ArgumentNullException("configuration");
-            _services = services ?? throw new ArgumentNullException("services");
         }
 
-        private readonly IConfigurationRoot _configuration;
-        private readonly IServiceCollection _services;
 
         public ServiceProvider ServiceProvider { get; private set; }
 
-        public ServiceProvider BuildServiceProvider()
+        public new TestConfiguration ConfigureBasicServices()
         {
-            ServiceProvider = _services.BuildServiceProvider();
-            return ServiceProvider;
-        }
-
-        public TestConfiguration ConfigureBasicServices()
-        {
-            _services.AddOptions();
-
-            // Add logging
-            
-            _services.AddSingleton(new LoggerFactory()
-                .AddConsole(
-                    Enum.Parse<LogLevel>(_configuration["Logging:Debug:LogLevel:Default"]),
-                    bool.Parse(_configuration["Logging:IncludeScopes"]))
-                .AddDebug(
-                    Enum.Parse<LogLevel>(_configuration["Logging:Console:LogLevel:Default"])));
-            _services.AddLogging();
-
-            // configure application specific logging
-            Log.Logger = new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .Enrich.WithProperty("Application", "Initiatives")
-                .Enrich.WithProperty("Module", "Logging")
-                //.ReadFrom.Configuration(_configuration)
-                .WriteTo.Console()
-                .CreateLogger();
-
-            _services.AddSingleton(x => Log.Logger);
-
+            base.ConfigureBasicServices();
             return this;
         }
 
         public TestConfiguration ConfigureIdeaServices()
         {
-            _services.AddScoped<IWordPressClient, MockWordPressClient>();
-            _services.AddScoped<IIdeaRepository, MockIdeaRepository>();
-            _services.AddScoped<IUpdatableIdeaRepository, MockIdeaRepository>();
-            _services.AddScoped<IdeasController>(x =>
-            {
-                return new IdeasController(x.GetRequiredService<IUpdatableIdeaRepository>(),
-                    x.GetRequiredService<IWordPressClient>(),
-                    x.GetRequiredService<IInitiativeMessageSender>(),
-                    x.GetRequiredService<Serilog.ILogger>())
-                {
-                    ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext() {
-                        HttpContext = new Microsoft.AspNetCore.Http.DefaultHttpContext
-                        {
-                            User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-                            {
-                                new Claim(ClaimTypes.Name, "Snow White"),
-                                new Claim(ClaimTypes.Email, "snow.white@edmonton.ca")
-                            }, "someAuthTypeName"))
-                        }
-                    }
-                };
-            });
+            Services.AddScoped<IWordPressClient, MockWordPressClient>();
+            Services.AddScoped<IIdeaRepository, MockIdeaRepository>();
+            Services.AddScoped<IUpdatableIdeaRepository, MockIdeaRepository>();
+            base.ConfigureIdeasController();
             return this;
         }
 
         public TestConfiguration ConfigureIdeaMessaging()
         {
 
-            _services.AddSingleton<MockInitiativeMessageReceiver>();
-            _services.AddSingleton<IInitiativeMessageReceiver>(x =>
+            Services.AddSingleton<MockInitiativeMessageReceiver>();
+            Services.AddSingleton<IInitiativeMessageReceiver>(x =>
             {
                 return x.GetRequiredService<MockInitiativeMessageReceiver>();
             });
-            _services.AddSingleton<IInitiativeMessageSender, MockInitiativeMessageSender>();
+            Services.AddSingleton<IInitiativeMessageSender, MockInitiativeMessageSender>();
 
             return this;
         }
 
         public TestConfiguration ConfigureRemedyServices()
         {
-            _services.AddSingleton<MockRemedyService>();
-            _services.AddSingleton<IRemedyService>(x => x.GetRequiredService<MockRemedyService>());
+            Services.AddSingleton<MockRemedyService>();
+            Services.AddSingleton<IRemedyService>(x => x.GetRequiredService<MockRemedyService>());
 
             // configure the listener that listens for new initiatives and create work order in remedy
-            _services.AddSingleton<NewIdeaListener>();
+            Services.AddSingleton<NewIdeaListener>();
 
-            _services.AddSingleton<RemedyItemUpdatedIdeaListener>();
+            Services.AddSingleton<RemedyItemUpdatedIdeaListener>();
 
             return this;
         }
@@ -130,16 +78,16 @@ namespace CoE.Ideas.EndToEnd.Tests
         public TestConfiguration ConfigureNotificationServices()
         {
             // logger first
-            _services.AddSingleton<MockIdeaLogger>();
-            _services.AddSingleton<Integration.Logger.IIdeaLogger>(x => x.GetRequiredService<MockIdeaLogger>());
-            _services.AddSingleton<Integration.Logger.NewIdeaListener>();
+            Services.AddSingleton<MockIdeaLogger>();
+            Services.AddSingleton<Integration.Logger.IIdeaLogger>(x => x.GetRequiredService<MockIdeaLogger>());
+            Services.AddSingleton<Integration.Logger.NewIdeaListener>();
 
             // now notifications
-            _services.AddSingleton<MockMailmanEnabledSheetReader>();
-            _services.AddSingleton<IMailmanEnabledSheetReader>(x => x.GetRequiredService<MockMailmanEnabledSheetReader>());
-            _services.AddSingleton<MockEmailService>();
-            _services.AddSingleton<IEmailService>(x => x.GetRequiredService<MockEmailService>());
-            _services.AddSingleton(x =>
+            Services.AddSingleton<MockMailmanEnabledSheetReader>();
+            Services.AddSingleton<IMailmanEnabledSheetReader>(x => x.GetRequiredService<MockMailmanEnabledSheetReader>());
+            Services.AddSingleton<MockEmailService>();
+            Services.AddSingleton<IEmailService>(x => x.GetRequiredService<MockEmailService>());
+            Services.AddSingleton(x =>
             {
                 return new IdeaLoggedListener(
                     x.GetRequiredService<IMailmanEnabledSheetReader>(),

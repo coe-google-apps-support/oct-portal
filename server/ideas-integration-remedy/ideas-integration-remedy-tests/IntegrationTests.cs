@@ -42,7 +42,7 @@ namespace CoE.Ideas.Remedy.Tests
             // mock Idea
             var newIdea = new Idea()
             {
-                Title = "Test Idea 2",
+                Title = "Test Idea 3",
                 Description = "Test Idea 2 Contents"
             };
 

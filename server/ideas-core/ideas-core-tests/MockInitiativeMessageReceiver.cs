@@ -1,14 +1,12 @@
-﻿using CoE.Ideas.Core;
-using CoE.Ideas.Core.ServiceBus;
+﻿using CoE.Ideas.Core.ServiceBus;
 using Microsoft.Azure.ServiceBus;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoE.Ideas.EndToEnd.Tests
+namespace CoE.Ideas.Core.Tests
 {
     internal class MockInitiativeMessageReceiver : IInitiativeMessageReceiver
     {
@@ -27,6 +25,11 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         internal IList<Func<InitiativeLoggedEventArgs, CancellationToken, Task>> InitiativeLoggedHandlers { get; private set; }
 
+        public Task CloseAsync()
+        {
+            // Nothing to do
+            return Task.CompletedTask;
+        }
 
         public void ReceiveInitiativeCreated(Func<InitiativeCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
         {
@@ -58,4 +61,5 @@ namespace CoE.Ideas.EndToEnd.Tests
             WorkOrderUpdatedHandlers.Add(handler);
         }
     }
+
 }
