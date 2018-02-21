@@ -65,6 +65,8 @@ class coe_ideas {
             $mode = 'New';
         } elseif ( preg_match('/\/view-ideas(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI']) ){
             $mode = 'ViewAll';
+        } elseif ( preg_match('/\/initiatives(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI']) ){
+            $mode = 'ViewSingle';
         } else {
             return;
         }
@@ -136,10 +138,15 @@ if (ideaApps) {
             $mode = 'New';
         } elseif ( preg_match('/\/view-ideas(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI']) ){
             $mode = 'ViewAll';
-        }        
+        } elseif ( preg_match('/\/initiatives(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI']) ){
+            $mode = 'ViewSingle';
+        }
 
         if ($mode == 'ViewAll') {
             $str = $str . 'route: "ViewIdeas",
+        ';
+        } elseif ($mode == 'ViewSingle') {
+            $str = $str . 'route: "Initiative",
         ';
         }
 
