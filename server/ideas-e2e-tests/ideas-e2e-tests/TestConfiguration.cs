@@ -2,6 +2,7 @@
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.Tests;
 using CoE.Ideas.Core.WordPress;
+using CoE.Ideas.EndToEnd.Tests.Mocks;
 using CoE.Ideas.Integration.Notification;
 using CoE.Ideas.Remedy;
 using CoE.Ideas.Remedy.RemedyServiceReference;

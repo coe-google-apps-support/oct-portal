@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CoE.Ideas.Core.Security
 {
-    internal interface IJwtTokenizer
+    public interface IJwtTokenizer
     {
         string CreateJwt(ClaimsPrincipal principal);
         ClaimsPrincipal CreatePrincipal(string jwt);

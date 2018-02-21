@@ -1,4 +1,5 @@
 using CoE.Ideas.Core;
+using CoE.Ideas.EndToEnd.Tests.Mocks;
 using CoE.Ideas.Integration.Notification;
 using CoE.Ideas.Remedy;
 using CoE.Ideas.Remedy.SbListener;

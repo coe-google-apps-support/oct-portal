@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoE.Ideas.EndToEnd.Tests
+namespace CoE.Ideas.EndToEnd.Tests.IntegrationServices
 {
     internal class IntegrationRemedyListenerNewIdeaListener : NewIdeaListener
     {
@@ -17,8 +17,12 @@ namespace CoE.Ideas.EndToEnd.Tests
             //IActiveDirectoryUserService activeDirectoryUserService,
             Serilog.ILogger logger) : base(initiativeMessageReceiver, initiativeMessageSender, remedyService, logger)
         {
+            _logger = logger ?? throw new ArgumentNullException("logger");
+
             NewInitiatives = new List<Idea>();
         }
+
+        private readonly Serilog.ILogger _logger;
 
         public ICollection<Idea> NewInitiatives { get; private set; }
 

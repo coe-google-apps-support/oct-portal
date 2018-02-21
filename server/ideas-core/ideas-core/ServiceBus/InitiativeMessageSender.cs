@@ -11,7 +11,7 @@ using Microsoft.Azure.ServiceBus;
 
 namespace CoE.Ideas.Core.ServiceBus
 {
-    internal class InitiativeMessageSender : IInitiativeMessageSender
+    public class InitiativeMessageSender : IInitiativeMessageSender
     {
         public InitiativeMessageSender(ITopicClient topicClient, 
             IJwtTokenizer jwtTokenizer)

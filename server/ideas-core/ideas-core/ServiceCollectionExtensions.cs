@@ -1,5 +1,6 @@
 ﻿using CoE.Ideas.Core.Internal;
 using CoE.Ideas.Core.Internal.Initiatives;
+using CoE.Ideas.Core.People;
 using CoE.Ideas.Core.ProjectManagement;
 using CoE.Ideas.Core.Security;
 using CoE.Ideas.Core.ServiceBus;
@@ -136,6 +137,31 @@ namespace CoE.Ideas.Core
             return services;
         }
 
+
+        public static IServiceCollection AddPeopleService(this IServiceCollection services,
+            string peopleServiceUrl)
+        {
+            if (string.IsNullOrWhiteSpace(peopleServiceUrl))
+                throw new ArgumentNullException("peopleServiceUrl");
+
+            Uri peopleServiceUri;
+            try
+            {
+                peopleServiceUri = new Uri(peopleServiceUrl);
+            }
+            catch (Exception err)
+            {
+                throw new InvalidOperationException($"peopleServiceUrl is not a valid url: { peopleServiceUrl }", err);
+            }
+
+            services.Configure<PeopleServiceOptions>(x =>
+            {
+                x.ServiceUrl = peopleServiceUri;
+            });
+            services.AddSingleton<IPeopleService, PeopleService>();
+
+            return services;
+        }
 
         /// <summary>
         /// Adds Idea authentication for WebAPI. Sets up JWT handlers for use with the token generator 

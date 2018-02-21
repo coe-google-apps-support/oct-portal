@@ -6,8 +6,9 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     public class WorkOrderUpdatedEventArgs
     {
-        public string UpdatedStatus { get; set; }
-        public DateTime UpdatedDateUtc { get; set; }
         public string WorkOrderId { get; set; }
+        public DateTime UpdatedDateUtc { get; set; }
+        public string UpdatedStatus { get; set; }
+        public string AssigneeEmail { get; set; }
     }
 }

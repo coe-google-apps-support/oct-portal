@@ -9,10 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\ideas-core\ideas-core-tests\MockIdeaRepository.cs" Link="MockIdeaRepository.cs" />
-    <Compile Include="..\..\ideas-core\ideas-core-tests\MockInitiativeMessageReceiver.cs" Link="MockInitiativeMessageReceiver.cs" />
-    <Compile Include="..\..\ideas-core\ideas-core-tests\MockInitiativeMessageSender.cs" Link="MockInitiativeMessageSender.cs" />
-    <Compile Include="..\..\ideas-core\ideas-core-tests\MockWordPressClient.cs" Link="MockWordPressClient.cs" />
+    <Compile Include="..\..\ideas-core\ideas-core-tests\MockIdeaRepository.cs" Link="Mocks\MockIdeaRepository.cs" />
+    <Compile Include="..\..\ideas-core\ideas-core-tests\MockInitiativeMessageReceiver.cs" Link="Mocks\MockInitiativeMessageReceiver.cs" />
+    <Compile Include="..\..\ideas-core\ideas-core-tests\MockInitiativeMessageSender.cs" Link="Mocks\MockInitiativeMessageSender.cs" />
+    <Compile Include="..\..\ideas-core\ideas-core-tests\MockWordPressClient.cs" Link="Mocks\MockWordPressClient.cs" />
   </ItemGroup>
 
   <ItemGroup>

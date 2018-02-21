@@ -1,4 +1,5 @@
 ﻿using CoE.Ideas.Core;
+using CoE.Ideas.EndToEnd.Tests.Mocks;
 using CoE.Ideas.Remedy;
 using CoE.Ideas.Remedy.RemedyServiceReference;
 using Microsoft.Extensions.Options;
@@ -7,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoE.Ideas.EndToEnd.Tests
+namespace CoE.Ideas.EndToEnd.Tests.IntegrationServices
 {
     internal class IntegrationRemedyService : RemedyService
     {

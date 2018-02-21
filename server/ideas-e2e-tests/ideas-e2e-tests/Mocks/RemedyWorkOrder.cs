@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CoE.Ideas.EndToEnd.Tests
+namespace CoE.Ideas.EndToEnd.Tests.Mocks
 {
     internal class RemedyWorkOrder
     {

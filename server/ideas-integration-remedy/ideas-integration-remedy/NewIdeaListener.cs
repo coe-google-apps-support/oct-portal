@@ -44,7 +44,7 @@ namespace CoE.Ideas.Remedy
 
         protected virtual Task OnError(ExceptionReceivedEventArgs err)
         {
-            _logger.Error(err.Exception, "Error receiving message");
+            _logger.Error(err.Exception, "Error receiving message: {ErrorMessage}", err.Exception.Message);
             return Task.CompletedTask;
         }
 

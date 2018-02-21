@@ -13,7 +13,7 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     //TODO: Mark messages as complete, abadoned or dead lettered!
 
-    internal class InitiativeMessageReceiver : IInitiativeMessageReceiver
+    public class InitiativeMessageReceiver : IInitiativeMessageReceiver
     {
         public InitiativeMessageReceiver(IIdeaRepository repository,
             IWordPressClient wordPressClient,
@@ -47,28 +47,32 @@ namespace CoE.Ideas.Core.ServiceBus
         }
         public void ReceiveInitiativeCreated(Func<InitiativeCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
         {
+            options.AutoComplete = false;
             _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
             {
-                var idea = await GetMessageInitiative(msg);
-                if (idea.WasMessageDeadLettered)
-                    return;
-                var owner = await GetMessageOwner(msg);
-                if (owner.WasMessageDeadLettered)
-                    return;
+                if (await EnsureMessageLabel(msg, "Initiative Created"))
+                {
+                    var idea = await GetMessageInitiative(msg);
+                    if (idea.WasMessageDeadLettered)
+                        return;
+                    var owner = await GetMessageOwner(msg);
+                    if (owner.WasMessageDeadLettered)
+                        return;
 
-                try
-                {
-                    await handler(new InitiativeCreatedEventArgs()
+                    try
                     {
-                        Initiative = idea.Item,
-                        Owner = owner.Item
-                    }, token);
-                    await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
-                }
-                catch (Exception err)
-                {
-                    System.Diagnostics.Trace.TraceWarning($"InitiativeCreated handler threw the following error, abandoning message for future processing: { err.Message }");
-                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                        await handler(new InitiativeCreatedEventArgs()
+                        {
+                            Initiative = idea.Item,
+                            Owner = owner.Item
+                        }, token);
+                        await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                    }
+                    catch (Exception err)
+                    {
+                        System.Diagnostics.Trace.TraceWarning($"InitiativeCreated handler threw the following error, abandoning message for future processing: { err.Message }");
+                        await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                    }
                 }
             }, options);
         }
@@ -76,32 +80,36 @@ namespace CoE.Ideas.Core.ServiceBus
 
         public void ReceiveInitiativeWorkItemCreated(Func<WorkOrderCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
         {
+            options.AutoComplete = false;
             _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
             {
-                var idea = await GetMessageInitiative(msg);
-                if (idea.WasMessageDeadLettered)
-                    return;
-                var owner = await GetMessageOwner(msg);
-                if (owner.WasMessageDeadLettered)
-                    return;
-                var workOrderId = await GetMessageString(msg, propertyName: "WorkOrderId");
-                if (workOrderId.WasMessageDeadLettered)
-                    return;
+                if (await EnsureMessageLabel(msg, "Remedy Work Item Created"))
+                {
+                    var idea = await GetMessageInitiative(msg);
+                    if (idea.WasMessageDeadLettered)
+                        return;
+                    var owner = await GetMessageOwner(msg);
+                    if (owner.WasMessageDeadLettered)
+                        return;
+                    var workOrderId = await GetMessageString(msg, propertyName: "WorkOrderId");
+                    if (workOrderId.WasMessageDeadLettered)
+                        return;
 
-                try
-                {
-                    await handler(new WorkOrderCreatedEventArgs()
+                    try
                     {
-                        Initiative = idea.Item,
-                        Owner = owner.Item,
-                        WorkOrderId = workOrderId.Item
-                    }, token);
-                    await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
-                }
-                catch (Exception err)
-                {
-                    System.Diagnostics.Trace.TraceWarning($"InitiativeWorkItemCreated handler threw the following error, abandoning message for future processing: { err.Message }");
-                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                        await handler(new WorkOrderCreatedEventArgs()
+                        {
+                            Initiative = idea.Item,
+                            Owner = owner.Item,
+                            WorkOrderId = workOrderId.Item
+                        }, token);
+                        await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                    }
+                    catch (Exception err)
+                    {
+                        System.Diagnostics.Trace.TraceWarning($"InitiativeWorkItemCreated handler threw the following error, abandoning message for future processing: { err.Message }");
+                        await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                    }
                 }
             }, options);
         }
@@ -109,32 +117,36 @@ namespace CoE.Ideas.Core.ServiceBus
 
         public void ReceiveWorkOrderUpdated(Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
         {
+            options.AutoComplete = false;
             _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
             {
-                var updatedStatus = await GetMessageString(msg, propertyName: "WorkOrderStatus");
-                if (updatedStatus.WasMessageDeadLettered)
-                    return;
-                var workOrderId = await GetMessageString(msg, propertyName: "WorkOrderId");
-                if (workOrderId.WasMessageDeadLettered)
-                    return;
-                var updateTime = await GetMessageProperty<DateTime>(msg, propertyName: "WorkOrderUpdateTimeUtc");
-                if (updateTime.WasMessageDeadLettered)
-                    return;
+                if (await EnsureMessageLabel(msg, "Work Order Updated"))
+                {
+                    var updatedStatus = await GetMessageString(msg, propertyName: "WorkOrderStatus");
+                    if (updatedStatus.WasMessageDeadLettered)
+                        return;
+                    var workOrderId = await GetMessageString(msg, propertyName: "WorkOrderId");
+                    if (workOrderId.WasMessageDeadLettered)
+                        return;
+                    var updateTime = await GetMessageProperty<DateTime>(msg, propertyName: "WorkOrderUpdateTimeUtc");
+                    if (updateTime.WasMessageDeadLettered)
+                        return;
 
-                try
-                {
-                    await handler(new WorkOrderUpdatedEventArgs()
+                    try
                     {
-                        UpdatedStatus = updatedStatus.Item,
-                        UpdatedDateUtc = updateTime.Item,
-                        WorkOrderId = workOrderId.Item
-                    }, token);
-                    await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
-                }
-                catch (Exception err)
-                {
-                    System.Diagnostics.Trace.TraceWarning($"WorkOrderUpdated handler threw the following error, abandoning message for future processing: { err.Message }");
-                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                        await handler(new WorkOrderUpdatedEventArgs()
+                        {
+                            UpdatedStatus = updatedStatus.Item,
+                            UpdatedDateUtc = updateTime.Item,
+                            WorkOrderId = workOrderId.Item
+                        }, token);
+                        await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                    }
+                    catch (Exception err)
+                    {
+                        System.Diagnostics.Trace.TraceWarning($"WorkOrderUpdated handler threw the following error, abandoning message for future processing: { err.Message }");
+                        await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                    }
                 }
             }, options);
         }
@@ -142,33 +154,50 @@ namespace CoE.Ideas.Core.ServiceBus
 
         public void ReceiveInitiativeLogged(Func<InitiativeLoggedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
         {
+            options.AutoComplete = false;
             _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
             {
-                var idea = await GetMessageInitiative(msg);
-                if (idea.WasMessageDeadLettered)
-                    return;
-                var owner = await GetMessageOwner(msg);
-                if (owner.WasMessageDeadLettered)
-                    return;
-                var rangeUpdated = await GetMessageString(msg, propertyName: "RangeUpdated");
-                if (rangeUpdated.WasMessageDeadLettered)
-                    return;
+                if (await EnsureMessageLabel(msg, "Initiative Logged"))
+                {
+                    var idea = await GetMessageInitiative(msg);
+                    if (idea.WasMessageDeadLettered)
+                        return;
+                    var owner = await GetMessageOwner(msg);
+                    if (owner.WasMessageDeadLettered)
+                        return;
+                    var rangeUpdated = await GetMessageString(msg, propertyName: "RangeUpdated");
+                    if (rangeUpdated.WasMessageDeadLettered)
+                        return;
 
-                try
-                {
-                    await handler(new InitiativeLoggedEventArgs()
+                    try
                     {
-                        Initiative = idea.Item,
-                        Owner = owner.Item,
-                        RangeUpdated = rangeUpdated.Item
-                    }, token);
-                }
-                catch (Exception err)
-                {
-                    System.Diagnostics.Trace.TraceWarning($"InitiativeLogged handler threw the following error, abandoning message for future processing: { err.Message }");
-                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                        await handler(new InitiativeLoggedEventArgs()
+                        {
+                            Initiative = idea.Item,
+                            Owner = owner.Item,
+                            RangeUpdated = rangeUpdated.Item
+                        }, token);
+                    }
+                    catch (Exception err)
+                    {
+                        System.Diagnostics.Trace.TraceWarning($"InitiativeLogged handler threw the following error, abandoning message for future processing: { err.Message }");
+                        await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                    }
                 }
             }, options);
+        }
+
+
+
+        private async Task<bool> EnsureMessageLabel(Message message, string label)
+        {
+            if (message.Label == label)
+                return true;
+            else
+            {
+                await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, $"Label was unexpected. Expected '{ label }', got '{ message.Label }';");
+                return false;
+            }
         }
 
 
@@ -177,7 +206,7 @@ namespace CoE.Ideas.Core.ServiceBus
             if (message == null)
                 throw new ArgumentNullException("msg");
 
-            var initiativeIdResult = await GetMessageProperty<long>(message, propertyName: "OwnerToken");
+            var initiativeIdResult = await GetMessageProperty<long>(message, propertyName: "InitiativeId");
             var result = new GetItemResult<Idea>();
             if (initiativeIdResult.WasMessageDeadLettered)
             {
@@ -263,7 +292,6 @@ namespace CoE.Ideas.Core.ServiceBus
                 throw new ArgumentNullException("msg");
 
             var result = new GetItemResult<T>();
-            T propertyValue = default(T);
             if (!message.UserProperties.ContainsKey(propertyName))
             {
                 string errorMessage = $"{ propertyName } not found in message";
@@ -283,7 +311,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 {
                     try
                     {
-                        propertyValue = (T)propertyObj;
+                        result.Item = (T)propertyObj;
                     }
                     catch (Exception)
                     {
@@ -297,7 +325,7 @@ namespace CoE.Ideas.Core.ServiceBus
             return result;
         }
 
-        internal class GetItemResult<T>
+        public class GetItemResult<T>
         {
             private readonly Message message;
 

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoE.Ideas.EndToEnd.Tests
+namespace CoE.Ideas.EndToEnd.Tests.Mocks
 {
     internal class MockRemedyService : IRemedyService
     {

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using CoE.Ideas.Integration.Notification;
 
-namespace CoE.Ideas.EndToEnd.Tests
+namespace CoE.Ideas.EndToEnd.Tests.Mocks
 {
     internal class MockEmailService : IEmailService
     {

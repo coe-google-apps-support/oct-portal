@@ -6,7 +6,7 @@ using CoE.Ideas.Core;
 using CoE.Ideas.Integration.Logger;
 using Google.Apis.Sheets.v4.Data;
 
-namespace CoE.Ideas.EndToEnd.Tests
+namespace CoE.Ideas.EndToEnd.Tests.Mocks
 {
     internal class MockIdeaLogger : IIdeaLogger
     {

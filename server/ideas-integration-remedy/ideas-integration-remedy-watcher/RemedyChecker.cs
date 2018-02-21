@@ -1,4 +1,5 @@
-﻿using CoE.Ideas.Core.ServiceBus;
+﻿using CoE.Ideas.Core.People;
+using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Logging;
@@ -18,11 +19,13 @@ namespace CoE.Ideas.Remedy.Watcher
     {
         public RemedyChecker(IRemedyService remedyService,
             IInitiativeMessageSender initiativeMessageSender,
+             IPeopleService peopleService,
             Serilog.ILogger logger,
             IOptions<RemedyCheckerOptions> options)
         {
             _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
             _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
+            _peopleService = peopleService ?? throw new ArgumentNullException("peopleService");
             _logger = logger ?? throw new ArgumentException("logger");
 
             if (options == null || options.Value == null)
@@ -36,6 +39,7 @@ namespace CoE.Ideas.Remedy.Watcher
 
         private readonly IRemedyService _remedyService;
         private readonly IInitiativeMessageSender _initiativeMessageSender;
+        private readonly IPeopleService _peopleService;
         private readonly Serilog.ILogger _logger;
         private RemedyCheckerOptions _options;
 
@@ -96,7 +100,7 @@ namespace CoE.Ideas.Remedy.Watcher
             }
             if (workItemsChanged != null && workItemsChanged.Any())
             {
-                await ProcessWorkItemsChanged(workItemsChanged, result);
+                await ProcessWorkItemsChanged(workItemsChanged, result, fromUtc);
             }
             result.EndTimeUtc = result.RecordsProcesed.Any()
                 ? result.RecordsProcesed.Max(x => x.Last_Modified_Date)
@@ -120,7 +124,7 @@ namespace CoE.Ideas.Remedy.Watcher
 
 
         private async Task ProcessWorkItemsChanged(IEnumerable<OutputMapping1GetListValues> workItemsChanged,
-            RemedyPollResult result)
+            RemedyPollResult result, DateTime timestampUtc)
         {
             Stopwatch watch =  new Stopwatch();
             watch.Start();
@@ -128,9 +132,12 @@ namespace CoE.Ideas.Remedy.Watcher
             int count = 0;
             foreach (var workItem in workItemsChanged)
             {
-                if (workItem.Last_Modified_Date <= lastPollTimeUtc)
+                // We can do the next line because this service will always be in the same time zone as Remedy
+                DateTime lastModifiedDateUtc = workItem.Last_Modified_Date.ToUniversalTime();
+
+                if (lastModifiedDateUtc <= timestampUtc)
                 {
-                    _logger.Warning($"WorkItem { workItem.Last_Modified_Date } has a last modified date less than or equal to our previous poll time, so ignoring");
+                    _logger.Warning($"WorkItem { workItem.WorkOrderID } has a last modified date less than or equal to our cutoff time, so ignoring ({ lastModifiedDateUtc } <= { timestampUtc }");
                     continue;
                 }
 
@@ -154,16 +161,36 @@ namespace CoE.Ideas.Remedy.Watcher
             _logger.Information($"Processed { count } work item changes in { watch.Elapsed }. Average = { avg.TotalMilliseconds }ms/record ");
         }
 
-        private async Task<Exception> TryProcessWorkItemChanged(
+        protected virtual async Task<Exception> TryProcessWorkItemChanged(
             OutputMapping1GetListValues workItem)
         {
+            // we need to convert the Assignee 3+3 to an email so Octava can use it
+            // from manual inspection in looks like this field is the "assignee 3+3":
+            string assignee3and3 = workItem.ASLOGID;
+
+            string assigneeEmail = null;
+            if (!string.IsNullOrWhiteSpace(assignee3and3))
+            {
+                try
+                {
+                    assigneeEmail = await _peopleService.GetEmailAsync(assignee3and3);
+                }
+                catch (Exception err)
+                {
+                    _logger.Warning("Unable to get email for Remedy Work Order Assignee { User3and3 }: { ErrorMessage }", assignee3and3, err.Message);
+                }
+            }
+
             try
             {
+                // Note the ToUniversalTime on the Last_Modified_Date:
+                // this works because this service runs in the same time zone as Remedy.
                 await _initiativeMessageSender.SendWorkOrderUpdatedAsync(new WorkOrderUpdatedEventArgs()
                 {
                     WorkOrderId = workItem.WorkOrderID,
+                    UpdatedDateUtc = workItem.Last_Modified_Date.ToUniversalTime(),
                     UpdatedStatus = workItem.Status.ToString(),
-                    UpdatedDateUtc = workItem.Last_Modified_Date
+                    AssigneeEmail = assigneeEmail
                 });
                 return null;
             }
@@ -175,7 +202,8 @@ namespace CoE.Ideas.Remedy.Watcher
 
                 return e;
             }
-    }
+        }
+
 
     }
 }
