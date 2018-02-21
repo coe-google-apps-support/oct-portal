@@ -29,11 +29,7 @@ namespace CoE.Ideas.Integration.Logger
             _initiativeMessageReceiver = initiativeMessageReceiver ?? throw new ArgumentNullException("initiativeMessageReceiver");
             _logger = logger ?? throw new ArgumentNullException("logger");
 
-            _initiativeMessageReceiver.ReceiveInitiativeWorkItemCreated(OnInitiativeWorkItemCreated,
-                new MessageHandlerOptions(OnError)
-                {
-                    MaxConcurrentCalls = 30
-                });
+            _initiativeMessageReceiver.ReceiveMessages(workOrderCreatedHandler: OnInitiativeWorkItemCreated);
         }
 
         private readonly IIdeaLogger _ideaLogger;
@@ -41,12 +37,6 @@ namespace CoE.Ideas.Integration.Logger
         private readonly IInitiativeMessageSender _initiativeMessageSender;
         private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
         private readonly Serilog.ILogger _logger;
-
-        protected virtual Task OnError(ExceptionReceivedEventArgs err)
-        {
-            _logger.Error(err.Exception, "Error receiving message");
-            return Task.CompletedTask;
-        }
 
  
         protected virtual async Task OnInitiativeWorkItemCreated(WorkOrderCreatedEventArgs args, CancellationToken token)

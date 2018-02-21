@@ -18,175 +18,219 @@ namespace CoE.Ideas.Core.ServiceBus
         public InitiativeMessageReceiver(IIdeaRepository repository,
             IWordPressClient wordPressClient,
             ISubscriptionClient subscriptionClient,
-            IJwtTokenizer jwtTokenizer)
+            IJwtTokenizer jwtTokenizer,
+            Serilog.ILogger logger)
         {
             _repository = repository ?? throw new ArgumentNullException("repository");
             _wordPressClient = wordPressClient ?? throw new ArgumentNullException("wordPressClient");
             _subscriptionClient = subscriptionClient ?? throw new ArgumentNullException("subscriptionClient");
             _jwtTokenizer = jwtTokenizer ?? throw new ArgumentNullException("jwtTokenizer");
+            _logger = logger ?? throw new ArgumentNullException("logger");
         }
         private readonly IIdeaRepository _repository;
         private readonly IWordPressClient _wordPressClient;
         private readonly ISubscriptionClient _subscriptionClient;
         private readonly IJwtTokenizer _jwtTokenizer;
+        private readonly Serilog.ILogger _logger;
 
-        /// <summary>
-        /// Closes the Client. Closes the connections opened by it.
-        /// </summary>
-        /// <returns></returns>
-        public Task CloseAsync()
+        private IDictionary<string, ICollection<Func<Message, CancellationToken, Task>>> MessageMap = new Dictionary<string, ICollection<Func<Message, CancellationToken, Task>>>();
+
+        public void ReceiveMessages(Func<InitiativeCreatedEventArgs, CancellationToken, Task> initiativeCreatedHndler = null,
+            Func<WorkOrderCreatedEventArgs, CancellationToken, Task> workOrderCreatedHandler = null, 
+            Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> workOrderUpdatedHandler = null,
+            Func<InitiativeLoggedEventArgs, CancellationToken, Task> initiativeLoggedHandler = null,
+            MessageHandlerOptions options = null)
         {
-            return _subscriptionClient.CloseAsync();
-        }
-
-        private async Task CheckPrerequisitions<TArgs>(Message msg, TArgs args, bool checker)
-        {
-
-            await _subscriptionClient.DeadLetterAsync(msg.SystemProperties.LockToken, $"Unable to get Initiative { msg.UserProperties["InitiativeId"] } or user for OwnerToken { msg.UserProperties["OwnerToken"] }");
-
-        }
-        public void ReceiveInitiativeCreated(Func<InitiativeCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
-        {
-            options.AutoComplete = false;
+            MessageHandlerOptions messageHandlerOptions = options ?? new MessageHandlerOptions(OnDefaultError);
+            messageHandlerOptions.AutoComplete = false;
             _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
             {
-                if (await EnsureMessageLabel(msg, "Initiative Created"))
+                switch (msg.Label)
                 {
-                    var idea = await GetMessageInitiative(msg);
-                    if (idea.WasMessageDeadLettered)
-                        return;
-                    var owner = await GetMessageOwner(msg);
-                    if (owner.WasMessageDeadLettered)
-                        return;
-
-                    try
+                    // TODO: These should be moved to a constants file
+                    case "Initiative Created":
                     {
-                        await handler(new InitiativeCreatedEventArgs()
-                        {
-                            Initiative = idea.Item,
-                            Owner = owner.Item
-                        }, token);
-                        await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                        if (initiativeCreatedHndler != null)
+                            await ReceiveInitiativeCreated(msg, token, initiativeCreatedHndler);
+                        else
+                            await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                        break;
                     }
-                    catch (Exception err)
+                    case "Remedy Work Item Created":
+                        if (workOrderCreatedHandler != null)
+                            await ReceiveInitiativeWorkItemCreated(msg, token, workOrderCreatedHandler);
+                        else
+                            await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                        break;
+                    case "Work Order Updated":
+                        if (workOrderUpdatedHandler != null)
+                            await ReceiveWorkOrderUpdated(msg, token, workOrderUpdatedHandler);
+                        else
+                            await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                        break;
+                    case "Initiative Logged":
+                        if (initiativeLoggedHandler != null)
+                            await ReceiveInitiativeLogged(msg, token, initiativeLoggedHandler);
+                        else
+                            await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                        break;
+                    default:
                     {
-                        System.Diagnostics.Trace.TraceWarning($"InitiativeCreated handler threw the following error, abandoning message for future processing: { err.Message }");
-                        await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                        await _subscriptionClient.DeadLetterAsync(msg.SystemProperties.LockToken, $"Unknown message type: { msg.Label }");
+                        break;
                     }
                 }
-            }, options);
+            }, messageHandlerOptions);
         }
 
-
-        public void ReceiveInitiativeWorkItemCreated(Func<WorkOrderCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
+        protected virtual Task OnDefaultError(ExceptionReceivedEventArgs err)
         {
-            options.AutoComplete = false;
-            _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
-            {
-                if (await EnsureMessageLabel(msg, "Remedy Work Item Created"))
-                {
-                    var idea = await GetMessageInitiative(msg);
-                    if (idea.WasMessageDeadLettered)
-                        return;
-                    var owner = await GetMessageOwner(msg);
-                    if (owner.WasMessageDeadLettered)
-                        return;
-                    var workOrderId = await GetMessageString(msg, propertyName: "WorkOrderId");
-                    if (workOrderId.WasMessageDeadLettered)
-                        return;
-
-                    try
-                    {
-                        await handler(new WorkOrderCreatedEventArgs()
-                        {
-                            Initiative = idea.Item,
-                            Owner = owner.Item,
-                            WorkOrderId = workOrderId.Item
-                        }, token);
-                        await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
-                    }
-                    catch (Exception err)
-                    {
-                        System.Diagnostics.Trace.TraceWarning($"InitiativeWorkItemCreated handler threw the following error, abandoning message for future processing: { err.Message }");
-                        await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
-                    }
-                }
-            }, options);
+            _logger.Error(err.Exception, "Error receiving message: {ErrorMessage}", err.Exception.Message);
+            return Task.CompletedTask;
         }
 
-
-        public void ReceiveWorkOrderUpdated(Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
+        protected virtual async Task ReceiveInitiativeCreated(Message msg, CancellationToken token, Func<InitiativeCreatedEventArgs, CancellationToken, Task> handler)
         {
-            options.AutoComplete = false;
-            _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
-            {
-                if (await EnsureMessageLabel(msg, "Work Order Updated"))
-                {
-                    var updatedStatus = await GetMessageString(msg, propertyName: "WorkOrderStatus");
-                    if (updatedStatus.WasMessageDeadLettered)
-                        return;
-                    var workOrderId = await GetMessageString(msg, propertyName: "WorkOrderId");
-                    if (workOrderId.WasMessageDeadLettered)
-                        return;
-                    var updateTime = await GetMessageProperty<DateTime>(msg, propertyName: "WorkOrderUpdateTimeUtc");
-                    if (updateTime.WasMessageDeadLettered)
-                        return;
+            if (msg == null)
+                throw new ArgumentNullException("msg");
+            if (handler == null)
+                throw new ArgumentNullException("handler");
 
-                    try
+            if (await EnsureMessageLabel(msg, "Initiative Created"))
+            {
+                var idea = await GetMessageInitiative(msg);
+                if (idea.WasMessageDeadLettered)
+                    return;
+                var owner = await GetMessageOwner(msg);
+                if (owner.WasMessageDeadLettered)
+                    return;
+
+                try
+                {
+                    await handler(new InitiativeCreatedEventArgs()
                     {
-                        await handler(new WorkOrderUpdatedEventArgs()
-                        {
-                            UpdatedStatus = updatedStatus.Item,
-                            UpdatedDateUtc = updateTime.Item,
-                            WorkOrderId = workOrderId.Item
-                        }, token);
-                        await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
-                    }
-                    catch (Exception err)
-                    {
-                        System.Diagnostics.Trace.TraceWarning($"WorkOrderUpdated handler threw the following error, abandoning message for future processing: { err.Message }");
-                        await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
-                    }
+                        Initiative = idea.Item,
+                        Owner = owner.Item
+                    }, token);
+                    await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
                 }
-            }, options);
+                catch (Exception err)
+                {
+                    System.Diagnostics.Trace.TraceWarning($"InitiativeCreated handler threw the following error, abandoning message for future processing: { err.Message }");
+                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                }
+            }
         }
 
-
-        public void ReceiveInitiativeLogged(Func<InitiativeLoggedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
+        protected virtual async Task ReceiveInitiativeWorkItemCreated(Message msg, CancellationToken token, Func<WorkOrderCreatedEventArgs, CancellationToken, Task> handler)
         {
-            options.AutoComplete = false;
-            _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
-            {
-                if (await EnsureMessageLabel(msg, "Initiative Logged"))
-                {
-                    var idea = await GetMessageInitiative(msg);
-                    if (idea.WasMessageDeadLettered)
-                        return;
-                    var owner = await GetMessageOwner(msg);
-                    if (owner.WasMessageDeadLettered)
-                        return;
-                    var rangeUpdated = await GetMessageString(msg, propertyName: "RangeUpdated");
-                    if (rangeUpdated.WasMessageDeadLettered)
-                        return;
+            if (msg == null)
+                throw new ArgumentNullException("msg");
+            if (handler == null)
+                throw new ArgumentNullException("handler");
 
-                    try
+            if (await EnsureMessageLabel(msg, "Remedy Work Item Created"))
+            {
+                var idea = await GetMessageInitiative(msg);
+                if (idea.WasMessageDeadLettered)
+                    return;
+                var owner = await GetMessageOwner(msg);
+                if (owner.WasMessageDeadLettered)
+                    return;
+                var workOrderId = await GetMessageString(msg, propertyName: "WorkOrderId");
+                if (workOrderId.WasMessageDeadLettered)
+                    return;
+
+                try
+                {
+                    await handler(new WorkOrderCreatedEventArgs()
                     {
-                        await handler(new InitiativeLoggedEventArgs()
-                        {
-                            Initiative = idea.Item,
-                            Owner = owner.Item,
-                            RangeUpdated = rangeUpdated.Item
-                        }, token);
-                    }
-                    catch (Exception err)
-                    {
-                        System.Diagnostics.Trace.TraceWarning($"InitiativeLogged handler threw the following error, abandoning message for future processing: { err.Message }");
-                        await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
-                    }
+                        Initiative = idea.Item,
+                        Owner = owner.Item,
+                        WorkOrderId = workOrderId.Item
+                    }, token);
+                    await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
                 }
-            }, options);
+                catch (Exception err)
+                {
+                    System.Diagnostics.Trace.TraceWarning($"InitiativeWorkItemCreated handler threw the following error, abandoning message for future processing: { err.Message }");
+                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                }
+            }
         }
 
+        protected virtual async Task ReceiveWorkOrderUpdated(Message msg, CancellationToken token, Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> handler)
+        {
+            if (msg == null)
+                throw new ArgumentNullException("msg");
+            if (handler == null)
+                throw new ArgumentNullException("handler");
+
+            if (await EnsureMessageLabel(msg, "Work Order Updated"))
+            {
+                var updatedStatus = await GetMessageString(msg, propertyName: "WorkOrderStatus");
+                if (updatedStatus.WasMessageDeadLettered)
+                    return;
+                var workOrderId = await GetMessageString(msg, propertyName: "WorkOrderId");
+                if (workOrderId.WasMessageDeadLettered)
+                    return;
+                var updateTime = await GetMessageProperty<DateTime>(msg, propertyName: "WorkOrderUpdateTimeUtc");
+                if (updateTime.WasMessageDeadLettered)
+                    return;
+
+                try
+                {
+                    await handler(new WorkOrderUpdatedEventArgs()
+                    {
+                        UpdatedStatus = updatedStatus.Item,
+                        UpdatedDateUtc = updateTime.Item,
+                        WorkOrderId = workOrderId.Item
+                    }, token);
+                    await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                }
+                catch (Exception err)
+                {
+                    System.Diagnostics.Trace.TraceWarning($"WorkOrderUpdated handler threw the following error, abandoning message for future processing: { err.Message }");
+                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                }
+            }
+        }
+
+        protected virtual async Task ReceiveInitiativeLogged(Message msg, CancellationToken token, Func<InitiativeLoggedEventArgs, CancellationToken, Task> handler)
+        {
+            if (msg == null)
+                throw new ArgumentNullException("msg");
+            if (handler == null)
+                throw new ArgumentNullException("handler");
+
+            if (await EnsureMessageLabel(msg, "Initiative Logged"))
+            {
+                var idea = await GetMessageInitiative(msg);
+                if (idea.WasMessageDeadLettered)
+                    return;
+                var owner = await GetMessageOwner(msg);
+                if (owner.WasMessageDeadLettered)
+                    return;
+                var rangeUpdated = await GetMessageString(msg, propertyName: "RangeUpdated");
+                if (rangeUpdated.WasMessageDeadLettered)
+                    return;
+
+                try
+                {
+                    await handler(new InitiativeLoggedEventArgs()
+                    {
+                        Initiative = idea.Item,
+                        Owner = owner.Item,
+                        RangeUpdated = rangeUpdated.Item
+                    }, token);
+                }
+                catch (Exception err)
+                {
+                    System.Diagnostics.Trace.TraceWarning($"InitiativeLogged handler threw the following error, abandoning message for future processing: { err.Message }");
+                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                }
+            }
+        }
 
 
         private async Task<bool> EnsureMessageLabel(Message message, string label)

@@ -24,7 +24,7 @@ namespace CoE.Ideas.Core
         /// Retrieves all ideas where the current user is a stakeholder
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<Idea>> GetIdeasByStakeholderAsync(long stakeholderId);
+        Task<IEnumerable<Idea>> GetIdeasByStakeholderEmailAsync(string emailAddress);
 
         /// <summary>
         /// Retrieves a single idea from the database.
@@ -48,10 +48,9 @@ namespace CoE.Ideas.Core
         Task<Idea> GetIdeaByWorkItemIdAsync(string workItemId);
         #endregion
 
-        #region Stakeholderse
-        Task<Stakeholder> GetStakeholderByEmailAsync(string email);
-        #endregion
-
+        #region People
+        Task<Person> GetPersonByEmail(string email);
+        #endregion  
 
         #region Tags
         /// <summary>

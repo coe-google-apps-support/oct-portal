@@ -13,17 +13,8 @@ namespace CoE.Ideas.Core.Internal.Initiatives
     [Table("Stakeholders")]
     internal class StakeholderInternal : EntityBaseInternal
     {
-        /// <summary>
-        /// The display name of the stakeholder.
-        /// </summary>
         [Required]
-        public string UserName { get; set; }
-
-        /// <summary>
-        /// The email address of the stakeholder.
-        /// </summary>
-        [Required]
-        public string Email { get; set; }
+        public PersonInternal Person { get; set; }
 
         /// <summary>
         /// The type of stakeholder: owner, etc.

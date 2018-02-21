@@ -1,16 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
 namespace CoE.Ideas.Core
 {
-    /// <summary>
-    /// People who have some sort of stake in ideas.
-    /// </summary>
-    public class Stakeholder : EntityBase
+    public class Person : EntityBase
     {
-        [Required]
-        public Person Person { get; set; }
-
         /// <summary>
         /// The display name of the stakeholder.
         /// </summary>
@@ -22,13 +18,6 @@ namespace CoE.Ideas.Core
         /// </summary>
         [Required]
         public string Email { get; set; }
-
-        /// <summary>
-        /// The type of stakeholder: owner, etc.
-        /// </summary>
-        [Required]
-      
-        public string Type { get; set; }
 
     }
 }

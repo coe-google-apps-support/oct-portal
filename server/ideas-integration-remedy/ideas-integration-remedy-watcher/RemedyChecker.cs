@@ -141,7 +141,15 @@ namespace CoE.Ideas.Remedy.Watcher
                     continue;
                 }
 
-                var error = await TryProcessWorkItemChanged(workItem);
+                Exception error = null;
+                try
+                {
+                    await TryProcessWorkItemChanged(workItem);
+                }
+                catch (Exception err)
+                {
+                    error = err;
+                }
 
                 if (error == null)
                 {
@@ -161,7 +169,7 @@ namespace CoE.Ideas.Remedy.Watcher
             _logger.Information($"Processed { count } work item changes in { watch.Elapsed }. Average = { avg.TotalMilliseconds }ms/record ");
         }
 
-        protected virtual async Task<Exception> TryProcessWorkItemChanged(
+        protected virtual async Task<WorkOrderUpdatedEventArgs> TryProcessWorkItemChanged(
             OutputMapping1GetListValues workItem)
         {
             // we need to convert the Assignee 3+3 to an email so Octava can use it
@@ -185,22 +193,22 @@ namespace CoE.Ideas.Remedy.Watcher
             {
                 // Note the ToUniversalTime on the Last_Modified_Date:
                 // this works because this service runs in the same time zone as Remedy.
-                await _initiativeMessageSender.SendWorkOrderUpdatedAsync(new WorkOrderUpdatedEventArgs()
+                var args = new WorkOrderUpdatedEventArgs()
                 {
-                    WorkOrderId = workItem.WorkOrderID,
+                    WorkOrderId = workItem.InstanceId,
                     UpdatedDateUtc = workItem.Last_Modified_Date.ToUniversalTime(),
                     UpdatedStatus = workItem.Status.ToString(),
                     AssigneeEmail = assigneeEmail
-                });
-                return null;
+                };
+                await _initiativeMessageSender.SendWorkOrderUpdatedAsync(args);
+                return args;
             }
             catch (Exception e)
             {
                 Guid correlationId = Guid.NewGuid();
                 _logger.Error(e, $"Unable to process work item changed (correlationId {correlationId}): {e.Message}");
                 _logger.Debug($"Work item change that caused processing error (correlationId {correlationId}): { workItem }");
-
-                return e;
+                throw;
             }
         }
 

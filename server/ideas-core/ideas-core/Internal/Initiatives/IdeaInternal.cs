@@ -37,6 +37,14 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         public virtual ICollection<StakeholderInternal> Stakeholders { get; set; }
 
         /// <summary>
+        /// The personal currently assigned to the initiative, usually a Business Analyst
+        /// </summary>
+        /// <remarks>
+        /// Can be null
+        /// </remarks>
+        public virtual PersonInternal Assignee { get; set; }
+
+        /// <summary>
         /// User-defined tags to categorize the idea
         /// </summary>
         public virtual ICollection<TagInternal> Tags { get; set; }
@@ -50,6 +58,16 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         /// The date and time the issue was created
         /// </summary>
         public DateTimeOffset CreatedDate { get; set; }
+
+        /// <summary>
+        /// Unique identifier in Work Item Tracking system (Remedy)
+        /// </summary>
+        public string WorkItemId { get; set; }
+
+        /// <summary>
+        /// Status of the Initiative
+        /// </summary>
+        public InitiativeStatusInternal Status { get; set; }
 
         /// <summary>
         /// The department where the initiative is a part of. Can be different
@@ -98,14 +116,5 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         [Display(Name = "Alignment", Description = "Describe how this initiative aligns with and supports the One City objective.")]
         public string OneCityAlignment { get; set; }
 
-        /// <summary>
-        /// Unique identifier in Work Item Tracking system (Remedy)
-        /// </summary>
-        public string WorkItemId { get; set; }
-
-        /// <summary>
-        /// Status of the Initiative
-        /// </summary>
-        public InitiativeStatusInternal Status { get; set; }
     }
 }

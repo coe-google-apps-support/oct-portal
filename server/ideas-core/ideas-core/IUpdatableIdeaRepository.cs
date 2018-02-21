@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ namespace CoE.Ideas.Core
         /// </summary>
         /// <param name="idea">The idea to add.</param>
         /// <returns>The idea after its been added to the data (with Id)</returns>
-        Task<Idea> AddIdeaAsync(Idea idea, Stakeholder owner);
+        Task<Idea> AddIdeaAsync(Idea idea, ClaimsPrincipal owner);
 
         Task<Idea> SetWordPressItemAsync(long ideaId, WordPress.WordPressPost post);
 
@@ -35,6 +36,8 @@ namespace CoE.Ideas.Core
         Task<Idea> SetWorkItemTicketIdAsync(long id, string workItemId);
 
         Task<Idea> SetWorkItemStatusAsync(long id, InitiativeStatus status);
+
+        Task<Idea> SetInitiativeAssignee(long ideaId, Person person);
         #endregion
 
         #region Tags

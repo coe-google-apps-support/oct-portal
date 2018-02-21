@@ -25,40 +25,21 @@ namespace CoE.Ideas.Core.Tests
 
         internal IList<Func<InitiativeLoggedEventArgs, CancellationToken, Task>> InitiativeLoggedHandlers { get; private set; }
 
-        public Task CloseAsync()
+        public void ReceiveMessages(
+            Func<InitiativeCreatedEventArgs, CancellationToken, Task> initiativeCreatedHndler = null, 
+            Func<WorkOrderCreatedEventArgs, CancellationToken, Task> workOrderCreatedHandler = null, 
+            Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> workOrderUpdatedHandler = null, 
+            Func<InitiativeLoggedEventArgs, CancellationToken, Task> initiativeLoggedHandler = null, 
+            MessageHandlerOptions options = null)
         {
-            // Nothing to do
-            return Task.CompletedTask;
-        }
-
-        public void ReceiveInitiativeCreated(Func<InitiativeCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
-        {
-            CreatedHandlers.Add(handler);
-        }
-
-        public void ReceiveInitiativeCreated(Func<InitiativeCreatedEventArgs, CancellationToken, Task> handler, Func<ExceptionReceivedEventArgs, Task> exceptionReceivedHandler)
-        {
-            CreatedHandlers.Add(handler);
-        }
-
-        public void ReceiveInitiativeLogged(Func<InitiativeLoggedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
-        {
-            InitiativeLoggedHandlers.Add(handler);
-        }
-
-        public void ReceiveInitiativeWorkItemCreated(Func<WorkOrderCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
-        {
-            WorkOrderCreatedHandlers.Add(handler);
-        }
-
-        public void ReceiveInitiativeWorkItemCreated(Func<WorkOrderCreatedEventArgs, CancellationToken, Task> handler, Func<ExceptionReceivedEventArgs, Task> exceptionReceivedHandler)
-        {
-            WorkOrderCreatedHandlers.Add(handler);
-        }
-
-        public void ReceiveWorkOrderUpdated(Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options)
-        {
-            WorkOrderUpdatedHandlers.Add(handler);
+            if (initiativeCreatedHndler != null)
+                CreatedHandlers.Add(initiativeCreatedHndler);
+            if (workOrderCreatedHandler != null)
+                WorkOrderCreatedHandlers.Add(workOrderCreatedHandler);
+            if (workOrderUpdatedHandler != null)
+                WorkOrderUpdatedHandlers.Add(workOrderUpdatedHandler);
+            if (initiativeLoggedHandler != null)
+                InitiativeLoggedHandlers.Add(initiativeLoggedHandler);
         }
     }
 

@@ -11,22 +11,11 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     public interface IInitiativeMessageReceiver
     {
-
-        /// <summary>
-        /// Closes the Client. Closes the connections opened by it.
-        /// </summary>
-        /// <returns></returns>
-        Task CloseAsync();
-
-        //Task EnsureSubscriptionsExist();
-
-        void ReceiveInitiativeCreated(Func<InitiativeCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options);
-
-        void ReceiveInitiativeWorkItemCreated(Func<WorkOrderCreatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options);
-
-        void ReceiveWorkOrderUpdated(Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options);
-
-        void ReceiveInitiativeLogged(Func<InitiativeLoggedEventArgs, CancellationToken, Task> handler, MessageHandlerOptions options);
+        void ReceiveMessages(Func<InitiativeCreatedEventArgs, CancellationToken, Task> initiativeCreatedHandler = null,
+            Func<WorkOrderCreatedEventArgs, CancellationToken, Task> workOrderCreatedHandler = null,
+            Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> workOrderUpdatedHandler = null,
+            Func<InitiativeLoggedEventArgs, CancellationToken, Task> initiativeLoggedHandler = null,
+            MessageHandlerOptions options = null);
     }
 
 }

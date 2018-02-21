@@ -26,28 +26,14 @@ namespace CoE.Ideas.Remedy.SbListener
             _initiativeMessageReceiver = initiativeMessageReceiver ?? throw new ArgumentNullException("initiativeMessageReceiver");
             _logger = logger ?? throw new ArgumentNullException("logger");
 
-            initiativeMessageReceiver.ReceiveInitiativeWorkItemCreated(OnInitiativeWorkItemCreated,
-                new MessageHandlerOptions(OnError)
-                {
-                    MaxConcurrentCalls = 30
-                });
-
-            initiativeMessageReceiver.ReceiveWorkOrderUpdated(OnWorkOrderUpdatedAsync,
-                new MessageHandlerOptions(OnError)
-                {
-                    MaxConcurrentCalls = 30
-                });
+            initiativeMessageReceiver.ReceiveMessages(
+                workOrderCreatedHandler: OnInitiativeWorkItemCreated,
+                workOrderUpdatedHandler: OnWorkOrderUpdatedAsync);
         }
 
         private readonly IUpdatableIdeaRepository _ideaRepository;
         private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
         private readonly Serilog.ILogger _logger;
-
-        protected virtual Task OnError(ExceptionReceivedEventArgs err)
-        {
-            _logger.Error(err.Exception, "Error receiving message");
-            return Task.CompletedTask;
-        }
 
         protected virtual async Task OnInitiativeWorkItemCreated(WorkOrderCreatedEventArgs args, CancellationToken token)
         {
@@ -65,6 +51,9 @@ namespace CoE.Ideas.Remedy.SbListener
                 try
                 {
                     await _ideaRepository.SetWorkItemTicketIdAsync(args.Initiative.Id, args.WorkOrderId);
+
+                    // first status will be Submitted
+                    await _ideaRepository.SetWorkItemStatusAsync(args.Initiative.Id, InitiativeStatus.Submit);
                 }
                 catch (Exception err)
                 {
@@ -75,7 +64,7 @@ namespace CoE.Ideas.Remedy.SbListener
             }
         }
 
-        protected virtual async Task OnWorkOrderUpdatedAsync(WorkOrderUpdatedEventArgs args, CancellationToken token)
+        protected virtual async Task<Idea> OnWorkOrderUpdatedAsync(WorkOrderUpdatedEventArgs args, CancellationToken token)
         {
             if (args == null)
                 throw new ArgumentNullException("args");
@@ -95,11 +84,16 @@ namespace CoE.Ideas.Remedy.SbListener
                     using (LogContext.PushProperty("InitiativeId", idea.Id))
                     {
                         var workOrderStatus = Enum.Parse<StatusType>(args.UpdatedStatus);
-                        await UpdateIdeaWithNewWorkOrderStats(idea, workOrderStatus, args.UpdatedDateUtc);
+
+                        await UpdateIdeaWithNewWorkOrderStatus(idea, workOrderStatus, args.UpdatedDateUtc);
+                        await UpdateIdeaAssignee(idea, args.AssigneeEmail);
                     }
                 }
+
+                return idea;
             }
         }
+
 
 
         protected async Task<Idea> GetInitiativeByWorkOrderId(string workOrderId)
@@ -118,7 +112,7 @@ namespace CoE.Ideas.Remedy.SbListener
             return idea;
         }
 
-        protected async Task UpdateIdeaWithNewWorkOrderStats(Idea initiative, StatusType workOrderStatus, DateTime workOrderLastModifiedUtc)
+        protected async Task UpdateIdeaWithNewWorkOrderStatus(Idea initiative, StatusType workOrderStatus, DateTime workOrderLastModifiedUtc)
         {
             // here we have the business logic of translating Remedy statuses into our statuses
             var newIdeaStatus = GetInitiativeStatusForRemedyStatus(workOrderStatus);
@@ -168,5 +162,15 @@ namespace CoE.Ideas.Remedy.SbListener
             return newIdeaStatus;
         }
 
+        private async Task UpdateIdeaAssignee(Idea idea, string assigneeEmail)
+        {
+            Person assignee = null;
+            if (!string.IsNullOrWhiteSpace(assigneeEmail))
+            {
+                assignee = await _ideaRepository.GetPersonByEmail(assigneeEmail);
+            }
+
+            await _ideaRepository.SetInitiativeAssignee(idea.Id, assignee);
+        }
     }
 }

@@ -18,7 +18,9 @@ namespace CoE.Ideas.Core.Internal.Initiatives
 
         public DbSet<DepartmentInternal> Departments { get; set; }
 
-        public DbSet<StakeholderInternal> Stakeholders { get; set; }
+        public DbSet<PersonInternal> People { get; set; }
+
+        public DbSet<StringTemplateInternal> StringTempltaes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

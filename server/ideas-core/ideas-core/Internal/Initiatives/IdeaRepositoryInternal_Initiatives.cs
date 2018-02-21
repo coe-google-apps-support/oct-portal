@@ -73,12 +73,16 @@ namespace CoE.Ideas.Core.Internal.Initiatives
                 return _mapper.Map<IdeaInternal, Idea>(ideaInternal);
         }
 
-        public async Task<Core.Idea> AddIdeaAsync(Idea idea, Stakeholder owner)
+        public async Task<Core.Idea> AddIdeaAsync(Idea idea, System.Security.Claims.ClaimsPrincipal owner)
         {
             if (idea == null)
                 throw new ArgumentNullException("idea");
             if (owner == null)
                 throw new ArgumentNullException("owner");
+
+            string ownerEmail = owner.GetEmail();
+            if (string.IsNullOrWhiteSpace(ownerEmail))
+                throw new InvalidOperationException("Unable to get email address from owner");
 
             _logger.LogInformation("Begin AddIdeaAsync");
             Stopwatch watch = null;
@@ -94,13 +98,21 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             if (idea.Stakeholders == null)
                 idea.Stakeholders = new List<Stakeholder>();
 
-            var existingStakeholder = _context.Stakeholders
-                .FirstOrDefault(x => owner.Email.Equals(x.Email, StringComparison.InvariantCultureIgnoreCase));
+            var existingPerson = _context.People
+                .FirstOrDefault(x => ownerEmail.Equals(x.Email, StringComparison.InvariantCultureIgnoreCase));
 
+            if (existingPerson == null)
+            {
+                existingPerson = new PersonInternal() { Email = ownerEmail, UserName = owner.GetDisplayName() };
+            }
+            var ownerPerson = _mapper.Map<PersonInternal, Person>(existingPerson);
+
+            var existingStakeholder = idea.Stakeholders
+                .FirstOrDefault(x => x.Email == ownerEmail || x.Person?.Email == ownerEmail);
             if (existingStakeholder == null)
             {
-                _logger.LogDebug($"Adding current user { owner.Email } to stakeholders list as owner");
-                idea.Stakeholders.Add(owner);
+                _logger.LogDebug($"Adding current user { ownerEmail } to stakeholders list as owner");
+                idea.Stakeholders.Add(new Stakeholder() { Person = ownerPerson, Type = "owner" });
             }
 
             var ideaInternal = _mapper.Map<Idea, IdeaInternal>(idea);
@@ -222,6 +234,49 @@ namespace CoE.Ideas.Core.Internal.Initiatives
 
                 return _mapper.Map<IdeaInternal, Idea>(idea);
             }
+        }
+
+
+        public async Task<IEnumerable<Idea>> GetIdeasByStakeholderEmailAsync(string emailAddress)
+        {
+            var ideas = await IdeaCollection.Where(x => x.Stakeholders.Any(y => y.Person.Email == emailAddress)).ToListAsync();
+            return _mapper.Map<IEnumerable<IdeaInternal>, IEnumerable<Idea>>(ideas);
+        }
+
+        public async Task<Idea> SetInitiativeAssignee(long ideaId, Person person)
+        {
+            var idea = await _context.Ideas.FindAsync(ideaId);
+            if (idea == null)
+                throw new InvalidOperationException($"Unable to find an initiative with id { ideaId }");
+
+            bool handled = false;
+            if (person == null)
+            {
+                // easiest case!
+                idea.Assignee = null;
+                handled = true;
+            }
+            else
+            {
+                if (person.Id > 0)
+                {
+                    var existingPerson = await _context.People.FindAsync(person.Id);
+                    if (existingPerson != null)
+                    {
+                        idea.Assignee = existingPerson;
+                        handled = true;
+                    }
+                }
+            }
+
+            if (!handled)
+            {
+                idea.Assignee = _mapper.Map<Person, PersonInternal>(person);
+            }
+
+            await _context.SaveChangesAsync();
+            return _mapper.Map<IdeaInternal, Idea>(idea);
+
         }
     }
 }

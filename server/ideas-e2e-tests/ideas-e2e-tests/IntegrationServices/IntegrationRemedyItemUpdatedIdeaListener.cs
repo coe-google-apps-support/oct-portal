@@ -18,11 +18,11 @@ namespace CoE.Ideas.EndToEnd.Tests.IntegrationServices
             : base(ideaRepository, initiativeMessageReceiver, logger)
         {
             WorkOrdersCreated = new List<WorkOrderCreatedEventArgs>();
-            WorkOrdersUpdated = new List<WorkOrderUpdatedEventArgs>();
+            WorkOrdersUpdated = new List<Tuple<WorkOrderUpdatedEventArgs, Idea>>();
         }
 
         public ICollection<WorkOrderCreatedEventArgs> WorkOrdersCreated { get; private set; }
-        public ICollection<WorkOrderUpdatedEventArgs> WorkOrdersUpdated { get; private set; }
+        public ICollection<Tuple<WorkOrderUpdatedEventArgs, Idea>> WorkOrdersUpdated { get; private set; }
 
         protected override async Task OnInitiativeWorkItemCreated(WorkOrderCreatedEventArgs args, CancellationToken token)
         {
@@ -30,10 +30,11 @@ namespace CoE.Ideas.EndToEnd.Tests.IntegrationServices
             WorkOrdersCreated.Add(args);
         }
 
-        protected override async Task OnWorkOrderUpdatedAsync(WorkOrderUpdatedEventArgs args, CancellationToken token)
+        protected override async Task<Idea> OnWorkOrderUpdatedAsync(WorkOrderUpdatedEventArgs args, CancellationToken token)
         {
-            await base.OnWorkOrderUpdatedAsync(args, token);
-            WorkOrdersUpdated.Add(args);
+            var idea = await base.OnWorkOrderUpdatedAsync(args, token);
+            WorkOrdersUpdated.Add(new Tuple<WorkOrderUpdatedEventArgs, Idea>(args, idea));
+            return idea;
         }
     }
 }

@@ -32,21 +32,18 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             _logger = logger ?? throw new ArgumentNullException("logger");
         }
 
-        #region Ideas
+        #region People
 
-        public async Task<IEnumerable<Idea>> GetIdeasByStakeholderAsync(long stakeholderId)
+        public async Task<Person> GetPersonByEmail(string email)
         {
-            // get stakeholder
-            var stakeholder = await _context.Stakeholders.FindAsync(stakeholderId);
-            if (stakeholder == null)
-                throw new ArgumentOutOfRangeException($"Unable to find a stakeholder with id { stakeholderId }");
-
-            var ideas = await IdeaCollection.Where(x => x.Stakeholders.Any(y => y.Email == stakeholder.Email)).ToListAsync();
-            return _mapper.Map<IEnumerable<IdeaInternal>, IEnumerable<Idea>>(ideas);
+            if (string.IsNullOrWhiteSpace(email))
+                throw new ArgumentNullException("email");
+            string emailUpper = email.ToUpperInvariant();
+            var person = await _context.People.FirstOrDefaultAsync(x => x.Email.ToUpperInvariant() == emailUpper);
+            return _mapper.Map<PersonInternal, Person>(person);
         }
 
         #endregion
-
 
         #region Tags
 
@@ -154,7 +151,6 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             var branch = await _context.Branches.FindAsync(id);
             return _mapper.Map<BranchInternal, Branch>(branch);
         }
-
 
         #endregion
     }

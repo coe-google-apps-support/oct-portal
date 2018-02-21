@@ -35,6 +35,21 @@ namespace CoE.Ideas.Core
         public ICollection<Stakeholder> Stakeholders { get; set; }
 
         /// <summary>
+        /// The personal currently assigned to the initiative, usually a Business Analyst
+        /// </summary>
+        /// <remarks>
+        /// Can be null
+        /// </remarks>
+        public virtual Person Assignee { get; set; }
+
+        /// <summary>
+        /// The owner of the initiative, usually the person who submitted it.
+        /// Shorthand to Stakeholder.Where(s => s.Type == "owner")
+        /// </summary>
+        public Person Owner { get; internal set; }
+
+
+        /// <summary>
         /// User-defined tags to categorize the idea
         /// </summary>
         public ICollection<Tag> Tags { get; set; }

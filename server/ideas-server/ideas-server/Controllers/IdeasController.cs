@@ -53,14 +53,7 @@ namespace CoE.Ideas.Server.Controllers
             IEnumerable<Idea> ideas;
             if (view == ViewOptions.Mine)
             {
-                var currentUser = await _repository.GetStakeholderByEmailAsync(User.GetEmail());
-                if (currentUser == null)
-                {
-                    // currentUser does not exist or has no ideas.
-                    ideas = new Idea[] { };
-                }
-                else
-                    ideas = await _repository.GetIdeasByStakeholderAsync(currentUser.Id);
+                ideas = await _repository.GetIdeasByStakeholderEmailAsync(User.GetEmail());
             }
             else
                 ideas = await _repository.GetIdeasAsync();
@@ -219,17 +212,10 @@ namespace CoE.Ideas.Server.Controllers
             try
             {
                 // post to WordPress
-                //_logger.LogDebug("Posting to WordPress");
-
-                var currentUserTask = _repository.GetStakeholderByEmailAsync(User.GetEmail());
 
                 var wordPressIdeaTask = _wordpressClient.PostIdeaAsync(idea);
-                var currentUser = await currentUserTask;
 
-                if (currentUser == null)
-                    currentUser = new Stakeholder() { Email = User.GetEmail(), UserName = User.GetDisplayName() };
-
-                var newIdeaTask = _repository.AddIdeaAsync(idea, currentUser);
+                var newIdeaTask = _repository.AddIdeaAsync(idea, User);
 
                 Task.WaitAll(newIdeaTask, wordPressIdeaTask);
 

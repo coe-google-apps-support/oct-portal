@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace CoE.Ideas.Core.Tests
         #region Ideas
         private ICollection<Idea> ideas = new HashSet<Idea>();
 
-        public Task<Idea> AddIdeaAsync(Idea idea, Stakeholder owner)
+        public Task<Idea> AddIdeaAsync(Idea idea, ClaimsPrincipal owner)
         {
             ideas.Add(idea);
             idea.Id = ideas.Count;
@@ -21,8 +22,21 @@ namespace CoE.Ideas.Core.Tests
             if (idea.Stakeholders == null)
                 idea.Stakeholders = new List<Stakeholder>();
 
-            if (!idea.Stakeholders.Contains(owner))
-                idea.Stakeholders.Add(owner);
+            string ownerEmail = owner.GetEmail();
+            if (!idea.Stakeholders.Any(x => x.Email == ownerEmail || x.Person?.Email == ownerEmail))
+            {
+                idea.Stakeholders.Add(new Stakeholder()
+                {
+                    Person = new Person()
+                    {
+                        Email = ownerEmail,
+                        UserName = owner.GetDisplayName()
+                    },
+                    Email = ownerEmail,
+                    UserName = owner.GetDisplayName(),
+                    Type = "owner"
+                });
+            }
 
             return Task.FromResult(idea); ;
         }
@@ -31,9 +45,9 @@ namespace CoE.Ideas.Core.Tests
             return Task.FromResult(ideas.AsEnumerable());
         }
 
-        public Task<IEnumerable<Idea>> GetIdeasByStakeholderAsync(long stakeholderId)
+        public Task<IEnumerable<Idea>> GetIdeasByStakeholderEmailAsync(string emailAddress)
         {
-            return Task.FromResult(ideas.Where(x => x.Stakeholders.Any(y => y.Id == stakeholderId)).AsEnumerable());
+            return Task.FromResult(ideas.Where(x => x.Stakeholders.Any(y => y.Email == emailAddress || y.Person?.Email == emailAddress)).AsEnumerable());
         }
 
         public Task<Idea> GetIdeaAsync(long id)
@@ -95,6 +109,24 @@ namespace CoE.Ideas.Core.Tests
             return Task.FromResult(idea);
         }
 
+
+        public Task<Idea> SetInitiativeAssignee(long ideaId, Person person)
+        {
+            var idea = ideas.FirstOrDefault(x => x.Id == ideaId);
+            if (idea != null)
+            {
+                idea.Assignee = person;
+            }
+            return Task.FromResult(idea);
+        }
+
+        #endregion
+
+        #region People
+        public Task<Person> GetPersonByEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region Tags
@@ -158,10 +190,9 @@ namespace CoE.Ideas.Core.Tests
             return Task.FromResult(idea);
         }
 
-        public Task<Stakeholder> GetStakeholderByEmailAsync(string email)
-        {
-            return Task.FromResult(ideas.SelectMany(x => x.Stakeholders).FirstOrDefault(x => x.Email == email));
-        }
+
+
+
         #endregion
     }
 }

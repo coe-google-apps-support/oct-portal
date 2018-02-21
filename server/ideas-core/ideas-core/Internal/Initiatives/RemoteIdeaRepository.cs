@@ -56,7 +56,7 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         }
 
 
-        public Task<IEnumerable<Idea>> GetIdeasByStakeholderAsync(long stakeholderId)
+        public Task<IEnumerable<Idea>> GetIdeasByStakeholderEmailAsync(string stakeholderEmail)
         {
             throw new NotSupportedException();
         }
@@ -112,14 +112,13 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         }
         #endregion
 
-        #region Stakeholders
+        #region People
 
-        public Task<Stakeholder> GetStakeholderByEmailAsync(string email)
+        public Task<Person> GetPersonByEmail(string email)
         {
-            throw new NotSupportedException();
+            throw new NotImplementedException();
         }
-
-        #endregion  
+        #endregion
 
         #region Tags
         public async Task<IEnumerable<Tag>> GetTagsAsync()

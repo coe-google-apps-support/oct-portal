@@ -29,11 +29,8 @@ namespace CoE.Ideas.Remedy
             _logger = logger ?? throw new ArgumentNullException("logger");
 
             _logger.Information("Starting messsage pump for New Initiatives");
-            _initiativeMessageReceiver.ReceiveInitiativeCreated(OnNewInitiative,
-                new MessageHandlerOptions(OnError)
-                {
-                    MaxConcurrentCalls = 30
-                });
+            initiativeMessageReceiver.ReceiveMessages(initiativeCreatedHandler: OnNewInitiative);
+
         }
 
         private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
@@ -115,11 +112,5 @@ namespace CoE.Ideas.Remedy
 
             _logger.Information("Send remedy work order created message to service bus in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
         }
-
-        public Task CloseAsync()
-        {
-            return _initiativeMessageReceiver.CloseAsync();
-        }
-
     }
 }

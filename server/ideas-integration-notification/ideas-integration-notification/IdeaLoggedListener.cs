@@ -27,11 +27,7 @@ namespace CoE.Ideas.Integration.Notification
             _logger = logger ?? throw new ArgumentNullException("logger");
             _mergeTemplateName = mergeTemplateName;
 
-            initiativeMessageReceiver.ReceiveInitiativeLogged(OnInitiativeLogged,
-                new MessageHandlerOptions(OnError)
-                {
-                    MaxConcurrentCalls = 30
-                });
+            initiativeMessageReceiver.ReceiveMessages(initiativeLoggedHandler: OnInitiativeLogged);
         }
 
         private readonly IMailmanEnabledSheetReader _mailmanSheetReader;
@@ -40,11 +36,6 @@ namespace CoE.Ideas.Integration.Notification
         private readonly Serilog.ILogger _logger;
         private readonly string _mergeTemplateName;
 
-        protected virtual Task OnError(ExceptionReceivedEventArgs err)
-        {
-            _logger.Error(err.Exception, "Error receiving message");
-            return Task.CompletedTask;
-        }
 
         protected virtual async Task OnInitiativeLogged(InitiativeLoggedEventArgs args, CancellationToken token)
         {
