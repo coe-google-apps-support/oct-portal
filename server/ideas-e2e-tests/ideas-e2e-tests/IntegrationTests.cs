@@ -197,14 +197,14 @@ namespace CoE.Ideas.EndToEnd.Tests
                     Assert.Fail("Timeout waiting for the Remedy ItemUpdatedListener to receive initiative updates");
                     break;
                 }
-                if (listener.WorkOrdersUpdated.Any(x => x.Item1.WorkOrderId == workOrderId))
+                if (listener.WorkOrdersUpdated.Any(x => x.Item1.WorkOrderId == workOrderId && !string.IsNullOrWhiteSpace(x.Item1.AssigneeEmail)))
                     break;
                 logger.Information("Waiting for Remedy ItemUpdatedListener...");
                 Thread.Sleep(500); // wait half a second and try again
             }
 
             // get a fresh Initiative to ensure we have the latest changes
-            var workOrderUpdatedArgs = listener.WorkOrdersUpdated.SingleOrDefault(x => x.Item1.WorkOrderId == workOrderId);
+            var workOrderUpdatedArgs = listener.WorkOrdersUpdated.SingleOrDefault(x => x.Item1.WorkOrderId == workOrderId && !string.IsNullOrWhiteSpace(x.Item1.AssigneeEmail));
             Assert.IsNotNull(workOrderUpdatedArgs, $"Unable to get the single WorkOrderUpdatedrgs of the WorkOrderUpdated event for WorkOrder { workOrderId }");
             Assert.IsNotNull(workOrderUpdatedArgs.Item2, $"Unable to get initiative for WorkOrder { workOrderId }");
             Assert.IsTrue(workOrderUpdatedArgs.Item2.Id > 0, $"Expected Initiative of WorkOrderCreatedArgs have a valid id, but got { workOrderUpdatedArgs.Item2.Id }");

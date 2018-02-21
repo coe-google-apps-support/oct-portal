@@ -10,5 +10,6 @@ namespace CoE.Ideas.Core.ServiceBus
         public DateTime UpdatedDateUtc { get; set; }
         public string UpdatedStatus { get; set; }
         public string AssigneeEmail { get; set; }
+        public string AssigneeDisplayName { get; set; }
     }
 }

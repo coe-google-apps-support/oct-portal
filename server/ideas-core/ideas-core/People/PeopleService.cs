@@ -29,7 +29,7 @@ namespace CoE.Ideas.Core.People
 
         private readonly Uri _serviceUrl;
 
-        public async Task<string> GetEmailAsync(string user3and3)
+        public async Task<PersonData> GetPersonAsync(string user3and3)
         {
             if (string.IsNullOrWhiteSpace(user3and3))
                 throw new ArgumentNullException("user3and3");
@@ -51,7 +51,7 @@ namespace CoE.Ideas.Core.People
 
             // there's lots of information we can get from the userData, but right now all we care about is the email
             dynamic userData = Newtonsoft.Json.Linq.JObject.Parse(userDataString);
-            return userData.Mail;
+            return new PersonData() { Email = userData.Mail, DisplayName = $"{ userData.GivenName } { userData.Surname }"};
         }
 
         protected virtual HttpClient GetHttpClient()

@@ -7,7 +7,7 @@ namespace CoE.Ideas.Core.People
 {
     public interface IPeopleService
     {
-        Task<String> GetEmailAsync(string user3and3);
+        Task<PersonData> GetPersonAsync(string user3and3);
             
     }
 }

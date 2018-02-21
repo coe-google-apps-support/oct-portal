@@ -176,12 +176,12 @@ namespace CoE.Ideas.Remedy.Watcher
             // from manual inspection in looks like this field is the "assignee 3+3":
             string assignee3and3 = workItem.ASLOGID;
 
-            string assigneeEmail = null;
+            PersonData assignee = null;
             if (!string.IsNullOrWhiteSpace(assignee3and3))
             {
                 try
                 {
-                    assigneeEmail = await _peopleService.GetEmailAsync(assignee3and3);
+                    assignee = await _peopleService.GetPersonAsync(assignee3and3);
                 }
                 catch (Exception err)
                 {
@@ -198,7 +198,8 @@ namespace CoE.Ideas.Remedy.Watcher
                     WorkOrderId = workItem.InstanceId,
                     UpdatedDateUtc = workItem.Last_Modified_Date.ToUniversalTime(),
                     UpdatedStatus = workItem.Status.ToString(),
-                    AssigneeEmail = assigneeEmail
+                    AssigneeEmail = assignee?.Email,
+                    AssigneeDisplayName = assignee?.DisplayName
                 };
                 await _initiativeMessageSender.SendWorkOrderUpdatedAsync(args);
                 return args;

@@ -177,6 +177,8 @@ namespace CoE.Ideas.Core.ServiceBus
                 var updateTime = await GetMessageProperty<DateTime>(msg, propertyName: "WorkOrderUpdateTimeUtc");
                 if (updateTime.WasMessageDeadLettered)
                     return;
+                var assigneeEmail = await GetMessageString(msg, propertyName: "WorkOrderAssigneeEmail", allowNullOrEmptyString: true);
+                var assigneeDisplayname = await GetMessageString(msg, propertyName: "WorkOrderAssigneeDisplayName", allowNullOrEmptyString: true);
 
                 try
                 {
@@ -184,7 +186,9 @@ namespace CoE.Ideas.Core.ServiceBus
                     {
                         UpdatedStatus = updatedStatus.Item,
                         UpdatedDateUtc = updateTime.Item,
-                        WorkOrderId = workOrderId.Item
+                        WorkOrderId = workOrderId.Item,
+                        AssigneeEmail = assigneeEmail.Item,
+                        AssigneeDisplayName = assigneeDisplayname.Item
                     }, token);
                     await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
                 }
@@ -312,13 +316,13 @@ namespace CoE.Ideas.Core.ServiceBus
             return result;
         }
 
-        protected virtual async Task<GetItemResult<string>> GetMessageString(Message message, string propertyName)
+        protected virtual async Task<GetItemResult<string>> GetMessageString(Message message, string propertyName, bool allowNullOrEmptyString = false)
         {
             if (message == null)
                 throw new ArgumentNullException("msg");
 
-            var result = await GetMessageProperty<string>(message, propertyName: propertyName);
-            if (!result.WasMessageDeadLettered)
+            var result = await GetMessageProperty<string>(message, propertyName: propertyName, allowNull: allowNullOrEmptyString);
+            if (!result.WasMessageDeadLettered && !allowNullOrEmptyString)
             {
                 if (string.IsNullOrWhiteSpace(result.Item))
                 {
@@ -330,7 +334,7 @@ namespace CoE.Ideas.Core.ServiceBus
             return result;
         }
 
-        protected virtual async Task<GetItemResult<T>> GetMessageProperty<T>(Message message, string propertyName) 
+        protected virtual async Task<GetItemResult<T>> GetMessageProperty<T>(Message message, string propertyName, bool allowNull = false) 
         {
             if (message == null)
                 throw new ArgumentNullException("msg");
@@ -347,9 +351,13 @@ namespace CoE.Ideas.Core.ServiceBus
                 object propertyObj = message.UserProperties[propertyName];
                 if (propertyObj == null)
                 {
-                    string errorMessage = $"{ propertyName } was null";
-                    result.SetMessageDeadLettered(errorMessage);
-                    await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
+                    if (!allowNull)
+                    {
+                        string errorMessage = $"{ propertyName } was null";
+                        result.SetMessageDeadLettered(errorMessage);
+                        await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
+                    }
+                    // else return null (or default) and don't dead letter
                 }
                 else
                 {

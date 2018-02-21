@@ -86,6 +86,8 @@ namespace CoE.Ideas.Core.ServiceBus
             message.UserProperties["WorkOrderId"] = args.WorkOrderId;
             message.UserProperties["WorkOrderStatus"] = args.UpdatedStatus;
             message.UserProperties["WorkOrderUpdateTimeUtc"] = args.UpdatedDateUtc;
+            message.UserProperties["WorkOrderAssigneeEmail"] = args.AssigneeEmail;
+            message.UserProperties["WorkOrderAssigneeDisplayName"] = args.AssigneeDisplayName;
 
             return _topicClient.SendAsync(message);
         }

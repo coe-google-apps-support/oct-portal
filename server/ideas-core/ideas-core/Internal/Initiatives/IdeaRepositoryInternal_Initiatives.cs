@@ -17,6 +17,8 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             {
                 return _context.Ideas
                     .Include(x => x.Stakeholders)
+                    .ThenInclude(y => y.Person)
+                    .Include(x => x.Assignee)
                     .Include(x => x.Tags)
                     .Include(x => x.Department)
                     .ThenInclude(y => y.Branch);

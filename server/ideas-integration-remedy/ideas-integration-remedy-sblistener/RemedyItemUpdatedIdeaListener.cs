@@ -86,7 +86,7 @@ namespace CoE.Ideas.Remedy.SbListener
                         var workOrderStatus = Enum.Parse<StatusType>(args.UpdatedStatus);
 
                         await UpdateIdeaWithNewWorkOrderStatus(idea, workOrderStatus, args.UpdatedDateUtc);
-                        await UpdateIdeaAssignee(idea, args.AssigneeEmail);
+                        await UpdateIdeaAssignee(idea, args.AssigneeEmail, args.AssigneeDisplayName);
                     }
                 }
 
@@ -162,12 +162,17 @@ namespace CoE.Ideas.Remedy.SbListener
             return newIdeaStatus;
         }
 
-        private async Task UpdateIdeaAssignee(Idea idea, string assigneeEmail)
+        private async Task UpdateIdeaAssignee(Idea idea, string assigneeEmail, string assigneeDisplayName)
         {
             Person assignee = null;
             if (!string.IsNullOrWhiteSpace(assigneeEmail))
             {
                 assignee = await _ideaRepository.GetPersonByEmail(assigneeEmail);
+                if (assignee == null)
+                {
+                    // this person doesn't exist yet, so create them.
+                    assignee = new Person() { Email = assigneeEmail, UserName = assigneeDisplayName };
+                }
             }
 
             await _ideaRepository.SetInitiativeAssignee(idea.Id, assignee);
