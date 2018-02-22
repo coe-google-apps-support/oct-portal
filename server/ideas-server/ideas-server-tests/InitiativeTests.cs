@@ -45,7 +45,7 @@ namespace CoE.Ideas.Server.Tests
             Assert.IsTrue(allIdeas != null && allIdeas.Count() == 3, "Expected to read at 3 initiatives (SetupMockData sets up 3 initiatives)");
 
             var myIdeas = await ideasController.GetIdeas(Models.ViewOptions.Mine);
-            Assert.IsTrue(myIdeas != null && myIdeas.Count() == 3, "Exoected to get 2 initiatives when reading \"My Initiatives\" (SetupMockData sets up 2 initiatives as current user)");
+            Assert.IsTrue(myIdeas != null && myIdeas.Count() == 2, "Expected to get 2 initiatives when reading \"My Initiatives\" (SetupMockData sets up 2 initiatives as current user)");
 
 
         }

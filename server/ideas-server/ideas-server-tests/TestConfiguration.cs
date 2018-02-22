@@ -112,15 +112,41 @@ namespace CoE.Ideas.Server.Tests
         {
             get
             {
-                if (currentUser == null)
+                return SnowWhite;
+            }
+        }
+
+        private ClaimsPrincipal showWhite;
+        protected ClaimsPrincipal SnowWhite
+        {
+            get
+            {
+                if (showWhite == null)
                 {
-                    currentUser = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    showWhite = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
                     {
                         new Claim(ClaimTypes.Name, "Snow White"),
                         new Claim(ClaimTypes.Email, "snow.white@edmonton.ca")
                     }, "someAuthTypeName"));
                 }
-                return currentUser;
+                return showWhite;
+            }
+        }
+
+        private ClaimsPrincipal sleepingBeauty;
+        protected ClaimsPrincipal SleepingBeauty
+        {
+            get
+            {
+                if (sleepingBeauty == null)
+                {
+                    sleepingBeauty = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+                    {
+                        new Claim(ClaimTypes.Name, "Sleeping Beauty"),
+                        new Claim(ClaimTypes.Email, "sleepingbeauty@edmonton.ca")
+                    }, "someAuthTypeName"));
+                }
+                return sleepingBeauty;
             }
         }
 
@@ -150,12 +176,9 @@ namespace CoE.Ideas.Server.Tests
         {
             var repository = serviceProvider.GetRequiredService<IUpdatableIdeaRepository>();
 
-            var snowWhite = new Stakeholder() { Email = CurrentUser.GetEmail(), UserName = CurrentUser.GetDisplayName(), Type = "owner" };
-            var sleepingBeauty = new Stakeholder() { Email = "sleepingbeauty@edmonton.ca", UserName = "Sleeping Beauty", Type = "owner" };
-
-            await repository.AddIdeaAsync(new Idea() { Title = "Test Idea 1", Description = "Test Idea 1 Description " }, snowWhite);
-            await repository.AddIdeaAsync(new Idea() { Title = "Test Idea 2", Description = "Test Idea 2 Description " }, snowWhite);
-            await repository.AddIdeaAsync(new Idea() { Title = "Test Idea 3", Description = "Test Idea 3 Description " }, sleepingBeauty);
+            await repository.AddIdeaAsync(new Idea() { Title = "Test Idea 1", Description = "Test Idea 1 Description " }, SnowWhite);
+            await repository.AddIdeaAsync(new Idea() { Title = "Test Idea 2", Description = "Test Idea 2 Description " }, SnowWhite);
+            await repository.AddIdeaAsync(new Idea() { Title = "Test Idea 3", Description = "Test Idea 3 Description " }, SleepingBeauty);
 
             return this;
         }
