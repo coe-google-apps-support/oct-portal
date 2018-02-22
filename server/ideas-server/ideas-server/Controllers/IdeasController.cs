@@ -217,7 +217,7 @@ namespace CoE.Ideas.Server.Controllers
 
                 var newIdeaTask = _repository.AddIdeaAsync(idea, User);
 
-                Task.WaitAll(newIdeaTask, wordPressIdeaTask);
+                await Task.WhenAll(newIdeaTask, wordPressIdeaTask);
 
                 var updateIdeaTask = _repository.SetWordPressItemAsync(newIdeaTask.Result.Id, wordPressIdeaTask.Result);
 
@@ -231,7 +231,7 @@ namespace CoE.Ideas.Server.Controllers
                         User
                     });
 
-                Task.WaitAll(updateIdeaTask, sendToServiceBusTask);
+                await Task.WhenAll(updateIdeaTask, sendToServiceBusTask);
                 _logger.Information("Posted to service bus");
 
                 if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
@@ -356,7 +356,7 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpGet("{id}/assignee")]
 
-        public IActionResult GetInitiativeAssignee([FromRoute] long id)
+        public async Task<IActionResult> GetInitiativeAssignee([FromRoute] long id)
         {
             using (LogContext.PushProperty("InitiativeId", id))
             {
@@ -374,16 +374,19 @@ namespace CoE.Ideas.Server.Controllers
                     return BadRequest(ModelState);
                 }
 
-                //var idea = await _repository.GetIdeaAsync(id);
+                var idea = await _repository.GetIdeaAsync(id);
 
-                //if (idea == null)
-                //{
-                //    return NotFound();
-                //}
+                if (idea == null || idea.Assignee == null)
+                    return NotFound();
 
-                // TODO: replace fake data with real data
-                var fakeData = Newtonsoft.Json.Linq.JObject.Parse(fakeAssignee);
-                var returnValue = Json(fakeData);
+                // convert Person to user
+                var assignee = new User()
+                {
+                    Email = idea.Assignee.Email,
+                    Name = idea.Assignee.UserName,
+                    AvatarUrl = null,
+                    PhoneNumber = null
+                };
 
                 if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
                 {
@@ -391,18 +394,11 @@ namespace CoE.Ideas.Server.Controllers
                     _logger.Information("Retrieved assignee for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
                 }
 
-                return returnValue;
+                return Ok(assignee);
             }
         }
 
         #region Fake Data
-
-        private const string fakeAssignee = @"{
-  name: 'Super BA',
-  email: 'super.ba@edmonton.ca',
-  phoneNumber: '555-555-5555',
-  avatarURL: 'https://www.iconexperience.com/v_collection/icons/?icon=user_generic2_black'
-}";
 
         private const string fakeSteps = @"{
   data: [{
