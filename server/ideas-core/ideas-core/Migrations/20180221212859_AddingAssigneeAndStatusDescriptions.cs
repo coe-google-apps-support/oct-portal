@@ -34,8 +34,8 @@ namespace CoE.Ideas.Core.Migrations
                     table.PrimaryKey("PK_People", x => x.Id);
                 });
 
-            migrationBuilder.Sql("INSERT INTO People(Email, UserName) SELECT Email, UserName FROM Stakeholders;");
-            migrationBuilder.Sql("UPDATE Stakeholders S LEFT JOIN (SELECT Id as NewPersonId, Email, UserName FROM People) P ON S.Email = P.Email AND S.UserName = P.UserName SET PersonId = NewPersonId;");
+            migrationBuilder.Sql("INSERT INTO People(Email, UserName) SELECT DISTINCT Email, UserName FROM Stakeholders;");
+            migrationBuilder.Sql("UPDATE Stakeholders S LEFT JOIN (SELECT Id, Email, UserName FROM People) P ON S.Email = P.Email AND S.UserName = P.UserName SET S.PersonId = P.Id;");
 
             migrationBuilder.DropColumn(
                 name: "Email",
@@ -96,6 +96,18 @@ namespace CoE.Ideas.Core.Migrations
                 name: "FK_Stakeholders_People_PersonId",
                 table: "Stakeholders");
 
+            migrationBuilder.AddColumn<string>(
+                name: "Email",
+                table: "Stakeholders",
+                nullable: false);
+
+            migrationBuilder.AddColumn<string>(
+                name: "UserName",
+                table: "Stakeholders",
+                nullable: false);
+
+            migrationBuilder.Sql("UPDATE Stakeholders S LEFT JOIN (SELECT Id, Email, UserName FROM People) P ON S.PersonId = P.Id SET S.Email = P.Email, S.UserName = P.UserName;");
+
             migrationBuilder.DropTable(
                 name: "People");
 
@@ -118,17 +130,6 @@ namespace CoE.Ideas.Core.Migrations
                 name: "AssigneeId",
                 table: "Ideas");
 
-            migrationBuilder.AddColumn<string>(
-                name: "Email",
-                table: "Stakeholders",
-                nullable: false,
-                defaultValue: "");
-
-            migrationBuilder.AddColumn<string>(
-                name: "UserName",
-                table: "Stakeholders",
-                nullable: false,
-                defaultValue: "");
         }
     }
 }
