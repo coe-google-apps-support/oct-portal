@@ -1,6 +1,7 @@
 ﻿using CoE.Ideas.Core.WordPress;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,7 +9,15 @@ namespace CoE.Ideas.Core.Tests
 {
     public class MockWordPressClient : IWordPressClient
     {
+        public MockWordPressClient()
+        {
+            Posts = new List<WordPressPost>();
+        }
+
+
         public string JwtCredentials { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public ICollection<WordPressPost> Posts { get; private set; }
 
         private static WordPressUser _mockWordPressUser = new WordPressUser()
         {
@@ -42,7 +51,7 @@ namespace CoE.Ideas.Core.Tests
         public Task<WordPressPost> PostIdeaAsync(Idea idea)
         {
             var publishedDate = new DateTime();
-            return Task.FromResult(new WordPressPost()
+            var newPost = new WordPressPost()
             {
                 Id = ++_wordPressPostCount,
                 Author = _mockWordPressUser.Id,
@@ -50,8 +59,25 @@ namespace CoE.Ideas.Core.Tests
                 Date = publishedDate,
                 DateGmt = publishedDate.ToUniversalTime(),
                 Link = "https://octportal.edmonton.ca/initiatives/andrews-idea/",
-                Type = "Initiative"
-            });
+                Type = "Initiative",
+                Slug = GenerateSlug(idea)
+            };
+            Posts.Add(newPost);
+            return Task.FromResult(newPost);
+        }
+
+        private string GenerateSlug(Idea idea)
+        {
+            if (idea == null)
+                return string.Empty;
+            if (string.IsNullOrWhiteSpace(idea.Title))
+                return string.Empty;
+            return idea.Title.Replace(" ", "_");
+        }
+
+        public Task<WordPressPost> GetPostForInitativeSlug(string slug)
+        {
+            return Task.FromResult(Posts.SingleOrDefault(x => x.Slug == slug));
         }
     }
 }

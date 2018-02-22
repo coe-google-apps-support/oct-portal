@@ -166,6 +166,24 @@ namespace CoE.Ideas.Core.WordPress
             }
         }
 
+
+        public async Task<WordPressPost> GetPostForInitativeSlug(string slug)
+        {
+            using (var client = GetHttpClient())
+            {
+                try
+                {
+                    // schema: https://developer.wordpress.org/rest-api/reference/posts/
+                    var postInfoString = await client.GetStringAsync($"initiatives/slug={slug}");
+                    return JsonConvert.DeserializeObject<WordPressPost>(postInfoString);
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            }
+        }
+
         //protected static int GetUserId(ClaimsPrincipal principal)
         //{
         //    int id;

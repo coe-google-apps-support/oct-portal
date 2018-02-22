@@ -379,8 +379,6 @@ namespace CoE.Ideas.Core.ServiceBus
 
         public class GetItemResult<T>
         {
-            private readonly Message message;
-
             public GetItemResult()
             {
                 errorsList = new List<string>();

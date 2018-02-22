@@ -70,7 +70,71 @@ namespace CoE.Ideas.Server.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetIdea([FromRoute] long id)
+        public async Task<IActionResult> GetIdea([FromRoute] string id, [FromQuery] InitiativeKeyType type = InitiativeKeyType.InitiativeKey)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                ModelState.AddModelError("id", "id cannot be empty");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                if (type == InitiativeKeyType.InitiativeKey)
+                {
+                    if (!long.TryParse(id, out long initiativeId))
+                    {
+                        _logger.Error($"id must be an integer if type is InitiativeKey, got { id }");
+                        ModelState.AddModelError("id", "id must be an integer if type is InitiativeKey");
+                        return BadRequest(ModelState);
+                    }
+                    else
+                    {
+                        return await GetIdeaByInitiativeId(initiativeId);
+                    }
+                }
+                else
+                {
+                    int wordPressKey;
+                    if (type == InitiativeKeyType.Slug)
+                    {
+                        WordPressPost post;
+                        try
+                        {
+                            post = await _wordpressClient.GetPostForInitativeSlug(id);
+                        }
+                        catch (Exception err)
+                        {
+                            _logger.Error(err, "Unable to get WordPress post id from slug { Slug }: { ErrorMessage }", id, err.Message);
+                            throw;
+                        }
+                        if (post == null)
+                            return NotFound();
+                        else
+                        {
+                            wordPressKey = post.Id;
+                            if (wordPressKey <= 0)
+                                throw new InvalidOperationException($"Retrieved Post for slug { id } but the id was invalid ({post.Id})");
+                            else
+                                return await GetInitiativeByWordPresskey(wordPressKey);
+                        }
+                    }
+                    else
+                    {
+                        if (int.TryParse(id, out wordPressKey))
+                        {
+                            return await GetInitiativeByWordPresskey(wordPressKey);
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("id", "id must be an integer if type is WordPressPostKey");
+                            return BadRequest(ModelState);
+                        }
+                    }
+                }
+            }
+        }
+
+        private async Task<IActionResult> GetIdeaByInitiativeId(long id)
         {
             using (LogContext.PushProperty("InitiativeId", id))
             {
@@ -78,15 +142,9 @@ namespace CoE.Ideas.Server.Controllers
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                if (!ModelState.IsValid)
-                {
-                    _logger.Warning("Unable to retrieve initiative {InitiativeId} because model state is not valid");
-                    return BadRequest(ModelState);
-                }
-
                 if (id <= 0)
                 {
-                    _logger.Warning("Unable to retrieve initiative {InitiativeId} because id passed in was less than zero");
+                    _logger.Warning("Unable to retrieve initiative {InitiativeId} because id passed in was less than or equal to zero");
                     return BadRequest("id must be greater than zero");
                 }
                 else
@@ -105,6 +163,37 @@ namespace CoE.Ideas.Server.Controllers
                 }
             }
         }
+
+        private async Task<IActionResult> GetInitiativeByWordPresskey(int wordPressKey)
+        {
+            using (LogContext.PushProperty("WordPressKey", wordPressKey))
+            {
+                _logger.Information("Retrieving initiative by WordPressKey {WordPressKey}");
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
+
+                if (wordPressKey <= 0)
+                {
+                    _logger.Warning("Unable to retrieve initiative with WordPressKey {WordPressKey} because id passed in was less than or equal to zero");
+                    return BadRequest("id must be greater than zero");
+                }
+                else
+                {
+                    var idea = await _repository.GetIdeaByWordpressKeyAsync(wordPressKey);
+
+                    if (idea == null)
+                    {
+                        _logger.Warning("Unable to find an initiative with WorkPressKey {WordPressKey}");
+                        return NotFound();
+                    }
+
+                    watch.Stop();
+                    _logger.Information("Retrieved initiative {WordPressKey} in {ElapsedMilliseconds}ms", wordPressKey, watch.ElapsedMilliseconds);
+                    return Ok(idea);
+                }
+            }
+        }
+
 
         // GET: ideas/wp/5
         /// <summary>

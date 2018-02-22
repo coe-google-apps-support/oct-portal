@@ -14,5 +14,7 @@ namespace CoE.Ideas.Core.WordPress
         Task<WordPressUser> GetUserAsync(int wordPressuserId);
 
         Task<WordPressPost> PostIdeaAsync(Idea idea);
+
+        Task<WordPressPost> GetPostForInitativeSlug(string slug);
     }
 }
