@@ -132,7 +132,7 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             return returnValue;
         }
 
-        public async Task<Idea> SetWordPressItemAsync(long ideaId, WordPress.WordPressPost post)
+        public async Task<Idea> SetWordPressItemAsync(long ideaId, Core.WordPress.WordPressPost post)
         {
             if (ideaId <= 0)
                 throw new ArgumentOutOfRangeException("ideaId", "ideaId cannot be less than or equal to zero");

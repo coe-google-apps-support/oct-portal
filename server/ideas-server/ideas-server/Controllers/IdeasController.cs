@@ -44,6 +44,7 @@ namespace CoE.Ideas.Server.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize]
         public async Task<IEnumerable<Idea>> GetIdeas([FromQuery]ViewOptions view = ViewOptions.All)
         {
             _logger.Information("Retrieving Initiatives");
@@ -70,6 +71,7 @@ namespace CoE.Ideas.Server.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetIdea([FromRoute] string id, [FromQuery] InitiativeKeyType type = InitiativeKeyType.InitiativeKey)
         {
             if (string.IsNullOrWhiteSpace(id))

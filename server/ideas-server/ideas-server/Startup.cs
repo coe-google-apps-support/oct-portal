@@ -45,10 +45,8 @@ namespace CoE.Ideas.Server
                 Configuration["Ideas:ServiceBusTopic"]);
 
 
-            services.AddIdeaAuthSecurity(Configuration["Authorization:JwtSecretKey"],
-                Configuration["Authorization:CoeAuthKey"], 
-                Configuration["Authorization:CoeAuthIV"],
-                Configuration["Ideas:WordPressUrl"]);
+            services.AddWordPressRepository(Configuration.GetConnectionString("WordPressDatabase"));
+            services.AddIdeaAuthSecurity(Configuration["Ideas:WordPressUrl"]);
 
             services.AddProjectManagementConfiguration(Configuration.GetConnectionString("IdeaProjectManagementDatabase"));
 
