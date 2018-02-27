@@ -22,9 +22,14 @@ namespace CoE.Ideas.Core.Security
             ISystemClock clock) : base(options, logger, encoder, clock)
         {
             _wordPressRepository = wordPressRepository ?? throw new ArgumentNullException("wordPressRepository");
+
+            if (logger == null)
+                throw new ArgumentNullException("logger");
+            _logger = logger.CreateLogger<WordPressCookieAuthenticationHandler>() ?? throw new ArgumentNullException("logger");
         }
 
         private readonly IWordPressRepository _wordPressRepository;
+        private readonly ILogger<WordPressCookieAuthenticationHandler> _logger;
 
         /// <summary>
         /// The handler calls methods on the events which give the application control at certain points where processing is occurring. 
@@ -51,7 +56,10 @@ namespace CoE.Ideas.Core.Security
                 await OnValidateCookieDefaultHandler(context);
             }
             else
+            {
+                _logger.LogInformation("Validating WordPress cookie using custom event");
                 await Events.OnValidateCookie(context);
+            }
 
             if (context.Principal == null)
                 return AuthenticateResult.Fail("No principal.");
@@ -61,17 +69,23 @@ namespace CoE.Ideas.Core.Security
 
         protected virtual async Task OnValidateCookieDefaultHandler(CookieReceivedContext context)
         {
+            _logger.LogInformation("Validating WordPress cookie using default event and WordPress url { WordPressUrl }", Options.WordPressUrl);
             var cookie = context.HttpContext.Request.Cookies[GetWordPressCookieName(wordPressUrl: Options.WordPressUrl)];
             if (string.IsNullOrWhiteSpace(cookie))
+            {
+                _logger.LogError("WordPress cookie not found for url { WordPressUrl }", Options.WordPressUrl);
                 context.Fail($"WordPress cookie not found for url { Options.WordPressUrl }");
+            }
             else
             {
+                _logger.LogDebug("WordPress cookie found with value { WordPressCookie }", cookie);
                 try
                 {
                     context.Principal = await _wordPressRepository.AuthenticateUserAsync(cookie);
                 }
                 catch (Exception err)
                 {
+                    _logger.LogError(err, "Unable to create Principal from cookie '{ WordPressCookie }'; { ErrorMessage }", cookie, err.Message);
                     context.Fail(err);
                 }
             }

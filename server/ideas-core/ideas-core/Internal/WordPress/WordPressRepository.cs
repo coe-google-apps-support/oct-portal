@@ -11,13 +11,16 @@ namespace CoE.Ideas.Core.Internal.WordPress
 {
     internal class WordPressRepository : IWordPressRepository
     {
-        public WordPressRepository(WordPressContext wordPressContext)
+        public WordPressRepository(
+            WordPressContext wordPressContext,
+            Serilog.ILogger logger)
         {
             _wordPressContext = wordPressContext ?? throw new ArgumentNullException("wordPressContext");
+            _logger = logger ?? throw new ArgumentNullException("logger");
         }
 
         private readonly WordPressContext _wordPressContext;
-
+        private readonly Serilog.ILogger _logger;
 
 
         public async Task<ClaimsPrincipal> AuthenticateUserAsync(string cookie, string scheme = "auth")
@@ -25,18 +28,29 @@ namespace CoE.Ideas.Core.Internal.WordPress
             if (string.IsNullOrWhiteSpace(cookie))
                 throw new ArgumentNullException("cookie");
 
+            _logger.Information("Attempting to authenticate user using WordPress");
+
             string[] cookieParts = cookie.Split("|");
             if (cookieParts.Length < 3)
+            {
+                _logger.Error("Expected cookie to contain Name|Expiration|Hash: { WordPressCookie }", cookie);
                 throw new InvalidOperationException($"Expected cookie to contain Name|Expiration|Hash, but only got { cookieParts.Length } parts to the cookie");
+            }
             else
             {
                 if (!long.TryParse(cookieParts[1], out long expiration))
+                {
+                    _logger.Error("Unable to determine expiration of WordPress cookie as it was not a 64-bit integer: { WordPressCookie }", cookie);
                     throw new InvalidOperationException("Unable to determine expiration of WordPress cookie as it was not a 64-bit integer");
+                }
                 else
                 {
                     DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
                     if (epoch.AddSeconds(expiration) <= DateTime.Now)
+                    {
+                        _logger.Error("WordPress cookie is expired: { WordPressCookie }", cookie);
                         throw new InvalidOperationException("WordPress cookie is expired");
+                    }
                     else
                     {
                         string username = System.Web.HttpUtility.UrlDecode(cookieParts[0]);
