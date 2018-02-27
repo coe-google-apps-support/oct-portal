@@ -19,12 +19,16 @@ namespace CoE.Ideas.Core.WordPress
 {
     internal class WordPressClient : IWordPressClient
     {
-        public WordPressClient(IOptions<WordPressClientOptions> options) : this(options, null)
+        public WordPressClient(
+            Serilog.ILogger logger,
+            IOptions<WordPressClientOptions> options) 
+            : this(logger, options, null)
         {
         }
 
-
-        public WordPressClient(IOptions<WordPressClientOptions> options,
+        public WordPressClient(
+            Serilog.ILogger logger, 
+            IOptions<WordPressClientOptions> options,
             IHttpContextAccessor httpContextAccessor)
         {
             if (options == null)
@@ -35,10 +39,12 @@ namespace CoE.Ideas.Core.WordPress
             _wordPressUrl = new Uri(wordPressUrl);
 
             _httpContextAccessor = httpContextAccessor; // allowed to be null
+            _logger = logger ?? throw new ArgumentNullException("logger");
         }
 
 
 
+        private readonly Serilog.ILogger _logger;
         // _httpContextAccessor is used to get the current user; set by Dependency Injection
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly Uri _wordPressUrl;
@@ -169,6 +175,7 @@ namespace CoE.Ideas.Core.WordPress
             var existingCookie = _httpContextAccessor.HttpContext?.Request?.Cookies?.LastOrDefault(x => x.Key == wordPressAuthCookieName);
             if (!existingCookie.HasValue || string.IsNullOrWhiteSpace(existingCookie.Value.Value) && User != null)
             {
+                _logger.Information("Unable to find authorization cookie in current HTTP context, so creating one from current user");
                 // create the cookie
 
                 // cookie has form:  Name|Expiration|Hash;
@@ -182,7 +189,13 @@ namespace CoE.Ideas.Core.WordPress
 
             var cookieContainer = new CookieContainer();
             if (!string.IsNullOrWhiteSpace(existingCookie?.Value))
+            {
                 cookieContainer.Add(new Uri($"{ _wordPressUrl.Scheme }://{ _wordPressUrl.Host }"), new Cookie(wordPressAuthCookieName, existingCookie.Value.Value));
+            }
+            else
+            {
+                _logger.Warning("Unable to set authorization cokoie as one was not able to be retrieved from HTTP context nor was one able to be create from current user");
+            }
 
             client.BaseAddress = new Uri(_wordPressUrl, "wp-json/wp/v2/");
 

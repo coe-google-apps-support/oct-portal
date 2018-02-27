@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,9 +16,8 @@ namespace CoE.Ideas.Core.Tests
         }
 
 
-        public string JwtCredentials { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
         public ICollection<WordPressPost> Posts { get; private set; }
+        public ClaimsPrincipal User { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         private static WordPressUser _mockWordPressUser = new WordPressUser()
         {

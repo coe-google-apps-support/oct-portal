@@ -63,7 +63,7 @@ namespace CoE.Ideas.Core
             {
                 options.Url = wordPressUri;
             });
-            services.AddSingleton<IWordPressClient, WordPressClient>();
+            services.AddScoped<IWordPressClient, WordPressClient>();
 
             return services;
         }

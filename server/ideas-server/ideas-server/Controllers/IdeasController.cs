@@ -303,7 +303,6 @@ namespace CoE.Ideas.Server.Controllers
             try
             {
                 // post to WordPress
-
                 var wordPressIdeaTask = _wordpressClient.PostIdeaAsync(idea);
 
                 var newIdeaTask = _repository.AddIdeaAsync(idea, User);
