@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading;
@@ -36,8 +37,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 Label = "Initiative Created"
             };
             message.UserProperties["InitiativeId"] = args.Initiative.Id;
-            //message.UserProperties["OwnerClaims"] = ownerPrincipal.Claims;
-            message.UserProperties["OwnerClaims"] = JsonConvert.SerializeObject(args.Owner.Claims);
+            message.UserProperties["OwnerClaims"] = SerializeUser(args.Owner);
 
             return _topicClient.SendAsync(message);
         }
@@ -59,7 +59,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 Label = "Remedy Work Item Created"
             };
             returnMessage.UserProperties["InitiativeId"] = args.Initiative.Id;
-            returnMessage.UserProperties["OwnerClaims"] = JsonConvert.SerializeObject(args.Owner.Claims);
+            returnMessage.UserProperties["OwnerClaims"] = SerializeUser(args.Owner);
             returnMessage.UserProperties["WorkOrderId"] = args.WorkOrderId;
             return _topicClient.SendAsync(returnMessage);
         }
@@ -106,9 +106,19 @@ namespace CoE.Ideas.Core.ServiceBus
                 Label = "Initiative Logged"
             };
             message.UserProperties["InitiativeId"] = args.Initiative.Id;
-            message.UserProperties["OwnerClaims"] = JsonConvert.SerializeObject(args.Owner.Claims);
+            message.UserProperties["OwnerClaims"] = SerializeUser(args.Owner);
             message.UserProperties["RangeUpdated"] = args.RangeUpdated;
             return _topicClient.SendAsync(message);
+        }
+
+
+        private string SerializeUser(ClaimsPrincipal claimsPrincipal)
+        {
+            if (claimsPrincipal == null)
+                return string.Empty;
+
+            var claims = claimsPrincipal.Claims.Select(x => new KeyValuePair<string, string>(x.Type, x.Value)).ToArray();
+            return JsonConvert.SerializeObject(claims);
         }
     }
 }

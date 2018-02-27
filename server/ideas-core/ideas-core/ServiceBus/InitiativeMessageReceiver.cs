@@ -313,13 +313,6 @@ namespace CoE.Ideas.Core.ServiceBus
 
             return result;
         }
-
-        private ClaimsPrincipal CreatePrincipal(string claimsSerialized)
-        {
-            IEnumerable<Claim> claims = string.IsNullOrWhiteSpace(claimsSerialized) ? null : JsonConvert.DeserializeObject<IEnumerable<Claim>>(claimsSerialized);
-            return new ClaimsPrincipal(new ClaimsIdentity(claims));
-        }
-
         protected virtual async Task<GetItemResult<string>> GetMessageString(Message message, string propertyName, bool allowNullOrEmptyString = false)
         {
             if (message == null)
@@ -397,6 +390,19 @@ namespace CoE.Ideas.Core.ServiceBus
                 errorsList.Add(reason);
             }
             public bool WasMessageDeadLettered { get; private set; }
+        }
+
+
+        private ClaimsPrincipal CreatePrincipal(string claimsSerialized)
+        {
+            if (!string.IsNullOrWhiteSpace(claimsSerialized))
+            {
+                var claimValues = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<string, string>>>(claimsSerialized);
+                var claims = claimValues.Select(x => new Claim(x.Key, x.Value));
+                return new ClaimsPrincipal(new ClaimsIdentity(claims));
+            }
+            else
+                return null;
         }
 
 

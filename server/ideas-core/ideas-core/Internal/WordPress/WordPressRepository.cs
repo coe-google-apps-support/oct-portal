@@ -107,8 +107,8 @@ namespace CoE.Ideas.Core.Internal.WordPress
 
             // augment with user metadata
             var userMetadata = await metadataInfoTask;
-            claims.Add(new Claim(ClaimTypes.GivenName, userMetadata.FirstOrDefault(x => x.Key == "first_name")?.Value));
-            claims.Add(new Claim(ClaimTypes.Surname, userMetadata.FirstOrDefault(x => x.Key == "last_name")?.Value));
+            claims.Add(new Claim(ClaimTypes.GivenName, userMetadata.SingleOrDefault(x => x.Key == "first_name")?.Value));
+            claims.Add(new Claim(ClaimTypes.Surname, userMetadata.SingleOrDefault(x => x.Key == "last_name")?.Value));
             AddRoleClaims(claims, userMetadata.SingleOrDefault(x => x.Key == "wp_capabilities")?.Value);
 
             return new ClaimsPrincipal(new ClaimsIdentity(claims, "WordPress"));
