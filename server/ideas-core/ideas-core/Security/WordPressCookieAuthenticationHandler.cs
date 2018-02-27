@@ -82,6 +82,12 @@ namespace CoE.Ideas.Core.Security
                 try
                 {
                     context.Principal = await _wordPressRepository.AuthenticateUserAsync(cookie);
+                    if (context.Principal.Identity.IsAuthenticated)
+                        _logger.LogInformation("Authenticated user { UserName }", context.Principal.Identity.Name);
+                    else
+                    {
+                        _logger.LogWarning("WordPressCookie reported success however identity was not authenticated. Cookie: { WordPressCookie }", cookie);
+                    }
                 }
                 catch (Exception err)
                 {
