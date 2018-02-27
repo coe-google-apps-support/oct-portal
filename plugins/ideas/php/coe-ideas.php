@@ -20,8 +20,6 @@ class coe_ideas {
 		return self::$instance;
     }
 
-    private $mode = 'New'; // Can be 'New', 'ViewAll', 'ViewSingle'
-    
     /**
      * Constructor; performs initialization
      */
@@ -37,42 +35,16 @@ class coe_ideas {
 
         // Shortcode to output needed markup
         $this->add_shortcodes();
-
-        add_action('init', array($this, 'enqueue_scripts'));
-
     }
 
     protected function add_shortcodes() {
         add_shortcode( 'coe_ideas',  array($this, 'show_new' ));
-
     }
 
     function show_new() {
-        return '<div id="coe-idea-new"></div>';
-    }
-
-    public function enqueue_scripts() {
-        // Only load for the specific posts
-        // It testing I can't seem to use any of the regular methods like 
-        // is_page or is_single or even $GLOBALS['wp_the_query'].
-        // I suspect Divi is doing something to the pages but I don't 
-        // have time to investigate, so we'll drop done to good old Request
-        // URL inspection with regular expressions
-        // if( !is_page( 'new-idea' ) ) {
-        // 	return;
-        // }
-        if ( preg_match('/\/new-idea(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI'])) {
-            $mode = 'New';
-        } elseif ( preg_match('/\/view-ideas(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI']) ){
-            $mode = 'ViewAll';
-        } else {
-            return;
-        }
-
         // CoeIdeasWebpackBuildFiles.php is dynamically built by webpack
         require_once( 'CoeIdeasWebpackBuiltFiles.php' );
 
-    
         // order needs to be like this 'manifest, vendor, app, others'
         $scripts = CoeIdeasWebpackBuiltFiles::$jsFiles;
         usort($scripts, array($this, 'get_compare_script_order' ));
@@ -91,8 +63,9 @@ class coe_ideas {
             wp_enqueue_style( $cssFile, plugin_dir_url( __FILE__ ) . $cssFile );
         }
 
-        // last, let's enqueue the code to add the auth key
         wp_add_inline_script($lastScriptHandle, $this->get_auth_key_script(), 'after');
+
+        return '<div id="coe-idea-new"></div>';
     }
 
     protected function get_compare_script_order($a, $b) {
@@ -114,6 +87,11 @@ class coe_ideas {
             return 4;
     }
 
+    protected function get_relative_path() {
+        $full_url = (is_ssl() ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        return explode(get_site_url(), $full_url)[1];
+    }
+
     protected function get_auth_key_script() {
         $authKeyInfo = $this->get_auth_key();
         $authKey = $authKeyInfo[0];
@@ -132,16 +110,13 @@ if (ideaApps) {
         ';
         }
 
-        if ( preg_match('/\/new-idea(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI'])) {
-            $mode = 'New';
-        } elseif ( preg_match('/\/view-ideas(\/|#|\?|\z)/i', $_SERVER['REQUEST_URI']) ){
-            $mode = 'ViewAll';
-        }        
-
-        if ($mode == 'ViewAll') {
-            $str = $str . 'route: "ViewIdeas",
+        // We push the active route through to vue-router.
+        $str = $str . 'route: "' . $this->get_relative_path() . '",
         ';
-        }
+
+        // And the route base (which isn't always the host)
+        $str = $str . 'base: "' . get_site_url() . '",
+        ';
 
         $str = $str . '
         userInfo: {
@@ -156,7 +131,7 @@ if (ideaApps) {
             $str = $str . '
 document.cookie = "coeauth=' . $authKey . '; expires=' . date('D M d Y H:i:s O', $newCookieExpires) . ';path=' . COOKIEPATH . '";';
         }
-    
+
         return $str;
     }
 
