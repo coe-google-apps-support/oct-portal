@@ -25,6 +25,8 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         {
             var client = new HttpClient();
 
+
+
             //// easy case - we have a bearer token in our own HTTP Request headers:
             //// so we can just reuse it because WordPress should be using the same
             //// JWT Auth keys we are.

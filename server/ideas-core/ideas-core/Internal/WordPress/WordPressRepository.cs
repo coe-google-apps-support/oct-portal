@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -196,6 +197,27 @@ namespace CoE.Ideas.Core.Internal.WordPress
         {
             // see "pluggable.php", lines 2092 - 2161
             throw new NotImplementedException();
+        }
+
+        internal static Cookie CreateWordPressCookie(ClaimsPrincipal principal)
+        {
+            throw new NotImplementedException();
+
+            //// create the cookie
+
+            //// cookie has form:  Name|Expiration|Hash;
+
+
+            //// TODO: generate a proper auth token
+            //DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            //TimeSpan span = DateTime.Now.AddMinutes(10).Subtract(epoch);
+            //long expiration = Convert.ToInt64(span.TotalSeconds);
+            //existingCookie = new KeyValuePair<string, string>(wordPressAuthCookieName, I);
+
+
+            //_logger.Warning("Unable to set authorization cookie as one was not able to be retrieved from HTTP context nor was one able to be create from current user");
+
+
         }
     }
 }

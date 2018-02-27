@@ -70,7 +70,7 @@ namespace CoE.Ideas.Core.ServiceBus
             messageHandlerOptions.AutoComplete = false;
             _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
             {
-                _logger.Information("Received service bus message { Label }", msg.Label);
+                _logger.Information("Received service bus message {Label}", msg.Label);
 
                 switch (msg.Label)
                 {
