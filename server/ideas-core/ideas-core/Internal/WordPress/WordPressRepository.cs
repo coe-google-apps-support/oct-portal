@@ -77,6 +77,7 @@ namespace CoE.Ideas.Core.Internal.WordPress
             var userInfo = await _wordPressContext.Users.Where(x => x.UserName == username)
                 .Select(x => new
                 {
+                    x.Id,
                     x.Email,
                     x.Password,
                     x.Url,
@@ -89,7 +90,7 @@ namespace CoE.Ideas.Core.Internal.WordPress
 
             var metaKeys = new string[] { "wp_capabilities", "first_name", "last_name" };
             var metadataInfoTask = _wordPressContext.UserMetadata
-                .Where(x => metaKeys.Contains(x.Key))
+                .Where(x => x.UserId == userInfo.Id && metaKeys.Contains(x.Key))
                 .Select(x => new { x.Key, x.Value })
                 .ToListAsync();
 
