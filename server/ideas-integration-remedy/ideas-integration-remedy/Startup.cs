@@ -63,7 +63,7 @@ namespace CoE.Ideas.Remedy
             //        Configuration["ActiveDirectory:ServicePassword"]);
             //});
 
-            services.AddSingleton(x =>
+            services.AddSingleton<New_Port_0PortType>(x =>
             {
                 return new New_Port_0PortTypeClient(
                     new BasicHttpBinding(BasicHttpSecurityMode.None),
@@ -71,6 +71,8 @@ namespace CoE.Ideas.Remedy
             });
             services.Configure<RemedyServiceOptions>(Configuration.GetSection("Remedy"));
             services.AddSingleton<IRemedyService, RemedyService>();
+
+            services.AddSingleton<NewIdeaListener>();
 
             return services;
         }
