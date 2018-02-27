@@ -168,6 +168,20 @@ let x = class IdeasService {
   }
 
   /**
+   * Returns a Promise that resolves with an initiative.
+   * @param {string} slug The slug of the initiative.
+   * @returns {Promise} Resolved with an initiative.
+   */
+  static getInitiativeBySlug (slug) {
+    return HTTP.get(`/${slug}?type=slug`).then((response) => {
+      return response.data
+    }, (err) => {
+      console.error(`Failed at route /${slug}?type=slug`)
+      console.error(err)
+    })
+  }
+
+  /**
    * Returns a Promise that resolves with an initiatives steps.
    * @param {string} id The id of the initiative.
    * @returns {Promise} Resolved with an initiatives steps.
