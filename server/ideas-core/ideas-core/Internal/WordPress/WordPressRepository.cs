@@ -53,8 +53,17 @@ namespace CoE.Ideas.Core.Internal.WordPress
                     }
                     else
                     {
-                        string username = System.Web.HttpUtility.UrlDecode(cookieParts[0]);
-                        return await VerifyHashAndCreatePrincipal(username, expiration, cookieHash: cookieParts[2], scheme: scheme);
+                        try
+                        {
+                            string username = System.Web.HttpUtility.UrlDecode(cookieParts[0]);
+                            _logger.Information("Authenticating user {UserName}", username);
+                            return await VerifyHashAndCreatePrincipal(username, expiration, cookieHash: cookieParts[2], scheme: scheme);
+                        }
+                        catch (Exception err)
+                        {
+                            _logger.Error(err, "Unknown error authenticating user: {ErrorMessage}", err.Message);
+                            throw;
+                        }
                     }
                 }
             }

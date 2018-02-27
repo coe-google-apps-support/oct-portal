@@ -40,10 +40,38 @@ namespace CoE.Ideas.Core.ServiceBus
             Func<InitiativeLoggedEventArgs, CancellationToken, Task> initiativeLoggedHandler = null,
             MessageHandlerOptions options = null)
         {
+            if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+            {
+                StringBuilder handlerNames = new StringBuilder();
+                if (initiativeCreatedHndler != null)
+                    handlerNames.Append("initiativeCreatedHndler");
+                if (workOrderCreatedHandler != null)
+                {
+                    if (handlerNames.Length > 0)
+                        handlerNames.Append(", ");
+                    handlerNames.Append("workOrderCreatedHandler");
+                }
+                if (workOrderUpdatedHandler != null)
+                {
+                    if (handlerNames.Length > 0)
+                        handlerNames.Append(", ");
+                    handlerNames.Append("workOrderUpdatedHandler");
+                }
+                if (initiativeLoggedHandler != null)
+                {
+                    if (handlerNames.Length > 0)
+                        handlerNames.Append(", ");
+                    handlerNames.Append("initiativeLoggedHandler");
+                }
+                _logger.Information("Starting message pump with handlers " + handlerNames.ToString() + " on topic '{TopicName}' and subscription '{Subscription}'", _subscriptionClient.TopicPath, _subscriptionClient.SubscriptionName);
+            }
+
             MessageHandlerOptions messageHandlerOptions = options ?? new MessageHandlerOptions(OnDefaultError);
             messageHandlerOptions.AutoComplete = false;
             _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
             {
+                _logger.Information("Received service bus message { Label }", msg.Label);
+
                 switch (msg.Label)
                 {
                     // TODO: These should be moved to a constants file
