@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -29,18 +30,20 @@ namespace CoE.Ideas.Core.Internal.WordPress
                 throw new ArgumentNullException("cookie");
 
             _logger.Information("Attempting to authenticate user using WordPress");
+            var watch = new Stopwatch();
+            watch.Start();
 
             string[] cookieParts = cookie.Split("|");
             if (cookieParts.Length < 3)
             {
-                _logger.Error("Expected cookie to contain Name|Expiration|Hash: { WordPressCookie }", cookie);
+                _logger.Error("Expected cookie to contain Name|Expiration|Hash: {WordPressCookie}", cookie);
                 throw new InvalidOperationException($"Expected cookie to contain Name|Expiration|Hash, but only got { cookieParts.Length } parts to the cookie");
             }
             else
             {
                 if (!long.TryParse(cookieParts[1], out long expiration))
                 {
-                    _logger.Error("Unable to determine expiration of WordPress cookie as it was not a 64-bit integer: { WordPressCookie }", cookie);
+                    _logger.Error("Unable to determine expiration of WordPress cookie as it was not a 64-bit integer: {WordPressCookie}", cookie);
                     throw new InvalidOperationException("Unable to determine expiration of WordPress cookie as it was not a 64-bit integer");
                 }
                 else
@@ -48,7 +51,7 @@ namespace CoE.Ideas.Core.Internal.WordPress
                     DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
                     if (epoch.AddSeconds(expiration) <= DateTime.Now)
                     {
-                        _logger.Error("WordPress cookie is expired: { WordPressCookie }", cookie);
+                        _logger.Error("WordPress cookie is expired: {WordPressCookie}", cookie);
                         throw new InvalidOperationException("WordPress cookie is expired");
                     }
                     else
@@ -57,7 +60,10 @@ namespace CoE.Ideas.Core.Internal.WordPress
                         {
                             string username = System.Web.HttpUtility.UrlDecode(cookieParts[0]);
                             _logger.Information("Authenticating user {UserName}", username);
-                            return await VerifyHashAndCreatePrincipal(username, expiration, cookieHash: cookieParts[2], scheme: scheme);
+                            var result = await VerifyHashAndCreatePrincipal(username, expiration, cookieHash: cookieParts[2], scheme: scheme);
+                            watch.Stop();
+                            _logger.Information("Authenticated user {UserName} in {ElapsedMilliseconds}", username, watch.ElapsedMilliseconds);
+                            return result;
                         }
                         catch (Exception err)
                         {
