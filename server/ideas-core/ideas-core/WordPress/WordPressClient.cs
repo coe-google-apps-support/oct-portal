@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security;
@@ -18,17 +19,14 @@ namespace CoE.Ideas.Core.WordPress
 {
     internal class WordPressClient : IWordPressClient
     {
-        public WordPressClient(IOptions<WordPressClientOptions> options, IJwtTokenizer jwtTokenizer) : this(options, jwtTokenizer, null)
+        public WordPressClient(IOptions<WordPressClientOptions> options) : this(options, null)
         {
         }
 
 
         public WordPressClient(IOptions<WordPressClientOptions> options,
-            IJwtTokenizer jwtTokenizer,
             IHttpContextAccessor httpContextAccessor)
         {
-            _jwtTokenizer = jwtTokenizer ?? throw new ArgumentNullException("jwtTokenizer");
-
             if (options == null)
                 throw new ArgumentNullException("options");
             string wordPressUrl = options.Value.Url.ToString();
@@ -43,56 +41,10 @@ namespace CoE.Ideas.Core.WordPress
 
         // _httpContextAccessor is used to get the current user; set by Dependency Injection
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IJwtTokenizer _jwtTokenizer;
         private readonly Uri _wordPressUrl;
 
-        private string jwtCredentials;
-        public string JwtCredentials
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(jwtCredentials) && 
-                    _httpContextAccessor != null && 
-                    _httpContextAccessor.HttpContext != null)
-                {
-                    var requestHeaders = _httpContextAccessor.HttpContext.Request?.Headers;
-                    string authToken = null;
-                    if (requestHeaders != null && requestHeaders.ContainsKey("Authorization"))
-                    {
-                        authToken = requestHeaders["Authorization"];
-                    }
+        public ClaimsPrincipal User { get; set; }
 
-                    if (string.IsNullOrWhiteSpace(authToken))
-                    {
-                        return null;
-                        //throw new SecurityException("Unable to get current JWT Authorization token");
-                    }
-                    else
-                    {
-                        if (authToken.Length > 7 && authToken.StartsWith("Bearer "))
-                            jwtCredentials = authToken.Substring(7);
-                        else
-                            throw new SecurityException("Unable to get current JWT Authorization token (does not contain 'Bearer' keyword)");
-                    }
-
-                }
-                return jwtCredentials;
-            }
-            set
-            {
-                if (!string.IsNullOrWhiteSpace(value))
-                {
-                    if (value.Length > 7 && value.StartsWith("Bearer", StringComparison.OrdinalIgnoreCase))
-                    {
-                        jwtCredentials = value.Substring(7);
-                    }
-                    else
-                        jwtCredentials = value;
-                }
-                else
-                    jwtCredentials = value;
-            }
-        }
 
         public async Task<WordPressUser> GetCurrentUserAsync()
         {
@@ -212,19 +164,25 @@ namespace CoE.Ideas.Core.WordPress
 
             var client = new HttpClient();
 
-            if (string.IsNullOrWhiteSpace(JwtCredentials))
-            {
-                bool? userIsAuthenticated = _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated;
-                if (!(userIsAuthenticated.HasValue && userIsAuthenticated.Value))
-                    throw new InvalidOperationException("JwtCredentials must be set or httpContextAccessor must have an authenticated user");
+            string wordPressAuthCookieName = WordPressCookieAuthenticationHandler.GetWordPressCookieName(_wordPressUrl.ToString());
 
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _jwtTokenizer.CreateJwt(_httpContextAccessor.HttpContext.User));
-            }
-            else
+            var existingCookie = _httpContextAccessor.HttpContext?.Request?.Cookies?.LastOrDefault(x => x.Key == wordPressAuthCookieName);
+            if (!existingCookie.HasValue || string.IsNullOrWhiteSpace(existingCookie.Value.Value) && User != null)
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", JwtCredentials);
+                // create the cookie
+
+                // cookie has form:  Name|Expiration|Hash;
+
+                // TODO: generate a proper auth token
+                DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                TimeSpan span = DateTime.Now.AddMinutes(10).Subtract(epoch);
+                long expiration = Convert.ToInt64(span.TotalSeconds);
+                existingCookie = new KeyValuePair<string, string>(wordPressAuthCookieName, $"{User.Identity.Name}|{ expiration }");
             }
 
+            var cookieContainer = new CookieContainer();
+            if (!string.IsNullOrWhiteSpace(existingCookie?.Value))
+                cookieContainer.Add(new Uri($"{ _wordPressUrl.Scheme }://{ _wordPressUrl.Host }"), new Cookie(wordPressAuthCookieName, existingCookie.Value.Value));
 
             client.BaseAddress = new Uri(_wordPressUrl, "wp-json/wp/v2/");
 

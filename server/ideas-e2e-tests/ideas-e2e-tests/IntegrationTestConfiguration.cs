@@ -91,8 +91,7 @@ namespace CoE.Ideas.EndToEnd.Tests
 
                 var messageReceiver = new InitiativeMessageReceiver(x.GetRequiredService<IIdeaRepository>(),
                     x.GetRequiredService<IWordPressClient>(),
-                    subscriptionClient, 
-                    x.GetRequiredService<IJwtTokenizer>(),
+                    subscriptionClient,
                     x.GetRequiredService<Serilog.ILogger>());
 
                 return new IntegrationRemedyListenerNewIdeaListener(messageReceiver,
@@ -143,7 +142,7 @@ namespace CoE.Ideas.EndToEnd.Tests
                 var messageReceiver = new InitiativeMessageReceiver(
                     x.GetRequiredService<IIdeaRepository>(),
                     x.GetRequiredService<IWordPressClient>(),
-                    subscriptionClient, x.GetRequiredService<IJwtTokenizer>(),
+                    subscriptionClient, 
                     x.GetRequiredService<Serilog.ILogger>());
 
             return new IntegrationRemedyItemUpdatedIdeaListener(

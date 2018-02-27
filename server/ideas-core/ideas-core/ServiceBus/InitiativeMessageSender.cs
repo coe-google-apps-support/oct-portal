@@ -8,20 +8,18 @@ using System.Threading.Tasks;
 using CoE.Ideas.Core.Security;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.Azure.ServiceBus;
+using Newtonsoft.Json;
 
 namespace CoE.Ideas.Core.ServiceBus
 {
     public class InitiativeMessageSender : IInitiativeMessageSender
     {
-        public InitiativeMessageSender(ITopicClient topicClient, 
-            IJwtTokenizer jwtTokenizer)
+        public InitiativeMessageSender(ITopicClient topicClient)
         {
             _topicClient = topicClient ?? throw new ArgumentNullException("topicClient");
-            _jwtTokenizer = jwtTokenizer ?? throw new ArgumentNullException("jwtTokenizer");
         }
 
         private readonly ITopicClient _topicClient;
-        private readonly IJwtTokenizer _jwtTokenizer;
 
 
         public Task SendInitiativeCreatedAsync(InitiativeCreatedEventArgs args)
@@ -39,7 +37,7 @@ namespace CoE.Ideas.Core.ServiceBus
             };
             message.UserProperties["InitiativeId"] = args.Initiative.Id;
             //message.UserProperties["OwnerClaims"] = ownerPrincipal.Claims;
-            message.UserProperties["OwnerToken"] = _jwtTokenizer.CreateJwt(args.Owner);
+            message.UserProperties["OwnerClaims"] = JsonConvert.SerializeObject(args.Owner.Claims);
 
             return _topicClient.SendAsync(message);
         }
@@ -61,7 +59,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 Label = "Remedy Work Item Created"
             };
             returnMessage.UserProperties["InitiativeId"] = args.Initiative.Id;
-            returnMessage.UserProperties["OwnerToken"] = _jwtTokenizer.CreateJwt(args.Owner);
+            returnMessage.UserProperties["OwnerClaims"] = JsonConvert.SerializeObject(args.Owner.Claims);
             returnMessage.UserProperties["WorkOrderId"] = args.WorkOrderId;
             return _topicClient.SendAsync(returnMessage);
         }
@@ -108,7 +106,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 Label = "Initiative Logged"
             };
             message.UserProperties["InitiativeId"] = args.Initiative.Id;
-            message.UserProperties["OwnerToken"] = _jwtTokenizer.CreateJwt(args.Owner);
+            message.UserProperties["OwnerClaims"] = JsonConvert.SerializeObject(args.Owner.Claims);
             message.UserProperties["RangeUpdated"] = args.RangeUpdated;
             return _topicClient.SendAsync(message);
         }

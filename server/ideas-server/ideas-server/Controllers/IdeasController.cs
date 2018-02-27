@@ -60,7 +60,7 @@ namespace CoE.Ideas.Server.Controllers
                 ideas = await _repository.GetIdeasAsync();
             var returnValue = ideas.OrderByDescending(x => x.Id);
             watch.Stop();
-            _logger.Information("Retried {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
+            _logger.Information("Retrieved {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
             return returnValue;
         }
 

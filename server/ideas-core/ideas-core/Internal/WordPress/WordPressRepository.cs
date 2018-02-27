@@ -74,24 +74,24 @@ namespace CoE.Ideas.Core.Internal.WordPress
 
 
             // WordPress cookies explained: https://www.securitysift.com/understanding-wordpress-auth-cookies/
-            // var metaKeys = new string[] { "wp_capabilities", "first_name", "last_name" };
             var userInfo = await _wordPressContext.Users.Where(x => x.UserName == username)
                 .Select(x => new
                 {
                     x.Email,
                     x.Password,
-                    x.Metadata,
                     x.Url,
                     x.Name // display name
-                    // Currently EFCore (with Pomelo MySql Provier) error on the following line.
-                    // May when we put in MS Sql server we'll be able to use the following and
-                    // be more efficient.
-                    //Metadata = x.Metadata.Where(y => metaKeys.Contains(y.Key))
                 })
                 .SingleOrDefaultAsync();
 
             if (userInfo == null)
                 throw new EntityNotFoundException($"Unable to find user with username { username }");
+
+            var metaKeys = new string[] { "wp_capabilities", "first_name", "last_name" };
+            var metadataInfoTask = _wordPressContext.UserMetadata
+                .Where(x => metaKeys.Contains(x.Key))
+                .Select(x => new { x.Key, x.Value })
+                .ToListAsync();
 
             // TODO: implement cookie hash verification like WordPress
             //VeryifyCookieHash(cookieHash, expiration, username, userInfo.Password, scheme);
@@ -101,11 +101,14 @@ namespace CoE.Ideas.Core.Internal.WordPress
                 new Claim(ClaimTypes.NameIdentifier, username),
                 new Claim(ClaimTypes.Email, userInfo.Email),
                 new Claim(ClaimTypes.Name, userInfo.Name),
-                new Claim(ClaimTypes.GivenName, userInfo.Metadata.FirstOrDefault(x => x.Key == "first_name")?.Value),
-                new Claim(ClaimTypes.Surname, userInfo.Metadata.FirstOrDefault(x => x.Key == "last_name")?.Value),
                 new Claim(ClaimTypes.Uri, userInfo.Url)
             };
-            AddRoleClaims(claims, userInfo.Metadata.SingleOrDefault(x => x.Key == "wp_capabilities")?.Value);
+
+            // augment with user metadata
+            var userMetadata = await metadataInfoTask;
+            claims.Add(new Claim(ClaimTypes.GivenName, userMetadata.FirstOrDefault(x => x.Key == "first_name")?.Value));
+            claims.Add(new Claim(ClaimTypes.Surname, userMetadata.FirstOrDefault(x => x.Key == "last_name")?.Value));
+            AddRoleClaims(claims, userMetadata.SingleOrDefault(x => x.Key == "wp_capabilities")?.Value);
 
             return new ClaimsPrincipal(new ClaimsIdentity(claims, "WordPress"));
         }

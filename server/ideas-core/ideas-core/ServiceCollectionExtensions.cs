@@ -65,14 +65,6 @@ namespace CoE.Ideas.Core
             });
             services.AddSingleton<IWordPressClient, WordPressClient>();
 
-            services.Configure<JwtTokenizerOptions>(x =>
-            {
-                x.WordPressUrl = wordPressUri;
-                x.JwtSecretKey = jwtSecretKey;
-            });
-            services.AddSingleton<IJwtTokenizer, JwtTokenizer>();
-
-
             return services;
         }
 

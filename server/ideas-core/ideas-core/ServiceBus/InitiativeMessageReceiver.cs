@@ -1,10 +1,12 @@
 ﻿using CoE.Ideas.Core.Security;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.Azure.ServiceBus;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,19 +20,16 @@ namespace CoE.Ideas.Core.ServiceBus
         public InitiativeMessageReceiver(IIdeaRepository repository,
             IWordPressClient wordPressClient,
             ISubscriptionClient subscriptionClient,
-            IJwtTokenizer jwtTokenizer,
             Serilog.ILogger logger)
         {
             _repository = repository ?? throw new ArgumentNullException("repository");
             _wordPressClient = wordPressClient ?? throw new ArgumentNullException("wordPressClient");
             _subscriptionClient = subscriptionClient ?? throw new ArgumentNullException("subscriptionClient");
-            _jwtTokenizer = jwtTokenizer ?? throw new ArgumentNullException("jwtTokenizer");
             _logger = logger ?? throw new ArgumentNullException("logger");
         }
         private readonly IIdeaRepository _repository;
         private readonly IWordPressClient _wordPressClient;
         private readonly ISubscriptionClient _subscriptionClient;
-        private readonly IJwtTokenizer _jwtTokenizer;
         private readonly Serilog.ILogger _logger;
 
         private IDictionary<string, ICollection<Func<Message, CancellationToken, Task>>> MessageMap = new Dictionary<string, ICollection<Func<Message, CancellationToken, Task>>>();
@@ -284,22 +283,21 @@ namespace CoE.Ideas.Core.ServiceBus
             if (message == null)
                 throw new ArgumentNullException("msg");
 
-            var ownerTokenResult = await GetMessageString(message, propertyName: "OwnerToken");
+            var ownerClaimsResult = await GetMessageString(message, propertyName: "OwnerClaims");
             var result = new GetItemResult<ClaimsPrincipal>();
-            if (ownerTokenResult.WasMessageDeadLettered)
+            if (ownerClaimsResult.WasMessageDeadLettered)
             {
-                result.SetMessageDeadLettered(ownerTokenResult.Errors.FirstOrDefault());
+                result.SetMessageDeadLettered(ownerClaimsResult.Errors.FirstOrDefault());
             }
             else
             {
-
                 try
                 {
-                    result.Item = _jwtTokenizer.CreatePrincipal(ownerTokenResult.Item);
+                    result.Item = CreatePrincipal(ownerClaimsResult.Item);
                 }
                 catch (Exception err)
                 {
-                    string errorMessage = $"Unable to get Owner from token { ownerTokenResult.Item }: { err.Message }";
+                    string errorMessage = $"Unable to get Owner from token { ownerClaimsResult.Item }: { err.Message }";
                     result.SetMessageDeadLettered(errorMessage);
                     await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
                 }
@@ -314,6 +312,12 @@ namespace CoE.Ideas.Core.ServiceBus
             }
 
             return result;
+        }
+
+        private ClaimsPrincipal CreatePrincipal(string claimsSerialized)
+        {
+            IEnumerable<Claim> claims = string.IsNullOrWhiteSpace(claimsSerialized) ? null : JsonConvert.DeserializeObject<IEnumerable<Claim>>(claimsSerialized);
+            return new ClaimsPrincipal(new ClaimsIdentity(claims));
         }
 
         protected virtual async Task<GetItemResult<string>> GetMessageString(Message message, string propertyName, bool allowNullOrEmptyString = false)

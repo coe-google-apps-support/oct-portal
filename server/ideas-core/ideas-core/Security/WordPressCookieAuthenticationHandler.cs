@@ -99,7 +99,7 @@ namespace CoE.Ideas.Core.Security
 
 
         private static IDictionary<string, string> wordPressCookieNameMap = new Dictionary<string, string>();
-        private static string GetWordPressCookieName(string wordPressUrl)
+        internal static string GetWordPressCookieName(string wordPressUrl)
         {
             // simple caching :)
             if (wordPressCookieNameMap.ContainsKey(wordPressUrl))
