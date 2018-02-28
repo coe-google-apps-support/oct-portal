@@ -91,7 +91,6 @@ namespace CoE.Ideas.EndToEnd.Tests
                     subscriptionName: Configuration["Ideas:RemedyServiceBusSubscription"]);
 
                 var messageReceiver = new InitiativeMessageReceiver(x.GetRequiredService<IIdeaRepository>(),
-                    x.GetRequiredService<IWordPressClient>(),
                     subscriptionClient,
                     x.GetRequiredService<Serilog.ILogger>());
 
@@ -142,7 +141,6 @@ namespace CoE.Ideas.EndToEnd.Tests
 
                 var messageReceiver = new InitiativeMessageReceiver(
                     x.GetRequiredService<IIdeaRepository>(),
-                    x.GetRequiredService<IWordPressClient>(),
                     subscriptionClient, 
                     x.GetRequiredService<Serilog.ILogger>());
 
