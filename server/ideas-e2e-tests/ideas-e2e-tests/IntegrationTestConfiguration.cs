@@ -39,8 +39,9 @@ namespace CoE.Ideas.EndToEnd.Tests
         {
             Services.AddIdeaConfiguration(
                 dbConnectionString: Configuration.GetConnectionString("IdeaDatabase"), 
-                wordPressUrl: Configuration["Ideas:WordPressUrl"],
-                jwtSecretKey: Configuration["Authorization:JwtSecretKey"]);
+                wordPressUrl: Configuration["Ideas:WordPressUrl"], 
+                wordPressDbConnectionString: Configuration.GetConnectionString("WordPressDatabase"),
+                wordPressConfigurationSection: Configuration.GetSection("WordPress"));
 
             Services.AddInitiativeMessaging(Configuration.GetConnectionString("IdeaServiceBus"),
                 Configuration["Ideas:ServiceBusTopic"]);
