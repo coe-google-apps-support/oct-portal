@@ -55,6 +55,7 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         public IntegrationTestConfiguration ConfigureRemedyServices()
         {
+            Services.AddSingleton<IIdeaRepositoryFactory, MockIdeaRepositoryFactory>();
 
             ConfigureOnNewInitiativeRemedyServices();
             ConfigureOnWorkOrderUpdatedRemedyServices();
@@ -90,9 +91,9 @@ namespace CoE.Ideas.EndToEnd.Tests
                     topicPath: Configuration["Ideas:ServiceBusTopic"],
                     subscriptionName: Configuration["Ideas:RemedyServiceBusSubscription"]);
 
-                var messageReceiver = new InitiativeMessageReceiver(x.GetRequiredService<IIdeaRepository>(),
-                    subscriptionClient,
-                    x.GetRequiredService<Serilog.ILogger>());
+                var messageReceiver = new InitiativeMessageReceiver(subscriptionClient,
+                    x.GetRequiredService<Serilog.ILogger>(),
+                    x.GetRequiredService<IIdeaRepositoryFactory>());
 
                 return new IntegrationRemedyListenerNewIdeaListener(messageReceiver,
                     x.GetRequiredService<IInitiativeMessageSender>(),
@@ -140,9 +141,9 @@ namespace CoE.Ideas.EndToEnd.Tests
                     subscriptionName: Configuration["Ideas:RemedyCheckerServiceBusSubscription"]);
 
                 var messageReceiver = new InitiativeMessageReceiver(
-                    x.GetRequiredService<IIdeaRepository>(),
                     subscriptionClient, 
-                    x.GetRequiredService<Serilog.ILogger>());
+                    x.GetRequiredService<Serilog.ILogger>(),
+                    x.GetRequiredService<IIdeaRepositoryFactory>());
 
             return new IntegrationRemedyItemUpdatedIdeaListener(
                     x.GetRequiredService<IUpdatableIdeaRepository>(),
