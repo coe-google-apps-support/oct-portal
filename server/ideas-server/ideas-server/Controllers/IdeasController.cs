@@ -335,7 +335,11 @@ namespace CoE.Ideas.Server.Controllers
             {
                 Guid correlationId = Guid.NewGuid();
                 _logger.Error(err, "Unable to save new initiative {Initiative} to repository. CorrelationId: {CorrelationId}", idea, correlationId);
+#if DEBUG
+                return base.StatusCode(500, $"Unable to save idea to repository. Error: { err }");
+#else
                 return base.StatusCode(500, $"Unable to save idea to repository. CorrelationId: { correlationId }");
+# endif
             }
 
         }
@@ -488,7 +492,7 @@ namespace CoE.Ideas.Server.Controllers
             }
         }
 
-        #region Fake Data
+#region Fake Data
 
         private const string fakeSteps = @"{
   data: [{
@@ -622,7 +626,7 @@ namespace CoE.Ideas.Server.Controllers
   }
   ]
 }";
-        #endregion
+#endregion
 
     }
 }
