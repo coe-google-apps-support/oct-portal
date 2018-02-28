@@ -100,6 +100,8 @@ namespace CoE.Ideas.Core
                 services.AddSingleton<IInitiativeMessageReceiver, InitiativeMessageReceiver>();
             }
 
+            services.AddSingleton<IIdeaRepositoryFactory, IdeaRepositoryFactory>();
+
             return services;
         }
 
@@ -129,14 +131,17 @@ namespace CoE.Ideas.Core
             if (string.IsNullOrWhiteSpace(wordpressUrl))
                 throw new ArgumentNullException("wordpressUrl");
 
-
-            Uri wordpressUri = new Uri(wordpressUrl);
-            services.AddScoped<IIdeaRepository, RemoteIdeaRepository>(x => new RemoteIdeaRepository(ideasApiUrl));
+            services.Configure<RemoteIdeaRepositoryOptions>(options =>
+            {
+                options.Url = ideasApiUrl;
+            });
+            services.AddSingleton<IdeaRepositoryFactory>();
+            //services.AddScoped<IIdeaRepository, RemoteIdeaRepository>();
 
 
             services.Configure<WordPressClientOptions>(options =>
             {
-                options.Url = wordpressUri;
+                options.Url = new Uri(wordpressUrl);
             });
             services.AddScoped<IWordPressClient, WordPressClient>();
             return services;

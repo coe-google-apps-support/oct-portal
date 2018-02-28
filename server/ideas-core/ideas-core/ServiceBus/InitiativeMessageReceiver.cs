@@ -1,4 +1,5 @@
-﻿using CoE.Ideas.Core.Security;
+﻿using CoE.Ideas.Core.Internal.Initiatives;
+using CoE.Ideas.Core.Security;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
@@ -16,18 +17,18 @@ namespace CoE.Ideas.Core.ServiceBus
     //TODO: Mark messages as complete, abadoned or dead lettered!
 
     public class InitiativeMessageReceiver : IInitiativeMessageReceiver
-    {
-        public InitiativeMessageReceiver(IIdeaRepository repository,
-            ISubscriptionClient subscriptionClient,
-            Serilog.ILogger logger)
+    { 
+        public InitiativeMessageReceiver(ISubscriptionClient subscriptionClient,
+            Serilog.ILogger logger,
+            IIdeaRepositoryFactory remoteIdeaRepositoryFactory) 
         {
-            _repository = repository ?? throw new ArgumentNullException("repository");
+            _remoteIdeaRepositoryFactory = remoteIdeaRepositoryFactory;
             _subscriptionClient = subscriptionClient ?? throw new ArgumentNullException("subscriptionClient");
             _logger = logger ?? throw new ArgumentNullException("logger");
         }
-        private readonly IIdeaRepository _repository;
         private readonly ISubscriptionClient _subscriptionClient;
         private readonly Serilog.ILogger _logger;
+        private readonly IIdeaRepositoryFactory _remoteIdeaRepositoryFactory;
 
         private IDictionary<string, ICollection<Func<Message, CancellationToken, Task>>> MessageMap = new Dictionary<string, ICollection<Func<Message, CancellationToken, Task>>>();
 
@@ -122,11 +123,11 @@ namespace CoE.Ideas.Core.ServiceBus
 
             if (await EnsureMessageLabel(msg, "Initiative Created"))
             {
-                var idea = await GetMessageInitiative(msg);
-                if (idea.WasMessageDeadLettered)
-                    return;
                 var owner = await GetMessageOwner(msg);
                 if (owner.WasMessageDeadLettered)
+                    return;
+                var idea = await GetMessageInitiative(msg, owner.Item);
+                if (idea.WasMessageDeadLettered)
                     return;
 
                 try
@@ -142,7 +143,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 {
                     System.Diagnostics.Trace.TraceWarning($"InitiativeCreated handler threw the following error, abandoning message for future processing: { err.Message }");
                     await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
-                }
+                    }
             }
         }
 
@@ -155,11 +156,12 @@ namespace CoE.Ideas.Core.ServiceBus
 
             if (await EnsureMessageLabel(msg, "Remedy Work Item Created"))
             {
-                var idea = await GetMessageInitiative(msg);
-                if (idea.WasMessageDeadLettered)
-                    return;
                 var owner = await GetMessageOwner(msg);
                 if (owner.WasMessageDeadLettered)
+                    return;
+
+                var idea = await GetMessageInitiative(msg, owner.Item);
+                if (idea.WasMessageDeadLettered)
                     return;
                 var workOrderId = await GetMessageString(msg, propertyName: "WorkOrderId");
                 if (workOrderId.WasMessageDeadLettered)
@@ -233,11 +235,11 @@ namespace CoE.Ideas.Core.ServiceBus
 
             if (await EnsureMessageLabel(msg, "Initiative Logged"))
             {
-                var idea = await GetMessageInitiative(msg);
-                if (idea.WasMessageDeadLettered)
-                    return;
                 var owner = await GetMessageOwner(msg);
                 if (owner.WasMessageDeadLettered)
+                    return;
+                var idea = await GetMessageInitiative(msg, owner.Item);
+                if (idea.WasMessageDeadLettered)
                     return;
                 var rangeUpdated = await GetMessageString(msg, propertyName: "RangeUpdated");
                 if (rangeUpdated.WasMessageDeadLettered)
@@ -273,7 +275,7 @@ namespace CoE.Ideas.Core.ServiceBus
         }
 
 
-        protected virtual async Task<GetItemResult<Idea>> GetMessageInitiative(Message message)
+        protected virtual async Task<GetItemResult<Idea>> GetMessageInitiative(Message message, ClaimsPrincipal owner)
         {
             if (message == null)
                 throw new ArgumentNullException("msg");
@@ -288,7 +290,11 @@ namespace CoE.Ideas.Core.ServiceBus
             {
                 try
                 {
-                    result.Item = await _repository.GetIdeaAsync(initiativeIdResult.Item);
+                    // if the remote repositoty factory is populated, we'll use that,
+                    // otherwise we'll just use the default
+                    IIdeaRepository ideaRepository = _remoteIdeaRepositoryFactory.Create(owner);
+
+                    result.Item = await ideaRepository.GetIdeaAsync(initiativeIdResult.Item);
                 }
                 catch (Exception err)
                 {
