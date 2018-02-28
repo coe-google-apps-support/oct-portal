@@ -338,7 +338,7 @@ namespace CoE.Ideas.Server.Controllers
 #if DEBUG
                 return base.StatusCode(500, $"Unable to save idea to repository. Error: { err }");
 #else
-                //return base.StatusCode(500, $"Unable to save idea to repository. CorrelationId: { correlationId }");
+                return base.StatusCode(500, $"Unable to save idea to repository. CorrelationId: { correlationId }");
 # endif
             }
 
