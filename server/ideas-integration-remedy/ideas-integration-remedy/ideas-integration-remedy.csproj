@@ -23,9 +23,8 @@
     <PackageReference Include="System.ServiceModel.Http" Version="4.4.0" />
     <PackageReference Include="System.ServiceModel.NetTcp" Version="4.4.0" />
     <PackageReference Include="System.ServiceModel.Security" Version="4.4.0" />
-    <!-- this next package is not fully compatible with .Net Core -->
-    <!--<PackageReference Include="Serilog.Sinks.AzureTableStorage" Version="4.0.0" />-->
-    <!--<PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.5.0-preview1-25914-04" />-->
+    <PackageReference Include="Serilog.Sinks.AzureTableStorage" Version="4.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
   </ItemGroup>
 
   <ItemGroup>
