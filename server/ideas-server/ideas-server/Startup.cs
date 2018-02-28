@@ -39,13 +39,13 @@ namespace CoE.Ideas.Server
 
             services.AddIdeaConfiguration(
                 Configuration.GetConnectionString("IdeaDatabase"), 
-                Configuration["Ideas:WordPressUrl"]);
+                Configuration["Ideas:WordPressUrl"],
+                Configuration.GetConnectionString("WordPressDatabase"),
+                Configuration.GetSection("WordPress"));
 
             services.AddInitiativeMessaging(Configuration.GetConnectionString("IdeaServiceBus"),
                 Configuration["Ideas:ServiceBusTopic"]);
 
-
-            services.AddWordPressRepository(Configuration.GetConnectionString("WordPressDatabase"));
             services.AddIdeaAuthSecurity(Configuration["Ideas:WordPressUrl"]);
 
             services.AddProjectManagementConfiguration(Configuration.GetConnectionString("IdeaProjectManagementDatabase"));

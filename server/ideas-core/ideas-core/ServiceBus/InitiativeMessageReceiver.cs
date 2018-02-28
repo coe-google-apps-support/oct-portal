@@ -18,17 +18,14 @@ namespace CoE.Ideas.Core.ServiceBus
     public class InitiativeMessageReceiver : IInitiativeMessageReceiver
     {
         public InitiativeMessageReceiver(IIdeaRepository repository,
-            IWordPressClient wordPressClient,
             ISubscriptionClient subscriptionClient,
             Serilog.ILogger logger)
         {
             _repository = repository ?? throw new ArgumentNullException("repository");
-            _wordPressClient = wordPressClient ?? throw new ArgumentNullException("wordPressClient");
             _subscriptionClient = subscriptionClient ?? throw new ArgumentNullException("subscriptionClient");
             _logger = logger ?? throw new ArgumentNullException("logger");
         }
         private readonly IIdeaRepository _repository;
-        private readonly IWordPressClient _wordPressClient;
         private readonly ISubscriptionClient _subscriptionClient;
         private readonly Serilog.ILogger _logger;
 
@@ -70,7 +67,7 @@ namespace CoE.Ideas.Core.ServiceBus
             messageHandlerOptions.AutoComplete = false;
             _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
             {
-                _logger.Information("Received service bus message { Label }", msg.Label);
+                _logger.Information("Received service bus message {Label}", msg.Label);
 
                 switch (msg.Label)
                 {
