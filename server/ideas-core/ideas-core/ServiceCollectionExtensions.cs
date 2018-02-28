@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -41,13 +42,17 @@ namespace CoE.Ideas.Core
         public static IServiceCollection AddIdeaConfiguration(this IServiceCollection services,
             string dbConnectionString, 
             string wordPressUrl,
-            string jwtSecretKey = null)
+            string wordPressDbConnectionString,
+            IConfigurationSection wordPressConfigurationSection)
         {
             if (string.IsNullOrWhiteSpace(dbConnectionString))
                 throw new ArgumentNullException("dbConnectionString");
 
             if (string.IsNullOrWhiteSpace(wordPressUrl))
                 throw new ArgumentNullException("wordPressUrl");
+
+            if (string.IsNullOrWhiteSpace(wordPressDbConnectionString))
+                throw new ArgumentNullException("wordPressDbConnectionString");
 
             services.AddDbContext<IdeaContext>(options =>
                 options.UseMySql(dbConnectionString));
@@ -64,6 +69,12 @@ namespace CoE.Ideas.Core
                 options.Url = wordPressUri;
             });
             services.AddScoped<IWordPressClient, WordPressClient>();
+
+            services.AddDbContext<WordPressContext>(options =>
+                options.UseMySql(wordPressDbConnectionString));
+
+            services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
+            services.AddScoped<IWordPressUserSecurity, WordPressUserSecurity>();
 
             return services;
         }
@@ -157,20 +168,6 @@ namespace CoE.Ideas.Core
             return services;
         }
 
-
-        public static IServiceCollection AddWordPressRepository(this IServiceCollection services,
-            string dbConnectionString)
-        {
-            if (string.IsNullOrWhiteSpace(dbConnectionString))
-                throw new ArgumentNullException("dbConnectionString");
-
-            services.AddDbContext<WordPressContext>(options =>
-                options.UseMySql(dbConnectionString));
-
-            services.AddScoped<IWordPressRepository, WordPressRepository>();
-
-            return services;
-        }
 
         /// <summary>
         /// Adds Idea authentication for WebAPI. Sets up JWT handlers for use with the token generator 

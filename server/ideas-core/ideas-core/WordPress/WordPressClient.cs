@@ -1,4 +1,5 @@
-﻿using CoE.Ideas.Core.Security;
+﻿using CoE.Ideas.Core.Internal.WordPress;
+using CoE.Ideas.Core.Security;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -20,33 +21,27 @@ namespace CoE.Ideas.Core.WordPress
     internal class WordPressClient : IWordPressClient
     {
         public WordPressClient(
-            Serilog.ILogger logger,
-            IOptions<WordPressClientOptions> options) 
-            : this(logger, options, null)
-        {
-        }
-
-        public WordPressClient(
             Serilog.ILogger logger, 
-            IOptions<WordPressClientOptions> options,
-            IHttpContextAccessor httpContextAccessor)
+            IWordPressUserSecurity wordPressUserSecurity,
+            IOptions<WordPressClientOptions> options)
         {
             if (options == null)
                 throw new ArgumentNullException("options");
+
+            _wordPressUserSecurity = wordPressUserSecurity ?? throw new ArgumentNullException("wordPressUserSecurity");
+
             string wordPressUrl = options.Value.Url.ToString();
             if (!wordPressUrl.EndsWith("/"))
                 wordPressUrl += "/";
             _wordPressUrl = new Uri(wordPressUrl);
 
-            _httpContextAccessor = httpContextAccessor; // allowed to be null
             _logger = logger ?? throw new ArgumentNullException("logger");
         }
 
 
 
         private readonly Serilog.ILogger _logger;
-        // _httpContextAccessor is used to get the current user; set by Dependency Injection
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IWordPressUserSecurity _wordPressUserSecurity;
         private readonly Uri _wordPressUrl;
 
         public ClaimsPrincipal User { get; set; }
@@ -112,7 +107,7 @@ namespace CoE.Ideas.Core.WordPress
                     //postdata.template = "single-initiative.php";
 
                     var postResponse = await client.PostAsync("initiatives", new StringContent(postdata.ToString(), Encoding.UTF8, "application/json"));
-                    var postResponseMessage = await postResponse.Content.ReadAsStringAsync();
+                    var postResponseMessage = await postResponse.EnsureSuccessStatusCode().Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject<WordPressPost>(postResponseMessage);
 
                 }
@@ -172,35 +167,14 @@ namespace CoE.Ideas.Core.WordPress
                 throw new ArgumentNullException("callback");
 
             var cookieContainer = new CookieContainer();
-            var cookieDomain = new Uri($"{ _wordPressUrl.Scheme }://{ _wordPressUrl.Host }");
-            var existingCookies = _httpContextAccessor.HttpContext?.Request?.Cookies;
-            if (existingCookies != null && existingCookies.Any())
-            {
-                foreach (var c in existingCookies)
-                {
-                    cookieContainer.Add(cookieDomain, new Cookie(c.Key, c.Value));
-                }
-            }
-            else
-            {
-                string wordPressAuthCookieName = WordPressCookieAuthenticationHandler.GetWordPressCookieName(_wordPressUrl.ToString());
-                var existingCookie = _httpContextAccessor.HttpContext?.Request?.Cookies?.LastOrDefault(x => x.Key == wordPressAuthCookieName);
-                if (existingCookie.HasValue && !string.IsNullOrWhiteSpace(existingCookie.Value.Value))
-                {
-                    cookieContainer.Add(cookieDomain, new Cookie(existingCookie.Value.Key, existingCookie.Value.Value));
-                }
-                else
-                {
-                    _logger.Information("Unable to find authorization cookie in current HTTP context, so creating one from current user");
-                    cookieContainer.Add(cookieDomain, Internal.WordPress.WordPressRepository.CreateWordPressCookie(User));
-                }
 
-            }
+            _wordPressUserSecurity.SetWordPressCookies(cookieContainer);
 
             using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
-            using (var client = new HttpClient())
+            using (var client = new HttpClient(handler))
             {
                 client.BaseAddress = new Uri(_wordPressUrl, "wp-json/wp/v2/");
+                _wordPressUserSecurity.SetWordPressNonce(client);
                 return await callback(client);
             }
         }

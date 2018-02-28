@@ -1,14 +1,17 @@
-﻿using CoE.Ideas.Core.WordPress;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Core.Internal.WordPress
 {
-    internal interface IWordPressRepository
+    internal interface IWordPressUserSecurity
     {
         Task<ClaimsPrincipal> AuthenticateUserAsync(string cookie, string scheme = "auth");
+        void SetWordPressCookies(CookieContainer cookieContainer);
+        void SetWordPressNonce(HttpClient httpClient);
     }
 }

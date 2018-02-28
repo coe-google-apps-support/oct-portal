@@ -15,20 +15,20 @@ namespace CoE.Ideas.Core.Security
     internal class WordPressCookieAuthenticationHandler : AuthenticationHandler<WordPressCookieAuthenticationOptions>
     {
         public WordPressCookieAuthenticationHandler(IOptionsMonitor<WordPressCookieAuthenticationOptions> options,
-            IWordPressRepository wordPressRepository,
+            IWordPressUserSecurity wordPressUserSecurity,
             ILoggerFactory logger, 
             UrlEncoder encoder, 
             //IDataProtectionProvider dataProtection, 
             ISystemClock clock) : base(options, logger, encoder, clock)
         {
-            _wordPressRepository = wordPressRepository ?? throw new ArgumentNullException("wordPressRepository");
+            _wordPressUserSecurity = wordPressUserSecurity ?? throw new ArgumentNullException("wordPressUserSecurity");
 
             if (logger == null)
                 throw new ArgumentNullException("logger");
             _logger = logger.CreateLogger<WordPressCookieAuthenticationHandler>() ?? throw new ArgumentNullException("logger");
         }
 
-        private readonly IWordPressRepository _wordPressRepository;
+        private readonly IWordPressUserSecurity _wordPressUserSecurity;
         private readonly ILogger<WordPressCookieAuthenticationHandler> _logger;
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace CoE.Ideas.Core.Security
                 _logger.LogDebug("WordPress cookie found with value { WordPressCookie }", cookie);
                 try
                 {
-                    context.Principal = await _wordPressRepository.AuthenticateUserAsync(cookie);
+                    context.Principal = await _wordPressUserSecurity.AuthenticateUserAsync(cookie);
                     if (context.Principal.Identity.IsAuthenticated)
                         _logger.LogInformation("Authenticated user { UserName }", context.Principal.Identity.Name);
                     else
