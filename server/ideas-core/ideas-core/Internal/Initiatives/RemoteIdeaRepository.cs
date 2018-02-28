@@ -1,7 +1,13 @@
-﻿using Newtonsoft.Json;
+﻿using CoE.Ideas.Core.Internal.WordPress;
+using CoE.Ideas.Core.Security;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,50 +17,65 @@ namespace CoE.Ideas.Core.Internal.Initiatives
     {
 
         public RemoteIdeaRepository(
-            string url)
+            ClaimsPrincipal user,
+            IWordPressUserSecurity wordPressUserSecurity,
+            IOptions<RemoteIdeaRepositoryOptions> options,
+            Serilog.ILogger logger)
         {
-            if (string.IsNullOrWhiteSpace(url))
-                throw new ArgumentNullException(url);
+            _user = user ?? throw new ArgumentNullException("user");
+            _wordPressUserSecurity = wordPressUserSecurity ?? throw new ArgumentNullException("wordPressUserSecurity");
+            _logger = logger ?? throw new ArgumentNullException("logger");
 
-            _baseUri = new Uri(url);
+            if (options == null || options.Value == null)
+                throw new ArgumentNullException("options");
+            if (string.IsNullOrWhiteSpace(options.Value.Url))
+                throw new ArgumentNullException("Url");
+
+            if (options.Value.Url.EndsWith("/"))
+                _baseUri = new Uri(options.Value.Url);
+            else
+                _baseUri = new Uri(options.Value.Url + "/");
         }
 
+        private readonly IWordPressUserSecurity _wordPressUserSecurity;
         private readonly Uri _baseUri;
+        private readonly Serilog.ILogger _logger;
 
-        protected virtual HttpClient GetHttpClient()
+        private readonly ClaimsPrincipal _user;
+
+        private async Task<T> ExecuteAsync<T>(Func<HttpClient, Task<T>> callback)
         {
-            var client = new HttpClient();
+            if (callback == null)
+                throw new ArgumentNullException("callback");
 
+            var cookieContainer = new CookieContainer();
 
-
-            //// easy case - we have a bearer token in our own HTTP Request headers:
-            //// so we can just reuse it because WordPress should be using the same
-            //// JWT Auth keys we are.
-            //if (!string.IsNullOrWhiteSpace(_jwtBearerToken))
-            //{
-            //    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _jwtBearerToken);
-
-            //}
-
-            return client;
+            using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
+            using (var client = new HttpClient(handler))
+            {
+                client.BaseAddress = _baseUri;
+                _wordPressUserSecurity.SetWordPressCredentials(client, cookieContainer, _user);
+                return await callback(client);
+            }
         }
 
 
         #region Ideas
         public async Task<IEnumerable<Idea>> GetIdeasAsync()
         {
-            var client = GetHttpClient();
-
-            try
+            return await ExecuteAsync(async client =>
             {
-                var allIdeasString = await client.GetStringAsync(_baseUri);
-                return JsonConvert.DeserializeObject<IEnumerable<Idea>>(allIdeasString);
+                try
+                {
+                    var allIdeasString = await client.GetStringAsync(string.Empty);
+                    return JsonConvert.DeserializeObject<IEnumerable<Idea>>(allIdeasString);
 
-            }
-            catch (Exception err)
-            {
-                throw err;
-            }
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            });
         }
 
 
@@ -65,18 +86,19 @@ namespace CoE.Ideas.Core.Internal.Initiatives
 
         public async Task<Idea> GetIdeaAsync(long id)
         {
-            var client = GetHttpClient();
-
-            try
+            return await ExecuteAsync(async client =>
             {
-                var ideaString = await client.GetStringAsync(_baseUri.ToString() + "initiatives/" + id);
-                return JsonConvert.DeserializeObject<Idea>(ideaString);
+                try
+                {
+                    var ideaString = await client.GetStringAsync(id.ToString());
+                    return JsonConvert.DeserializeObject<Idea>(ideaString);
 
-            }
-            catch (Exception err)
-            {
-                throw err;
-            }
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            });
         }
 
         public Task<Idea> GetIdeaByWordpressKeyAsync(int id)
@@ -125,17 +147,19 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         #region Tags
         public async Task<IEnumerable<Tag>> GetTagsAsync()
         {
-            var client = GetHttpClient();
+            return await ExecuteAsync(async client =>
+            {
+                try
+                {
+                    var allIdeasString = await client.GetStringAsync(_baseUri + "/tags");
+                    return JsonConvert.DeserializeObject<IEnumerable<Tag>>(allIdeasString);
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
 
-            try
-            {
-                var allIdeasString = await client.GetStringAsync(_baseUri + "/tags");
-                return JsonConvert.DeserializeObject<IEnumerable<Tag>>(allIdeasString);
-            }
-            catch (Exception err)
-            {
-                throw err;
-            }
+            });
         }
 
         public Task<Tag> GetTagAsync(long id)

@@ -168,13 +168,12 @@ namespace CoE.Ideas.Core.WordPress
 
             var cookieContainer = new CookieContainer();
 
-            _wordPressUserSecurity.SetWordPressCookies(cookieContainer);
 
             using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
             using (var client = new HttpClient(handler))
             {
                 client.BaseAddress = new Uri(_wordPressUrl, "wp-json/wp/v2/");
-                _wordPressUserSecurity.SetWordPressNonce(client);
+                _wordPressUserSecurity.SetWordPressCredentials(client, cookieContainer);
                 return await callback(client);
             }
         }
