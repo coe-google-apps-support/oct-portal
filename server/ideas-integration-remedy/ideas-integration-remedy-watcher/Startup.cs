@@ -53,14 +53,7 @@ namespace CoE.Ideas.Remedy.Watcher
                 Configuration["Ideas:ServiceBusTopic"]);
 
             // Add services to talk to Remedy
-            services.Configure<RemedyCheckerOptions>(options =>
-            {
-                options.ServiceUserName = Configuration["Remedy:ServiceUserName"];
-                options.ServicePassword = Configuration["Remedy:ServicePassword"];
-                options.TemplateName = Configuration["Remedy:TemplateName"];
-                options.ApiUrl = Configuration["Remedy:ApiUrl"];
-                options.TempDirectory = Configuration["Remedy:TempDirectory"];
-            });
+            services.Configure<RemedyCheckerOptions>(Configuration.GetSection("Remedy"));
             services.AddSingleton<New_Port_0PortType, 
                 New_Port_0PortTypeClient>(x => 
                     new New_Port_0PortTypeClient(new BasicHttpBinding(BasicHttpSecurityMode.None)

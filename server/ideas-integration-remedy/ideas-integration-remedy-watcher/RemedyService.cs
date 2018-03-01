@@ -19,6 +19,8 @@ namespace CoE.Ideas.Remedy.Watcher
             if (options == null || options.Value == null)
                 throw new ArgumentNullException("options");
             _options = options.Value;
+
+            _logger.Information("Created Remedy Service, endpoint should be {Url}", options.Value.ApiUrl);
         }
 
         private New_Port_0PortType _remedyClient;
