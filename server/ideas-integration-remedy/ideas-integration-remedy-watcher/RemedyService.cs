@@ -57,8 +57,17 @@ namespace CoE.Ideas.Remedy.Watcher
             }
             catch (Exception err)
             {
-                _logger.Error(err, $"Unable to get response from Remedy: { err.Message }");
-                throw;
+                // need to find a better way to detect this...
+                if (err.Message.StartsWith("ERROR (302): Entry does not exist in database"))
+                {
+                    // none found, so return empty list
+                    return new OutputMapping1GetListValues[] { };
+                }
+                else
+                {
+                    _logger.Error(err, $"Unable to get response from Remedy: { err.Message }");
+                    throw;
+                }
             }
         }
     }
