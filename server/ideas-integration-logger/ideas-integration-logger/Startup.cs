@@ -65,6 +65,7 @@ namespace CoE.Ideas.Integration.Logger
                     Configuration["IdeasApi"]);
             });
 
+            services.AddSingleton<NewIdeaListener>();
 
             return services;
         }
