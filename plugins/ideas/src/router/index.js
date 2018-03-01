@@ -20,6 +20,14 @@ export default new Router({
       component: ViewIdeas
     },
     {
+      path: '/my-profile',
+      name: 'my-profile',
+      component: ViewIdeas,
+      props: {
+        filter: 'mine'
+      }
+    },
+    {
       path: '/initiatives/:slug/',
       name: 'initiatives',
       component: ViewInitiative,
