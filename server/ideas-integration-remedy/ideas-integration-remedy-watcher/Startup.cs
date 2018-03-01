@@ -5,6 +5,7 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;
@@ -30,28 +31,26 @@ namespace CoE.Ideas.Remedy.Watcher
 
         private IServiceCollection ConfigureServices(IServiceCollection services)
         {
-            // basic stuff - there's probably a better way to register these
-            services.AddSingleton(
-                typeof(Microsoft.Extensions.Options.IOptions<>),
-                typeof(Microsoft.Extensions.Options.OptionsManager<>));
-            services.AddSingleton(
-                typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
-                typeof(Microsoft.Extensions.Options.OptionsFactory<>));
+            services.AddOptions();
 
             // Add logging
             services.AddSingleton(new LoggerFactory()
-                .AddConsole(
-                    Enum.Parse<LogLevel>(Configuration["Logging:Debug:LogLevel:Default"]),
-                    bool.Parse(Configuration["Logging:IncludeScopes"]))
-                .AddDebug(
-                    Enum.Parse<LogLevel>(Configuration["Logging:Console:LogLevel:Default"])));
+                .AddConsole(Configuration)
+                .AddDebug()
+                .AddSerilog());
             services.AddLogging();
 
+            // configure application specific logging
+            services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithProperty("Application", "Initiatives")
+                .Enrich.WithProperty("Module", "Remedy WO Creator")
+                .ReadFrom.Configuration(Configuration)
+                .CreateLogger());
+
             // Add service to talk to ServiceBus
-            services.AddSingleton<ITopicClient>(x =>
-            {
-                return new TopicClient(Configuration.GetConnectionString("ServiceBus"), Configuration["Ideas:ServiceBusTopic"]);
-            });
+            services.AddInitiativeMessaging(Configuration.GetConnectionString("ServiceBus"), 
+                Configuration["Ideas:ServiceBusTopic"]);
 
             // Add services to talk to Remedy
             services.Configure<RemedyCheckerOptions>(options =>
@@ -70,6 +69,10 @@ namespace CoE.Ideas.Remedy.Watcher
                     },
                     new EndpointAddress(Configuration["Remedy:ApiUrl"])));
             services.AddSingleton<RemedyChecker>();
+
+            services.AddSingleton<IRemedyService, RemedyService>();
+
+            services.AddPeopleService(Configuration["PeopleService"]);
 
             return services;
         }
