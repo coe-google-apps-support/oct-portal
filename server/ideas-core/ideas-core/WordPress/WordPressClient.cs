@@ -127,7 +127,7 @@ namespace CoE.Ideas.Core.WordPress
                 try
                 {
                     // schema: https://developer.wordpress.org/rest-api/reference/posts/
-                    var postInfoString = await client.GetStringAsync($"initiatives/slug={slug}");
+                    var postInfoString = await client.GetStringAsync($"initiatives?slug={slug}");
                     return JsonConvert.DeserializeObject<WordPressPost>(postInfoString);
                 }
                 catch (Exception err)
