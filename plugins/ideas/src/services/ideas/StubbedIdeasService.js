@@ -90,14 +90,14 @@ const fakeIdeas = {
 const steps1 = {
   data: [{
     'title': 'Submitted',
-    'description': 'Proin auctor pretium sem, ut malesuada dolor porttitor vel. Donec at auctor libero. Nunc nec massa condimentum, mattis diam vel, rutrum ante. Nam sed semper metus.',
+    'description': 'Thank you! Your initiative has been submitted and will be assigned for review. An OCT representative will contact you within three (3) business days.',
     'startDate': 'Jan 28 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'completionDate': 'Jan 29 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
+    'completionDate': null
   },
   {
     'title': 'In Review',
     'description': 'Etiam id vehicula metus. Fusce tristique vestibulum nulla, vitae vestibulum mi scelerisque ut. Sed consequat elit in lacus tristique, id mattis elit eleifend. Vestibulum nec augue maximus, feugiat justo sollicitudin, interdum metus.',
-    'startDate': 'Jan 29 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
+    'startDate': null,
     'completionDate': null
   },
   {
@@ -118,19 +118,19 @@ const steps1 = {
 const steps2 = {
   data: [{
     'title': 'Submitted',
-    'description': 'Proin auctor pretium sem, ut malesuada dolor porttitor vel. Donec at auctor libero. Nunc nec massa condimentum, mattis diam vel, rutrum ante. Nam sed semper metus.',
+    'description': 'Thank you! Your initiative was submitted.',
     'startDate': 'Feb 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
     'completionDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
   },
   {
     'title': 'In Review',
-    'description': 'Etiam id vehicula metus. Fusce tristique vestibulum nulla, vitae vestibulum mi scelerisque ut. Sed consequat elit in lacus tristique, id mattis elit eleifend. Vestibulum nec augue maximus, feugiat justo sollicitudin, interdum metus.',
+    'description': 'Your initiative has been assigned and reviewed.',
     'startDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
     'completionDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
   },
   {
     'title': 'In Collaboration',
-    'description': 'Maecenas non enim a eros imperdiet scelerisque et a urna. Nunc at tincidunt massa, sit amet faucibus neque.',
+    'description': 'We are actively working with you to complete an Investment Request for your initiative.',
     'startDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
     'completionDate': null
   },
