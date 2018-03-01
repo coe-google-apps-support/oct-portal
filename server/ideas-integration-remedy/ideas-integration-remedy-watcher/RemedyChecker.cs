@@ -179,13 +179,14 @@ namespace CoE.Ideas.Remedy.Watcher
             PersonData assignee = null;
             if (!string.IsNullOrWhiteSpace(assignee3and3))
             {
+                _logger.Information("Looking up assignee with 3+3 {User3and3}", assignee3and3);
                 try
                 {
                     assignee = await _peopleService.GetPersonAsync(assignee3and3);
                 }
                 catch (Exception err)
                 {
-                    _logger.Warning("Unable to get email for Remedy Work Order Assignee { User3and3 }: { ErrorMessage }", assignee3and3, err.Message);
+                    _logger.Warning("Unable to get email for Remedy Work Order Assignee {User3and3}: {ErrorMessage}", assignee3and3, err.Message);
                 }
             }
 

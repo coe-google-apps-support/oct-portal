@@ -46,7 +46,7 @@ namespace CoE.Ideas.Remedy.SbListener
 
             using (LogContext.PushProperty("InitiativeId", args.Initiative.Id))
             {
-                _logger.Information("Remedy has created a work item for initiative { InitiativeId } with remedy id { WorkOrderId }", args.Initiative.Id, args.WorkOrderId);
+                _logger.Information("Remedy has created a work item for initiative {InitiativeId} with remedy id {WorkOrderId}", args.Initiative.Id, args.WorkOrderId);
 
                 try
                 {
@@ -57,7 +57,7 @@ namespace CoE.Ideas.Remedy.SbListener
                 }
                 catch (Exception err)
                 {
-                    _logger.Error(err, "Unable to set work item id '{ WorkOrderId }' to initiative id { InitiativeId }. Will retry later. Error was: { ErrorMessage }", 
+                    _logger.Error(err, "Unable to set work item id '{WorkOrderId}' to initiative id {InitiativeId}. Will retry later. Error was: {ErrorMessage}", 
                         args.WorkOrderId, args.Initiative.Id, err.Message);
                     throw;
                 }
@@ -78,7 +78,7 @@ namespace CoE.Ideas.Remedy.SbListener
                 Idea idea = await GetInitiativeByWorkOrderId(args.WorkOrderId);
 
                 if (idea == null)
-                    _logger.Warning($"Remedy message received for WorkItemId { args.WorkOrderId } but could not find an associated initiative", args.WorkOrderId);
+                    _logger.Warning("Remedy message received for WorkItemId {WorkOrderId} but could not find an associated initiative", args.WorkOrderId);
                 else
                 {
                     using (LogContext.PushProperty("InitiativeId", idea.Id))
@@ -105,7 +105,7 @@ namespace CoE.Ideas.Remedy.SbListener
             }
             catch (Exception err)
             {
-                _logger.Error(err, "Received WorkItem change notification from Remedy for item with Id { WorkOrderId } but got the following error when looking it up in the Idea repository: { ErrorMessage }",
+                _logger.Error(err, "Received WorkItem change notification from Remedy for item with Id {WorkOrderId} but got the following error when looking it up in the Idea repository: {ErrorMessage}",
                     workOrderId, err.Message);
                 idea = null;
             }
@@ -119,13 +119,13 @@ namespace CoE.Ideas.Remedy.SbListener
             if (newIdeaStatus.HasValue && newIdeaStatus.Value != initiative.Status)
             {
                 // we must update our database!
-                _logger.Information("Updating status of initiative { InitiativeId } from { FromInitiativeStatus } to { ToIdeaStatus } because Remedy was updated on { LastModifiedDateUtc }",
+                _logger.Information("Updating status of initiative {InitiativeId} from {FromInitiativeStatus} to {ToIdeaStatus} because Remedy was updated on {LastModifiedDateUtc}",
                     initiative.Id, initiative.Status, newIdeaStatus, workOrderLastModifiedUtc);
                 await _ideaRepository.SetWorkItemStatusAsync(initiative.Id, newIdeaStatus.Value);
             }
             else
             {
-                _logger.Debug("Initative is already at status { InitiativeStatus }, so ignoring update to WorkItemId { WorkOrderId }", initiative.Status);
+                _logger.Debug("Initative is already at status {InitiativeStatus}, so ignoring update to WorkItemId {WorkOrderId}", initiative.Status);
             }
         }
 
