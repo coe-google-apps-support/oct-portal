@@ -6,10 +6,11 @@ const fakeIdeas = {
     url: 'initiatives/idea-1',
     title: 'Idea #1',
     description: 'Easily one of the greatest ideas ever made, this idea does things for people that people really really need. Game changing. Mind blowing. World altering. Welcome to Idea #1.',
-    createdDate: 'Jan 14 2018 10:40:16 GMT-0700 (Mountain Standard Time)',
+    createdDate: '2018-02-28 17:42:43.210965',
     stakeholders: [{
       'userName': 'gregory.onuczko@edmonton.ca'
-    }]
+    }],
+    businessCaseURL: 'https://www.google.ca/'
   },
   {
     id: 2,
@@ -29,7 +30,8 @@ const fakeIdeas = {
     createdDate: 'Dec 30 2017 10:40:16 GMT-0700 (Mountain Standard Time)',
     stakeholders: [{
       'userName': 'daniel.chenier@edmonton.ca'
-    }]
+    }],
+    businessCaseURL: 'https://www.google.ca/'
   },
   {
     id: 4,
@@ -49,7 +51,8 @@ const fakeIdeas = {
     createdDate: 'Jan 16 2018 10:40:16 GMT-0700 (Mountain Standard Time)',
     stakeholders: [{
       'userName': 'stephen.mundy@edmonton.ca'
-    }]
+    }],
+    businessCaseURL: 'https://www.google.ca/'
   },
   {
     id: 6,
@@ -87,14 +90,14 @@ const fakeIdeas = {
 const steps1 = {
   data: [{
     'title': 'Submitted',
-    'description': 'Proin auctor pretium sem, ut malesuada dolor porttitor vel. Donec at auctor libero. Nunc nec massa condimentum, mattis diam vel, rutrum ante. Nam sed semper metus.',
+    'description': 'Thank you! Your initiative has been submitted and will be assigned for review. An OCT representative will contact you within three (3) business days.',
     'startDate': 'Jan 28 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'completionDate': 'Jan 29 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
+    'completionDate': null
   },
   {
     'title': 'In Review',
     'description': 'Etiam id vehicula metus. Fusce tristique vestibulum nulla, vitae vestibulum mi scelerisque ut. Sed consequat elit in lacus tristique, id mattis elit eleifend. Vestibulum nec augue maximus, feugiat justo sollicitudin, interdum metus.',
-    'startDate': 'Jan 29 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
+    'startDate': null,
     'completionDate': null
   },
   {
@@ -115,19 +118,19 @@ const steps1 = {
 const steps2 = {
   data: [{
     'title': 'Submitted',
-    'description': 'Proin auctor pretium sem, ut malesuada dolor porttitor vel. Donec at auctor libero. Nunc nec massa condimentum, mattis diam vel, rutrum ante. Nam sed semper metus.',
+    'description': 'Thank you! Your initiative was submitted.',
     'startDate': 'Feb 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
     'completionDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
   },
   {
     'title': 'In Review',
-    'description': 'Etiam id vehicula metus. Fusce tristique vestibulum nulla, vitae vestibulum mi scelerisque ut. Sed consequat elit in lacus tristique, id mattis elit eleifend. Vestibulum nec augue maximus, feugiat justo sollicitudin, interdum metus.',
+    'description': 'Your initiative has been assigned and reviewed.',
     'startDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
     'completionDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
   },
   {
     'title': 'In Collaboration',
-    'description': 'Maecenas non enim a eros imperdiet scelerisque et a urna. Nunc at tincidunt massa, sit amet faucibus neque.',
+    'description': 'We are actively working with you to complete an Investment Request for your initiative.',
     'startDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
     'completionDate': null
   },
@@ -272,6 +275,19 @@ let x = class StubbedIdeasService {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(fakeAssignee)
+      }, QUERY_TIMEOUT)
+    })
+  }
+
+  /**
+   * Causes an initiative to be updated.
+   * @param {Object} initiative The initiative to update.
+   * @return {Promise} A promise resolved with the updated initiative.
+   */
+  static updateInitiative (initiative) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(initiative)
       }, QUERY_TIMEOUT)
     })
   }

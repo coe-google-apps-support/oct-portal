@@ -25,12 +25,6 @@
                 <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
               </md-field>
             </div>
-            <div class="md-flex md-flex-small-100">
-              <md-field>
-                <label>Do you have any supporting documents?</label>
-                <md-file v-model="fileAttachments" multiple />
-              </md-field>
-            </div>
             <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea" @click="setDone('first', 'second')">Continue</md-button>
           </md-step>
 
@@ -76,8 +70,7 @@ export default {
       sponsorEmail: null,
       hasBudget: false,
       deliveryDate: null
-    },
-    fileAttachments: []
+    }
   }),
   validations: {
     form: {
