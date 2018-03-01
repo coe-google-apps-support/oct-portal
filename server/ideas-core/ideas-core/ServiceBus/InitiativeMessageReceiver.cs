@@ -123,6 +123,8 @@ namespace CoE.Ideas.Core.ServiceBus
 
             if (await EnsureMessageLabel(msg, "Initiative Created"))
             {
+                _logger.Information("Getting message owner");
+
                 var owner = await GetMessageOwner(msg);
                 if (owner.WasMessageDeadLettered)
                     return;
@@ -290,15 +292,19 @@ namespace CoE.Ideas.Core.ServiceBus
             {
                 try
                 {
+                    _logger.Information("Message is for initiative {InitiativeId}, retrieving initiative...", initiativeIdResult.Item);
+
                     // if the remote repositoty factory is populated, we'll use that,
                     // otherwise we'll just use the default
                     IIdeaRepository ideaRepository = _remoteIdeaRepositoryFactory.Create(owner);
 
                     result.Item = await ideaRepository.GetIdeaAsync(initiativeIdResult.Item);
+                    _logger.Information("Retrieved initiative {InitiativeId}, has title '{Title}'", initiativeIdResult.Item, result?.Item?.Title);
                 }
                 catch (Exception err)
                 {
                     string errorMessage = $"Unable to get Initiative { initiativeIdResult.Item }: { err.Message }";
+                    _logger.Error(err, "Unable to get Initiative {InitiativeId}: {ErrorMessage}", initiativeIdResult.Item, err.Message);
                     result.SetMessageDeadLettered(errorMessage);
                     await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
 
@@ -325,10 +331,12 @@ namespace CoE.Ideas.Core.ServiceBus
                 try
                 {
                     result.Item = CreatePrincipal(ownerClaimsResult.Item);
+                    _logger.Information("Message owner is {UserName} with email {Email}", result?.Item?.Identity?.Name, result?.Item?.GetEmail());
                 }
                 catch (Exception err)
                 {
                     string errorMessage = $"Unable to get Owner from token { ownerClaimsResult.Item }: { err.Message }";
+                    _logger.Error(err, "Unable to get Owner from token {Token}: {ErrorMessage}", ownerClaimsResult.Item, err.Message);
                     result.SetMessageDeadLettered(errorMessage);
                     await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
                 }
@@ -338,6 +346,7 @@ namespace CoE.Ideas.Core.ServiceBus
             if (!result.WasMessageDeadLettered && result.Item == null)
             {
                 string errorMessage = $"Unable to get Owner, reason unknown";
+                _logger.Error(errorMessage);
                 result.SetMessageDeadLettered(errorMessage);
                 await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
             }
@@ -355,6 +364,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 if (string.IsNullOrWhiteSpace(result.Item))
                 {
                     string errorMessage = $"{ propertyName } was empty";
+                    _logger.Error("{PropertyName} was empty in Service Bus message", propertyName);
                     result.SetMessageDeadLettered(errorMessage);
                     await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
                 }
@@ -382,6 +392,7 @@ namespace CoE.Ideas.Core.ServiceBus
                     if (!allowNull)
                     {
                         string errorMessage = $"{ propertyName } was null";
+                        _logger.Error("{PropertyName} was empty in Service Bus message", propertyName);
                         result.SetMessageDeadLettered(errorMessage);
                         await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
                     }
@@ -396,6 +407,7 @@ namespace CoE.Ideas.Core.ServiceBus
                     catch (Exception)
                     {
                         string errorMessage = $"{ propertyName } was not of type { typeof(T).FullName }";
+                        _logger.Error("{PropertyName} had value {Value}, which was not of the expected type '{Type}", propertyName, propertyObj, typeof(T).FullName);
                         result.SetMessageDeadLettered(errorMessage);
                         await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
                     }

@@ -253,8 +253,6 @@ namespace CoE.Ideas.Core.Internal.WordPress
                 throw new ArgumentNullException("cookieContainer");
             if (user == null)
                 throw new ArgumentNullException("user");
-            if (!user.Identity.IsAuthenticated)
-                throw new ArgumentException("user is not authenticated");
 
             var authCookie = CreateWordPressCookie(user);
             if (authCookie == null)
@@ -432,7 +430,7 @@ namespace CoE.Ideas.Core.Internal.WordPress
             var authClaim = principal.Claims.FirstOrDefault(x => x.Type == CLAIM_AUTH);
             if (authClaim != null && !string.IsNullOrWhiteSpace(authClaim.Value))
             {
-                return new Cookie(WordPressCookieAuthenticationHandler.GetWordPressCookieName(_options.Url), authClaim.Value);
+                return new Cookie(WordPressCookieAuthenticationHandler.GetWordPressCookieName(_options.Url), authClaim.Value, "/", new Uri(_options.Url).Host);
             }
             else
                 throw new NotImplementedException();

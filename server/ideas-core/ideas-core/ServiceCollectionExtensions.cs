@@ -124,13 +124,20 @@ namespace CoE.Ideas.Core
         }
 
         public static IServiceCollection AddRemoteIdeaConfiguration(this IServiceCollection services,
-            string ideasApiUrl, string wordpressUrl)
+            string ideasApiUrl, 
+            string wordpressUrl,
+            IConfigurationSection wordPressConfigurationSection)
         {
             if (string.IsNullOrWhiteSpace(ideasApiUrl))
                 throw new ArgumentNullException("ideasApiUrl");
             if (string.IsNullOrWhiteSpace(wordpressUrl))
                 throw new ArgumentNullException("wordpressUrl");
 
+            services.Configure<IdeaRepositoryFactoryOptions>(options =>
+            {
+                options.IsRemote = true;
+                options.WordPressUrl = wordpressUrl;
+            });
             services.Configure<RemoteIdeaRepositoryOptions>(options =>
             {
                 options.Url = ideasApiUrl;
@@ -144,6 +151,10 @@ namespace CoE.Ideas.Core
                 options.Url = new Uri(wordpressUrl);
             });
             services.AddScoped<IWordPressClient, WordPressClient>();
+
+            services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
+            services.AddSingleton<IWordPressUserSecurity, WordPressUserSecurity>();
+
             return services;
         }
 
