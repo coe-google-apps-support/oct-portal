@@ -19,6 +19,9 @@ import Vue from 'Vue'
 
 export default {
   name: 'ViewIdeas',
+  props: {
+    filter: String
+  },
   data: () => ({
     ideas: [],
     errors: [],
@@ -53,10 +56,16 @@ export default {
     }
   },
   created () {
-    console.log('ViewIdeas')
     this.ideas.splice(0, this.ideas.length)
-    this.services.ideas.getIdeas().then((response) => {
-      console.log('received ideas!!')
+
+    let initiativeFunction = null
+    if (this.filter === 'mine') {
+      initiativeFunction = this.services.ideas.getMyInitiatives
+    } else {
+      initiativeFunction = this.services.ideas.getIdeas
+    }
+
+    initiativeFunction().then((response) => {
       this.ideas = response.data
       for (let i = 0; i < this.ideas.length; i++) {
         this.ideas[i].isLoading = false

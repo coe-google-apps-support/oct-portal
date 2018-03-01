@@ -176,6 +176,21 @@ let x = class StubbedIdeasService {
   }
 
   /**
+   * Returns a Promise that resolves with a list of my initiatives.
+   * @returns {Promise} Resolved with an array of my initiatives.
+   */
+  static getMyInitiatives () {
+    let myInitiatives = { data: null }
+    myInitiatives.data = [fakeIdeas.data[0], fakeIdeas.data[1], fakeIdeas.data[2]]
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(myInitiatives)
+      }, QUERY_TIMEOUT)
+    })
+  }
+
+  /**
    * Returns a Promise that resolves with an initiative.
    * @param {string} id The id of the initiative.
    * @returns {Promise} Resolved with an initiative.
