@@ -228,7 +228,16 @@ let x = class IdeasService {
    * @return {Promise} A Promise that resolves with the information of the assignee.
    */
   static getAssignee (id) {
-    return HTTP.get(`${id}/assignee`)
+    return HTTP.get(`${id}/assignee`).then((assignee) => {
+      return assignee
+    }, (issue) => {
+      if (issue.response && issue.response.status === 404) {
+        console.log('no assignee')
+        return null
+      } else {
+        console.error(issue)
+      }
+    })
   }
 
   /**

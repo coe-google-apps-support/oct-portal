@@ -7,12 +7,15 @@
           <div class="md-caption">{{ initiative.createdDate | formatDate}}</div>
         </div>
         <div class="md-body-1 oct-content-block">{{ initiative.description }}</div>
-        <div v-if="assignee != null">
+        <div>
           <div class="md-headline">Resources</div>
           <md-table>
             <md-table-row>
               <md-table-cell>Assigned to</md-table-cell>
-              <md-table-cell><Assignee :user="assignee"></Assignee></md-table-cell>
+              <md-table-cell>
+                <Assignee v-if="assignee" :user="assignee"></Assignee>
+                <div v-else>Unassigned</div>
+              </md-table-cell>
             </md-table-row>
             <md-table-row>
               <md-table-cell>Business case</md-table-cell>
@@ -71,7 +74,9 @@ export default {
       }
       return this.services.ideas.getAssignee(initiative.id)
     }).then((response) => {
-      this.assignee = response.data
+      if (response && response.data) {
+        this.assignee = response.data
+      }
       return this.services.ideas.getInitiativeSteps(this.initiative.id)
     }).then((response) => {
       this.steps = response.data
