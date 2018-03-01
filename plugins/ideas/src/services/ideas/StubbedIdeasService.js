@@ -263,6 +263,19 @@ let x = class StubbedIdeasService {
       }, QUERY_TIMEOUT)
     })
   }
+
+  /**
+   * Causes an initiative to be updated.
+   * @param {Object} initiative The initiative to update.
+   * @return {Promise} A promise resolved with the updated initiative.
+   */
+  static updateInitiative (initiative) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(initiative)
+      }, QUERY_TIMEOUT)
+    })
+  }
 }
 
 export const StubbedIdeasService = x
