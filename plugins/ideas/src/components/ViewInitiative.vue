@@ -16,7 +16,9 @@
             </md-table-row>
             <md-table-row>
               <md-table-cell>Business case</md-table-cell>
-              <md-table-cell>BC Here!!</md-table-cell>
+              <md-table-cell>
+                <attach-file-button :url="this.initiative.businessCaseURL" @click.native="attachClicked"></attach-file-button>
+              </md-table-cell>
             </md-table-row>
           </md-table>
         </div>
@@ -30,6 +32,7 @@
 <script>
 import Assignee from '@/components/Assignee'
 import Steps from '@/components/stepper/Steps'
+import AttachFileButton from '@/components/AttachFileButton'
 import formatDate from '@/utils/format-date-since'
 
 export default {
@@ -45,7 +48,8 @@ export default {
   }),
   components: {
     Assignee,
-    Steps
+    Steps,
+    AttachFileButton
   },
   created () {
     this.services.ideas.getInitiativeBySlug(this.slug).then((initiative) => {
@@ -60,6 +64,15 @@ export default {
   },
   filters: {
     formatDate
+  },
+  methods: {
+    attachClicked () {
+      if (this.initiative.businessCaseURL) {
+        window.open(this.initiative.businessCaseURL)
+      } else {
+        console.log('Attach a new business case.')
+      }
+    }
   }
 }
 </script>
