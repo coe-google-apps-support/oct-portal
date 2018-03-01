@@ -50,7 +50,7 @@ namespace CoE.Ideas.Integration.Notification
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                var mergeTemplate = GetMessageTemplate();
+                var mergeTemplate = await GetMessageTemplate();
                 if (mergeTemplate != null)
                 {
                     string ideaRange = args.RangeUpdated;
@@ -69,10 +69,20 @@ namespace CoE.Ideas.Integration.Notification
 
         protected virtual async Task<dynamic> GetMessageTemplate()
         {
-            var mergeTemplate = await _mailmanSheetReader.GetMergeTemplateAsync(_mergeTemplateName);
+            dynamic mergeTemplate;
+            try
+            {
+                mergeTemplate = await _mailmanSheetReader.GetMergeTemplateAsync(_mergeTemplateName);
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err, "Unable to get merge template with name {MergeTemplate}: {ErrorMessage}", _mergeTemplateName, err.Message);
+                throw new InvalidOperationException($"Unable to get merge template with name {_mergeTemplateName}: {err.Message}", err);
+            }
             if (mergeTemplate == null)
             {
                 // intentionally not putting "MergeTemplateName" as a property of Serilog
+                _logger.Error("Unable to get merge template with name {MergeTemplate}", _mergeTemplateName);
                 throw new InvalidOperationException($"Unable to get merge template with name { _mergeTemplateName }");
             }
             return mergeTemplate;

@@ -19,9 +19,6 @@ namespace CoE.Ideas.Core.People
             if (_serviceUrl == null)
                 throw new ArgumentOutOfRangeException("PeopleServiceOptions ServiceUrl must be specified");
 
-            // _serviceUrl should be something like 
-            // http://webapps.edmonton.ca/CoE.PeopleDirectory.WebApi/api/PeopleDirectory/
-
             // ensure _serviceUrl ends with "/", because we'll be appending 
             if (!_serviceUrl.ToString().EndsWith("/"))
                 _serviceUrl = new Uri(_serviceUrl + "/");
