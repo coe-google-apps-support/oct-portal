@@ -222,6 +222,15 @@ let x = class IdeasService {
   static getAssignee (id) {
     return HTTP.get(`${id}/assignee`)
   }
+
+  /**
+   * Causes an initiative to be updated.
+   * @param {Object} initiative The initiative to update.
+   * @return {Promise} A promise resolved with the updated initiative.
+   */
+  static updateInitiative (initiative) {
+    return HTTP.put(`${initiative.id}`, initiative)
+  }
 }
 
 export const IdeasService = x
