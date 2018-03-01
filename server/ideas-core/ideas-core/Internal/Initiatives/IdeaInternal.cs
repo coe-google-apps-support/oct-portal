@@ -116,5 +116,11 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         [Display(Name = "Alignment", Description = "Describe how this initiative aligns with and supports the One City objective.")]
         public string OneCityAlignment { get; set; }
 
+        /// <summary>
+        /// Business case for the initiative
+        /// </summary>
+        [Display(Name = "Business Case URL", Description = "The location of the businses case for the initiative")]
+        public string BusinessCaseUrl { get; set; }
+
     }
 }

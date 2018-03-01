@@ -120,5 +120,12 @@ namespace CoE.Ideas.Core
         /// Status of the Initiative
         /// </summary>
         public InitiativeStatus Status { get; internal set; }
+
+        /// <summary>
+        /// Business case for the initiative
+        /// </summary>
+        [Display(Name = "Business Case URL", Description = "The location of the businses case for the initiative")]
+        public string BusinessCaseUrl { get; set; }
+
     }
 }
