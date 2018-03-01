@@ -6,10 +6,11 @@ const fakeIdeas = {
     url: 'initiatives/idea-1',
     title: 'Idea #1',
     description: 'Easily one of the greatest ideas ever made, this idea does things for people that people really really need. Game changing. Mind blowing. World altering. Welcome to Idea #1.',
-    createdDate: 'Jan 14 2018 10:40:16 GMT-0700 (Mountain Standard Time)',
+    createdDate: '2018-02-28 17:42:43.210965',
     stakeholders: [{
       'userName': 'gregory.onuczko@edmonton.ca'
-    }]
+    }],
+    businessCaseURL: 'https://www.google.ca/'
   },
   {
     id: 2,
@@ -29,7 +30,8 @@ const fakeIdeas = {
     createdDate: 'Dec 30 2017 10:40:16 GMT-0700 (Mountain Standard Time)',
     stakeholders: [{
       'userName': 'daniel.chenier@edmonton.ca'
-    }]
+    }],
+    businessCaseURL: 'https://www.google.ca/'
   },
   {
     id: 4,
@@ -49,7 +51,8 @@ const fakeIdeas = {
     createdDate: 'Jan 16 2018 10:40:16 GMT-0700 (Mountain Standard Time)',
     stakeholders: [{
       'userName': 'stephen.mundy@edmonton.ca'
-    }]
+    }],
+    businessCaseURL: 'https://www.google.ca/'
   },
   {
     id: 6,
