@@ -57,7 +57,7 @@ export default {
   },
   created () {
     this.ideas.splice(0, this.ideas.length)
-    
+
     let initiativeFunction = null
     if (this.filter === 'mine') {
       initiativeFunction = this.services.ideas.getMyInitiatives

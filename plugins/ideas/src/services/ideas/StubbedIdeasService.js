@@ -182,7 +182,7 @@ let x = class StubbedIdeasService {
   static getMyInitiatives () {
     let myInitiatives = { data: null }
     myInitiatives.data = [fakeIdeas.data[0], fakeIdeas.data[1], fakeIdeas.data[2]]
-    console.log(myInitiatives)
+
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(myInitiatives)
