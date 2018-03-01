@@ -219,6 +219,8 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             }
         }
 
+
+
         public async Task<Idea> SetWorkItemStatusAsync(long id, InitiativeStatus status)
         {
             if (id <= 0)
@@ -231,7 +233,31 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             }
             else
             {
+                // get the previous status change, if any
+                var previousChange = await _context.IdeaStatusHistories.Where(x => x.Initiative == idea)
+                    .OrderByDescending(x => x.StatusEntryDateUtc)
+                    .FirstOrDefaultAsync();
+                
+                // update the previous change message to past tense
+                if (previousChange != null)
+                {
+                    previousChange.Text = await _stringTemplateService.GetStatusChangeTextAsync(idea.Status, idea.Assignee, isPastTense: true);
+                }
+
+                // update the status on the initiative itself
                 idea.Status = _mapper.Map<InitiativeStatus, InitiativeStatusInternal>(status);
+
+                // now we add the new status
+                var statusChange = new IdeaStatusHistoryInternal()
+                {
+                    Initiative = idea,
+                    StatusEntryDateUtc = DateTime.UtcNow,
+                    Status = idea.Status
+                };
+
+                statusChange.Text = await _stringTemplateService.GetStatusChangeTextAsync(idea.Status, idea.Assignee);
+                _context.IdeaStatusHistories.Add(statusChange);
+
                 await _context.SaveChangesAsync();
 
                 return _mapper.Map<IdeaInternal, Idea>(idea);

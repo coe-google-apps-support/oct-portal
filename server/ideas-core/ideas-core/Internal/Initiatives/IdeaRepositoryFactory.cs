@@ -38,6 +38,7 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             else
                 return new IdeaRepositoryInternal(_serviceProvider.GetService(typeof(IdeaContext)) as IdeaContext,
                     _serviceProvider.GetService(typeof(IMapper)) as IMapper,
+                    _serviceProvider.GetService(typeof(IStringTemplateService))as IStringTemplateService,
                     _serviceProvider.GetService(typeof(ILogger<IdeaRepositoryInternal>)) as ILogger<IdeaRepositoryInternal>);
         }
     }

@@ -29,4 +29,10 @@
     <ProjectReference Include="..\ideas-core\ideas-core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

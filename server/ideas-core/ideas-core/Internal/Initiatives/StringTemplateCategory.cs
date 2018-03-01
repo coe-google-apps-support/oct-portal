@@ -2,6 +2,6 @@
 {
     internal enum StringTemplateCategory
     {
-        StatusDescription
+        StatusDescription = 1
     }
 }

@@ -18,17 +18,17 @@ namespace CoE.Ideas.Core.Internal.Initiatives
     {
         private readonly IdeaContext _context;
         private readonly IMapper _mapper;
-        //private readonly IWordPressClient _wordpressClient;
+        private readonly IStringTemplateService _stringTemplateService;
         private readonly ILogger<IdeaRepositoryInternal> _logger;
 
         public IdeaRepositoryInternal(IdeaContext context, 
-            IMapper mapper, 
-           // IWordPressClient wordpressClient, 
+            IMapper mapper,
+            IStringTemplateService stringTemplateService, 
             ILogger<IdeaRepositoryInternal> logger)
         {
             _context = context ?? throw new ArgumentNullException("context");
             _mapper = mapper ?? throw new ArgumentNullException("mapper");
-            //_wordpressClient = wordpressClient ?? throw new ArgumentNullException("wordpressClient");
+            _stringTemplateService = stringTemplateService ?? throw new ArgumentNullException("stringTemplateService");
             _logger = logger ?? throw new ArgumentNullException("logger");
         }
 

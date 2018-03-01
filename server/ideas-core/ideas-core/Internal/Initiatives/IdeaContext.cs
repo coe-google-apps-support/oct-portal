@@ -12,6 +12,8 @@ namespace CoE.Ideas.Core.Internal.Initiatives
 
         public DbSet<IdeaInternal> Ideas { get; set; }
 
+        public DbSet<IdeaStatusHistoryInternal> IdeaStatusHistories { get; set; }
+
         public DbSet<TagInternal> Tags { get; set; }
 
         public DbSet<BranchInternal> Branches { get; set; }
@@ -20,7 +22,7 @@ namespace CoE.Ideas.Core.Internal.Initiatives
 
         public DbSet<PersonInternal> People { get; set; }
 
-        public DbSet<StringTemplateInternal> StringTempltaes { get; set; }
+        public DbSet<StringTemplateInternal> StringTemplates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -76,6 +76,8 @@ namespace CoE.Ideas.Core
             services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
             services.AddScoped<IWordPressUserSecurity, WordPressUserSecurity>();
 
+            services.AddSingleton<IStringTemplateService, StringTemplateService>();
+
             return services;
         }
 

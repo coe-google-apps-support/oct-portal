@@ -6,11 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20180111211436_AddingSecondaryFieldsToIdea.cs" />
-    <Compile Remove="Migrations\20180118144804_MoreSecondaryFields.cs" />
-    <Compile Remove="Migrations\20180118145608_MoreSecondaryFields.cs" />
-    <Compile Remove="Migrations\20180119141304_MoreSecondaryFields.cs" />
-    <Compile Remove="Migrations\20180129053136_Temp.cs" />
+    <Compile Remove="Migrations\20180301200113_AddingIdeaStatusHistory.cs" />
   </ItemGroup>
 
   <ItemGroup>

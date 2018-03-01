@@ -168,10 +168,10 @@ namespace CoE.Ideas.Core.WordPress
 
             var cookieContainer = new CookieContainer();
 
-
             using (var handler = new HttpClientHandler() { CookieContainer = cookieContainer })
             using (var client = new HttpClient(handler))
             {
+                _logger.Information("Creating WordPress client with url {Url}", _wordPressUrl);
                 client.BaseAddress = new Uri(_wordPressUrl, "wp-json/wp/v2/");
                 _wordPressUserSecurity.SetWordPressCredentials(client, cookieContainer);
                 return await callback(client);

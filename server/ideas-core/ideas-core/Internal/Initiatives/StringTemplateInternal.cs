@@ -10,5 +10,6 @@ namespace CoE.Ideas.Core.Internal.Initiatives
     {
         public string Text { get; set; }
         public StringTemplateCategory Category { get; set; }
+        public string Key { get; set; }
     }
 }

@@ -40,5 +40,6 @@ namespace CoE.Ideas.Core.Tests
         //    });
         //    Assert.IsTrue(newInitiative.Id > 0, "Could not create initiative");
         //}
+
     }
 }

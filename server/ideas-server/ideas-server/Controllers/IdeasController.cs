@@ -106,7 +106,7 @@ namespace CoE.Ideas.Server.Controllers
                         }
                         catch (Exception err)
                         {
-                            _logger.Error(err, "Unable to get WordPress post id from slug { Slug }: { ErrorMessage }", id, err.Message);
+                            _logger.Error(err, "Unable to get WordPress post id from slug {Slug}: {ErrorMessage}", id, err.Message);
                             throw;
                         }
                         if (post == null)
