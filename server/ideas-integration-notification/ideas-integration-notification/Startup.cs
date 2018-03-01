@@ -50,7 +50,8 @@ namespace CoE.Ideas.Integration.Notification
                 .CreateLogger());
 
             services.AddRemoteIdeaConfiguration(Configuration["IdeasApi"],
-                Configuration["WordPressUrl"]);
+                Configuration["WordPressUrl"],
+                Configuration.GetSection("WordPress"));
             services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],
                 Configuration["ServiceBus:Subscription"]);
