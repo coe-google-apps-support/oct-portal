@@ -5,6 +5,7 @@ using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -39,12 +40,18 @@ namespace CoE.Ideas.Remedy.SbListener
 
             // Add logging
             services.AddSingleton(new LoggerFactory()
-                .AddConsole(
-                    Enum.Parse<LogLevel>(Configuration["Logging:Debug:LogLevel:Default"]),
-                    bool.Parse(Configuration["Logging:IncludeScopes"]))
-                .AddDebug(
-                    Enum.Parse<LogLevel>(Configuration["Logging:Console:LogLevel:Default"])));
+                .AddConsole(Configuration)
+                .AddDebug()
+                .AddSerilog());
             services.AddLogging();
+
+            // configure application specific logging
+            services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithProperty("Application", "Initiatives")
+                .Enrich.WithProperty("Module", "Remedy Service Bus Listener")
+                .ReadFrom.Configuration(Configuration)
+                .CreateLogger());
 
             // Add Idea Repository
             services.AddIdeaConfiguration(
@@ -54,12 +61,9 @@ namespace CoE.Ideas.Remedy.SbListener
                 Configuration.GetSection("WordPress"));
 
             // Add service to talk to ServiceBus
-            services.AddSingleton<ISubscriptionClient>(x =>
-            {
-                return new SubscriptionClient(Configuration["ServiceBus:ConnectionString"],
+            services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],
                     Configuration["ServiceBus:TopicName"],
                     Configuration["ServiceBus:Subscription"]);
-            });
 
             services.AddSingleton<RemedyItemUpdatedIdeaListener>();
 
