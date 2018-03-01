@@ -24,7 +24,7 @@ namespace CoE.Ideas.Core.People
 
             // ensure _serviceUrl ends with "/", because we'll be appending 
             if (!_serviceUrl.ToString().EndsWith("/"))
-                _serviceUrl = new Uri(_serviceUrl, "/");
+                _serviceUrl = new Uri(_serviceUrl + "/");
         }
 
         private readonly Uri _serviceUrl;
@@ -43,11 +43,11 @@ namespace CoE.Ideas.Core.People
             }
             catch (Exception err)
             {
-                throw new InvalidOperationException($"Unable to get data for user { user3and3 }: { err.Message }", err);
+                throw new InvalidOperationException($"Unable to get data for user {user3and3}: {err.Message}", err);
             }
 
             if (string.IsNullOrWhiteSpace(userDataString))
-                throw new InvalidOperationException($"Unable to get data for user { user3and3 }");
+                throw new InvalidOperationException($"Unable to get data for user {user3and3}");
 
             // there's lots of information we can get from the userData, but right now all we care about is the email
             dynamic userData = Newtonsoft.Json.Linq.JObject.Parse(userDataString);
