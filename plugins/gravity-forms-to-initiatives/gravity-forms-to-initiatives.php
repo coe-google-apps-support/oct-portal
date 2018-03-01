@@ -41,6 +41,28 @@ class coe_gravity_forms_to_initiatives {
     
     public function after_gform_submission( $entry, $form ) {
         // TODO: send form to initiatives API...
+        error_log( 'BEGIN-Submitting Gravity Form' );
+
+        $post_url = get_site_url() . '/api/initiatives';
+        $body = array(
+            'title' => rgar( $entry, '1' ),
+            'description' => rgar( $entry, '2' ),
+            );
+
+        #error_log( 'post_url is ' . $post_url);
+        #error_log( 'title is ' . rgar( $entry, '1' ));
+        #error_log( 'body is ' . rgar( $entry, '2' ));
+
+        $bodyJson = wp_json_encode($body);
+
+        error_log( 'Sending ' . $bodyJson . ' to initiatives API...');
+
+        $request = new WP_Http();
+        #TODO: set the Content-Type header to application/json
+        #      copy the incoming cookies to this request
+        $response = $request->post( $post_url, $bodyJson );
+
+        error_log( 'END-Submitting Gravity Form!' );
     }
 
 }
