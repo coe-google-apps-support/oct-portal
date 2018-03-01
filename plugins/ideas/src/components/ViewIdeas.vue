@@ -10,18 +10,11 @@
         </initiative>
       </div>
     </transition> 
-    
-    <md-dialog :md-active.sync="showDialog">
-      <InitiativeInfo :initiative="shownInitiative" :steps="shownSteps" :active="activeStep"></InitiativeInfo>
-    </md-dialog>
   </div>    
 </template>
 
 <script>
 import Initiative from '@/components/initiative'
-import InitiativeInfo from '@/components/ViewInitiative'
-import formatNumber from '@/utils/format-number-long'
-import ResponseTransform from '@/services/github/response-transform'
 import Vue from 'Vue'
 
 export default {
@@ -35,60 +28,12 @@ export default {
     shownSteps: null
   }),
   components: {
-    Initiative,
-    InitiativeInfo
+    Initiative
   },
   methods: {
     openDialog (initiative) {
       console.log('Opening: ' + initiative.id)
-      this.setLoading(initiative, true)
-
-      let stepsData = []
-
-      this.services.ideas.getInitiativeSteps(initiative.id).then((response) => {
-        let steps = response.data
-        let active = 'first'
-
-        for (let i = 0; i < steps.length; i++) {
-          // TODO externalise this status somehow.
-          if (steps[i].status !== 'done') {
-            active = formatNumber(steps[i].step)
-            break
-          }
-        }
-
-        this.activeStep = active
-        // this.shownSteps = steps
-        stepsData = steps
-        this.shownInitiative = initiative
-      }).catch((err) => {
-        this.errors.push(err)
-        this.setLoading(initiative, false)
-      }).then(() => {
-        return this.services.github.getAllIssues()
-      }).then((result) => {
-        let transform = new ResponseTransform(result)
-        let weeksBack = new Date()
-        weeksBack.setDate(weeksBack.getDate() - 13)
-        weeksBack.setHours(0)
-        weeksBack.setMinutes(0)
-        weeksBack.setSeconds(0)
-        weeksBack.setMilliseconds(0)
-        let githubData = transform.transformToBurndown(weeksBack)
-        console.log(this.shownSteps)
-        stepsData.map((value) => {
-          if (value.type === 'burndown') {
-            value.data = githubData.data
-            value.initialWork = githubData.initialWork
-          }
-        })
-      }).catch((err) => {
-        this.errors.push(err)
-      }).then(() => {
-        this.shownSteps = stepsData
-        this.setLoading(initiative, false)
-        this.showDialog = true
-      })
+      window.location.href = initiative.url
     },
     setLoading (initiative, state) {
       let foundInit = this.getInitiativeByID(initiative.id)
@@ -108,6 +53,7 @@ export default {
     }
   },
   created () {
+    console.log('ViewIdeas')
     this.ideas.splice(0, this.ideas.length)
     this.services.ideas.getIdeas().then((response) => {
       console.log('received ideas!!')
