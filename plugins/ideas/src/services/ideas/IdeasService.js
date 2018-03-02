@@ -196,11 +196,15 @@ let x = class IdeasService {
    */
   static getInitiativeSteps (id) {
     return HTTP.get(`/${id}/steps`).then((response) => {
-      return response.data
+      if (response.data) {
+        return response.data
+      } else {
+        return response
+      }
     }, (err) => {
       console.error(`Failed at route /${id}/steps.`)
       console.error(err)
-      return fakeInitiativeSteps
+      return fakeInitiativeSteps.data
     })
   }
 

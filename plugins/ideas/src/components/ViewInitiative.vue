@@ -79,7 +79,7 @@ export default {
       }
       return this.services.ideas.getInitiativeSteps(this.initiative.id)
     }).then((response) => {
-      this.steps = response.data
+      this.steps = response
     })
   },
   filters: {

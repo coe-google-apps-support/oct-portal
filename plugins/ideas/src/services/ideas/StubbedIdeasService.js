@@ -241,7 +241,7 @@ let x = class StubbedIdeasService {
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(getRandom(steps))
+        resolve(getRandom(steps).data)
       }, QUERY_TIMEOUT)
     })
   }
