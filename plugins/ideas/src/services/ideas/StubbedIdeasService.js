@@ -148,7 +148,7 @@ const fakeAssignee = {
     'name': 'Super BA',
     'email': 'super.ba@edmonton.ca',
     'phoneNumber': '555-555-5555',
-    'avatarURL': 'https://i.imgur.com/FD51R30.png'
+    'avatarURL': null
   }
 }
 
