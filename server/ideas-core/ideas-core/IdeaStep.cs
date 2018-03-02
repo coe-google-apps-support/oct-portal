@@ -6,10 +6,10 @@ namespace CoE.Ideas.Core
 {
     public class IdeaStep
     {
-        public DateTimeOffset CompletedDate { get; set; }
-        public object Data { get; set; }
-        public string Name { get; set; }
-        public int Step { get; set; }
-        public string Type { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        
+        public DateTimeOffset? StartDate { get; set; }
+        public DateTimeOffset? CompletionDate { get; set; }
     }
 }

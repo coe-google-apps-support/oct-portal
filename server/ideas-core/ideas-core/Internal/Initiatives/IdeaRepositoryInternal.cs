@@ -33,6 +33,36 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         }
 
         #region IdeaSteps
+
+        // data should look like:
+//        const steps2 = {
+//data: [{
+//'title': 'Submitted',
+//'description': 'Thank you! Your initiative was submitted.',
+//'startDate': 'Feb 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
+//'completionDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
+//},
+//{
+//'title': 'In Review',
+//'description': 'Your initiative has been assigned and reviewed.',
+//'startDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
+//'completionDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
+//},
+//{
+//'title': 'In Collaboration',
+//'description': 'We are actively working with you to complete an Investment Request for your initiative.',
+//'startDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
+//'completionDate': null
+//},
+//{
+//'title': 'In Delivery',
+//'description': 'Pellentesque ut neque tempus, placerat purus volutpat, scelerisque velit. Vivamus porta urna vel ligula lobortis, id porttitor quam maximus.',
+//'startDate': null,
+//'completionDate': null
+//}
+//]
+//}
+
         public async Task<IEnumerable<IdeaStep>> GetInitiativeStepsAsync(long initiativeId)
         {
             var initiative = await _context.Ideas.FindAsync(initiativeId);
@@ -54,173 +84,82 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             statusHistories = statusHistories.Where(x => (int)x.Status <= (int)latest.Status).ToList();
 
             var items = statusHistories.GroupBy(x => x.Status)
-                .ToDictionary(x => x.Key, y => new { EnterDate = y.Min(z => z.StatusEntryDateUtc), ExitDate = y.Max(z => z.StatusEntryDateUtc), Items = y });
-
-            // mapping of history records and their completedDate
-            var cleanedSteps = new Dictionary<IdeaStatusHistoryInternal, DateTimeOffset>(); 
-
-            DateTime lastStepExitDate = DateTime.MaxValue.ToUniversalTime();
-            foreach (var statusGrouping in items.OrderByDescending(x => (int)x.Key))
-            {
-                var item = statusGrouping.Value.Items
-                    .Where(x => x.StatusEntryDateUtc < lastStepExitDate)
-                    .OrderByDescending(x => x.StatusEntryDateUtc)
-                    .FirstOrDefault();
-                if (item != null)
+                .ToDictionary(x => x.Key, 
+                y => new
                 {
-                    var exitDateUtc = DateTime.SpecifyKind(statusGrouping.Value.ExitDate, DateTimeKind.Utc);
-                    cleanedSteps.Add(item, exitDateUtc.ToLocalTime());
-                    lastStepExitDate = statusGrouping.Value.ExitDate;
-                }
-            }
+                    EnterItem = y.OrderBy(z => z.StatusEntryDateUtc).First(),
+                    ExitItem = y.OrderByDescending(z => z.StatusEntryDateUtc).First(),
+                    Items = y
+                });
 
-            // translate cleanedSteps to IdeaStep
-            var returnValue = cleanedSteps.Select(x => new IdeaStep()
+
+            var steps = items.Select(x => new 
             {
-                Name = x.Key.Status.ToString(),
-                CompletedDate = x.Value,
-                Step = (int)x.Key.Status - 2,
-                Type = GetInitiativeStepsAsync_GetType(x.Key),
-                Data = GetInitiativeStepsAsync_GetData(x.Key)
-            });
+                Title = GetInitiativeStepsAsync_GetTitle(x.Key),
+                Description = x.Value.ExitItem.Text,
+                StartDate = (DateTime?)x.Value.EnterItem.StatusEntryDateUtc,
+                CompletionDate = (DateTime?)items.Where(y => y.Value.EnterItem.StatusEntryDateUtc > x.Value.ExitItem.StatusEntryDateUtc)
+                                      .OrderBy(y => y.Value.EnterItem.StatusEntryDateUtc)
+                                      .Select(y => y.Value.EnterItem.StatusEntryDateUtc)
+                                      .FirstOrDefault(),
+                stepOrder = (int)x.Key
+            })
+            .OrderBy(x => x.StartDate)
+            .ToList();
 
-            return returnValue.OrderBy(x => x.CompletedDate);
+
+            // finally, we set any missing steps so the front end get all available steps
+            // note, it's not really all steps, just the ones we really care about on our screen
+            var allStatuses = new InitiativeStatusInternal[] { InitiativeStatusInternal.Submit, InitiativeStatusInternal.Review, InitiativeStatusInternal.Collaborate, InitiativeStatusInternal.Deliver };
+            var missingStatuses = allStatuses
+                .Where(x => !items.Any(y => y.Key == x))
+                .Select(x => new
+                {
+                    Title = GetInitiativeStepsAsync_GetTitle(x),
+                    Description = (string)null,
+                    StartDate = (DateTime?)null,
+                    CompletionDate = (DateTime?)null,
+                    stepOrder = (int)x
+                })
+                .ToList();
+
+            var returnValue = steps.Union(missingStatuses)
+                .OrderBy(x => x.stepOrder)
+                .Select(x => new IdeaStep()
+                {
+                    Title = x.Title,
+                    Description = x.Description,
+                    StartDate = x.StartDate,
+                    
+                    //bug fix for above where CompletionDate is default(DateTimeOffset)
+                    CompletionDate = x.CompletionDate.HasValue && x.CompletionDate.Value.Ticks == 0 ? null : x.CompletionDate
+                })
+                .ToList();
+
+            return returnValue;
         }
 
-        private string GetInitiativeStepsAsync_GetType(IdeaStatusHistoryInternal historyItem)
-        {
-            switch (historyItem.Status)
+        private string GetInitiativeStepsAsync_GetTitle(InitiativeStatusInternal status)
+        { 
+            switch (status)
             {
+                case InitiativeStatusInternal.Initiate:
+                    return "Initiated";
                 case InitiativeStatusInternal.Submit:
-                    return "text";
+                    return "Submitted";
                 case InitiativeStatusInternal.Review:
-                    return "resource";
+                    return "In Review";
                 case InitiativeStatusInternal.Collaborate:
-                    return "resource";
+                    return "In Collaboration";
                 case InitiativeStatusInternal.Deliver:
-                    return "burndown";
+                    return "In Delivery";
+                case InitiativeStatusInternal.Cancelled:
+                    return "Cancelled";
                 default:
-                    return "text";
-            }
-           
-        }
-
-        private object GetInitiativeStepsAsync_GetData(IdeaStatusHistoryInternal historyItem)
-        {
-            if (historyItem.Status == InitiativeStatusInternal.Review || historyItem.Status == InitiativeStatusInternal.Collaborate)
-            {
-                // these are the "review" steps
-                var people = new List<object>();
-                if (historyItem.Assignee != null)
-                {
-                    people.Add(new
-                    {
-                        User = historyItem.Assignee.Email,
-                        AssignedOn = (DateTimeOffset)historyItem.StatusEntryDateUtc.ToLocalTime(),
-                        AvatarUrl = string.Empty
-                    });
-                }
-                return people;
-            }
-            else if (historyItem.Status == InitiativeStatusInternal.Deliver)
-            {
-                // this is of type "BurnDown"
-                return Newtonsoft.Json.Linq.JObject.Parse(fakeBurndown);
-            }
-            else
-            {
-                // this is just the text
-                return historyItem.Text;
+                    return status.ToString();
             }
         }
 
-        private const string fakeBurndown = @"
-[
-      {
-        date: 'Jan 18 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 0,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-18..2018-01-18&type=Issues'
-      },
-      {
-        date: 'Jan 19 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 2,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-19..2018-01-19&type=Issues'
-      },
-      {
-        date: 'Jan 20 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 1,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-20..2018-01-20&type=Issues'
-      },
-      {
-        date: 'Jan 21 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 1,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-21..2018-01-21&type=Issues'
-      },
-      {
-        date: 'Jan 22 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 1,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-22..2018-01-22&type=Issues'
-      },
-      {
-        date: 'Jan 23 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 1,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-23..2018-01-23&type=Issues'
-      },
-      {
-        date: 'Jan 24 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-24..2018-01-24&type=Issues'
-      },
-      {
-        date: 'Jan 25 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-25..2018-01-25&type=Issues'
-      },
-      {
-        date: 'Jan 26 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-26..2018-01-26&type=Issues'
-      },
-      {
-        date: 'Jan 27 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-27..2018-01-27&type=Issues'
-      },
-      {
-        date: 'Jan 28 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-28..2018-01-28&type=Issues'
-      },
-      {
-        date: 'Jan 29 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 23,
-        workRemoved: 0,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-29..2018-01-29&type=Issues'
-      },
-      {
-        date: 'Jan 30 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 1,
-        workRemoved: 3,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-30..2018-01-30&type=Issues'
-      },
-      {
-        date: 'Jan 31 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
-        workAdded: 0,
-        workRemoved: 5,
-        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-31..2018-02-31&type=Issues'
-      }
-    ]";
         #endregion
 
 
