@@ -10,7 +10,7 @@ const fakeIdeas = {
     stakeholders: [{
       'userName': 'gregory.onuczko@edmonton.ca'
     }],
-    businessCaseURL: 'https://www.google.ca/'
+    businessCaseUrl: 'https://www.google.ca/'
   },
   {
     id: 2,
@@ -31,7 +31,7 @@ const fakeIdeas = {
     stakeholders: [{
       'userName': 'daniel.chenier@edmonton.ca'
     }],
-    businessCaseURL: 'https://www.google.ca/'
+    businessCaseUrl: 'https://www.google.ca/'
   },
   {
     id: 4,
@@ -52,7 +52,7 @@ const fakeIdeas = {
     stakeholders: [{
       'userName': 'stephen.mundy@edmonton.ca'
     }],
-    businessCaseURL: 'https://www.google.ca/'
+    businessCaseUrl: 'https://www.google.ca/'
   },
   {
     id: 6,
