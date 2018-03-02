@@ -35,5 +35,7 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         /// </summary>
         [Display(Name = "Text", Description = "Status description")]
         public string Text { get; set; }
+
+        public virtual PersonInternal Assignee { get; set; }
     }
 }

@@ -42,12 +42,14 @@ namespace CoE.Ideas.Core.Tests
         public async Task ChangeIdeaStatus()
         {
             long initiativeId = 84;
+            Person person = new Person() { Email = "daniel.chenier@edmonton.ca", UserName = "Dan Chenier" };
 
             var initiativeRepository = serviceProvider.GetRequiredService<IUpdatableIdeaRepository>();
             var idea = await initiativeRepository.GetIdeaAsync(initiativeId);
             Assert.IsNotNull(idea, "Could not get idea with id " + initiativeId);
 
-            await initiativeRepository.SetWorkItemStatusAsync(initiativeId, InitiativeStatus.Submit);
+            await initiativeRepository.SetInitiativeAssignee(initiativeId, person);
+            await initiativeRepository.SetWorkItemStatusAsync(initiativeId, InitiativeStatus.Collaborate);
 
             var updatedIdea = await initiativeRepository.GetIdeaAsync(initiativeId);
         }

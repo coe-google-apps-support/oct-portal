@@ -201,6 +201,11 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<IdeaStep>> GetInitiativeStepsAsync(long initiativeId)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
     }

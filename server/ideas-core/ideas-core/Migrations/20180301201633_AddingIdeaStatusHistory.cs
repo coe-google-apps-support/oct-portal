@@ -42,16 +42,16 @@ namespace CoE.Ideas.Core.Migrations
                 column: "InitiativeId");
 
             migrationBuilder.Sql(@"
-INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Submit_past', 'Thank you! Your initiative has been submitted and will be assigned for review. An OCT representative will contact you within three (3) business days.');
-INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Submit_present', 'Thank you! Your initiative was submitted.');
+INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Submit_present', 'Thank you! Your initiative has been submitted and will be assigned for review. An OCT representative will contact you within three (3) business days.');
+INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Submit_past', 'Thank you! Your initiative was submitted.');
 INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Review_present', 'Your initiative has been assigned for review. {0} will contact you to schedule a project intake meeting.');
 INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Review_past', 'Your initiative has been assigned and reviewed.');
-INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Collaborate_past', '{0} is actively working with you to complete an Investment Request for your initiative.');
-INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Collaborate_present', 'An Investment Request has been completed for your initiative.');
-INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Deliver_past', 'Your request has been successfully submitted as a project with Solutions Delivery. A representative from Solutions Delivery will contact you to discuss the next steps.');
-INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Deliver_present', 'Your initiative has been successfully submitted as a project with Solutions Delivery.');
-INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Cancelled_past', 'Your request has been cancelled. ');
-INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Cancelled_present', 'Your request was cancelled');");
+INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Collaborate_present', '{0} is actively working with you to complete an Investment Request for your initiative.');
+INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Collaborate_past', 'An Investment Request has been completed for your initiative.');
+INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Deliver_present', 'Your request has been successfully submitted as a project with Solutions Delivery. A representative from Solutions Delivery will contact you to discuss the next steps.');
+INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Deliver_past', 'Your initiative has been successfully submitted as a project with Solutions Delivery.');
+INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Cancelled_preset', 'Your request has been cancelled. ');
+INSERT INTO StringTemplates(Category, `key`, `Text`) VALUES(1, 'Cancelled_past', 'Your request was cancelled');");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

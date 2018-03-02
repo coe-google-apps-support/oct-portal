@@ -85,8 +85,8 @@ namespace CoE.Ideas.Remedy.SbListener
                     {
                         var workOrderStatus = Enum.Parse<StatusType>(args.UpdatedStatus);
 
-                        await UpdateIdeaWithNewWorkOrderStatus(idea, workOrderStatus, args.UpdatedDateUtc);
                         await UpdateIdeaAssignee(idea, args.AssigneeEmail, args.AssigneeDisplayName);
+                        await UpdateIdeaWithNewWorkOrderStatus(idea, workOrderStatus, args.UpdatedDateUtc);
                     }
                 }
 

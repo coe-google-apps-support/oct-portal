@@ -252,7 +252,8 @@ namespace CoE.Ideas.Core.Internal.Initiatives
                 {
                     Initiative = idea,
                     StatusEntryDateUtc = DateTime.UtcNow,
-                    Status = idea.Status
+                    Status = idea.Status,
+                    Assignee = idea.Assignee
                 };
 
                 statusChange.Text = await _stringTemplateService.GetStatusChangeTextAsync(idea.Status, idea.Assignee);
@@ -289,6 +290,15 @@ namespace CoE.Ideas.Core.Internal.Initiatives
                 if (person.Id > 0)
                 {
                     var existingPerson = await _context.People.FindAsync(person.Id);
+                    if (existingPerson != null)
+                    {
+                        idea.Assignee = existingPerson;
+                        handled = true;
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(person.Email))
+                {
+                    var existingPerson = await _context.People.FirstOrDefaultAsync(x => x.Email == person.Email);
                     if (existingPerson != null)
                     {
                         idea.Assignee = existingPerson;

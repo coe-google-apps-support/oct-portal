@@ -32,6 +32,198 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             _logger = logger ?? throw new ArgumentNullException("logger");
         }
 
+        #region IdeaSteps
+        public async Task<IEnumerable<IdeaStep>> GetInitiativeStepsAsync(long initiativeId)
+        {
+            var initiative = await _context.Ideas.FindAsync(initiativeId);
+            if (initiative == null)
+                throw new EntityNotFoundException($"Unable to find an initiative with id " + initiativeId);
+
+            var statusHistories = await _context.IdeaStatusHistories
+                .Include(x => x.Assignee)
+                .Where(x => x.Initiative == initiative)
+                .ToListAsync();
+
+            if (!statusHistories.Any())
+                return new IdeaStep[] { };
+
+            // get the latest
+            var latest = statusHistories.OrderByDescending(x => x.StatusEntryDateUtc).First();
+
+            // discard any entries that are after this step in the workflow
+            statusHistories = statusHistories.Where(x => (int)x.Status <= (int)latest.Status).ToList();
+
+            var items = statusHistories.GroupBy(x => x.Status)
+                .ToDictionary(x => x.Key, y => new { EnterDate = y.Min(z => z.StatusEntryDateUtc), ExitDate = y.Max(z => z.StatusEntryDateUtc), Items = y });
+
+            // mapping of history records and their completedDate
+            var cleanedSteps = new Dictionary<IdeaStatusHistoryInternal, DateTimeOffset>(); 
+
+            DateTime lastStepExitDate = DateTime.MaxValue.ToUniversalTime();
+            foreach (var statusGrouping in items.OrderByDescending(x => (int)x.Key))
+            {
+                var item = statusGrouping.Value.Items
+                    .Where(x => x.StatusEntryDateUtc < lastStepExitDate)
+                    .OrderByDescending(x => x.StatusEntryDateUtc)
+                    .FirstOrDefault();
+                if (item != null)
+                {
+                    var exitDateUtc = DateTime.SpecifyKind(statusGrouping.Value.ExitDate, DateTimeKind.Utc);
+                    cleanedSteps.Add(item, exitDateUtc.ToLocalTime());
+                    lastStepExitDate = statusGrouping.Value.ExitDate;
+                }
+            }
+
+            // translate cleanedSteps to IdeaStep
+            var returnValue = cleanedSteps.Select(x => new IdeaStep()
+            {
+                Name = x.Key.Status.ToString(),
+                CompletedDate = x.Value,
+                Step = (int)x.Key.Status - 2,
+                Type = GetInitiativeStepsAsync_GetType(x.Key),
+                Data = GetInitiativeStepsAsync_GetData(x.Key)
+            });
+
+            return returnValue.OrderBy(x => x.CompletedDate);
+        }
+
+        private string GetInitiativeStepsAsync_GetType(IdeaStatusHistoryInternal historyItem)
+        {
+            switch (historyItem.Status)
+            {
+                case InitiativeStatusInternal.Submit:
+                    return "text";
+                case InitiativeStatusInternal.Review:
+                    return "resource";
+                case InitiativeStatusInternal.Collaborate:
+                    return "resource";
+                case InitiativeStatusInternal.Deliver:
+                    return "burndown";
+                default:
+                    return "text";
+            }
+           
+        }
+
+        private object GetInitiativeStepsAsync_GetData(IdeaStatusHistoryInternal historyItem)
+        {
+            if (historyItem.Status == InitiativeStatusInternal.Review || historyItem.Status == InitiativeStatusInternal.Collaborate)
+            {
+                // these are the "review" steps
+                var people = new List<object>();
+                if (historyItem.Assignee != null)
+                {
+                    people.Add(new
+                    {
+                        User = historyItem.Assignee.Email,
+                        AssignedOn = (DateTimeOffset)historyItem.StatusEntryDateUtc.ToLocalTime(),
+                        AvatarUrl = string.Empty
+                    });
+                }
+                return people;
+            }
+            else if (historyItem.Status == InitiativeStatusInternal.Deliver)
+            {
+                // this is of type "BurnDown"
+                return Newtonsoft.Json.Linq.JObject.Parse(fakeBurndown);
+            }
+            else
+            {
+                // this is just the text
+                return historyItem.Text;
+            }
+        }
+
+        private const string fakeBurndown = @"
+[
+      {
+        date: 'Jan 18 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 0,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-18..2018-01-18&type=Issues'
+      },
+      {
+        date: 'Jan 19 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 2,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-19..2018-01-19&type=Issues'
+      },
+      {
+        date: 'Jan 20 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-20..2018-01-20&type=Issues'
+      },
+      {
+        date: 'Jan 21 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-21..2018-01-21&type=Issues'
+      },
+      {
+        date: 'Jan 22 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-22..2018-01-22&type=Issues'
+      },
+      {
+        date: 'Jan 23 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 1,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-23..2018-01-23&type=Issues'
+      },
+      {
+        date: 'Jan 24 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-24..2018-01-24&type=Issues'
+      },
+      {
+        date: 'Jan 25 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-25..2018-01-25&type=Issues'
+      },
+      {
+        date: 'Jan 26 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-26..2018-01-26&type=Issues'
+      },
+      {
+        date: 'Jan 27 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-27..2018-01-27&type=Issues'
+      },
+      {
+        date: 'Jan 28 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-28..2018-01-28&type=Issues'
+      },
+      {
+        date: 'Jan 29 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 23,
+        workRemoved: 0,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-29..2018-01-29&type=Issues'
+      },
+      {
+        date: 'Jan 30 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 1,
+        workRemoved: 3,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-30..2018-01-30&type=Issues'
+      },
+      {
+        date: 'Jan 31 2018 12:00:00 GMT-0700 (Mountain Standard Time)',
+        workAdded: 0,
+        workRemoved: 5,
+        url: 'https://github.com/search?utf8=%E2%9C%93&q=repo%3Acoe-google-apps-support%2Foct-portal+closed%3A2018-01-31..2018-02-31&type=Issues'
+      }
+    ]";
+        #endregion
+
+
         #region People
 
         public async Task<Person> GetPersonByEmail(string email)

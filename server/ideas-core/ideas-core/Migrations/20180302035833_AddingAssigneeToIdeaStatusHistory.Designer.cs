@@ -12,9 +12,10 @@ using System;
 namespace CoE.Ideas.Core.Migrations
 {
     [DbContext(typeof(IdeaContext))]
-    partial class IdeaContextModelSnapshot : ModelSnapshot
+    [Migration("20180302035833_AddingAssigneeToIdeaStatusHistory")]
+    partial class AddingAssigneeToIdeaStatusHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

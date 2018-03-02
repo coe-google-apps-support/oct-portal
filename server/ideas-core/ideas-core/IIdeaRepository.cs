@@ -70,6 +70,9 @@ namespace CoE.Ideas.Core
 
         #endregion
 
+        #region IdeaSteps
+        Task<IEnumerable<IdeaStep>> GetInitiativeStepsAsync(long initiativeId);
+        #endregion
 
         #region Branches and Departments
         /// <summary>

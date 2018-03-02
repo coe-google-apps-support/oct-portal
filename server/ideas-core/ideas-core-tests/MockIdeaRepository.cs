@@ -190,6 +190,11 @@ namespace CoE.Ideas.Core.Tests
             return Task.FromResult(idea);
         }
 
+        public Task<IEnumerable<IdeaStep>> GetInitiativeStepsAsync(long initiativeId)
+        {
+            throw new NotImplementedException();
+        }
+
 
 
 
