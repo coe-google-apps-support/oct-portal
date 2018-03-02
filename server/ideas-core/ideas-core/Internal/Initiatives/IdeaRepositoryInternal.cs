@@ -92,12 +92,13 @@ namespace CoE.Ideas.Core.Internal.Initiatives
                     Items = y
                 });
 
-
+            // Get the distinct statuses, and the first and last entries where the initiative entered
+            // each status (if if re-enters statuses)
             var steps = items.Select(x => new 
             {
                 Title = GetInitiativeStepsAsync_GetTitle(x.Key),
                 Description = x.Value.ExitItem.Text,
-                StartDate = (DateTime?)x.Value.EnterItem.StatusEntryDateUtc,
+                StartDate = (DateTime?)x.Value.ExitItem.StatusEntryDateUtc,
                 CompletionDate = (DateTime?)items.Where(y => y.Value.EnterItem.StatusEntryDateUtc > x.Value.ExitItem.StatusEntryDateUtc)
                                       .OrderBy(y => y.Value.EnterItem.StatusEntryDateUtc)
                                       .Select(y => y.Value.EnterItem.StatusEntryDateUtc)
