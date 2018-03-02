@@ -19,7 +19,10 @@ export default {
     'user'
   ],
   created () {
-    console.log('created')
+    if (!this.user.avatarURL) {
+      console.log('No avatarURL provided.')
+      this.user.avatarURL = 'https://i.imgur.com/FD51R30.png'
+    }
   }
 }
 </script>

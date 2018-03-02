@@ -20,13 +20,13 @@
             <md-table-row>
               <md-table-cell>Business case</md-table-cell>
               <md-table-cell>
-                <attach-file-button :url="this.initiative.businessCaseURL" @click.native="attachClicked"></attach-file-button>
+                <attach-file-button :url="this.initiative.businessCaseUrl" @click.native="attachClicked"></attach-file-button>
               </md-table-cell>
             </md-table-row>
           </md-table>
         </div>
       </div>
-      <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90">
+      <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps"></Steps>
       </div>
 
@@ -34,7 +34,7 @@
         <md-dialog-title>Business Case</md-dialog-title>
         <md-field>
           <label>URL</label>
-          <md-input v-model="initiative.businessCaseURL"></md-input>
+          <md-input v-model="initiative.businessCaseUrl"></md-input>
         </md-field>
         <md-button @click="attachBusinessCase" class="md-primary oct-attach-button">Attach</md-button>
         <md-progress-bar v-if="busCaseLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
@@ -69,8 +69,8 @@ export default {
   created () {
     this.services.ideas.getInitiativeBySlug(this.slug).then((initiative) => {
       this.initiative = initiative
-      if (!this.initiative.businessCaseURL) {
-        this.initiative.businessCaseURL = ''
+      if (!this.initiative.businessCaseUrl) {
+        this.initiative.businessCaseUrl = ''
       }
       return this.services.ideas.getAssignee(initiative.id)
     }).then((response) => {
@@ -87,8 +87,8 @@ export default {
   },
   methods: {
     attachClicked () {
-      if (this.initiative.businessCaseURL) {
-        window.open(this.initiative.businessCaseURL)
+      if (this.initiative.businessCaseUrl) {
+        window.open(this.initiative.businessCaseUrl)
       } else {
         this.showDialog = true
       }
@@ -118,6 +118,10 @@ export default {
 
   .oct-business-case {
     padding: 22px;
+  }
+
+  .oct-steps {
+    margin: 14px;
   }
 
   .oct-divider {
