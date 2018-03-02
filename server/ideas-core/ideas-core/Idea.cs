@@ -14,7 +14,7 @@ namespace CoE.Ideas.Core
         /// The unique identifier of an idea (blog post) in WordPress
         /// </summary>
         [Required]
-        public int WordPressKey { get; internal set; }
+        public int WordPressKey { get; set; }
 
         /// <summary>
         /// The short title of the idea
@@ -46,7 +46,7 @@ namespace CoE.Ideas.Core
         /// The owner of the initiative, usually the person who submitted it.
         /// Shorthand to Stakeholder.Where(s => s.Type == "owner")
         /// </summary>
-        public Person Owner { get; internal set; }
+        public Person Owner { get; set; }
 
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace CoE.Ideas.Core
         /// <summary>
         /// The date and time the issue was created
         /// </summary>
-        public DateTimeOffset CreatedDate { get; internal set; }
+        public DateTimeOffset CreatedDate { get; set; }
 
         /// <summary>
         /// The department where the initiative is a part of. Can be different
@@ -114,12 +114,12 @@ namespace CoE.Ideas.Core
         /// <summary>
         /// Unique identifier in Work Item Tracking system (Remedy)
         /// </summary>
-        public string WorkItemId { get; internal set; }
+        public string WorkItemId { get; set; }
 
         /// <summary>
         /// Status of the Initiative
         /// </summary>
-        public InitiativeStatus Status { get; internal set; }
+        public InitiativeStatus Status { get; set; }
 
         /// <summary>
         /// Business case for the initiative
