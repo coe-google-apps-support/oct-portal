@@ -291,6 +291,20 @@ let x = class StubbedIdeasService {
       }, QUERY_TIMEOUT)
     })
   }
+
+  /**
+   * Updates a businessCaseUrl.
+   * @param {String} id The id of the business case.
+   * @param {Object} url The initiative to update.
+   * @return {Promise} A promise resolved with the url if successful.
+   */
+  static updateBusinessCase (id, url) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(url)
+      }, QUERY_TIMEOUT)
+    })
+  }
 }
 
 export const StubbedIdeasService = x

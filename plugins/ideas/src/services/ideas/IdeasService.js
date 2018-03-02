@@ -248,6 +248,18 @@ let x = class IdeasService {
   static updateInitiative (initiative) {
     return HTTP.put(`${initiative.id}`, initiative)
   }
+
+  /**
+   * Updates a businessCaseUrl.
+   * @param {String} id The id of the business case.
+   * @param {Object} url The initiative to update.
+   * @return {Promise} A promise resolved with the url if successful.
+   */
+  static updateBusinessCase (id, url) {
+    return HTTP.put(`${id}`, {
+      businessCaseUrl: url
+    })
+  }
 }
 
 export const IdeasService = x
