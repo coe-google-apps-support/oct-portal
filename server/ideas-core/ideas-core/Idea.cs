@@ -62,7 +62,7 @@ namespace CoE.Ideas.Core
         /// <summary>
         /// The date and time the issue was created
         /// </summary>
-        public DateTimeOffset CreatedDate { get;  }
+        public DateTimeOffset CreatedDate { get; internal set; }
 
         /// <summary>
         /// The department where the initiative is a part of. Can be different
