@@ -38,7 +38,6 @@ namespace CoE.Ideas.Core.Tests
 
         private static ServiceProvider serviceProvider;
 
-            long initiativeId = 84;
         //[TestMethod]
         //public async Task ChangeIdeaStatus()
         //{
