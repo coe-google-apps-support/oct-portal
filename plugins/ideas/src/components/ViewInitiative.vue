@@ -26,7 +26,7 @@
           </md-table>
         </div>
       </div>
-      <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90">
+      <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps"></Steps>
       </div>
 
@@ -118,6 +118,10 @@ export default {
 
   .oct-business-case {
     padding: 22px;
+  }
+
+  .oct-steps {
+    margin: 14px;
   }
 
   .oct-divider {
