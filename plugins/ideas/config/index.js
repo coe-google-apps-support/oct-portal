@@ -53,7 +53,7 @@ module.exports = {
   },
 
   local: {
-    wordpressRoot: 'C:\\Bitnami\\wordpress-4.9.1-0\\apps\\wordpress\\htdocs\\',
+    wordpressRoot: 'C:\\octava\\vsts\\WordPress\\',
     pluginsSubDirectory: 'wp-content\\plugins'
   },
 
