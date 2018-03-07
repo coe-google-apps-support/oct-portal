@@ -68,7 +68,7 @@ namespace CoE.Ideas.Core.ServiceBus
             messageHandlerOptions.AutoComplete = false;
             _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
             {
-                _logger.Information("Received service bus message {Label}", msg.Label);
+                _logger.Information("Received service bus message {MessageId}: {Label}", msg.MessageId, msg.Label);
 
                 switch (msg.Label)
                 {
@@ -255,6 +255,7 @@ namespace CoE.Ideas.Core.ServiceBus
                         Owner = owner.Item,
                         RangeUpdated = rangeUpdated.Item
                     }, token);
+                    await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
                 }
                 catch (Exception err)
                 {
