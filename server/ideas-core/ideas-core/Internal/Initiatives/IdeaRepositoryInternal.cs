@@ -89,7 +89,7 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             foreach (var sh in statusHistories)
             {
                 
-                while (stack.Count > 0 && stack.Peek().stateId > (int)sh.Status)
+                while (stack.Count > 0 && stack.Peek().stateId > (int)sh.Status && sh.Status != InitiativeStatusInternal.Cancelled)
                 {
                     stack.Pop();
                 }
