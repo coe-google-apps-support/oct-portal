@@ -35,33 +35,40 @@ namespace CoE.Ideas.Core.Internal.Initiatives
         #region IdeaSteps
 
         // data should look like:
-//        const steps2 = {
-//data: [{
-//'title': 'Submitted',
-//'description': 'Thank you! Your initiative was submitted.',
-//'startDate': 'Feb 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-//'completionDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
-//},
-//{
-//'title': 'In Review',
-//'description': 'Your initiative has been assigned and reviewed.',
-//'startDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
-//'completionDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
-//},
-//{
-//'title': 'In Collaboration',
-//'description': 'We are actively working with you to complete an Investment Request for your initiative.',
-//'startDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
-//'completionDate': null
-//},
-//{
-//'title': 'In Delivery',
-//'description': 'Pellentesque ut neque tempus, placerat purus volutpat, scelerisque velit. Vivamus porta urna vel ligula lobortis, id porttitor quam maximus.',
-//'startDate': null,
-//'completionDate': null
-//}
-//]
-//}
+        //        const steps2 = {
+        //data: [{
+        //'title': 'Submitted',
+        //'description': 'Thank you! Your initiative was submitted.',
+        //'startDate': 'Feb 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
+        //'completionDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
+        //},
+        //{
+        //'title': 'In Review',
+        //'description': 'Your initiative has been assigned and reviewed.',
+        //'startDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
+        //'completionDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
+        //},
+        //{
+        //'title': 'In Collaboration',
+        //'description': 'We are actively working with you to complete an Investment Request for your initiative.',
+        //'startDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
+        //'completionDate': null
+        //},
+        //{
+        //'title': 'In Delivery',
+        //'description': 'Pellentesque ut neque tempus, placerat purus volutpat, scelerisque velit. Vivamus porta urna vel ligula lobortis, id porttitor quam maximus.',
+        //'startDate': null,
+        //'completionDate': null
+        //}
+        //]
+        //}
+
+        private struct IdeaStepInfo
+        {
+            public IdeaStep IdeaStep;
+            public int stateId;
+        }
+
 
         public async Task<IEnumerable<IdeaStep>> GetInitiativeStepsAsync(long initiativeId)
         {
@@ -72,72 +79,46 @@ namespace CoE.Ideas.Core.Internal.Initiatives
             var statusHistories = await _context.IdeaStatusHistories
                 .Include(x => x.Assignee)
                 .Where(x => x.Initiative == initiative)
+                .OrderBy(x => x.StatusEntryDateUtc)
                 .ToListAsync();
 
             if (!statusHistories.Any())
                 return new IdeaStep[] { };
 
-            // get the latest
-            var latest = statusHistories.OrderByDescending(x => x.StatusEntryDateUtc).First();
-
-            // discard any entries that are after this step in the workflow
-            statusHistories = statusHistories.Where(x => (int)x.Status <= (int)latest.Status).ToList();
-
-            var items = statusHistories.GroupBy(x => x.Status)
-                .ToDictionary(x => x.Key, 
-                y => new
-                {
-                    EnterItem = y.OrderBy(z => z.StatusEntryDateUtc).First(),
-                    ExitItem = y.OrderByDescending(z => z.StatusEntryDateUtc).First(),
-                    Items = y
-                });
-
-            // Get the distinct statuses, and the first and last entries where the initiative entered
-            // each status (if if re-enters statuses)
-            var steps = items.Select(x => new 
+            var stack = new Stack<IdeaStepInfo>();
+            foreach (var sh in statusHistories)
             {
-                Title = GetInitiativeStepsAsync_GetTitle(x.Key),
-                Description = x.Value.ExitItem.Text,
-                StartDate = (DateTime?)x.Value.ExitItem.StatusEntryDateUtc,
-                CompletionDate = (DateTime?)items.Where(y => y.Value.EnterItem.StatusEntryDateUtc > x.Value.ExitItem.StatusEntryDateUtc)
-                                      .OrderBy(y => y.Value.EnterItem.StatusEntryDateUtc)
-                                      .Select(y => y.Value.EnterItem.StatusEntryDateUtc)
-                                      .FirstOrDefault(),
-                stepOrder = (int)x.Key
-            })
-            .OrderBy(x => x.StartDate)
-            .ToList();
-
-
-            // finally, we set any missing steps so the front end get all available steps
-            // note, it's not really all steps, just the ones we really care about on our screen
-            var allStatuses = new InitiativeStatusInternal[] { InitiativeStatusInternal.Submit, InitiativeStatusInternal.Review, InitiativeStatusInternal.Collaborate, InitiativeStatusInternal.Deliver };
-            var missingStatuses = allStatuses
-                .Where(x => !items.Any(y => y.Key == x))
-                .Select(x => new
+                
+                while (stack.Count > 0 && stack.Peek().stateId > (int)sh.Status)
                 {
-                    Title = GetInitiativeStepsAsync_GetTitle(x),
-                    Description = (string)null,
-                    StartDate = (DateTime?)null,
-                    CompletionDate = (DateTime?)null,
-                    stepOrder = (int)x
-                })
-                .ToList();
+                    stack.Pop();
+                }
 
-            var returnValue = steps.Union(missingStatuses)
-                .OrderBy(x => x.stepOrder)
-                .Select(x => new IdeaStep()
+                if (stack.Count > 0 && stack.Peek().stateId == (int)sh.Status)
                 {
-                    Title = x.Title,
-                    Description = x.Description,
-                    StartDate = x.StartDate,
-                    
-                    //bug fix for above where CompletionDate is default(DateTimeOffset)
-                    CompletionDate = x.CompletionDate.HasValue && x.CompletionDate.Value.Ticks == 0 ? null : x.CompletionDate
-                })
-                .ToList();
+                    // nothing to do here
+                    continue;
+                }
 
-            return returnValue;
+                DateTimeOffset entryDate = new DateTime(sh.StatusEntryDateUtc.Ticks, DateTimeKind.Utc).ToLocalTime();
+
+                // update the finish date of the previous entry
+                if (stack.Count > 0)
+                    stack.Peek().IdeaStep.CompletionDate = entryDate;
+
+                // add the new guy on top
+                stack.Push(new IdeaStepInfo()
+                {
+                    IdeaStep = new IdeaStep()
+                    {
+                        Title = GetInitiativeStepsAsync_GetTitle(sh.Status),
+                        Description = sh.Text,
+                        StartDate = entryDate
+                    }, stateId = (int)sh.Status
+                });
+            }
+
+            return stack.Select(x => x.IdeaStep);
         }
 
         private string GetInitiativeStepsAsync_GetTitle(InitiativeStatusInternal status)
