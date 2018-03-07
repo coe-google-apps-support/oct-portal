@@ -118,7 +118,19 @@ namespace CoE.Ideas.Core.Internal.Initiatives
                 });
             }
 
-            return stack.Select(x => x.IdeaStep);
+            var completedItems = stack.Select(x => x.IdeaStep).Reverse();
+
+            // now add the remaining ones
+            var allStatuses = new InitiativeStatusInternal[] 
+            {
+                InitiativeStatusInternal.Submit,
+                InitiativeStatusInternal.Review,
+                InitiativeStatusInternal.Collaborate,
+                InitiativeStatusInternal.Deliver
+            };
+
+            var remaining = allStatuses.Where(x => !stack.Any(y => y.stateId == (int)x)).OrderBy(x => (int)x);
+            return completedItems.Concat(remaining.Select(x => new IdeaStep() { Title = GetInitiativeStepsAsync_GetTitle(x) }));
         }
 
         private string GetInitiativeStepsAsync_GetTitle(InitiativeStatusInternal status)
