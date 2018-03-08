@@ -53,12 +53,12 @@ namespace CoE.Ideas.EndToEnd.Tests
         public TestConfiguration ConfigureIdeaMessaging()
         {
 
-            Services.AddSingleton<MockInitiativeMessageReceiver>();
+            Services.AddSingleton<SynchronousInitiativeMessageReceiver>();
             Services.AddSingleton<IInitiativeMessageReceiver>(x =>
             {
-                return x.GetRequiredService<MockInitiativeMessageReceiver>();
+                return x.GetRequiredService<SynchronousInitiativeMessageReceiver>();
             });
-            Services.AddSingleton<IInitiativeMessageSender, MockInitiativeMessageSender>();
+            Services.AddSingleton<IInitiativeMessageSender, SynchronousInitiativeMessageSender>();
 
             return this;
         }
