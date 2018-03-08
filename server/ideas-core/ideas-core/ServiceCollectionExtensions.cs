@@ -82,25 +82,34 @@ namespace CoE.Ideas.Core
         }
 
         public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
-            string serviceBusConnectionString,
-            string serviceBusTopicName,
+            string serviceBusConnectionString = null,
+            string serviceBusTopicName = null,
             string serviceBusSubscription = null)
         {
-
-            services.AddSingleton<ITopicClient, TopicClient>(x =>
+            if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
             {
-                return new TopicClient(serviceBusConnectionString, serviceBusTopicName);
-            });
-            services.AddSingleton<IInitiativeMessageSender, InitiativeMessageSender>();
-
-            if (!string.IsNullOrWhiteSpace(serviceBusSubscription))
-            {
-                services.AddSingleton<ISubscriptionClient, SubscriptionClient>(x =>
-                {
-                    return new SubscriptionClient(serviceBusConnectionString, serviceBusTopicName, serviceBusSubscription);
-                });
-                services.AddSingleton<IInitiativeMessageReceiver, InitiativeMessageReceiver>();
+                services.AddSingleton<SynchronousInitiativeMessageReceiver>();
+                services.AddSingleton<Core.ServiceBus.IInitiativeMessageReceiver>(x => x.GetRequiredService<SynchronousInitiativeMessageReceiver>());
+                services.AddSingleton<Core.ServiceBus.IInitiativeMessageSender, SynchronousInitiativeMessageSender>();
             }
+            else
+            {
+                services.AddSingleton<ITopicClient, TopicClient>(x =>
+                {
+                    return new TopicClient(serviceBusConnectionString, serviceBusTopicName);
+                });
+                services.AddSingleton<IInitiativeMessageSender, InitiativeMessageSender>();
+
+                if (!string.IsNullOrWhiteSpace(serviceBusSubscription))
+                {
+                    services.AddSingleton<ISubscriptionClient, SubscriptionClient>(x =>
+                    {
+                        return new SubscriptionClient(serviceBusConnectionString, serviceBusTopicName, serviceBusSubscription);
+                    });
+                    services.AddSingleton<IInitiativeMessageReceiver, InitiativeMessageReceiver>();
+                }
+            }
+
 
             services.AddSingleton<IIdeaRepositoryFactory, IdeaRepositoryFactory>();
 
