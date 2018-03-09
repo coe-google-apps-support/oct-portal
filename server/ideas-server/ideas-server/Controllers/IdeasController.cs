@@ -13,6 +13,10 @@ using System.Diagnostics;
 using Serilog.Context;
 using CoE.Ideas.Server.Models;
 using CoE.Ideas.Core.WordPress;
+using CoE.Ideas.Core.Data;
+using CoE.Ideas.Shared.Security;
+using CoE.Ideas.Core.Services;
+using EnsureThat;
 
 namespace CoE.Ideas.Server.Controllers
 {
@@ -22,12 +26,12 @@ namespace CoE.Ideas.Server.Controllers
     [Route("Initiatives")]
     public class IdeasController : Controller
     {
-        private readonly IUpdatableIdeaRepository _repository;
+        private readonly IInitiativeRepository _repository;
         private readonly IWordPressClient _wordpressClient;
         private readonly IInitiativeMessageSender _initiativeMessageSender;
         private readonly Serilog.ILogger _logger;
 
-        public IdeasController(IUpdatableIdeaRepository repository,
+        public IdeasController(IInitiativeRepository repository,
             IWordPressClient wordpressClient,
             IInitiativeMessageSender initiativeMessageSender,
             Serilog.ILogger logger)
@@ -45,20 +49,20 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public async Task<IEnumerable<Idea>> GetIdeas([FromQuery]ViewOptions view = ViewOptions.All)
+        public async Task<IEnumerable<InitiativeInfo>> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All)
         {
             _logger.Information("Retrieving Initiatives");
             Stopwatch watch = new Stopwatch();
             watch.Start();
 
-            IEnumerable<Idea> ideas;
+            IEnumerable<InitiativeInfo> ideas;
             if (view == ViewOptions.Mine)
             {
-                ideas = await _repository.GetIdeasByStakeholderEmailAsync(User.GetEmail());
+                ideas = await _repository.GetInitiativesByStakeholderEmailAsync(User.GetEmail());
             }
             else
-                ideas = await _repository.GetIdeasAsync();
-            var returnValue = ideas.OrderByDescending(x => x.Id);
+                ideas = await _repository.GetInitiativesAsync();
+            var returnValue = ideas.OrderByDescending(x => x.AuditUpdatedOn);
             watch.Stop();
             _logger.Information("Retrieved {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
             return returnValue;
@@ -83,7 +87,7 @@ namespace CoE.Ideas.Server.Controllers
             {
                 if (type == InitiativeKeyType.InitiativeKey)
                 {
-                    if (!long.TryParse(id, out long initiativeId))
+                    if (!int.TryParse(id, out int initiativeId))
                     {
                         _logger.Error($"id must be an integer if type is InitiativeKey, got { id }");
                         ModelState.AddModelError("id", "id must be an integer if type is InitiativeKey");
@@ -91,7 +95,7 @@ namespace CoE.Ideas.Server.Controllers
                     }
                     else
                     {
-                        return await GetIdeaByInitiativeId(initiativeId);
+                        return await GetInitiativeByInitiativeId(initiativeId);
                     }
                 }
                 else
@@ -136,7 +140,7 @@ namespace CoE.Ideas.Server.Controllers
             }
         }
 
-        private async Task<IActionResult> GetIdeaByInitiativeId(long id)
+        private async Task<IActionResult> GetInitiativeByInitiativeId(int id)
         {
             using (LogContext.PushProperty("InitiativeId", id))
             {
@@ -151,7 +155,7 @@ namespace CoE.Ideas.Server.Controllers
                 }
                 else
                 {
-                    var idea = await _repository.GetIdeaAsync(id);
+                    var idea = await _repository.GetInitiativeAsync(id);
 
                     if (idea == null)
                     {
@@ -181,7 +185,7 @@ namespace CoE.Ideas.Server.Controllers
                 }
                 else
                 {
-                    var idea = await _repository.GetIdeaByWordpressKeyAsync(wordPressKey);
+                    var idea = await _repository.GetInitiativeByWordpressKeyAsync(wordPressKey);
 
                     if (idea == null)
                     {
@@ -204,7 +208,7 @@ namespace CoE.Ideas.Server.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("wp/{id}")]
-        public async Task<IActionResult> GetIdeaByWordpressKey([FromRoute] int id)
+        public async Task<IActionResult> GetInitiativeByWordpressKey([FromRoute] int id)
         {
             using (LogContext.PushProperty("WordPressId", id))
             {
@@ -217,7 +221,7 @@ namespace CoE.Ideas.Server.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var idea = await _repository.GetIdeaByWordpressKeyAsync(id);
+                var idea = await _repository.GetInitiativeByWordpressKeyAsync(id);
 
                 if (idea == null)
                 {
@@ -240,7 +244,7 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutIdea([FromRoute] long id, [FromBody] Idea idea)
+        public async Task<IActionResult> PutIdea([FromRoute] int id, [FromBody] Initiative idea)
         {
             using (LogContext.PushProperty("InitiativeId", id))
             {
@@ -254,7 +258,7 @@ namespace CoE.Ideas.Server.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (id != idea.Id)
+                if (id != idea.AlternateKey)
                 {
                     _logger.Warning("Unable to retrieve initiative {InitiativeId} because id of initiative retrieved from database was different than the id passed in");
                     return BadRequest();
@@ -262,7 +266,7 @@ namespace CoE.Ideas.Server.Controllers
 
                 try
                 {
-                    await _repository.UpdateIdeaAsync(idea);
+                    await _repository.UpdateInitiativeAsync(idea);
 
                     watch.Stop();
                     _logger.Information("Updated initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
@@ -286,10 +290,9 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> PostIdea([FromBody] Idea idea)
+        public async Task<IActionResult> PostInitiative([FromBody] AddInitiativeDto initiativeData)
         {
-            if (idea == null)
-                throw new ArgumentNullException("idea");
+            EnsureArg.IsNotNull(initiativeData);
 
             if (!ModelState.IsValid)
             {
@@ -297,44 +300,27 @@ namespace CoE.Ideas.Server.Controllers
                 return BadRequest(ModelState);
             }
 
+            EnsureArg.IsNotNull(initiativeData.Title);
+            EnsureArg.IsNotNull(initiativeData.Description);
+
+
             _logger.Information("Creating new initiative");
             Stopwatch watch = new Stopwatch();
             watch.Start();
+            Initiative newInitiative = null;
             try
             {
-                // post to WordPress
-                var wordPressIdeaTask = _wordpressClient.PostIdeaAsync(idea);
+                newInitiative = Initiative.Create(initiativeData.Title, initiativeData.Description);
+                newInitiative = await _repository.AddInitiativeAsync(newInitiative, User);
 
-                var newIdeaTask = _repository.AddIdeaAsync(idea, User);
-
-                await Task.WhenAll(newIdeaTask, wordPressIdeaTask);
-
-                var updateIdeaTask = _repository.SetWordPressItemAsync(newIdeaTask.Result.Id, wordPressIdeaTask.Result);
-
-                _logger.Information("Posting to service bus");
-                var sendToServiceBusTask = _initiativeMessageSender.SendInitiativeCreatedAsync(
-                    new InitiativeCreatedEventArgs()
-                    {
-                        Initiative =
-                        newIdeaTask.Result,
-                        Owner =
-                        User
-                    });
-
-                await Task.WhenAll(updateIdeaTask, sendToServiceBusTask);
-                _logger.Information("Posted to service bus");
-
-                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                {
-                    watch.Stop();
-                    _logger.Information("Created initiative in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
-                }
-                return CreatedAtAction("GetIdea", new { id = newIdeaTask.Result.Id }, newIdeaTask.Result);
+                watch.Stop();
+                _logger.Information("Created initiative in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
+                return CreatedAtAction("GetIdea", new { id = newInitiative.Id }, newInitiative);
             }
             catch (Exception err)
             {
                 Guid correlationId = Guid.NewGuid();
-                _logger.Error(err, "Unable to save new initiative {Initiative} to repository. CorrelationId: {CorrelationId}", idea, correlationId);
+                _logger.Error(err, "Unable to save new initiative {Initiative} to repository. CorrelationId: {CorrelationId}", newInitiative, correlationId);
 #if DEBUG
                 return base.StatusCode(500, $"Unable to save idea to repository. Error: { err }");
 #else
@@ -344,54 +330,54 @@ namespace CoE.Ideas.Server.Controllers
 
         }
 
-        // DELETE: ideas/5
-        [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<IActionResult> DeleteIdea([FromRoute] long id)
-        {
-            using (LogContext.PushProperty("InitiativeId", id))
-            {
-                Stopwatch watch = null;
-                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                {
-                    _logger.Information("Deleting initiative {InitiativeId}");
-                    watch = new Stopwatch();
-                    watch.Start();
-                }
+        //// DELETE: ideas/5
+        //[HttpDelete("{id}")]
+        //[Authorize]
+        //public async Task<IActionResult> DeleteIdea([FromRoute] int id)
+        //{
+        //    using (LogContext.PushProperty("InitiativeId", id))
+        //    {
+        //        Stopwatch watch = null;
+        //        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+        //        {
+        //            _logger.Information("Deleting initiative {InitiativeId}");
+        //            watch = new Stopwatch();
+        //            watch.Start();
+        //        }
 
-                if (!ModelState.IsValid)
-                {
-                    _logger.Warning("Unable to delete initiative {InitiativeId} because model state is not valid: {ModelState}", id, ModelState);
-                    return BadRequest(ModelState);
-                }
+        //        if (!ModelState.IsValid)
+        //        {
+        //            _logger.Warning("Unable to delete initiative {InitiativeId} because model state is not valid: {ModelState}", id, ModelState);
+        //            return BadRequest(ModelState);
+        //        }
 
-                try
-                {
-                    var idea = await _repository.DeleteIdeaAsync(id);
-                    if (idea == null)
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                        {
-                            watch.Stop();
-                            _logger.Information("Updated initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
-                        }
-                        return Ok(idea);
-                    }
-                }
-                catch (Exception err)
-                {
-                    Guid correlationId = Guid.NewGuid();
-                    _logger.Error(err, "Unable to delete initiative InitiativeId from repository. CorrelationId: {CorrelationId}", id, correlationId);
-                    return base.StatusCode(500, $"Unable to delete initiative from repository. CorrelationId: { correlationId }");
+        //        try
+        //        {
+        //            var idea = await _repository.DeleteIdeaAsync(id);
+        //            if (idea == null)
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+        //                {
+        //                    watch.Stop();
+        //                    _logger.Information("Updated initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+        //                }
+        //                return Ok(idea);
+        //            }
+        //        }
+        //        catch (Exception err)
+        //        {
+        //            Guid correlationId = Guid.NewGuid();
+        //            _logger.Error(err, "Unable to delete initiative InitiativeId from repository. CorrelationId: {CorrelationId}", id, correlationId);
+        //            return base.StatusCode(500, $"Unable to delete initiative from repository. CorrelationId: { correlationId }");
 
-                }
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
 
 

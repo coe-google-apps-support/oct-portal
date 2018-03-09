@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CoE.Ideas.Core.Data;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Core.WordPress
@@ -14,7 +12,7 @@ namespace CoE.Ideas.Core.WordPress
 
         Task<WordPressUser> GetUserAsync(int wordPressuserId);
 
-        Task<WordPressPost> PostIdeaAsync(Idea idea);
+        Task<WordPressPost> PostIdeaAsync(Initiative idea);
 
         Task<WordPressPost> GetPostForInitativeSlug(string slug);
     }

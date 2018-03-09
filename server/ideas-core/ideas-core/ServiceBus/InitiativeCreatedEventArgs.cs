@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CoE.Ideas.Core.Data;
 using System.Security.Claims;
-using System.Text;
 
 namespace CoE.Ideas.Core.ServiceBus
 {
     public class InitiativeCreatedEventArgs
     {
-        public Idea Initiative { get; set; }
+        public Initiative Initiative { get; set; }
         public ClaimsPrincipal Owner { get; set; }
     }
 }

@@ -1,13 +1,12 @@
-﻿using CoE.Ideas.Core.Internal.Initiatives;
-using CoE.Ideas.Core.Security;
-using CoE.Ideas.Core.WordPress;
+﻿using CoE.Ideas.Core.Data;
+using CoE.Ideas.Core.Services;
+using CoE.Ideas.Shared.Security;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,19 +15,19 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     //TODO: Mark messages as complete, abadoned or dead lettered!
 
-    public class InitiativeMessageReceiver : IInitiativeMessageReceiver
+    internal abstract class InitiativeMessageReceiver : IInitiativeMessageReceiver
     { 
         public InitiativeMessageReceiver(ISubscriptionClient subscriptionClient,
-            Serilog.ILogger logger,
-            IIdeaRepositoryFactory remoteIdeaRepositoryFactory) 
+            Serilog.ILogger logger) 
         {
-            _remoteIdeaRepositoryFactory = remoteIdeaRepositoryFactory;
             _subscriptionClient = subscriptionClient ?? throw new ArgumentNullException("subscriptionClient");
             _logger = logger ?? throw new ArgumentNullException("logger");
         }
         private readonly ISubscriptionClient _subscriptionClient;
         private readonly Serilog.ILogger _logger;
-        private readonly IIdeaRepositoryFactory _remoteIdeaRepositoryFactory;
+
+        protected abstract IInitiativeRepository GetInitiativeRepository(ClaimsPrincipal owner);
+
 
         private IDictionary<string, ICollection<Func<Message, CancellationToken, Task>>> MessageMap = new Dictionary<string, ICollection<Func<Message, CancellationToken, Task>>>();
 
@@ -278,13 +277,13 @@ namespace CoE.Ideas.Core.ServiceBus
         }
 
 
-        protected virtual async Task<GetItemResult<Idea>> GetMessageInitiative(Message message, ClaimsPrincipal owner)
+        protected virtual async Task<GetItemResult<Initiative>> GetMessageInitiative(Message message, ClaimsPrincipal owner)
         {
             if (message == null)
                 throw new ArgumentNullException("msg");
 
-            var initiativeIdResult = await GetMessageProperty<long>(message, propertyName: "InitiativeId");
-            var result = new GetItemResult<Idea>();
+            var initiativeIdResult = await GetMessageProperty<int>(message, propertyName: "InitiativeId");
+            var result = new GetItemResult<Initiative>();
             if (initiativeIdResult.WasMessageDeadLettered)
             {
                 result.SetMessageDeadLettered(initiativeIdResult.Errors.FirstOrDefault());
@@ -297,9 +296,9 @@ namespace CoE.Ideas.Core.ServiceBus
 
                     // if the remote repositoty factory is populated, we'll use that,
                     // otherwise we'll just use the default
-                    IIdeaRepository ideaRepository = _remoteIdeaRepositoryFactory.Create(owner);
+                    var ideaRepository = GetInitiativeRepository(owner);
 
-                    result.Item = await ideaRepository.GetIdeaAsync(initiativeIdResult.Item);
+                    result.Item = await ideaRepository.GetInitiativeAsync(initiativeIdResult.Item);
                     _logger.Information("Retrieved initiative {InitiativeId}, has title '{Title}'", initiativeIdResult.Item, result?.Item?.Title);
                 }
                 catch (Exception err)
