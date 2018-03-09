@@ -1,29 +1,17 @@
-﻿using CoE.Ideas.Core.Internal;
-using CoE.Ideas.Core.Internal.Initiatives;
-using CoE.Ideas.Core.Internal.WordPress;
-using CoE.Ideas.Core.People;
-using CoE.Ideas.Core.ProjectManagement;
-using CoE.Ideas.Core.Security;
+﻿using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Core.Services;
 using CoE.Ideas.Core.WordPress;
-using CoE.Ideas.ProjectManagement.Core.Internal;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using CoE.Ideas.Shared.Security;
+using EnsureThat;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoE.Ideas.Core
 {
@@ -39,42 +27,25 @@ namespace CoE.Ideas.Core
         /// <param name="services">The Microsoft.Extensions.DependencyInjection.IServiceCollection to add services to.</param>
         /// <param name="dbConnectionString">The connection string to the Idea database.</param>
         /// <returns>The passed in services, for chaining</returns>
-        public static IServiceCollection AddIdeaConfiguration(this IServiceCollection services,
-            string dbConnectionString, 
-            string wordPressUrl,
-            string wordPressDbConnectionString,
-            IConfigurationSection wordPressConfigurationSection)
+        public static IServiceCollection AddLocalInitiativeConfiguration(this IServiceCollection services,
+            string dbConnectionString)
         {
-            if (string.IsNullOrWhiteSpace(dbConnectionString))
-                throw new ArgumentNullException("dbConnectionString");
+            EnsureArg.IsNotNullOrWhiteSpace(dbConnectionString);
 
-            if (string.IsNullOrWhiteSpace(wordPressUrl))
-                throw new ArgumentNullException("wordPressUrl");
-
-            if (string.IsNullOrWhiteSpace(wordPressDbConnectionString))
-                throw new ArgumentNullException("wordPressDbConnectionString");
-
-            services.AddDbContext<IdeaContext>(options =>
+            services.AddDbContext<InitiativeContext>(options =>
                 options.UseMySql(dbConnectionString));
 
-            services.AddScoped<IIdeaRepository, IdeaRepositoryInternal>();
-            services.AddScoped<IUpdatableIdeaRepository, IdeaRepositoryInternal>();
+            services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
 
-            // IHttpContextAccessor is used in WordpressClient
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //// IHttpContextAccessor is used in WordpressClient
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            var wordPressUri = new Uri(wordPressUrl);
-            services.Configure<WordPressClientOptions>(options => 
-            {
-                options.Url = wordPressUri;
-            });
-            services.AddScoped<IWordPressClient, WordPressClient>();
-
-            services.AddDbContext<WordPressContext>(options =>
-                options.UseMySql(wordPressDbConnectionString));
-
-            services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
-            services.AddScoped<IWordPressUserSecurity, WordPressUserSecurity>();
+            //var wordPressUri = new Uri(wordPressUrl);
+            //services.Configure<WordPressClientOptions>(options => 
+            //{
+            //    options.Url = wordPressUri;
+            //});
+            //services.AddScoped<IWordPressClient, WordPressClient>();
 
             services.AddSingleton<IStringTemplateService, StringTemplateService>();
 
@@ -89,8 +60,8 @@ namespace CoE.Ideas.Core
             if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
             {
                 services.AddSingleton<SynchronousInitiativeMessageReceiver>();
-                services.AddSingleton<Core.ServiceBus.IInitiativeMessageReceiver>(x => x.GetRequiredService<SynchronousInitiativeMessageReceiver>());
-                services.AddSingleton<Core.ServiceBus.IInitiativeMessageSender, SynchronousInitiativeMessageSender>();
+                services.AddSingleton<IInitiativeMessageReceiver>(x => x.GetRequiredService<SynchronousInitiativeMessageReceiver>());
+                services.AddSingleton<IInitiativeMessageSender, SynchronousInitiativeMessageSender>();
             }
             else
             {
@@ -106,35 +77,19 @@ namespace CoE.Ideas.Core
                     {
                         return new SubscriptionClient(serviceBusConnectionString, serviceBusTopicName, serviceBusSubscription);
                     });
-                    services.AddSingleton<IInitiativeMessageReceiver, InitiativeMessageReceiver>();
+
+                    // this is how we can determine if we can acces the local database...
+                    if (services.Any(x => x.ImplementationType == typeof(LocalInitiativeRepository)))
+                        services.AddSingleton<IInitiativeMessageReceiver, LocalInitiativeMessageReceiver>();
+                    else
+                        services.AddSingleton<IInitiativeMessageReceiver, RemoteInitiativeMessageReceiver>();
                 }
             }
 
-
-            services.AddSingleton<IIdeaRepositoryFactory, IdeaRepositoryFactory>();
-
             return services;
         }
 
-        public static IServiceCollection AddProjectManagementConfiguration(
-            this IServiceCollection services,
-            string dbConnectionString)
-        {
-            if (string.IsNullOrWhiteSpace(dbConnectionString))
-                throw new ArgumentNullException("dbConnectionString");
-
-
-            services.AddDbContext<ProjectManagementContext>(options =>
-                options.UseMySql(dbConnectionString));
-
-
-
-            services.AddScoped<IProjectManagementRepository, ProjectManagementRepositoryInternal>();
-
-            return services;
-        }
-
-        public static IServiceCollection AddRemoteIdeaConfiguration(this IServiceCollection services,
+        public static IServiceCollection AddRemoteInitiativeConfiguration(this IServiceCollection services,
             string ideasApiUrl, 
             string wordpressUrl,
             IConfigurationSection wordPressConfigurationSection)
@@ -144,56 +99,28 @@ namespace CoE.Ideas.Core
             if (string.IsNullOrWhiteSpace(wordpressUrl))
                 throw new ArgumentNullException("wordpressUrl");
 
-            services.Configure<IdeaRepositoryFactoryOptions>(options =>
+            services.Configure<RemoteInitiativeRepositoryOptions>(options =>
             {
-                options.IsRemote = true;
                 options.WordPressUrl = wordpressUrl;
             });
-            services.Configure<RemoteIdeaRepositoryOptions>(options =>
-            {
-                options.Url = ideasApiUrl;
-            });
-            services.AddSingleton<IdeaRepositoryFactory>();
-            //services.AddScoped<IIdeaRepository, RemoteIdeaRepository>();
+            services.AddTransient<RemoteInitiativeRepository>();
+            services.AddTransient<IInitiativeRepository>(x => x.GetRequiredService<RemoteInitiativeRepository>());
 
 
-            services.Configure<WordPressClientOptions>(options =>
-            {
-                options.Url = new Uri(wordpressUrl);
-            });
-            services.AddScoped<IWordPressClient, WordPressClient>();
+            //services.Configure<WordPressClientOptions>(options =>
+            //{
+            //    options.Url = new Uri(wordpressUrl);
+            //});
+            //services.AddScoped<IWordPressClient, WordPressClient>();
 
-            services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
-            services.AddSingleton<IWordPressUserSecurity, WordPressUserSecurity>();
+            //services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
+            //services.AddSingleton<IWordPressUserSecurity, WordPressUserSecurity>();
 
             return services;
         }
 
 
-        public static IServiceCollection AddPeopleService(this IServiceCollection services,
-            string peopleServiceUrl)
-        {
-            if (string.IsNullOrWhiteSpace(peopleServiceUrl))
-                throw new ArgumentNullException("peopleServiceUrl");
 
-            Uri peopleServiceUri;
-            try
-            {
-                peopleServiceUri = new Uri(peopleServiceUrl);
-            }
-            catch (Exception err)
-            {
-                throw new InvalidOperationException($"peopleServiceUrl is not a valid url: { peopleServiceUrl }", err);
-            }
-
-            services.Configure<PeopleServiceOptions>(x =>
-            {
-                x.ServiceUrl = peopleServiceUri;
-            });
-            services.AddSingleton<IPeopleService, PeopleService>();
-
-            return services;
-        }
 
 
         /// <summary>
@@ -208,21 +135,17 @@ namespace CoE.Ideas.Core
         /// <returns></returns>
         public static IServiceCollection AddIdeaAuthSecurity(this IServiceCollection services, string wordPressUrl)
         {
+            EnsureArg.IsNotNullOrWhiteSpace(wordPressUrl);
+
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = WordPressCookieAuthenticationDefaults.AuthenticationScheme;
-                //options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddWordPressCookie(options =>
             {
                 options.WordPressUrl = wordPressUrl;
             });
 
             return services;
-        }
-
-        private class SimpleOptions<T> : IOptions<T> where T : class, new()
-        {
-            public T Value { get; set; }
         }
     }
 }

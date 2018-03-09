@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CoE.Ideas.Core.Security;
 using CoE.Ideas.Core.WordPress;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;

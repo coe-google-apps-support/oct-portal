@@ -6,22 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20180301200113_AddingIdeaStatusHistory.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\IssueInternal.cs" Link="Internal\ProjectManagement\IssueInternal.cs" />
-    <Compile Include="..\..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\IssueStatusChangeInternal.cs" Link="Internal\ProjectManagement\IssueStatusChangeInternal.cs" />
-    <Compile Include="..\..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\IssueStatusInternal.cs" Link="Internal\ProjectManagement\IssueStatusInternal.cs" />
-    <Compile Include="..\..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\ProjectManagementContext.cs" Link="Internal\ProjectManagement\ProjectManagementContext.cs" />
-    <Compile Include="..\..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\ProjectManagementEntityBaseInternal.cs" Link="Internal\ProjectManagement\ProjectManagementEntityBaseInternal.cs" />
-    <Compile Include="..\..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\ProjectManagementRepositoryInternal.cs" Link="Internal\ProjectManagement\ProjectManagementRepositoryInternal.cs" />
-    <Compile Include="..\..\ideas-integration-projectmanagement\ideas-integration-projectmanagement-core\Internal\ProjectManagementSystemInternal.cs" Link="Internal\ProjectManagement\ProjectManagementSystemInternal.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
+    <PackageReference Include="Ensure.That" Version="7.2.1" />
+    <PackageReference Include="MediatR" Version="4.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.1" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="2.0.0" />
@@ -40,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Internal\ProjectManagement\" />
+    <ProjectReference Include="..\..\shared-kernel\shared-kernel.csproj" />
   </ItemGroup>
 
 </Project>

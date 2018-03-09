@@ -1,17 +1,13 @@
-﻿using CoE.Ideas.Core.Internal.WordPress;
-using CoE.Ideas.Core.Security;
-using CoE.Ideas.Core.WordPress;
-using Microsoft.AspNetCore.Http;
+﻿using CoE.Ideas.Core.Data;
+using CoE.Ideas.Shared.WordPress;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,7 +80,7 @@ namespace CoE.Ideas.Core.WordPress
         }
 
 
-        public Task<WordPressPost> PostIdeaAsync(Idea idea)
+        public Task<WordPressPost> PostIdeaAsync(Initiative idea)
         {
             if (idea == null)
                 throw new ArgumentNullException("idea");
