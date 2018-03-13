@@ -1,17 +1,15 @@
-﻿using AutoMapper;
-using CoE.Ideas.Core;
+﻿using CoE.Ideas.Core;
+using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Core.Services;
 using CoE.Ideas.Core.Tests;
-using CoE.Ideas.Core.WordPress;
 using CoE.Ideas.Server.Controllers;
+using CoE.Ideas.Shared.Security;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Server.Tests
@@ -75,9 +73,8 @@ namespace CoE.Ideas.Server.Tests
 
         public TestConfiguration ConfigureIdeaServices()
         {
-            _services.AddScoped<IWordPressClient, MockWordPressClient>();
-            _services.AddScoped<IIdeaRepository, MockIdeaRepository>();
-            _services.AddScoped<IUpdatableIdeaRepository, MockIdeaRepository>();
+            //_services.AddScoped<IWordPressClient, MockWordPressClient>();
+            _services.AddScoped<IInitiativeRepository, MockIdeaRepository>();
 
 
             //_services.AddIdeaAuthSecurity(
@@ -94,14 +91,7 @@ namespace CoE.Ideas.Server.Tests
 
         public TestConfiguration ConfigureIdeaMessaging()
         {
-
-            _services.AddSingleton<MockInitiativeMessageReceiver>();
-            _services.AddSingleton<IInitiativeMessageReceiver>(x =>
-            {
-                return x.GetRequiredService<MockInitiativeMessageReceiver>();
-            });
-            _services.AddSingleton<IInitiativeMessageSender, MockInitiativeMessageSender>();
-
+            _services.AddInitiativeMessaging();
             return this;
         }
 
@@ -154,8 +144,8 @@ namespace CoE.Ideas.Server.Tests
         {
             _services.AddScoped<IdeasController>(x =>
             {
-                return new IdeasController(x.GetRequiredService<IUpdatableIdeaRepository>(),
-                    x.GetRequiredService<IWordPressClient>(),
+                return new IdeasController(x.GetRequiredService<IInitiativeRepository>(),
+                    x.GetRequiredService<IPersonRepository>(),
                     x.GetRequiredService<IInitiativeMessageSender>(),
                     x.GetRequiredService<Serilog.ILogger>())
                 {
@@ -174,11 +164,14 @@ namespace CoE.Ideas.Server.Tests
 
         public async Task<TestConfiguration> SetupMockData(ServiceProvider serviceProvider)
         {
-            var repository = serviceProvider.GetRequiredService<IUpdatableIdeaRepository>();
+            var repository = serviceProvider.GetRequiredService<IInitiativeRepository>();
+            var personRepository = serviceProvider.GetRequiredService<IPersonRepository>();
+            int snowWhiteId = await personRepository.GetPersonIdByEmailAsync(SnowWhite.GetEmail());
+            int sleepingBeautyId = await personRepository.GetPersonIdByEmailAsync(SleepingBeauty.GetEmail());
 
-            await repository.AddIdeaAsync(new Idea() { Title = "Test Idea 1", Description = "Test Idea 1 Description " }, SnowWhite);
-            await repository.AddIdeaAsync(new Idea() { Title = "Test Idea 2", Description = "Test Idea 2 Description " }, SnowWhite);
-            await repository.AddIdeaAsync(new Idea() { Title = "Test Idea 3", Description = "Test Idea 3 Description " }, SleepingBeauty);
+            await repository.AddInitiativeAsync(Initiative.Create(title: "Test Idea 1", description: "Test Idea 1 Description ", ownerPersonId: snowWhiteId));
+            await repository.AddInitiativeAsync(Initiative.Create(title: "Test Idea 2", description: "Test Idea 2 Description ", ownerPersonId: snowWhiteId));
+            await repository.AddInitiativeAsync(Initiative.Create(title: "Test Idea 3", description: "Test Idea 3 Description ", ownerPersonId: sleepingBeautyId));
 
             return this;
         }

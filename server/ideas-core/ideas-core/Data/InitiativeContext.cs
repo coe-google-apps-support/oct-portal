@@ -1,8 +1,10 @@
 ﻿using CoE.Ideas.Core.Events;
+using CoE.Ideas.Shared.Data;
 using EnsureThat;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,13 +15,13 @@ namespace CoE.Ideas.Core.Data
     {
         public InitiativeContext(
             DbContextOptions<InitiativeContext> options,
-            InitiativeMediator mediator) : base(options)
+            DomainEvents domainEvents) : base(options)
         {
-            EnsureArg.IsNotNull(mediator);
-            _initiativeMediator = mediator;
+            EnsureArg.IsNotNull(domainEvents);
+            _domainEvents = domainEvents;
         }
 
-        private readonly InitiativeMediator _initiativeMediator;
+        private readonly DomainEvents _domainEvents;
 
         public DbSet<Initiative> Initiatives { get; set; }
         public DbSet<InitiativeStatusHistory> IdeaStatusHistories { get; set; }
@@ -42,10 +44,35 @@ namespace CoE.Ideas.Core.Data
             // multiple transactions. You will need to handle eventual consistency and
             // compensatory actions in case of failures.        
 
-            await _initiativeMediator.DispatchDomainEventsAsync(this);
+            // see https://ardalis.com/using-mediatr-in-aspnet-core-apps for Mediatr examples
+
+
+            SetAuditing();
 
             var result = await base.SaveChangesAsync(cancellationToken);
+
+            await _domainEvents.DispatchDomainEventsAsync(this);
+
             return result;
+        }
+
+        protected virtual void SetAuditing()
+        {
+            var auditableEntities = base.ChangeTracker.Entries()
+                .Where(x => x.Entity.GetType().GetInterfaces().Any(y => y == typeof(IAuditEntity)))
+                .GroupBy(x => x.State)
+                .ToDictionary(x => x.Key, y => y.Select(z => (IAuditEntity)z.Entity));
+
+            DateTime now = DateTime.UtcNow;
+            foreach (var addedEntry in auditableEntities[EntityState.Added])
+            {
+                // set the Audit values using the CurrentValue property because the properties themselves are not public
+                //addedEntry.AuditRecord.AuditCreatedOnUtc = now;
+
+            }
+
+            throw new NotImplementedException();
+
         }
     }
 }

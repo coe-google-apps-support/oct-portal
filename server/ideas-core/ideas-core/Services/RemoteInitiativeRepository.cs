@@ -9,7 +9,9 @@ namespace CoE.Ideas.Core.Services
 {
     internal class RemoteInitiativeRepository : IInitiativeRepository
     {
-        public Task<Initiative> AddInitiativeAsync(Initiative initiative, ClaimsPrincipal owner)
+        public void SetUser(ClaimsPrincipal user) { }
+
+        public Task<Initiative> AddInitiativeAsync(Initiative initiative)
         {
             throw new NotImplementedException();
         }
@@ -24,26 +26,25 @@ namespace CoE.Ideas.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<Initiative> GetInitiativeByWordpressKeyAsync(int wordpressKey)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderEmailAsync(string email)
+        public Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId)
         {
             throw new NotImplementedException();
         }
 
-        public void SetUser(ClaimsPrincipal user) { }
+        public Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId)
+        {
+            throw new NotImplementedException();
+        }
 
         public Task<Initiative> UpdateInitiativeAsync(Initiative initiative)
         {
             throw new NotImplementedException();
         }
+
     }
 }

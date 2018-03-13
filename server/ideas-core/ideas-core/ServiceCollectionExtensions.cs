@@ -1,16 +1,12 @@
 ﻿using CoE.Ideas.Core.Data;
+using CoE.Ideas.Core.Events;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.Services;
-using CoE.Ideas.Core.WordPress;
-using CoE.Ideas.Shared.Security;
 using EnsureThat;
-using Microsoft.AspNetCore.Http;
+using MediatR;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using System;
 using System.Linq;
 
 namespace CoE.Ideas.Core
@@ -33,19 +29,14 @@ namespace CoE.Ideas.Core
             EnsureArg.IsNotNullOrWhiteSpace(dbConnectionString);
 
             services.AddDbContext<InitiativeContext>(options =>
-                options.UseMySql(dbConnectionString));
+                options.UseSqlServer(dbConnectionString));
 
             services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
 
-            //// IHttpContextAccessor is used in WordpressClient
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddMediatR();
+            services.AddScoped<DomainEvents>();
 
-            //var wordPressUri = new Uri(wordPressUrl);
-            //services.Configure<WordPressClientOptions>(options => 
-            //{
-            //    options.Url = wordPressUri;
-            //});
-            //services.AddScoped<IWordPressClient, WordPressClient>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
 
             services.AddSingleton<IStringTemplateService, StringTemplateService>();
 
@@ -89,63 +80,36 @@ namespace CoE.Ideas.Core
             return services;
         }
 
-        public static IServiceCollection AddRemoteInitiativeConfiguration(this IServiceCollection services,
-            string ideasApiUrl, 
-            string wordpressUrl,
-            IConfigurationSection wordPressConfigurationSection)
-        {
-            if (string.IsNullOrWhiteSpace(ideasApiUrl))
-                throw new ArgumentNullException("ideasApiUrl");
-            if (string.IsNullOrWhiteSpace(wordpressUrl))
-                throw new ArgumentNullException("wordpressUrl");
+        //public static IServiceCollection AddRemoteInitiativeConfiguration(this IServiceCollection services,
+        //    string ideasApiUrl, 
+        //    string wordpressUrl,
+        //    IConfigurationSection wordPressConfigurationSection)
+        //{
+        //    if (string.IsNullOrWhiteSpace(ideasApiUrl))
+        //        throw new ArgumentNullException("ideasApiUrl");
+        //    if (string.IsNullOrWhiteSpace(wordpressUrl))
+        //        throw new ArgumentNullException("wordpressUrl");
 
-            services.Configure<RemoteInitiativeRepositoryOptions>(options =>
-            {
-                options.WordPressUrl = wordpressUrl;
-            });
-            services.AddTransient<RemoteInitiativeRepository>();
-            services.AddTransient<IInitiativeRepository>(x => x.GetRequiredService<RemoteInitiativeRepository>());
-
-
-            //services.Configure<WordPressClientOptions>(options =>
-            //{
-            //    options.Url = new Uri(wordpressUrl);
-            //});
-            //services.AddScoped<IWordPressClient, WordPressClient>();
-
-            //services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
-            //services.AddSingleton<IWordPressUserSecurity, WordPressUserSecurity>();
-
-            return services;
-        }
+        //    services.Configure<RemoteInitiativeRepositoryOptions>(options =>
+        //    {
+        //        options.WordPressUrl = wordpressUrl;
+        //    });
+        //    services.AddTransient<RemoteInitiativeRepository>();
+        //    services.AddTransient<IInitiativeRepository>(x => x.GetRequiredService<RemoteInitiativeRepository>());
 
 
+        //    //services.Configure<WordPressClientOptions>(options =>
+        //    //{
+        //    //    options.Url = new Uri(wordpressUrl);
+        //    //});
+        //    //services.AddScoped<IWordPressClient, WordPressClient>();
+
+        //    //services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
+        //    //services.AddSingleton<IWordPressUserSecurity, WordPressUserSecurity>();
+
+        //    return services;
+        //}
 
 
-
-        /// <summary>
-        /// Adds Idea authentication for WebAPI. Sets up JWT handlers for use with the token generator 
-        /// in the WordPress JWT plugin
-        /// </summary>
-        /// <param name="services">The Microsoft.Extensions.DependencyInjection.IServiceCollection to add services to.</param>
-        /// <param name="jwtSecretKey">The JWT_SECRET_KEY, as specified in the corresponding WordPress installation.</param>
-        /// <param name="coeAuthKey">The COE_AUTH_KEY, as specified in the corresponding WordPress installation.</param>
-        /// <param name="coeAuthIV">The COE_AUTH_IV, as specified in the corresponding WordPress installation.</param>
-        /// <param name="wordPressUrl">The full URL of the wordpress installation, used to verify issuers of the JWT token</param>
-        /// <returns></returns>
-        public static IServiceCollection AddIdeaAuthSecurity(this IServiceCollection services, string wordPressUrl)
-        {
-            EnsureArg.IsNotNullOrWhiteSpace(wordPressUrl);
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = WordPressCookieAuthenticationDefaults.AuthenticationScheme;
-            }).AddWordPressCookie(options =>
-            {
-                options.WordPressUrl = wordPressUrl;
-            });
-
-            return services;
-        }
     }
 }

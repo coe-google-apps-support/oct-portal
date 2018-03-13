@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
-namespace CoE.Ideas.Core.Data
+namespace CoE.Ideas.Shared.Data
 {
     // based on "Domain-Driven Design Fundamentals" PluralSight course by Julie Lerman and Steve Smith
     public abstract class ValueObject<T> : IEquatable<T>

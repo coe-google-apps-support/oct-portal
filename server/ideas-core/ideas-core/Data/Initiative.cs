@@ -1,4 +1,5 @@
 ﻿using CoE.Ideas.Core.Events;
+using CoE.Ideas.Shared.Data;
 using EnsureThat;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Text;
 namespace CoE.Ideas.Core.Data
 {
     // Initiative is a Domain Driven Design aggregate root 
-    public class Initiative : Entity<Guid>
+    public class Initiative : AggregateRoot<Guid>
     {
         public Initiative(Guid id) : base(id) { }
 
@@ -17,14 +18,23 @@ namespace CoE.Ideas.Core.Data
 
         // Factory method for creation
         public static Initiative Create(
-            string title, string description)
+            string title, 
+            string description,
+            int ownerPersonId)
         {
             Ensure.String.IsNotNullOrWhiteSpace(title, nameof(title));
             Ensure.String.IsNotNullOrWhiteSpace(description, nameof(description));
+            Ensure.Comparable.IsGt(ownerPersonId, 0, nameof(ownerPersonId));
 
             var initiative = new Initiative(Guid.NewGuid());
             initiative.Title = title;
             initiative.Description = description;
+            initiative.Stakeholders = new List<Stakeholder>()
+            {
+                Stakeholder.Create(ownerPersonId, StakeholderType.Owner)
+            };
+            initiative.Status = InitiativeStatus.Initiate;
+            initiative.CreatedDate = DateTimeOffset.Now;
 
             initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative));
 
@@ -47,6 +57,8 @@ namespace CoE.Ideas.Core.Data
         /// </summary>
         [Required]
         public string Description { get; private set; }
+
+        public DateTimeOffset CreatedDate { get; private set; }
 
 
         // best practice is to have only one-way navigation properties, where possible
@@ -108,5 +120,6 @@ namespace CoE.Ideas.Core.Data
 
             AddDomainEvent(new InitiativeStatusChangedDomainEvent(this, oldStatus));
         }
+
     }
 }

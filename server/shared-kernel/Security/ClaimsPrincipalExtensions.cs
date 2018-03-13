@@ -23,6 +23,20 @@ namespace CoE.Ideas.Shared.Security
             else
                 return displayNameClaim.Value;
         }
+        public static int GetPersonId(this ClaimsPrincipal principal)
+        {
+            var idClaim = principal.Claims.FirstOrDefault(x => x.Type == WordPress.WordPressUserSecurity.CLAIM_TYPE_ID);
+            if (idClaim == null)
+                throw new InvalidOperationException($"Unable to find a claim of type {WordPress.WordPressUserSecurity.CLAIM_TYPE_ID}");
+            else
+            {
+                int personId;
+                if (int.TryParse(idClaim.Value, out personId))
+                    return personId;
+                else
+                    throw new InvalidOperationException($"Expected claim of type {WordPress.WordPressUserSecurity.CLAIM_TYPE_ID} to be an integer, but got '{idClaim.Value}'");
+            }
+        }
     }
 
 }

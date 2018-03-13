@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using CoE.Ideas.Core;
+using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.WordPress;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Sheets.v4;
@@ -91,7 +92,7 @@ namespace CoE.Ideas.Integration.Logger
         }
 
 
-        public async Task<AppendValuesResponse> LogIdeaAsync(Idea idea, ClaimsPrincipal owner, UserPrincipal adUser)
+        public async Task<AppendValuesResponse> LogIdeaAsync(Initiative idea, ClaimsPrincipal owner, UserPrincipal adUser)
         {
             var values = new ValueRange() { MajorDimension = "ROWS" };
             IList<object> rowData = new List<object>()

@@ -1,4 +1,5 @@
 ﻿using CoE.Ideas.Shared.People;
+using CoE.Ideas.Shared.Security;
 using CoE.Ideas.Shared.WordPress;
 using EnsureThat;
 using Microsoft.EntityFrameworkCore;
@@ -19,11 +20,25 @@ namespace CoE.Ideas.Shared.Extensions
             EnsureArg.IsNotNullOrWhiteSpace(wordPressDbConnectionString);
             EnsureArg.IsNotNull(wordPressConfigurationSection);
 
+            string wordPressUrl = wordPressConfigurationSection["Url"];
+            EnsureArg.IsNotNullOrWhiteSpace(wordPressUrl, "wordPressConfigurationSection", 
+                o => o.WithMessage("wordPressConfigurationSection must contain a valid Url"));
+
             services.AddDbContext<WordPressContext>(options =>
                 options.UseMySql(wordPressDbConnectionString));
 
             services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
             services.AddScoped<IWordPressUserSecurity, WordPressUserSecurity>();
+
+            services.AddScoped<IWordPressRepository, WordPressRepository>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = WordPressCookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddWordPressCookie(options =>
+            {
+                options.WordPressUrl = wordPressConfigurationSection["Url"];
+            });
 
             return services;
         }
