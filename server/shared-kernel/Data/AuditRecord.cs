@@ -1,44 +1,12 @@
-﻿using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace CoE.Ideas.Core.Data
+namespace CoE.Ideas.Shared.Data
 {
-    // based on "Domain-Driven Design Fundamentals" PluralSight course by Julie Lerman and Steve Smith
-    public abstract class Entity<TId> : IEquatable<Entity<TId>>
+    public class AuditRecord : ValueObject<AuditRecord>
     {
-        public TId Id { get; protected set; }
-
-        protected Entity(TId id)
-        {
-            if (object.Equals(id, default(TId)))
-            {
-                throw new ArgumentException("The ID Cannot be the type's default value.", "id");
-            }
-
-            this.Id = id;
-        }
-
-        // EF requires an empty constructor
-        protected Entity() { }
-
-        private IList<INotification> _domainEvents;
-        public IList<INotification> DomainEvents => _domainEvents;
-
-        public void AddDomainEvent(INotification eventItem)
-        {
-            _domainEvents = _domainEvents ?? new List<INotification>();
-            _domainEvents.Add(eventItem);
-        }
-
-        public void RemoveDomainEvent(INotification eventItem)
-        {
-            if (_domainEvents is null) return;
-            _domainEvents.Remove(eventItem);
-        }
-
         /// <summary>
         /// Sets/Returns the identity of the person or process that created the item.
         /// </summary>
@@ -67,7 +35,7 @@ namespace CoE.Ideas.Core.Data
         /// </para>
         /// </remarks>
         [Display(Description = "Contains the creation date and time for the item.", Name = "Created On")]
-        public DateTimeOffset? AuditCreatedOn { get; private set; }
+        public DateTime AuditCreatedOnUtc { get; private set; }
 
         /// <summary>
         /// Sets/Returns the identity of the person or process that last updated the item.
@@ -97,32 +65,8 @@ namespace CoE.Ideas.Core.Data
         /// </para>
         /// </remarks>
         [Display(Description = "Contains the date and time when the item was last updated.", Name = "Updated On")]
-        public DateTimeOffset? AuditUpdatedOn { get; private set; }
+        public DateTime AuditUpdatedOnUtc { get; private set; }
 
-        // For simple entities, this may suffice
-        // As Evans notes earlier in the course, equality of Entities is frequently not a simple operator
-        public override bool Equals(object otherObject)
-        {
-            var entity = otherObject as Entity<TId>;
-            if (entity != null)
-            {
-                return this.Equals(entity);
-            }
-            return base.Equals(otherObject);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public bool Equals(Entity<TId> other)
-        {
-            if (other == null)
-            {
-                return false;
-            }
-            return this.Id.Equals(other.Id);
-        }
+        
     }
 }

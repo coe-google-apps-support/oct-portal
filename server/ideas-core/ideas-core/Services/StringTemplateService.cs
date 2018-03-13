@@ -1,10 +1,8 @@
 ﻿using CoE.Ideas.Core.Data;
-using CoE.Ideas.Core.WordPress;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Core.Services
@@ -19,7 +17,7 @@ namespace CoE.Ideas.Core.Services
         private readonly InitiativeContext _ideaContext;
 
         private static IDictionary<TemplateKey, string> _stringTemplateCache = new Dictionary<TemplateKey, string>();
-        public async Task<string> GetStatusChangeTextAsync(InitiativeStatus status, WordPressUser assignee, bool isPastTense = false)
+        public async Task<string> GetStatusChangeTextAsync(InitiativeStatus status, Person assignee, bool isPastTense = false)
         {
             TemplateKey key = new TemplateKey()
             {

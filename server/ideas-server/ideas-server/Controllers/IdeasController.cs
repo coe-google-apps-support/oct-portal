@@ -2,17 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using Serilog.Context;
 using CoE.Ideas.Server.Models;
-using CoE.Ideas.Core.WordPress;
 using CoE.Ideas.Core.Data;
 using CoE.Ideas.Shared.Security;
 using CoE.Ideas.Core.Services;
@@ -27,17 +22,17 @@ namespace CoE.Ideas.Server.Controllers
     public class IdeasController : Controller
     {
         private readonly IInitiativeRepository _repository;
-        private readonly IWordPressClient _wordpressClient;
+        private readonly IPersonRepository _personRepository;
         private readonly IInitiativeMessageSender _initiativeMessageSender;
         private readonly Serilog.ILogger _logger;
 
         public IdeasController(IInitiativeRepository repository,
-            IWordPressClient wordpressClient,
+            IPersonRepository personRepository,
             IInitiativeMessageSender initiativeMessageSender,
             Serilog.ILogger logger)
         {
             _repository = repository ?? throw new ArgumentNullException("repository");
-            _wordpressClient = wordpressClient ?? throw new ArgumentNullException("wordpressClient");
+            _personRepository = personRepository ?? throw new ArgumentNullException("personRepository");
             _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
             _logger = logger ?? throw new ArgumentNullException("logger");
         }
@@ -58,7 +53,7 @@ namespace CoE.Ideas.Server.Controllers
             IEnumerable<InitiativeInfo> ideas;
             if (view == ViewOptions.Mine)
             {
-                ideas = await _repository.GetInitiativesByStakeholderEmailAsync(User.GetEmail());
+                ideas = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId());
             }
             else
                 ideas = await _repository.GetInitiativesAsync();
@@ -76,7 +71,7 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetIdea([FromRoute] string id, [FromQuery] InitiativeKeyType type = InitiativeKeyType.InitiativeKey)
+        public async Task<IActionResult> GetIdea([FromRoute] string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -85,57 +80,15 @@ namespace CoE.Ideas.Server.Controllers
             }
             else
             {
-                if (type == InitiativeKeyType.InitiativeKey)
+                if (!int.TryParse(id, out int initiativeId))
                 {
-                    if (!int.TryParse(id, out int initiativeId))
-                    {
-                        _logger.Error($"id must be an integer if type is InitiativeKey, got { id }");
-                        ModelState.AddModelError("id", "id must be an integer if type is InitiativeKey");
-                        return BadRequest(ModelState);
-                    }
-                    else
-                    {
-                        return await GetInitiativeByInitiativeId(initiativeId);
-                    }
+                    _logger.Error($"id must be an integer if type is InitiativeKey, got { id }");
+                    ModelState.AddModelError("id", "id must be an integer if type is InitiativeKey");
+                    return BadRequest(ModelState);
                 }
                 else
                 {
-                    int wordPressKey;
-                    if (type == InitiativeKeyType.Slug)
-                    {
-                        WordPressPost post;
-                        try
-                        {
-                            post = await _wordpressClient.GetPostForInitativeSlug(id);
-                        }
-                        catch (Exception err)
-                        {
-                            _logger.Error(err, "Unable to get WordPress post id from slug {Slug}: {ErrorMessage}", id, err.Message);
-                            throw;
-                        }
-                        if (post == null)
-                            return NotFound();
-                        else
-                        {
-                            wordPressKey = post.Id;
-                            if (wordPressKey <= 0)
-                                throw new InvalidOperationException($"Retrieved Post for slug { id } but the id was invalid ({post.Id})");
-                            else
-                                return await GetInitiativeByWordPresskey(wordPressKey);
-                        }
-                    }
-                    else
-                    {
-                        if (int.TryParse(id, out wordPressKey))
-                        {
-                            return await GetInitiativeByWordPresskey(wordPressKey);
-                        }
-                        else
-                        {
-                            ModelState.AddModelError("id", "id must be an integer if type is WordPressPostKey");
-                            return BadRequest(ModelState);
-                        }
-                    }
+                    return await GetInitiativeByInitiativeId(initiativeId);
                 }
             }
         }
@@ -167,71 +120,6 @@ namespace CoE.Ideas.Server.Controllers
                     _logger.Information("Retrieved initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
                     return Ok(idea);
                 }
-            }
-        }
-
-        private async Task<IActionResult> GetInitiativeByWordPresskey(int wordPressKey)
-        {
-            using (LogContext.PushProperty("WordPressKey", wordPressKey))
-            {
-                _logger.Information("Retrieving initiative by WordPressKey {WordPressKey}");
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
-
-                if (wordPressKey <= 0)
-                {
-                    _logger.Warning("Unable to retrieve initiative with WordPressKey {WordPressKey} because id passed in was less than or equal to zero");
-                    return BadRequest("id must be greater than zero");
-                }
-                else
-                {
-                    var idea = await _repository.GetInitiativeByWordpressKeyAsync(wordPressKey);
-
-                    if (idea == null)
-                    {
-                        _logger.Warning("Unable to find an initiative with WorkPressKey {WordPressKey}");
-                        return NotFound();
-                    }
-
-                    watch.Stop();
-                    _logger.Information("Retrieved initiative {WordPressKey} in {ElapsedMilliseconds}ms", wordPressKey, watch.ElapsedMilliseconds);
-                    return Ok(idea);
-                }
-            }
-        }
-
-
-        // GET: ideas/wp/5
-        /// <summary>
-        /// Retrieves a single Idea based on its assocated wordpressKey
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("wp/{id}")]
-        public async Task<IActionResult> GetInitiativeByWordpressKey([FromRoute] int id)
-        {
-            using (LogContext.PushProperty("WordPressId", id))
-            {
-                _logger.Information("Retrieving initiative by WordPress id {WordPressId}");
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
-                if (!ModelState.IsValid)
-                {
-                    _logger.Warning("Unable to retrieve initiative by WordPress id {WordPressId} because model state is not valid");
-                    return BadRequest(ModelState);
-                }
-
-                var idea = await _repository.GetInitiativeByWordpressKeyAsync(id);
-
-                if (idea == null)
-                {
-                    _logger.Warning("Unable to find an initiative with WordPress id {WordPressId}");
-                    return NotFound();
-                }
-
-                watch.Stop();
-                _logger.Information("Retrieved initiative {InitiativeId} from WordPress id {WordPressId} in {ElapsedMilliseconds}ms", idea.Id, id, watch.ElapsedMilliseconds);
-                return Ok(idea);
             }
         }
 
@@ -310,8 +198,10 @@ namespace CoE.Ideas.Server.Controllers
             Initiative newInitiative = null;
             try
             {
-                newInitiative = Initiative.Create(initiativeData.Title, initiativeData.Description);
-                newInitiative = await _repository.AddInitiativeAsync(newInitiative, User);
+                int personId = User.GetPersonId();
+
+                newInitiative = Initiative.Create(initiativeData.Title, initiativeData.Description, personId);
+                newInitiative = await _repository.AddInitiativeAsync(newInitiative);
 
                 watch.Stop();
                 _logger.Information("Created initiative in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
@@ -389,7 +279,7 @@ namespace CoE.Ideas.Server.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}/steps")]
-        public async Task<IActionResult> GetIdeaSteps([FromRoute] long id)
+        public async Task<IActionResult> GetIdeaSteps([FromRoute] int id)
         {
             using (LogContext.PushProperty("InitiativeId", id))
             {
@@ -430,7 +320,7 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpGet("{id}/assignee")]
 
-        public async Task<IActionResult> GetInitiativeAssignee([FromRoute] long id)
+        public async Task<IActionResult> GetInitiativeAssignee([FromRoute] int id)
         {
             using (LogContext.PushProperty("InitiativeId", id))
             {
@@ -448,16 +338,20 @@ namespace CoE.Ideas.Server.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var idea = await _repository.GetIdeaAsync(id);
+                var idea = await _repository.GetInitiativeAsync(id);
 
-                if (idea == null || idea.Assignee == null)
+                if (idea == null || !idea.AssigneeId.HasValue)
+                    return NotFound();
+
+                var assigneePerson = await _personRepository.GetPersonAsync(idea.AssigneeId.Value);
+                if (assigneePerson == null)
                     return NotFound();
 
                 // convert Person to user
                 var assignee = new User()
                 {
-                    Email = idea.Assignee.Email,
-                    Name = idea.Assignee.UserName,
+                    Email = assigneePerson.Email,
+                    Name = assigneePerson.Name,
                     AvatarUrl = null,
                     PhoneNumber = null
                 };

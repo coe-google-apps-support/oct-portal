@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoE.Ideas.Core;
+using CoE.Ideas.Shared.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,18 +38,12 @@ namespace CoE.Ideas.Server
                 .ReadFrom.Configuration(Configuration)
                 .CreateLogger());
 
-            services.AddIdeaConfiguration(
-                Configuration.GetConnectionString("IdeaDatabase"), 
-                Configuration["Ideas:WordPressUrl"],
-                Configuration.GetConnectionString("WordPressDatabase"),
+            services.AddLocalInitiativeConfiguration(Configuration.GetConnectionString("IdeaDatabase"));
+            services.AddWordPressSecurity(Configuration.GetConnectionString("WordPressDatabase"), 
                 Configuration.GetSection("WordPress"));
 
             services.AddInitiativeMessaging(Configuration.GetConnectionString("IdeaServiceBus"),
                 Configuration["Ideas:ServiceBusTopic"]);
-
-            services.AddIdeaAuthSecurity(Configuration["Ideas:WordPressUrl"]);
-
-            services.AddProjectManagementConfiguration(Configuration.GetConnectionString("IdeaProjectManagementDatabase"));
 
             services.AddMvc();
 

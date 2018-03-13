@@ -40,8 +40,8 @@ namespace CoE.Ideas.Shared.WordPress
         private readonly Serilog.ILogger _logger;
         private readonly WordPressContext _wordPressContext;
 
-        const string CLAIM_TYPE_ID = "http://octavia.edmonton.ca/schemas/2018/02/id";
-        const string CLAIM_AUTH = "http://octavia.edmonton.ca/schemas/2018/02/auth";
+        internal const string CLAIM_TYPE_ID = "http://octavia.edmonton.ca/schemas/2018/02/id";
+        internal const string CLAIM_AUTH = "http://octavia.edmonton.ca/schemas/2018/02/auth";
 
         #region Authentication (Incoming)
         public async Task<ClaimsPrincipal> AuthenticateUserAsync(string cookie, string scheme = "auth")

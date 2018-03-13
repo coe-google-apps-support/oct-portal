@@ -8,13 +8,14 @@ namespace CoE.Ideas.Core.Services
 {
     public interface IInitiativeRepository
     {
-        Task<Initiative> AddInitiativeAsync(Initiative initiative, ClaimsPrincipal owner);
+        Task<Initiative> AddInitiativeAsync(Initiative initiative);
         Task<Initiative> UpdateInitiativeAsync(Initiative initiative);
         Task<Initiative> GetInitiativeAsync(Guid id);
         Task<Initiative> GetInitiativeAsync(int id);
-        Task<Initiative> GetInitiativeByWordpressKeyAsync(int wordpressKey);
 
         Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync();
-        Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderEmailAsync(string email);
+        Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId);
+
+        Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId);
     }
 }

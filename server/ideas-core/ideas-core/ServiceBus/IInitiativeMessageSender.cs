@@ -1,5 +1,4 @@
-﻿using CoE.Ideas.Core.WordPress;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text;
