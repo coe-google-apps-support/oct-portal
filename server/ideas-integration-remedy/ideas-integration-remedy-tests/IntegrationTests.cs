@@ -1,13 +1,11 @@
-using CoE.Ideas.Core;
-using CoE.Ideas.Core.WordPress;
-using CoE.Ideas.Remedy;
+using CoE.Ideas.Core.Data;
+using CoE.Ideas.Shared.WordPress;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using System.Linq;
-using System.ServiceModel;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Remedy.Tests
@@ -39,22 +37,18 @@ namespace CoE.Ideas.Remedy.Tests
         [TestCategory("Integration")]
         public async Task TestCreateRemedyWorkOrder()
         {
-            // mock Idea
-            var newIdea = new Idea()
-            {
-                Title = "Test Idea 3",
-                Description = "Test Idea 2 Contents"
-            };
+            //// mock Idea
+            //var newIdea = Initiative.Create(title: "Test Idea 3", description: "Test Idea 2 Contents");
 
-            // mock user 
-            var newUser = new WordPressUser()
-            {
-                FirstName = "Jane",
-                LastName = "Doe"
-            };
+            //// mock user 
+            //var newUser = new WordPressUser()
+            //{
+            //    FirstName = "Jane",
+            //    LastName = "Doe"
+            //};
 
-            var remedyService = serviceProvider.GetRequiredService<IRemedyService>();
-            await remedyService.PostNewIdeaAsync(newIdea, "COE\\fakeuser");
+            //var remedyService = serviceProvider.GetRequiredService<IRemedyService>();
+            //await remedyService.PostNewIdeaAsync(newIdea, "COE\\fakeuser");
         }
 
         [TestMethod]

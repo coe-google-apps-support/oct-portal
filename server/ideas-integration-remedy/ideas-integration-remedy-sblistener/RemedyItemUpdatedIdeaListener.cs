@@ -1,15 +1,9 @@
-﻿using CoE.Ideas.Core;
+﻿using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.ServiceBus;
-using CoE.Ideas.Core.WordPress;
+using CoE.Ideas.Core.Services;
 using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Serilog.Context;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,11 +12,13 @@ namespace CoE.Ideas.Remedy.SbListener
     public class RemedyItemUpdatedIdeaListener
     {
         public RemedyItemUpdatedIdeaListener(
-            IUpdatableIdeaRepository ideaRepository,
+            IInitiativeRepository ideaRepository,
+            IPersonRepository personRepository,
             IInitiativeMessageReceiver initiativeMessageReceiver,
             Serilog.ILogger logger)
         {
             _ideaRepository = ideaRepository ?? throw new ArgumentNullException("ideaRepository");
+            _personRepository = personRepository ?? throw new ArgumentNullException("personRepository");
             _initiativeMessageReceiver = initiativeMessageReceiver ?? throw new ArgumentNullException("initiativeMessageReceiver");
             _logger = logger ?? throw new ArgumentNullException("logger");
 
@@ -31,7 +27,8 @@ namespace CoE.Ideas.Remedy.SbListener
                 workOrderUpdatedHandler: OnWorkOrderUpdatedAsync);
         }
 
-        private readonly IUpdatableIdeaRepository _ideaRepository;
+        private readonly IInitiativeRepository _ideaRepository;
+        private readonly IPersonRepository _personRepository;
         private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
         private readonly Serilog.ILogger _logger;
 
@@ -50,10 +47,9 @@ namespace CoE.Ideas.Remedy.SbListener
 
                 try
                 {
-                    await _ideaRepository.SetWorkItemTicketIdAsync(args.Initiative.Id, args.WorkOrderId);
-
-                    // first status will be Submitted
-                    await _ideaRepository.SetWorkItemStatusAsync(args.Initiative.Id, InitiativeStatus.Submit);
+                    args.Initiative.SetWorkOrderId(args.WorkOrderId);
+                    args.Initiative.UpdateStatus(InitiativeStatus.Submit);
+                    await _ideaRepository.UpdateInitiativeAsync(args.Initiative);
                 }
                 catch (Exception err)
                 {
@@ -64,7 +60,7 @@ namespace CoE.Ideas.Remedy.SbListener
             }
         }
 
-        protected virtual async Task<Idea> OnWorkOrderUpdatedAsync(WorkOrderUpdatedEventArgs args, CancellationToken token)
+        protected virtual async Task<Initiative> OnWorkOrderUpdatedAsync(WorkOrderUpdatedEventArgs args, CancellationToken token)
         {
             if (args == null)
                 throw new ArgumentNullException("args");
@@ -75,7 +71,7 @@ namespace CoE.Ideas.Remedy.SbListener
 
             using (LogContext.PushProperty("WorkOrderId", args.WorkOrderId))
             {
-                Idea idea = await GetInitiativeByWorkOrderId(args.WorkOrderId);
+                Initiative idea = await GetInitiativeByWorkOrderId(args.WorkOrderId);
 
                 if (idea == null)
                     _logger.Warning("Remedy message received for WorkItemId {WorkOrderId} but could not find an associated initiative", args.WorkOrderId);
@@ -96,12 +92,12 @@ namespace CoE.Ideas.Remedy.SbListener
 
 
 
-        protected async Task<Idea> GetInitiativeByWorkOrderId(string workOrderId)
+        protected async Task<Initiative> GetInitiativeByWorkOrderId(string workOrderId)
         {
-            Idea idea = null;
+            Initiative idea = null;
             try
             {
-                idea = await _ideaRepository.GetIdeaByWorkItemIdAsync(workOrderId);
+                idea = await _ideaRepository.GetInitiativeByWorkOrderIdAsync(workOrderId);
             }
             catch (Exception err)
             {
@@ -112,7 +108,7 @@ namespace CoE.Ideas.Remedy.SbListener
             return idea;
         }
 
-        protected async Task UpdateIdeaWithNewWorkOrderStatus(Idea initiative, StatusType workOrderStatus, DateTime workOrderLastModifiedUtc)
+        protected async Task UpdateIdeaWithNewWorkOrderStatus(Initiative initiative, StatusType workOrderStatus, DateTime workOrderLastModifiedUtc)
         {
             // here we have the business logic of translating Remedy statuses into our statuses
             var newIdeaStatus = GetInitiativeStatusForRemedyStatus(workOrderStatus);
@@ -121,7 +117,8 @@ namespace CoE.Ideas.Remedy.SbListener
                 // we must update our database!
                 _logger.Information("Updating status of initiative {InitiativeId} from {FromInitiativeStatus} to {ToIdeaStatus} because Remedy was updated on {LastModifiedDateUtc}",
                     initiative.Id, initiative.Status, newIdeaStatus, workOrderLastModifiedUtc);
-                await _ideaRepository.SetWorkItemStatusAsync(initiative.Id, newIdeaStatus.Value);
+                initiative.UpdateStatus(newIdeaStatus.Value);
+                await _ideaRepository.UpdateInitiativeAsync(initiative);
             }
             else
             {
@@ -162,20 +159,20 @@ namespace CoE.Ideas.Remedy.SbListener
             return newIdeaStatus;
         }
 
-        private async Task UpdateIdeaAssignee(Idea idea, string assigneeEmail, string assigneeDisplayName)
+        private async Task UpdateIdeaAssignee(Initiative idea, string assigneeEmail, string assigneeDisplayName)
         {
-            Person assignee = null;
+            //Person assignee = null;
+            int assigneeId = 0;
             if (!string.IsNullOrWhiteSpace(assigneeEmail))
             {
-                assignee = await _ideaRepository.GetPersonByEmail(assigneeEmail);
-                if (assignee == null)
-                {
-                    // this person doesn't exist yet, so create them.
-                    assignee = new Person() { Email = assigneeEmail, UserName = assigneeDisplayName };
-                }
+                assigneeId = await _personRepository.GetPersonIdByEmailAsync(assigneeEmail);
+
+                // TODO: create the user if they don't exist?
             }
 
-            await _ideaRepository.SetInitiativeAssignee(idea.Id, assignee);
+            idea.SetAssigneeId(assigneeId);
+
+            await _ideaRepository.UpdateInitiativeAsync(idea);
         }
     }
 }

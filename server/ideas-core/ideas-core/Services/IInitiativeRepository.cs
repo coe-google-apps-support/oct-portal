@@ -12,6 +12,7 @@ namespace CoE.Ideas.Core.Services
         Task<Initiative> UpdateInitiativeAsync(Initiative initiative);
         Task<Initiative> GetInitiativeAsync(Guid id);
         Task<Initiative> GetInitiativeAsync(int id);
+        Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId);
 
         Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync();
         Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId);

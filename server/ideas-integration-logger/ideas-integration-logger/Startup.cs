@@ -1,14 +1,8 @@
 ﻿using CoE.Ideas.Core;
-using CoE.Ideas.Core.ServiceBus;
-using CoE.Ideas.Core.WordPress;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CoE.Ideas.Integration.Logger
 {
@@ -48,9 +42,7 @@ namespace CoE.Ideas.Integration.Logger
                 .CreateLogger());
 
 
-            services.AddRemoteIdeaConfiguration(Configuration["IdeasApi"],
-                Configuration["WordPressUrl"],
-                Configuration.GetSection("WordPress"));
+            services.AddRemoteInitiativeConfiguration(Configuration["IdeasApi"]);
 
             services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],

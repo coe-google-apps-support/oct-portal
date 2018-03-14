@@ -40,7 +40,11 @@ namespace CoE.Ideas.Core.Migrations
                     InvestmentRequestFormUrl = table.Column<string>(maxLength: 255, nullable: true),
                     Status = table.Column<int>(nullable: false),
                     Title = table.Column<string>(maxLength: 255, nullable: false),
-                    WorkOrderId = table.Column<string>(nullable: true)
+                    WorkOrderId = table.Column<string>(nullable: true),
+                    AuditRecord_AuditCreatedBy = table.Column<string>(maxLength: 128, nullable: true),
+                    AuditRecord_AuditCreatedOnUtc = table.Column<DateTime>(nullable: false),
+                    AuditRecord_AuditUpdatedBy = table.Column<string>(maxLength: 128, nullable: true),
+                    AuditRecord_AuditUpdatedOnUtc = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 
 namespace CoE.Ideas.Core
@@ -80,35 +81,31 @@ namespace CoE.Ideas.Core
             return services;
         }
 
-        //public static IServiceCollection AddRemoteInitiativeConfiguration(this IServiceCollection services,
-        //    string ideasApiUrl, 
-        //    string wordpressUrl,
-        //    IConfigurationSection wordPressConfigurationSection)
-        //{
-        //    if (string.IsNullOrWhiteSpace(ideasApiUrl))
-        //        throw new ArgumentNullException("ideasApiUrl");
-        //    if (string.IsNullOrWhiteSpace(wordpressUrl))
-        //        throw new ArgumentNullException("wordpressUrl");
+        public static IServiceCollection AddRemoteInitiativeConfiguration(this IServiceCollection services,
+            string ideasApiUrl)
+        {
+            if (string.IsNullOrWhiteSpace(ideasApiUrl))
+                throw new ArgumentNullException("ideasApiUrl");
 
-        //    services.Configure<RemoteInitiativeRepositoryOptions>(options =>
-        //    {
-        //        options.WordPressUrl = wordpressUrl;
-        //    });
-        //    services.AddTransient<RemoteInitiativeRepository>();
-        //    services.AddTransient<IInitiativeRepository>(x => x.GetRequiredService<RemoteInitiativeRepository>());
+            //services.Configure<RemoteInitiativeRepositoryOptions>(options =>
+            //{
+            //    options.WordPressUrl = wordpressUrl;
+            //});
+            services.AddTransient<RemoteInitiativeRepository>();
+            services.AddTransient<IInitiativeRepository>(x => x.GetRequiredService<RemoteInitiativeRepository>());
 
 
-        //    //services.Configure<WordPressClientOptions>(options =>
-        //    //{
-        //    //    options.Url = new Uri(wordpressUrl);
-        //    //});
-        //    //services.AddScoped<IWordPressClient, WordPressClient>();
+            //services.Configure<WordPressClientOptions>(options =>
+            //{
+            //    options.Url = new Uri(wordpressUrl);
+            //});
+            //services.AddScoped<IWordPressClient, WordPressClient>();
 
-        //    //services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
-        //    //services.AddSingleton<IWordPressUserSecurity, WordPressUserSecurity>();
+            //services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
+            //services.AddSingleton<IWordPressUserSecurity, WordPressUserSecurity>();
 
-        //    return services;
-        //}
+            return services;
+        }
 
 
     }

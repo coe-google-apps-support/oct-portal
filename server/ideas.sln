@@ -27,7 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy-tests", "ideas-integration-remedy\ideas-integration-remedy-tests\ideas-integration-remedy-tests.csproj", "{7B17E7BB-7BE1-4F0C-B719-C84586CDE6CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "shared-kernel", "shared-kernel\shared-kernel.csproj", "{D84C582F-3BC1-407C-A909-281E475F1CD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "shared-kernel", "shared-kernel\shared-kernel.csproj", "{D84C582F-3BC1-407C-A909-281E475F1CD0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy-sblistener", "ideas-integration-remedy\ideas-integration-remedy-sblistener\ideas-integration-remedy-sblistener.csproj", "{4DAF33B4-B5B3-47DD-8B63-802A93B7312E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy-watcher", "ideas-integration-remedy\ideas-integration-remedy-watcher\ideas-integration-remedy-watcher.csproj", "{BC692FF2-927B-4E33-AD54-01957D483021}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +75,14 @@ Global
 		{D84C582F-3BC1-407C-A909-281E475F1CD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D84C582F-3BC1-407C-A909-281E475F1CD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D84C582F-3BC1-407C-A909-281E475F1CD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DAF33B4-B5B3-47DD-8B63-802A93B7312E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DAF33B4-B5B3-47DD-8B63-802A93B7312E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DAF33B4-B5B3-47DD-8B63-802A93B7312E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DAF33B4-B5B3-47DD-8B63-802A93B7312E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC692FF2-927B-4E33-AD54-01957D483021}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC692FF2-927B-4E33-AD54-01957D483021}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC692FF2-927B-4E33-AD54-01957D483021}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC692FF2-927B-4E33-AD54-01957D483021}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +97,8 @@ Global
 		{46733B1F-445A-437B-8DEF-E37B1EFD5284} = {6F2D1860-80DC-4074-8F8C-90F435EEF0D1}
 		{7B17E7BB-7BE1-4F0C-B719-C84586CDE6CF} = {EC1833AF-B6B0-4918-B832-47CF8291ED50}
 		{D84C582F-3BC1-407C-A909-281E475F1CD0} = {728A4378-7B30-4CD3-85CC-750E107F6139}
+		{4DAF33B4-B5B3-47DD-8B63-802A93B7312E} = {6F2D1860-80DC-4074-8F8C-90F435EEF0D1}
+		{BC692FF2-927B-4E33-AD54-01957D483021} = {6F2D1860-80DC-4074-8F8C-90F435EEF0D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5356DFEE-8877-4B02-A9CE-74DCCDCA75E5}

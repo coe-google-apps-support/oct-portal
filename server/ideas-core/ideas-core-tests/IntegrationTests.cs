@@ -24,11 +24,8 @@ namespace CoE.Ideas.Core.Tests
                 .Build();
 
             var services = new ServiceCollection();
-            services.AddIdeaConfiguration(
-                config.GetConnectionString("IdeaDatabase"),
-                config["Ideas:WordPressUrl"],
-                config.GetConnectionString("WordPressDatabase"),
-                config.GetSection("WordPress"));
+            services.AddLocalInitiativeConfiguration(
+                config.GetConnectionString("IdeaDatabase"));
 
 
             services.AddAutoMapper();

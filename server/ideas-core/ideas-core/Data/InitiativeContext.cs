@@ -30,6 +30,12 @@ namespace CoE.Ideas.Core.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+
+            // we need to specifically tell the model about value types:
+            // https://technet.microsoft.com/en-us/mt842503.aspx
+
+            modelBuilder.Entity<Initiative>().OwnsOne(i => i.AuditRecord);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))

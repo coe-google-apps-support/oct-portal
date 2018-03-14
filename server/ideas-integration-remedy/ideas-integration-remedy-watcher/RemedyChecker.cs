@@ -1,8 +1,6 @@
-﻿using CoE.Ideas.Core.People;
-using CoE.Ideas.Core.ServiceBus;
+﻿using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.Extensions.Logging;
+using CoE.Ideas.Shared.People;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
@@ -10,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Remedy.Watcher
@@ -19,7 +16,7 @@ namespace CoE.Ideas.Remedy.Watcher
     {
         public RemedyChecker(IRemedyService remedyService,
             IInitiativeMessageSender initiativeMessageSender,
-             IPeopleService peopleService,
+            IPeopleService peopleService,
             Serilog.ILogger logger,
             IOptions<RemedyCheckerOptions> options)
         {

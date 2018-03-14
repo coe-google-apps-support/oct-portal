@@ -1,15 +1,10 @@
 ﻿using CoE.Ideas.Core;
-using CoE.Ideas.Core.ServiceBus;
-using CoE.Ideas.Core.WordPress;
 using CoE.Ideas.Remedy.RemedyServiceReference;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using System;
-using System.Collections.Generic;
 using System.ServiceModel;
-using System.Text;
 
 namespace CoE.Ideas.Remedy
 {
@@ -47,9 +42,7 @@ namespace CoE.Ideas.Remedy
                 .ReadFrom.Configuration(Configuration)
                 .CreateLogger());
 
-            services.AddRemoteIdeaConfiguration(Configuration["IdeasApi"],
-                Configuration["WordPressUrl"], 
-                Configuration.GetSection("WordPress"));
+            services.AddRemoteInitiativeConfiguration(Configuration["IdeasApi"]);
 
 
             services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],

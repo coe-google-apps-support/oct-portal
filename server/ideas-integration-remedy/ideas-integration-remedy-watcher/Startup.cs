@@ -1,6 +1,7 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
+using CoE.Ideas.Shared.Extensions;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

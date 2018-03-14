@@ -95,9 +95,6 @@ namespace CoE.Ideas.Server.Tests
             return this;
         }
 
-
-
-        private ClaimsPrincipal currentUser;
         public ClaimsPrincipal CurrentUser
         {
             get

@@ -1,13 +1,7 @@
-﻿using CoE.Ideas.Core;
-using CoE.Ideas.Core.WordPress;
+﻿using CoE.Ideas.Core.Data;
 using CoE.Ideas.Remedy.RemedyServiceReference;
 using Microsoft.Extensions.Options;
-using Serilog.Context;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.ServiceModel;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Remedy
@@ -30,7 +24,7 @@ namespace CoE.Ideas.Remedy
         private readonly Serilog.ILogger _logger;
 
 
-        public virtual async Task<string> PostNewIdeaAsync(Idea idea, string user3and3)
+        public virtual async Task<string> PostNewIdeaAsync(Initiative idea, string user3and3)
         {
             try
             {
