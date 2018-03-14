@@ -1,15 +1,10 @@
-﻿using CoE.Ideas.Core;
+﻿using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.ServiceBus;
-using CoE.Ideas.Core.WordPress;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.Extensions.Logging;
+using CoE.Ideas.Shared.Security;
 using Serilog.Context;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.DirectoryServices.AccountManagement;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -70,7 +65,7 @@ namespace CoE.Ideas.Integration.Logger
 
         }
 
-        protected virtual async Task<Google.Apis.Sheets.v4.Data.AppendValuesResponse> LogNewInitiative(Idea initiative, ClaimsPrincipal owner)
+        protected virtual async Task<Google.Apis.Sheets.v4.Data.AppendValuesResponse> LogNewInitiative(Initiative initiative, ClaimsPrincipal owner)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -90,7 +85,7 @@ namespace CoE.Ideas.Integration.Logger
             return loggerResponse;
         }
 
-        protected virtual async Task SendInitiativeLoggerMessage(Idea initiative, 
+        protected virtual async Task SendInitiativeLoggerMessage(Initiative initiative, 
             ClaimsPrincipal owner, 
             Google.Apis.Sheets.v4.Data.AppendValuesResponse loggerResponse)
         {

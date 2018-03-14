@@ -82,5 +82,10 @@ namespace CoE.Ideas.Core.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

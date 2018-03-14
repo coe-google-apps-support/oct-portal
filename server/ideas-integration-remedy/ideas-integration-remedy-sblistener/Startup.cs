@@ -54,11 +54,8 @@ namespace CoE.Ideas.Remedy.SbListener
                 .CreateLogger());
 
             // Add Idea Repository
-            services.AddIdeaConfiguration(
-                Configuration.GetConnectionString("IdeaDatabase"),
-                Configuration["Ideas:WordPressUrl"],
-                Configuration.GetConnectionString("WordPressDatabase"),
-                Configuration.GetSection("WordPress"));
+            services.AddLocalInitiativeConfiguration(
+                Configuration.GetConnectionString("IdeaDatabase"));
 
             // Add service to talk to ServiceBus
             services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],

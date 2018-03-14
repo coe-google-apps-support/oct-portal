@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
-using CoE.Ideas.Core.Internal;
-using CoE.Ideas.Core.Internal.Initiatives;
-using CoE.Ideas.Core.ServiceBus;
-using CoE.Ideas.Core.WordPress;
+using CoE.Ideas.Core.Data;
+using CoE.Ideas.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CoE.Ideas.Core.Tests
 {
@@ -53,10 +49,10 @@ namespace CoE.Ideas.Core.Tests
 
         internal TestConfiguration ConfigureIdeaServicesInMemory()
         {
-            _services.AddDbContext<IdeaContext>(x => x.UseInMemoryDatabase("ideas"));
-            _services.AddScoped<IIdeaRepository, IdeaRepositoryInternal>();
+            _services.AddDbContext<InitiativeContext>(x => x.UseInMemoryDatabase("ideas"));
+            _services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
 
-            _services.AddSingleton<IWordPressClient, MockWordPressClient>();
+            //_services.AddSingleton<IWordPressClient, MockWordPressClient>();
             //_services.AddSingleton<ITopicSender<IdeaMessage>, NullTopicSender<IdeaMessage>>();
 
             //_services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();

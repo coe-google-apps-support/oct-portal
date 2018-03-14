@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.IO;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
-using CoE.Ideas.Core;
 using CoE.Ideas.Core.Data;
-using CoE.Ideas.Core.WordPress;
+using CoE.Ideas.Shared.Security;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
-using Newtonsoft.Json;
 
 namespace CoE.Ideas.Integration.Logger
 {
@@ -100,7 +97,7 @@ namespace CoE.Ideas.Integration.Logger
                 idea.Id,
                 idea.Title,
                 idea.Description,
-                idea.Url,
+                string.Empty,//idea.Url,
                 $"{_ideasApiBaseUrl}/{idea.Id}",
                 owner.GetDisplayName(),
                 owner.GetEmail(),

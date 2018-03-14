@@ -104,14 +104,22 @@ namespace CoE.Ideas.Core.Data
         {
             Ensure.String.IsNotNullOrWhiteSpace(newWorkOrderId, nameof(newWorkOrderId));
 
-            WorkOrderId = newWorkOrderId;
-
-           
+            WorkOrderId = newWorkOrderId;           
 
             #region InitiativeUpdated Event
 
             #endregion
         }
+
+        public void SetAssigneeId(int? assigneeId)
+        {
+            AssigneeId = assigneeId;
+
+            #region InitiativeUpdated Event
+
+            #endregion
+        }
+
 
         public void UpdateStatus(InitiativeStatus newStatus)
         {

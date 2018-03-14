@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CoE.Ideas.Core;
+using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.ServiceBus;
-using CoE.Ideas.Core.WordPress;
+using CoE.Ideas.Shared.Security;
 using Microsoft.Azure.ServiceBus;
-using Microsoft.Extensions.Logging;
 using Serilog.Context;
 
 namespace CoE.Ideas.Remedy
@@ -87,7 +84,7 @@ namespace CoE.Ideas.Remedy
             return await Task.FromResult<string>(null);
         }
 
-        protected virtual async Task<string> CreateWorkOrder(Idea initiative, string user3And3)
+        protected virtual async Task<string> CreateWorkOrder(Initiative initiative, string user3And3)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -97,7 +94,7 @@ namespace CoE.Ideas.Remedy
             return remedyTicketId;
         }
 
-        protected virtual async Task SendWorkOrderCreatedMessage(Idea initiative, ClaimsPrincipal owner, string workOrderId)
+        protected virtual async Task SendWorkOrderCreatedMessage(Initiative initiative, ClaimsPrincipal owner, string workOrderId)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();

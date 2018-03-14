@@ -11,8 +11,8 @@ using System;
 namespace CoE.Ideas.Core.Migrations
 {
     [DbContext(typeof(InitiativeContext))]
-    [Migration("20180313204634_Initial")]
-    partial class Initial
+    [Migration("20180314202707_AddAuditing")]
+    partial class AddAuditing
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -106,6 +106,31 @@ namespace CoE.Ideas.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StringTemplates");
+                });
+
+            modelBuilder.Entity("CoE.Ideas.Core.Data.Initiative", b =>
+                {
+                    b.OwnsOne("CoE.Ideas.Shared.Data.AuditRecord", "AuditRecord", b1 =>
+                        {
+                            b1.Property<Guid>("InitiativeId");
+
+                            b1.Property<string>("AuditCreatedBy")
+                                .HasMaxLength(128);
+
+                            b1.Property<DateTime>("AuditCreatedOnUtc");
+
+                            b1.Property<string>("AuditUpdatedBy")
+                                .HasMaxLength(128);
+
+                            b1.Property<DateTime>("AuditUpdatedOnUtc");
+
+                            b1.ToTable("Initiatives");
+
+                            b1.HasOne("CoE.Ideas.Core.Data.Initiative")
+                                .WithOne("AuditRecord")
+                                .HasForeignKey("CoE.Ideas.Shared.Data.AuditRecord", "InitiativeId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
                 });
 
             modelBuilder.Entity("CoE.Ideas.Core.Data.Stakeholder", b =>

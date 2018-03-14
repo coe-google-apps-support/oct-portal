@@ -34,6 +34,11 @@ namespace CoE.Ideas.Core.Tests
             throw new NotImplementedException();
         }
 
+        public Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync()
         {
             throw new NotImplementedException();
