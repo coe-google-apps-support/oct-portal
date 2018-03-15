@@ -39,7 +39,7 @@ namespace CoE.Ideas.Core.Events
 
             var initiative = notification.Initiative;
             // get the previous status change, if any
-            var previousChange = await _initiativeContext.IdeaStatusHistories.Where(x => x.InitiativeId == initiative.Id)
+            var previousChange = await _initiativeContext.InitiativeStatusHistories.Where(x => x.InitiativeId == initiative.Uid)
                 .OrderByDescending(x => x.StatusEntryDateUtc)
                 .FirstOrDefaultAsync();
 
@@ -51,14 +51,14 @@ namespace CoE.Ideas.Core.Events
                 previousChange.UpdateText(await _stringTemplateService.GetStatusChangeTextAsync(initiative.Status, assignee, isPastTense: true));
             }
 
-            var statusChange = InitiativeStatusHistory.CreateInitiativeStatusChange(initiative.Id,
+            var statusChange = InitiativeStatusHistory.CreateInitiativeStatusChange(initiative.Uid,
                 initiative.Status,
                 DateTime.UtcNow,
                 initiative.AssigneeId,
                 await _stringTemplateService.GetStatusChangeTextAsync(initiative.Status, assignee));
 
             // now we add the new status
-            _initiativeContext.IdeaStatusHistories.Add(statusChange);
+            _initiativeContext.InitiativeStatusHistories.Add(statusChange);
 
             await _initiativeContext.SaveChangesAsync();
         }

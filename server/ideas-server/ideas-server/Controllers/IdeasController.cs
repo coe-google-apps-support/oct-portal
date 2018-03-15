@@ -16,9 +16,7 @@ using EnsureThat;
 namespace CoE.Ideas.Server.Controllers
 {
     [Produces("application/json")]
-    [Route("")]
-    [Route("Ideas")]
-    [Route("Initiatives")]
+    [Route("api")]
     public class IdeasController : Controller
     {
         private readonly IInitiativeRepository _repository;
@@ -57,7 +55,7 @@ namespace CoE.Ideas.Server.Controllers
             }
             else
                 ideas = await _repository.GetInitiativesAsync();
-            var returnValue = ideas.OrderByDescending(x => x.AlternateKey);
+            var returnValue = ideas.OrderByDescending(x => x.CreatedDate);
             watch.Stop();
             _logger.Information("Retrieved {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
             return returnValue;
@@ -146,7 +144,7 @@ namespace CoE.Ideas.Server.Controllers
                     return BadRequest(ModelState);
                 }
 
-                if (id != idea.AlternateKey)
+                if (id != idea.Id)
                 {
                     _logger.Warning("Unable to retrieve initiative {InitiativeId} because id of initiative retrieved from database was different than the id passed in");
                     return BadRequest();

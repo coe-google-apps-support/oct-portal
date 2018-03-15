@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoE.Ideas.Core;
+using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Shared.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -78,7 +80,10 @@ namespace CoE.Ideas.Server
                 var svcReceiver = app.ApplicationServices.GetService<CoE.Ideas.Core.ServiceBus.SynchronousInitiativeMessageReceiver>();
                 if (svcReceiver != null)
                 {
-                    //svcReceiver.CreatedHandlers.Add(/* RemedyListener */)
+                    //This doesn't work because the integration projects have nuget dependencies that are
+                    //not referenced by the ideas-server project (throws error...)
+                    //LoadIntegrationComponents(app, svcReceiver);
+                    // svcReceiver.CreatedHandlers.Add(/* RemedyListener */)
                     // etc.
                     // but we have to load the assemblies dynamically with Reflection because
                     // I don't want to reference them directly in this project.
@@ -97,7 +102,118 @@ namespace CoE.Ideas.Server
 
             app.UseAuthentication();
 
-            app.UseMvc();
+            app.UseStaticFiles();
+            var d = new DefaultFilesOptions();
+            d.DefaultFileNames.Add("index.html");
+            app.UseDefaultFiles(d);
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("api", "api/{action}", defaults: new { controller = "Ideas" });
+                routes.MapRoute("Spa", "{*url}", defaults: new { controller = "Home", action = "Spa" });
+            });
+
+
+            ////var rewriteOptions = new RewriteOptions();
+            ////rewriteOptions.AddRewrite(@".*", "/index.html", false);
+            ////app.UseRewriter(rewriteOptions);
+
+            //app.Use(async (context, next) =>
+            //{
+            //    var m = app.ApplicationServices.GetService<Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware>();
+            //    //app.ApplicationServices.GetService<StaticFileContext>();
+            //   // await m.Invoke(context);
+
+            //    await next.Invoke();
+            //});
+
+
         }
+
+        //private void LoadIntegrationComponents(IApplicationBuilder app, SynchronousInitiativeMessageReceiver svcReceiver)
+        //{
+        //    // This gets the "server" root directory of the github source
+        //    var dir = new System.IO.DirectoryInfo(System.IO.Directory.GetCurrentDirectory()).Parent.Parent;
+        //    var allDlls = dir.EnumerateFiles("*.dll", System.IO.SearchOption.AllDirectories)
+        //        .Where(f => f.Directory.Name == "netcoreapp2.0")
+        //        .GroupBy(x => x.Name)
+        //        .Select(x => x.OrderByDescending(y => y.LastWriteTimeUtc).First())
+        //        .ToList();
+
+        //    // "ideas-integration-remedy"
+        //    var ideasIntegrationRemedy = allDlls.FirstOrDefault(x => x.Name == "ideas-integration-remedy.dll");
+        //    if (ideasIntegrationRemedy != null)
+        //    {
+        //        LoadIntegrationAssembly(ideasIntegrationRemedy.FullName, "CoE.Ideas.Remedy.Program", svcReceiver);
+        //    }
+        //}
+
+        //private void LoadIntegrationAssembly(string assemblyFullPath, string entryType, SynchronousInitiativeMessageReceiver svcReceiver)
+        //{
+        //    try
+        //    {
+        //        // from https://github.com/dotnet/corefx/issues/11639
+        //        var fileNameWithOutExtension = System.IO.Path.GetFileNameWithoutExtension(assemblyFullPath);
+        //        var fileName = System.IO.Path.GetFileName(assemblyFullPath);
+        //        var directory = System.IO.Path.GetDirectoryName(assemblyFullPath);
+
+        //        var inCompileLibraries = Microsoft.Extensions.DependencyModel.DependencyContext.Default.CompileLibraries.Any(l => l.Name.Equals(fileNameWithOutExtension, StringComparison.OrdinalIgnoreCase));
+        //        var inRuntimeLibraries = Microsoft.Extensions.DependencyModel.DependencyContext.Default.RuntimeLibraries.Any(l => l.Name.Equals(fileNameWithOutExtension, StringComparison.OrdinalIgnoreCase));
+
+        //        var assembly = (inCompileLibraries || inRuntimeLibraries)
+        //            ? System.Reflection.Assembly.Load(new System.Reflection.AssemblyName(fileNameWithOutExtension))
+        //            : System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyFullPath);
+
+        //        if (assembly != null)
+        //        {
+        //            var entry = assembly.GetType(entryType, throwOnError: false, ignoreCase: false);
+
+        //            if (entry != null)
+        //            {
+        //                var entryMethod = entry.GetMethods(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)
+        //                    .Select(x => new { Method = x, Parameters = x.GetParameters() })
+        //                    .SingleOrDefault(x => x.Parameters.Length == 3
+        //                             && x.Parameters[0].ParameterType == typeof(string[])
+        //                             && x.Parameters[1].ParameterType == typeof(string)
+        //                             && x.Parameters[2].ParameterType == typeof(SynchronousInitiativeMessageReceiver));
+        //                if (entryMethod != null)
+        //                {
+        //                    //LoadReferencedAssemblies(assembly, fileName, directory);
+
+        //                    // invoke the method on a new thread
+        //                    System.Threading.ThreadPool.QueueUserWorkItem(x =>
+        //                    {
+        //                        entryMethod.Method.Invoke(null, new object[] { new string[] { }, new System.IO.FileInfo(assemblyPath).DirectoryName, svcReceiver });
+        //                    });
+        //                }
+        //            }
+
+        //        }
+        //    }
+        //    catch (Exception err)
+        //    {
+        //        throw;
+        //    }
+
+        //}
+
+        ////private static void LoadReferencedAssemblies(System.Reflection.Assembly assembly, string fileName, string directory)
+        ////{
+        ////    var filesInDirectory = System.IO.Directory.GetFiles(directory).Where(x => x != fileName).Select(x => System.IO.Path.GetFileNameWithoutExtension(x)).ToList();
+        ////    var references = assembly.GetReferencedAssemblies();
+
+        ////    foreach (var reference in references)
+        ////    {
+        ////        if (filesInDirectory.Contains(reference.Name))
+        ////        {
+        ////            var loadFileName = reference.Name + ".dll";
+        ////            var path = System.IO.Path.Combine(directory, loadFileName);
+        ////            var loadedAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+        ////            if (loadedAssembly != null)
+        ////                LoadReferencedAssemblies(loadedAssembly, loadFileName, directory);
+        ////        }
+        ////    }
+
+        ////}
     }
 }

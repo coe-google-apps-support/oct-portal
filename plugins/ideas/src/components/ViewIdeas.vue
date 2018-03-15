@@ -35,8 +35,8 @@ export default {
   },
   methods: {
     openDialog (initiative) {
-      console.log('Opening: ' + initiative.id)
-      window.location.href = initiative.url
+      console.log('Opening: ' + initiative.id + ' with url ' + initiative.url)
+      window.dispatchEvent(new CustomEvent('navigate', { detail: initiative.url }))
     },
     setLoading (initiative, state) {
       let foundInit = this.getInitiativeByID(initiative.id)

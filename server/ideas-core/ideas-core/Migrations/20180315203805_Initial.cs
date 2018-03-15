@@ -10,7 +10,28 @@ namespace CoE.Ideas.Core.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "IdeaStatusHistories",
+                name: "Initiatives",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AssigneeId = table.Column<int>(nullable: true),
+                    BusinessCaseUrl = table.Column<string>(maxLength: 2048, nullable: true),
+                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
+                    Description = table.Column<string>(nullable: false),
+                    InvestmentRequestFormUrl = table.Column<string>(maxLength: 2048, nullable: true),
+                    Status = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(maxLength: 255, nullable: false),
+                    Uid = table.Column<Guid>(nullable: false),
+                    WorkOrderId = table.Column<string>(maxLength: 128, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Initiatives", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "InitiativeStatusHistories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -23,28 +44,7 @@ namespace CoE.Ideas.Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IdeaStatusHistories", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Initiatives",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    AlternateKey = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    AssigneeId = table.Column<int>(nullable: true),
-                    BusinessCaseUrl = table.Column<string>(maxLength: 2048, nullable: true),
-                    CreatedDate = table.Column<DateTimeOffset>(nullable: false),
-                    Description = table.Column<string>(nullable: false),
-                    InvestmentRequestFormUrl = table.Column<string>(maxLength: 2048, nullable: true),
-                    Status = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(maxLength: 255, nullable: false),
-                    WorkOrderId = table.Column<string>(maxLength: 128, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Initiatives", x => x.Id);
+                    table.PrimaryKey("PK_InitiativeStatusHistories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,7 +68,7 @@ namespace CoE.Ideas.Core.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    InitiativeId = table.Column<Guid>(nullable: true),
+                    InitiativeId = table.Column<int>(nullable: true),
                     PersonId = table.Column<int>(nullable: false),
                     Type = table.Column<int>(nullable: false)
                 },
@@ -99,7 +99,7 @@ namespace CoE.Ideas.Core.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "IdeaStatusHistories");
+                name: "InitiativeStatusHistories");
 
             migrationBuilder.DropTable(
                 name: "Stakeholder");

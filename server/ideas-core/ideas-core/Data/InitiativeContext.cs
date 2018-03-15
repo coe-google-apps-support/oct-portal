@@ -24,7 +24,7 @@ namespace CoE.Ideas.Core.Data
         private readonly DomainEvents _domainEvents;
 
         public DbSet<Initiative> Initiatives { get; set; }
-        public DbSet<InitiativeStatusHistory> IdeaStatusHistories { get; set; }
+        public DbSet<InitiativeStatusHistory> InitiativeStatusHistories { get; set; }
         public DbSet<StringTemplate> StringTemplates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
