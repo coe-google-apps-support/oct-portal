@@ -11,11 +11,13 @@ namespace CoE.Ideas.Core.Events
 
     public class InitiativeCreatedDomainEvent : INotification
     {
-        public Initiative Initiative { get; private set; }
+        public Guid InitiativeId { get; private set; }
+        public int OwnerPeronId { get; private set; }
 
-        internal InitiativeCreatedDomainEvent(Initiative initiative)
+        internal InitiativeCreatedDomainEvent(Guid initiativeId, int ownerPersonId)
         {
-            Initiative = initiative;
+            InitiativeId = initiativeId;
+            OwnerPeronId = ownerPersonId;
         }
     }
 }

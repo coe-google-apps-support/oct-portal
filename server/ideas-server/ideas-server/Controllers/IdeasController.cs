@@ -57,7 +57,7 @@ namespace CoE.Ideas.Server.Controllers
             }
             else
                 ideas = await _repository.GetInitiativesAsync();
-            var returnValue = ideas.OrderByDescending(x => x.AuditUpdatedOn);
+            var returnValue = ideas.OrderByDescending(x => x.AlternateKey);
             watch.Stop();
             _logger.Information("Retrieved {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
             return returnValue;

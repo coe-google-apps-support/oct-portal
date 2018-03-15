@@ -6,7 +6,7 @@ using System.Text;
 namespace CoE.Ideas.Shared.Data
 {
     // based on "Domain-Driven Design Fundamentals" PluralSight course by Julie Lerman and Steve Smith
-    public abstract class Entity<TId> : IEquatable<Entity<TId>>, IAuditEntity
+    public abstract class Entity<TId> : IEquatable<Entity<TId>>
     {
         public TId Id { get; protected set; }
 
@@ -22,9 +22,6 @@ namespace CoE.Ideas.Shared.Data
 
         // EF requires an empty constructor
         protected Entity() { }
-
-
-        public AuditRecord AuditRecord { get; private set; }
 
 
         // For simple entities, this may suffice

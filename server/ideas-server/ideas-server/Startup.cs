@@ -50,6 +50,7 @@ namespace CoE.Ideas.Server
             services.AddAutoMapper();
         }
 
+        
 
         protected void ConfigureCors(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -72,6 +73,16 @@ namespace CoE.Ideas.Server
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                //TODO: Load integration projects to simulate receiving service bus events?
+                var svcReceiver = app.ApplicationServices.GetService<CoE.Ideas.Core.ServiceBus.SynchronousInitiativeMessageReceiver>();
+                if (svcReceiver != null)
+                {
+                    //svcReceiver.CreatedHandlers.Add(/* RemedyListener */)
+                    // etc.
+                    // but we have to load the assemblies dynamically with Reflection because
+                    // I don't want to reference them directly in this project.
+                }
             }
             else if (env.IsProduction())
             {

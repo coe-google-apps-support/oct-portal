@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
+    <PackageReference Include="CoE.Auditing.Strategy.Core" Version="1.0.1" />
     <PackageReference Include="Ensure.That" Version="7.2.1" />
     <PackageReference Include="MediatR" Version="4.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="4.0.0" />
@@ -33,9 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="CoE.Data.Auditing.SqlClient.Core">
-      <HintPath>..\..\lib\CoE.Data.Auditing.SqlClient.Core.dll</HintPath>
-    </Reference>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.2" />
   </ItemGroup>
-
 </Project>

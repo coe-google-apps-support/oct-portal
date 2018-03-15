@@ -31,11 +31,15 @@ namespace CoE.Ideas.Core.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Initiative>()
+                .HasIndex(i => i.WorkOrderId)
+                .IsUnique();
+
 
             // we need to specifically tell the model about value types:
             // https://technet.microsoft.com/en-us/mt842503.aspx
 
-            modelBuilder.Entity<Initiative>().OwnsOne(i => i.AuditRecord);
+            //modelBuilder.Entity<Initiative>().OwnsOne(i => i.AuditRecord);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -52,9 +56,6 @@ namespace CoE.Ideas.Core.Data
 
             // see https://ardalis.com/using-mediatr-in-aspnet-core-apps for Mediatr examples
 
-
-            SetAuditing();
-
             var result = await base.SaveChangesAsync(cancellationToken);
 
             await _domainEvents.DispatchDomainEventsAsync(this);
@@ -62,23 +63,5 @@ namespace CoE.Ideas.Core.Data
             return result;
         }
 
-        protected virtual void SetAuditing()
-        {
-            var auditableEntities = base.ChangeTracker.Entries()
-                .Where(x => x.Entity.GetType().GetInterfaces().Any(y => y == typeof(IAuditEntity)))
-                .GroupBy(x => x.State)
-                .ToDictionary(x => x.Key, y => y.Select(z => (IAuditEntity)z.Entity));
-
-            DateTime now = DateTime.UtcNow;
-            foreach (var addedEntry in auditableEntities[EntityState.Added])
-            {
-                // set the Audit values using the CurrentValue property because the properties themselves are not public
-                //addedEntry.AuditRecord.AuditCreatedOnUtc = now;
-
-            }
-
-            throw new NotImplementedException();
-
-        }
     }
 }

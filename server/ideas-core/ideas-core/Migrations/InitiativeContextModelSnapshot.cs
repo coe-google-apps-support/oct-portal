@@ -17,7 +17,7 @@ namespace CoE.Ideas.Core.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
+                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("CoE.Ideas.Core.Data.Initiative", b =>
@@ -30,7 +30,8 @@ namespace CoE.Ideas.Core.Migrations
 
                     b.Property<int?>("AssigneeId");
 
-                    b.Property<string>("BusinessCaseUrl");
+                    b.Property<string>("BusinessCaseUrl")
+                        .HasMaxLength(2048);
 
                     b.Property<DateTimeOffset>("CreatedDate");
 
@@ -38,7 +39,7 @@ namespace CoE.Ideas.Core.Migrations
                         .IsRequired();
 
                     b.Property<string>("InvestmentRequestFormUrl")
-                        .HasMaxLength(255);
+                        .HasMaxLength(2048);
 
                     b.Property<int>("Status");
 
@@ -46,9 +47,14 @@ namespace CoE.Ideas.Core.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<string>("WorkOrderId");
+                    b.Property<string>("WorkOrderId")
+                        .HasMaxLength(128);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("WorkOrderId")
+                        .IsUnique()
+                        .HasFilter("[WorkOrderId] IS NOT NULL");
 
                     b.ToTable("Initiatives");
                 });
@@ -66,7 +72,8 @@ namespace CoE.Ideas.Core.Migrations
 
                     b.Property<DateTime>("StatusEntryDateUtc");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .HasMaxLength(1024);
 
                     b.HasKey("Id");
 
@@ -98,38 +105,15 @@ namespace CoE.Ideas.Core.Migrations
 
                     b.Property<int>("Category");
 
-                    b.Property<string>("Key");
+                    b.Property<string>("Key")
+                        .HasMaxLength(64);
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .HasMaxLength(2048);
 
                     b.HasKey("Id");
 
                     b.ToTable("StringTemplates");
-                });
-
-            modelBuilder.Entity("CoE.Ideas.Core.Data.Initiative", b =>
-                {
-                    b.OwnsOne("CoE.Ideas.Shared.Data.AuditRecord", "AuditRecord", b1 =>
-                        {
-                            b1.Property<Guid>("InitiativeId");
-
-                            b1.Property<string>("AuditCreatedBy")
-                                .HasMaxLength(128);
-
-                            b1.Property<DateTime>("AuditCreatedOnUtc");
-
-                            b1.Property<string>("AuditUpdatedBy")
-                                .HasMaxLength(128);
-
-                            b1.Property<DateTime>("AuditUpdatedOnUtc");
-
-                            b1.ToTable("Initiatives");
-
-                            b1.HasOne("CoE.Ideas.Core.Data.Initiative")
-                                .WithOne("AuditRecord")
-                                .HasForeignKey("CoE.Ideas.Shared.Data.AuditRecord", "InitiativeId")
-                                .OnDelete(DeleteBehavior.Cascade);
-                        });
                 });
 
             modelBuilder.Entity("CoE.Ideas.Core.Data.Stakeholder", b =>

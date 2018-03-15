@@ -36,7 +36,7 @@ namespace CoE.Ideas.Core.Data
             initiative.Status = InitiativeStatus.Initiate;
             initiative.CreatedDate = DateTimeOffset.Now;
 
-            initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative));
+            initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Id, ownerPersonId));
 
             return initiative;
         }
@@ -79,6 +79,7 @@ namespace CoE.Ideas.Core.Data
         /// <summary>
         /// Unique identifier in Work Order Tracking system (Remedy)
         /// </summary>
+        [MaxLength(128)]
         public string WorkOrderId { get; private set; }
 
         /// <summary>
@@ -90,13 +91,14 @@ namespace CoE.Ideas.Core.Data
         /// Business case for the initiative
         /// </summary>
         [Display(Name = "Business Case URL", Description = "The location of the businses case for the initiative")]
+        [MaxLength(2048)]
         public string BusinessCaseUrl { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
         [Display(Name = "Investment Request Form Url", Description = "The link the to associated Investment Request Form")]
-        [MaxLength(255)]
+        [MaxLength(2048)]
         public string InvestmentRequestFormUrl { get; private set; }
 
 
