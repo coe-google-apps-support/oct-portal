@@ -45,15 +45,22 @@ namespace CoE.Ideas.Core
         }
 
         public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
+            SynchronousInitiativeMessageReceiver synchronousInitiativeMessageReceiver)
+        {
+            services.AddSingleton<SynchronousInitiativeMessageReceiver>(x => synchronousInitiativeMessageReceiver);
+            services.AddSingleton<IInitiativeMessageReceiver>(x => x.GetRequiredService<SynchronousInitiativeMessageReceiver>());
+            services.AddSingleton<IInitiativeMessageSender, SynchronousInitiativeMessageSender>();
+            return services;
+        }
+
+        public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
             string serviceBusConnectionString = null,
             string serviceBusTopicName = null,
             string serviceBusSubscription = null)
         {
             if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
             {
-                services.AddSingleton<SynchronousInitiativeMessageReceiver>();
-                services.AddSingleton<IInitiativeMessageReceiver>(x => x.GetRequiredService<SynchronousInitiativeMessageReceiver>());
-                services.AddSingleton<IInitiativeMessageSender, SynchronousInitiativeMessageSender>();
+                AddInitiativeMessaging(services, new SynchronousInitiativeMessageReceiver());
             }
             else
             {

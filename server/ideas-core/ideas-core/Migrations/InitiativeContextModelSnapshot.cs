@@ -22,10 +22,7 @@ namespace CoE.Ideas.Core.Migrations
 
             modelBuilder.Entity("CoE.Ideas.Core.Data.Initiative", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AlternateKey")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int?>("AssigneeId");
@@ -46,6 +43,8 @@ namespace CoE.Ideas.Core.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(255);
+
+                    b.Property<Guid>("Uid");
 
                     b.Property<string>("WorkOrderId")
                         .HasMaxLength(128);
@@ -77,7 +76,7 @@ namespace CoE.Ideas.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("IdeaStatusHistories");
+                    b.ToTable("InitiativeStatusHistories");
                 });
 
             modelBuilder.Entity("CoE.Ideas.Core.Data.Stakeholder", b =>
@@ -85,7 +84,7 @@ namespace CoE.Ideas.Core.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid?>("InitiativeId");
+                    b.Property<int?>("InitiativeId");
 
                     b.Property<int>("PersonId");
 

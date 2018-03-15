@@ -10,11 +10,14 @@ using System.Text;
 namespace CoE.Ideas.Core.Data
 {
     // Initiative is a Domain Driven Design aggregate root 
-    public class Initiative : AggregateRoot<Guid>
+    public class Initiative : AggregateRoot<int>
     {
-        public Initiative(Guid id) : base(id) { }
+        public Initiative(Guid uid) : base()
+        {
+            Uid = uid;
+        }
 
-        private Initiative() : base(Guid.NewGuid()) { } // required for EF
+        private Initiative() : base() { } // required for EF
 
         // Factory method for creation
         public static Initiative Create(
@@ -36,14 +39,13 @@ namespace CoE.Ideas.Core.Data
             initiative.Status = InitiativeStatus.Initiate;
             initiative.CreatedDate = DateTimeOffset.Now;
 
-            initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Id, ownerPersonId));
+            initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId));
 
             return initiative;
         }
 
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AlternateKey { get; private set; }
+        public Guid Uid { get; private set; }
 
         /// <summary>
         /// The short title of the idea

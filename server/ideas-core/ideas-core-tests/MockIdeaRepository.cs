@@ -21,12 +21,12 @@ namespace CoE.Ideas.Core.Tests
 
         public Task<Initiative> GetInitiativeAsync(Guid id)
         {
-            return Task.FromResult(initiatives.Single(x => x.Id == id));
+            return Task.FromResult(initiatives.Single(x => x.Uid == id));
         }
 
         public Task<Initiative> GetInitiativeAsync(int id)
         {
-            return Task.FromResult(initiatives.Single(x => x.AlternateKey == id));
+            return Task.FromResult(initiatives.Single(x => x.Id == id));
         }
 
         public Task<Initiative> GetInitiativeByWordpressKeyAsync(int wordpressKey)
