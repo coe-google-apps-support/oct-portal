@@ -23,9 +23,6 @@ namespace CoE.Ideas.Core.Data
         [Required]
         public string Description { get; private set; }
 
-        public DateTimeOffset? AuditUpdatedOn { get; private set; }
-
-
         internal static InitiativeInfo Create(Initiative initiative)
         {
             return new InitiativeInfo()
@@ -33,8 +30,7 @@ namespace CoE.Ideas.Core.Data
                 Id = initiative.Id,
                 AlternateKey = initiative.AlternateKey,
                 Title = initiative.Title,
-                Description = initiative.Description,
-                AuditUpdatedOn = initiative.AuditRecord.AuditUpdatedOnUtc
+                Description = initiative.Description
             };
         }
     }

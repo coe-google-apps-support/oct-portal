@@ -1,6 +1,7 @@
 ﻿using CoE.Ideas.Shared.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace CoE.Ideas.Core.Data
@@ -28,6 +29,7 @@ namespace CoE.Ideas.Core.Data
         /// status, or it can be updated to a past tense message if this
         /// record is not the current record.
         /// </summary>
+        [MaxLength(1024)]
         public string Text { get; private set; }
 
         // foreign key to Initiatives
