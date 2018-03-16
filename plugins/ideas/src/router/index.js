@@ -32,6 +32,30 @@ export default new Router({
       name: 'initiatives',
       component: ViewInitiative,
       props: true
+    },
+    {
+      path: '/plugins/initiatives/new-idea',
+      name: 'new-idea',
+      component: NewIdea
+    },
+    {
+      path: '/plugins/initiatives/view-ideas',
+      name: 'view-ideas',
+      component: ViewIdeas
+    },
+    {
+      path: '/plugins/initiatives/my-profile',
+      name: 'my-profile',
+      component: ViewIdeas,
+      props: {
+        filter: 'mine'
+      }
+    },
+    {
+      path: '/plugins/initiatives/initiatives/:slug/',
+      name: 'initiatives',
+      component: ViewInitiative,
+      props: true
     }
   ]
 })

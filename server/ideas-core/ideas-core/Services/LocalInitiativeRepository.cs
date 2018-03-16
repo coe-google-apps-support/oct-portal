@@ -41,7 +41,7 @@ namespace CoE.Ideas.Core.Services
 
         public Task<Initiative> GetInitiativeAsync(Guid id)
         {
-            return _initiativeContext.Initiatives.FindAsync(id);
+            return _initiativeContext.Initiatives.SingleOrDefaultAsync(x => x.Uid == id);
         }
 
         public Task<Initiative> GetInitiativeAsync(int id)
