@@ -10,21 +10,17 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '*',
-      component: ViewIdeas
-    },
-    {
-      path: '*/new-idea',
+      path: '/new-idea',
       name: 'new-idea',
       component: NewIdea
     },
     {
-      path: '*/view-ideas',
+      path: '/view-ideas',
       name: 'view-ideas',
       component: ViewIdeas
     },
     {
-      path: '*/my-profile',
+      path: '/my-profile',
       name: 'my-profile',
       component: ViewIdeas,
       props: {
@@ -32,7 +28,7 @@ export default new Router({
       }
     },
     {
-      path: '*/initiatives/:initiativeId/',
+      path: '/initiatives/:slug/',
       name: 'initiatives',
       component: ViewInitiative,
       props: true

@@ -51,7 +51,7 @@ import formatDate from '@/utils/format-date-since'
 export default {
   name: 'ViewInitiative',
   props: [
-    'initiativeId'
+    'slug'
   ],
   data: () => ({
     errors: [],
@@ -67,7 +67,7 @@ export default {
     AttachFileButton
   },
   created () {
-    this.services.ideas.getInitiative(this.initiativeId).then((initiative) => {
+    this.services.ideas.getInitiative(this.slug).then((initiative) => {
       this.initiative = initiative
       if (!this.initiative.businessCaseUrl) {
         this.initiative.businessCaseUrl = ''

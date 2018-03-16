@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoE.Ideas.Core;
@@ -22,12 +23,14 @@ namespace CoE.Ideas.Server
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory, IHostingEnvironment env)
         {
             Configuration = configuration;
+            HostingEnvironment = env;
         }
 
         public IConfiguration Configuration { get; }
+        private IHostingEnvironment HostingEnvironment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -41,8 +44,23 @@ namespace CoE.Ideas.Server
                 .CreateLogger());
 
             services.AddLocalInitiativeConfiguration(Configuration.GetConnectionString("IdeaDatabase"));
-            services.AddWordPressSecurity(Configuration.GetConnectionString("WordPressDatabase"), 
-                Configuration.GetSection("WordPress"));
+
+            services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"),
+                    Configuration.GetSection("WordPress"));
+
+            if (HostingEnvironment.IsDevelopment())
+            {
+                services.AddWordPressSecurity(Configuration.GetSection("WordPress")
+#if DEBUG
+                    ,staticDevUserName: "Snow White"
+                    ,staticDevEmail: "snow.white@edmonton.ca"
+#endif
+                    );
+            }
+            else
+            {
+                services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
+            }
 
             services.AddInitiativeMessaging(Configuration.GetConnectionString("IdeaServiceBus"),
                 Configuration["Ideas:ServiceBusTopic"]);
@@ -51,8 +69,6 @@ namespace CoE.Ideas.Server
 
             services.AddAutoMapper();
         }
-
-        
 
         protected void ConfigureCors(IApplicationBuilder app, IHostingEnvironment env)
         {

@@ -1,5 +1,6 @@
 ﻿using CoE.Ideas.Shared.Extensions;
 using CoE.Ideas.Shared.Security;
+using EnsureThat;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -99,6 +100,36 @@ namespace CoE.Ideas.Shared.WordPress
             }
         }
 
+#if DEBUG
+        internal static ClaimsPrincipal CreateDevUser(string userName, string email)
+        {
+            EnsureArg.IsNotNullOrWhiteSpace(userName);
+            EnsureArg.IsNotNullOrWhiteSpace(email);
+
+            var claims = new List<Claim>()
+            {
+                new Claim(CLAIM_TYPE_ID, "0"),
+                new Claim(ClaimTypes.NameIdentifier, userName),
+                new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.Name, userName),
+                new Claim(ClaimTypes.Uri, string.Empty)
+            };
+
+            string[] tokens = userName.Split(" ");
+            if (tokens.Length >= 2)
+            {
+                claims.Add(new Claim(ClaimTypes.GivenName, tokens[0]));
+                claims.Add(new Claim(ClaimTypes.Surname, tokens.Last()));
+            }
+
+            claims.Add(new Claim(CLAIM_AUTH, string.Empty));
+
+            AddRoleClaims(claims, string.Empty); // left here for future use
+
+            return new ClaimsPrincipal(new ClaimsIdentity(claims, "WordPress"));
+        }
+#endif
+
         private async Task<ClaimsPrincipal> VerifyHashAndCreatePrincipal(string username, long expiration, string cookieHash, string scheme = "auth", Func<ICollection<Claim>, Task> onCreatingClaims = null)
         {
 
@@ -175,7 +206,7 @@ namespace CoE.Ideas.Shared.WordPress
 
         }
 
-        private void AddRoleClaims(ICollection<Claim> claims, string wpCapabilities)
+        private static void AddRoleClaims(ICollection<Claim> claims, string wpCapabilities)
         {
             if (!string.IsNullOrWhiteSpace(wpCapabilities))
             {

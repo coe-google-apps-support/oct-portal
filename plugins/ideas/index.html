@@ -34,7 +34,16 @@
         }        
       });
 
-      new pym.Child();
+      var pluginWindow = new pym.Child({ polling: 500 });
+        window.addEventListener('navigate', function (e) {
+        if (e.detail) {
+            if (pluginWindow.parentUrl) {
+                pluginWindow.navigateParentTo(e.detail);
+            } else {
+                window.location.href = e.detail;
+            }
+        }
+    }, false);
     </script>
 
   </body>

@@ -50,6 +50,7 @@ namespace CoE.Ideas.Shared.Security
         {
             var context = new CookieReceivedContext(Context, Scheme, Options);
 
+
             if (Events.OnValidateCookie == null)
             {
                 await OnValidateCookieDefaultHandler(context);
@@ -59,6 +60,19 @@ namespace CoE.Ideas.Shared.Security
                 _logger.LogInformation("Validating WordPress cookie using custom event");
                 await Events.OnValidateCookie(context);
             }
+
+#if DEBUG
+            if (context.Principal == null || !context.Principal.Identity.IsAuthenticated)
+            {
+                if (!string.IsNullOrWhiteSpace(Options.DevUserEmail) || !string.IsNullOrWhiteSpace(Options.DevUserName))
+                {
+                    context.Principal = WordPressUserSecurity.CreateDevUser(Options.DevUserName, Options.DevUserEmail);
+                    return AuthenticateResult.Success(new AuthenticationTicket(context.Principal, context.Properties, Scheme.Name));
+                }
+            }
+#endif
+
+
 
             if (context.Principal == null)
                 return AuthenticateResult.Fail("No principal.");
@@ -73,7 +87,9 @@ namespace CoE.Ideas.Shared.Security
             if (string.IsNullOrWhiteSpace(cookie))
             {
                 _logger.LogError("WordPress cookie not found for url { WordPressUrl }", Options.WordPressUrl);
+#if !DEBUG
                 context.Fail($"WordPress cookie not found for url { Options.WordPressUrl }");
+#endif
             }
             else
             {
@@ -91,7 +107,9 @@ namespace CoE.Ideas.Shared.Security
                 catch (Exception err)
                 {
                     _logger.LogError(err, "Unable to create Principal from cookie '{ WordPressCookie }'; { ErrorMessage }", cookie, err.Message);
+#if !DEBUG
                     context.Fail(err);
+#endif
                 }
             }
         }
