@@ -13,7 +13,7 @@ namespace CoE.Ideas.Shared.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddWordPressSecurity(this IServiceCollection services,
+        public static IServiceCollection AddWordPressServices(this IServiceCollection services,
             string wordPressDbConnectionString,
             IConfigurationSection wordPressConfigurationSection)
         {
@@ -21,16 +21,28 @@ namespace CoE.Ideas.Shared.Extensions
             EnsureArg.IsNotNull(wordPressConfigurationSection);
 
             string wordPressUrl = wordPressConfigurationSection["Url"];
-            EnsureArg.IsNotNullOrWhiteSpace(wordPressUrl, "wordPressConfigurationSection", 
+            EnsureArg.IsNotNullOrWhiteSpace(wordPressUrl, "wordPressConfigurationSection",
                 o => o.WithMessage("wordPressConfigurationSection must contain a valid Url"));
 
             services.AddDbContext<WordPressContext>(options =>
                 options.UseMySql(wordPressDbConnectionString));
 
+            services.AddScoped<IWordPressRepository, WordPressRepository>();
+
+            return services;
+        }
+
+
+        public static IServiceCollection AddWordPressSecurity(this IServiceCollection services,
+            IConfigurationSection wordPressConfigurationSection
+#if DEBUG
+            ,string staticDevUserName = null
+            ,string staticDevEmail = null
+#endif
+            )
+        {
             services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
             services.AddScoped<IWordPressUserSecurity, WordPressUserSecurity>();
-
-            services.AddScoped<IWordPressRepository, WordPressRepository>();
 
             services.AddAuthentication(options =>
             {
@@ -38,6 +50,13 @@ namespace CoE.Ideas.Shared.Extensions
             }).AddWordPressCookie(options =>
             {
                 options.WordPressUrl = wordPressConfigurationSection["Url"];
+#if DEBUG
+                if (!string.IsNullOrWhiteSpace(staticDevUserName) && !string.IsNullOrWhiteSpace(staticDevEmail))
+                {
+                    options.DevUserName = staticDevUserName;
+                    options.DevUserEmail = staticDevEmail;
+                }
+#endif
             });
 
             return services;

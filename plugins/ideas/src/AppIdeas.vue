@@ -7,17 +7,8 @@
 
 <script>
 
-import {bus} from './main'
-
 export default {
-  name: 'app',
-  mounted () {
-    bus.$on('initialize-ideas', config => {
-      if (config.route) {
-        this.$router.push(config.route)
-      }
-    })
-  }
+  name: 'app'
 }
 </script>
 
