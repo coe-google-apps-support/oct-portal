@@ -78,14 +78,14 @@ export default {
       if (!this.initiative.businessCaseUrl) {
         this.initiative.businessCaseUrl = ''
       }
-      return this.services.ideas.getAssignee(initiative.id)
+      return Promise.all([this.services.ideas.getAssignee(initiative.id), this.services.ideas.getInitiativeSteps(initiative.id)])
     }).then((response) => {
-      if (response && response.data) {
-        this.assignee = response.data
+      if (response && response[0] && response[0].data) {
+        this.assignee = response[0].data
       }
-      return this.services.ideas.getInitiativeSteps(this.initiative.id)
-    }).then((response) => {
-      this.steps = response
+      if (response && response[1]) {
+        this.steps = response[1]
+      }
       this.isLoading = false
     })
   },
