@@ -25,7 +25,7 @@
                 <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
               </md-field>
             </div>
-            <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea" @click="setDone('first', 'second')">Continue</md-button>
+            <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea">Continue</md-button>
           </md-step>
 
           <md-step id="second" md-label="Finalize" :md-done.sync="second">
@@ -34,7 +34,7 @@
           </md-step>
 
         </md-steppers>
-        <md-progress-bar md-mode="indeterminate" v-if="sending" />
+        <md-progress-bar md-mode="indeterminate" class="md-accent" v-if="sending" />
       </md-card>
     </form>
   </div>    
