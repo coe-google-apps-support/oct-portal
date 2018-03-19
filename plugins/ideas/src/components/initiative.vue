@@ -17,7 +17,9 @@
     </md-card-media-cover>
 
     <div class="card-secondary-info">
-      <div class ="description-text">{{ initiative.description | truncate }}</div>
+      <div class="description-container">
+        <div class ="description-text">{{ initiative.description }}</div>
+      </div>
       <div class="date-text md-subhead">{{ initiative.createdDate | formatDate }}</div>
     </div>
     
@@ -105,7 +107,17 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+@import '../mixins.scss';
+
+.description-text {
+  position: relative;
+  @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: white);
+}
+
+.description-container {
+  height: 3.6em;
+}
 
 .oct-cover {
   position: absolute;
