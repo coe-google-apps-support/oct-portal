@@ -76,13 +76,6 @@ namespace CoE.Ideas.Server.Tests
             //_services.AddScoped<IWordPressClient, MockWordPressClient>();
             _services.AddScoped<IInitiativeRepository, MockIdeaRepository>();
 
-
-            //_services.AddIdeaAuthSecurity(
-            //    _configuration["Authorization:JwtSecretKey"],
-            //    _configuration["Authorization:CoeAuthKey"],
-            //    _configuration["Authorization:CoeAuthIV"],
-            //    _configuration["Ideas:WordPressUrl"]);
-
             //_services.AddMvc();
 
             //_services.AddAutoMapper();

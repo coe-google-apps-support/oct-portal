@@ -25,12 +25,14 @@ namespace CoE.Ideas.Core
         /// <param name="dbConnectionString">The connection string to the Idea database.</param>
         /// <returns>The passed in services, for chaining</returns>
         public static IServiceCollection AddLocalInitiativeConfiguration(this IServiceCollection services,
-            string dbConnectionString)
-        {
-            EnsureArg.IsNotNullOrWhiteSpace(dbConnectionString);
+            string dbConnectionString = null)
+        { 
+            // default value is one is not supplied
+            string connectionString = string.IsNullOrWhiteSpace(dbConnectionString)
+                ? "server=.;database=CoeIdeas;Trusted_Connection=True;" : dbConnectionString;
 
             services.AddDbContext<InitiativeContext>(options =>
-                options.UseSqlServer(dbConnectionString));
+                options.UseSqlServer(connectionString));
 
             services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
 

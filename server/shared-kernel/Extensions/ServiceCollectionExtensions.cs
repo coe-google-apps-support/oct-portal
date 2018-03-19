@@ -14,22 +14,20 @@ namespace CoE.Ideas.Shared.Extensions
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddWordPressServices(this IServiceCollection services,
-            string wordPressDbConnectionString,
-            IConfigurationSection wordPressConfigurationSection)
+            string wordPressDbConnectionString)
         {
-            EnsureArg.IsNotNullOrWhiteSpace(wordPressDbConnectionString);
-            EnsureArg.IsNotNull(wordPressConfigurationSection);
-
-            string wordPressUrl = wordPressConfigurationSection["Url"];
-            EnsureArg.IsNotNullOrWhiteSpace(wordPressUrl, "wordPressConfigurationSection",
-                o => o.WithMessage("wordPressConfigurationSection must contain a valid Url"));
+            // defaults (for dev environment)
+            string connectionString = string.IsNullOrWhiteSpace(wordPressDbConnectionString)
+                ? "server=127.0.0.1;uid=InitiativeWordPressReader;pwd=octavadev;database=OctPortalWordPress"
+                : wordPressDbConnectionString;
 
             services.AddDbContext<WordPressContext>(options =>
-                options.UseMySql(wordPressDbConnectionString));
+                options.UseMySql(connectionString));
 
             services.AddScoped<IWordPressRepository, WordPressRepository>();
 
             return services;
+
         }
 
 
@@ -41,6 +39,22 @@ namespace CoE.Ideas.Shared.Extensions
 #endif
             )
         {
+            // defaults (for dev environment)
+            string wordPressUrl = string.IsNullOrWhiteSpace(wordPressConfigurationSection["Url"])
+                ? "http://localhost"
+                : wordPressConfigurationSection["Url"];
+#if DEBUG
+            // NOTE this our not the keys we use in INT/UAT/Production !!
+            if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["AUTH_KEY"])) wordPressConfigurationSection["AUTH_KEY"] = "df66691c29f5c411518e34b63a1596e7b4c8c592f7374f2aa31d18b37a6a706b";
+            if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["SECURE_AUTH_KEY"])) wordPressConfigurationSection["SECURE_AUTH_KEY"] = "20833cf1548f33907dc1d22594bc327090fcf36658aa99cc3893d2ac83c60bdc";
+            if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["LOGGED_IN_KEY"])) wordPressConfigurationSection["LOGGED_IN_KEY"] = "e062894f6f210de789922a1610163bd0ecc4b37dcc9586a90b42d6de55edc3a1";
+            if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["NONCE_KEY"])) wordPressConfigurationSection["NONCE_KEY"] = "72162ab50ed34a99d2e968302a2e79e71dd5b7174472b6355cb1fe2f70aec36a";
+            if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["AUTH_SALT"])) wordPressConfigurationSection["AUTH_SALT"] = "cc7d75e599261db4f3e3dc08055fc324cd1f4764a7136d0d2b41cf66cd4feb4e";
+            if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["SECURE_AUTH_SALT"])) wordPressConfigurationSection["SECURE_AUTH_SALT"] = "633b9c2b2eaaba702c5fb1130951cdaadd8a1940504c7f85879453776cc59fe0";
+            if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["LOGGED_IN_SALT"])) wordPressConfigurationSection["LOGGED_IN_SALT"] = "2cb69d64dd4a85b634eaf26b8e77b0fa18f430591c2f573485a370f6ed8e4424";
+            if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["NONCE_SALT"])) wordPressConfigurationSection["NONCE_SALT"] = "c9e9e4dcccf9fb7dc5daf5275ce88f1aef33bc031a558a9845678c741fdfdf92";
+#endif
+
             services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
             services.AddScoped<IWordPressUserSecurity, WordPressUserSecurity>();
 
@@ -49,7 +63,7 @@ namespace CoE.Ideas.Shared.Extensions
                 options.DefaultScheme = WordPressCookieAuthenticationDefaults.AuthenticationScheme;
             }).AddWordPressCookie(options =>
             {
-                options.WordPressUrl = wordPressConfigurationSection["Url"];
+                options.WordPressUrl = wordPressUrl;
 #if DEBUG
                 if (!string.IsNullOrWhiteSpace(staticDevUserName) && !string.IsNullOrWhiteSpace(staticDevEmail))
                 {

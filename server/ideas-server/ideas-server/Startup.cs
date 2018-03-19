@@ -46,8 +46,7 @@ namespace CoE.Ideas.Server
 
             services.AddLocalInitiativeConfiguration(Configuration.GetConnectionString("IdeaDatabase"));
 
-            services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"),
-                    Configuration.GetSection("WordPress"));
+            services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"));
 
             if (HostingEnvironment.IsDevelopment())
             {
