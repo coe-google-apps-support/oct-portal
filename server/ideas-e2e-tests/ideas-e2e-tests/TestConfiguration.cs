@@ -1,23 +1,11 @@
-﻿using CoE.Ideas.Core;
-using CoE.Ideas.Core.ServiceBus;
+﻿using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.Tests;
-using CoE.Ideas.Core.WordPress;
 using CoE.Ideas.EndToEnd.Tests.Mocks;
 using CoE.Ideas.Integration.Notification;
 using CoE.Ideas.Remedy;
-using CoE.Ideas.Remedy.RemedyServiceReference;
 using CoE.Ideas.Remedy.SbListener;
-using CoE.Ideas.Server.Controllers;
-using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.ServiceModel;
-using System.Text;
 
 namespace CoE.Ideas.EndToEnd.Tests
 {
@@ -43,9 +31,9 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         public TestConfiguration ConfigureIdeaServices()
         {
-            Services.AddScoped<IWordPressClient, MockWordPressClient>();
-            Services.AddScoped<IIdeaRepository, MockIdeaRepository>();
-            Services.AddScoped<IUpdatableIdeaRepository, MockIdeaRepository>();
+            //Services.AddScoped<IWordPressClient, MockWordPressClient>();
+            //Services.AddScoped<IIdeaRepository, MockIdeaRepository>();
+            //Services.AddScoped<IUpdatableIdeaRepository, MockIdeaRepository>();
             base.ConfigureIdeasController();
             return this;
         }

@@ -4,11 +4,11 @@ using CoE.Ideas.Core.Tests;
 
 namespace CoE.Ideas.EndToEnd.Tests
 {
-    internal class MockIdeaRepositoryFactory : IIdeaRepositoryFactory
-    {
-        public IIdeaRepository Create(ClaimsPrincipal user)
-        {
-            return new MockIdeaRepository();
-        }
-    }
+    //internal class MockIdeaRepositoryFactory : IInitiativeRepositoryFactory
+    //{
+    //    public IIdeaRepository Create(ClaimsPrincipal user)
+    //    {
+    //        return new MockIdeaRepository();
+    //    }
+    //}
 }

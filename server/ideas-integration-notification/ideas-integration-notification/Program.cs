@@ -1,12 +1,5 @@
-﻿using CoE.Ideas.Core;
-using CoE.Ideas.Core.ServiceBus;
-using CoE.Ideas.Core.WordPress;
-using Microsoft.AspNetCore.NodeServices;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
 using Serilog;
-using System;
 using System.IO;
 using System.Threading;
 

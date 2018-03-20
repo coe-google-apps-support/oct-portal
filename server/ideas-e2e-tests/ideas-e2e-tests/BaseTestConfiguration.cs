@@ -1,14 +1,12 @@
-﻿using CoE.Ideas.Core;
-using CoE.Ideas.Core.ServiceBus;
-using CoE.Ideas.Core.WordPress;
+﻿using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Core.Services;
 using CoE.Ideas.Server.Controllers;
+using CoE.Ideas.Shared.WordPress;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 
 namespace CoE.Ideas.EndToEnd.Tests
 {
@@ -65,8 +63,8 @@ namespace CoE.Ideas.EndToEnd.Tests
         {
             Services.AddScoped<IdeasController>(x =>
             {
-                return new IdeasController(x.GetRequiredService<IUpdatableIdeaRepository>(),
-                    x.GetRequiredService<IWordPressClient>(),
+                return new IdeasController(x.GetRequiredService<IInitiativeRepository>(),
+                    x.GetRequiredService<IPersonRepository>(),
                     x.GetRequiredService<IInitiativeMessageSender>(),
                     x.GetRequiredService<Serilog.ILogger>())
                 {

@@ -1,13 +1,11 @@
-﻿using CoE.Ideas.Core.People;
-using CoE.Ideas.Core.ServiceBus;
+﻿using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Remedy.Watcher;
 using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
+using CoE.Ideas.Shared.People;
 using Microsoft.Extensions.Options;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.EndToEnd.Tests.IntegrationServices

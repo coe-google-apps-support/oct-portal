@@ -1,9 +1,8 @@
-﻿using CoE.Ideas.Core;
+﻿using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Remedy;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,12 +18,12 @@ namespace CoE.Ideas.EndToEnd.Tests.IntegrationServices
         {
             _logger = logger ?? throw new ArgumentNullException("logger");
 
-            NewInitiatives = new List<Idea>();
+            NewInitiatives = new List<Initiative>();
         }
 
         private readonly Serilog.ILogger _logger;
 
-        public ICollection<Idea> NewInitiatives { get; private set; }
+        public ICollection<Initiative> NewInitiatives { get; private set; }
 
 
         protected override async Task OnNewInitiative(InitiativeCreatedEventArgs e, CancellationToken token)

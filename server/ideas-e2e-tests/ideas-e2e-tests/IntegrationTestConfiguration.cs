@@ -1,15 +1,13 @@
-﻿using System;
-using System.ServiceModel;
+﻿using System.ServiceModel;
 using AutoMapper;
 using CoE.Ideas.Core;
-using CoE.Ideas.Core.People;
-using CoE.Ideas.Core.Security;
 using CoE.Ideas.Core.ServiceBus;
-using CoE.Ideas.Core.WordPress;
 using CoE.Ideas.EndToEnd.Tests.IntegrationServices;
 using CoE.Ideas.Remedy;
 using CoE.Ideas.Remedy.RemedyServiceReference;
 using CoE.Ideas.Remedy.SbListener;
+using CoE.Ideas.Shared.Extensions;
+using CoE.Ideas.Shared.People;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,11 +35,8 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         public IntegrationTestConfiguration ConfigureIdeaServices()
         {
-            Services.AddIdeaConfiguration(
-                dbConnectionString: Configuration.GetConnectionString("IdeaDatabase"), 
-                wordPressUrl: Configuration["Ideas:WordPressUrl"], 
-                wordPressDbConnectionString: Configuration.GetConnectionString("WordPressDatabase"),
-                wordPressConfigurationSection: Configuration.GetSection("WordPress"));
+            Services.AddLocalInitiativeConfiguration(
+                dbConnectionString: Configuration.GetConnectionString("IdeaDatabase"));
 
             Services.AddInitiativeMessaging(Configuration.GetConnectionString("IdeaServiceBus"),
                 Configuration["Ideas:ServiceBusTopic"]);
@@ -55,7 +50,7 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         public IntegrationTestConfiguration ConfigureRemedyServices()
         {
-            Services.AddSingleton<IIdeaRepositoryFactory, MockIdeaRepositoryFactory>();
+            //Services.AddSingleton<IIdeaRepositoryFactory, MockIdeaRepositoryFactory>();
 
             ConfigureOnNewInitiativeRemedyServices();
             ConfigureOnWorkOrderUpdatedRemedyServices();
@@ -67,41 +62,41 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         private void ConfigureOnNewInitiativeRemedyServices()
         {
-            Services.AddSingleton<CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType>(x =>
-            {
-                return new New_Port_0PortTypeClient(
-                    new BasicHttpBinding(BasicHttpSecurityMode.None)
-                    {
-                        MaxReceivedMessageSize = 16777216L // 16 MB, default it 65kb
-                    },
-                    new EndpointAddress(Configuration["Remedy:ApiUrl"]));
-            });
+            //Services.AddSingleton<CoE.Ideas.Remedy.RemedyServiceReference.New_Port_0PortType>(x =>
+            //{
+            //    return new New_Port_0PortTypeClient(
+            //        new BasicHttpBinding(BasicHttpSecurityMode.None)
+            //        {
+            //            MaxReceivedMessageSize = 16777216L // 16 MB, default it 65kb
+            //        },
+            //        new EndpointAddress(Configuration["Remedy:ApiUrl"]));
+            //});
 
 
 
-            Services.Configure<RemedyServiceOptions>(Configuration.GetSection("Remedy"));
-            Services.AddSingleton<IntegrationRemedyService>();
-            Services.AddSingleton<IRemedyService>(x => x.GetRequiredService<IntegrationRemedyService>());
+            //Services.Configure<RemedyServiceOptions>(Configuration.GetSection("Remedy"));
+            //Services.AddSingleton<IntegrationRemedyService>();
+            //Services.AddSingleton<IRemedyService>(x => x.GetRequiredService<IntegrationRemedyService>());
 
 
-            // configure the listener that listens for new initiatives and create work order in remedy
-            Services.AddSingleton<IntegrationRemedyListenerNewIdeaListener>(x =>
-            {
-                var subscriptionClient = new SubscriptionClient(connectionString: Configuration.GetConnectionString("IdeaServiceBus"),
-                    topicPath: Configuration["Ideas:ServiceBusTopic"],
-                    subscriptionName: Configuration["Ideas:RemedyServiceBusSubscription"]);
+            //// configure the listener that listens for new initiatives and create work order in remedy
+            //Services.AddSingleton<IntegrationRemedyListenerNewIdeaListener>(x =>
+            //{
+            //    var subscriptionClient = new SubscriptionClient(connectionString: Configuration.GetConnectionString("IdeaServiceBus"),
+            //        topicPath: Configuration["Ideas:ServiceBusTopic"],
+            //        subscriptionName: Configuration["Ideas:RemedyServiceBusSubscription"]);
 
-                var messageReceiver = new InitiativeMessageReceiver(subscriptionClient,
-                    x.GetRequiredService<Serilog.ILogger>(),
-                    x.GetRequiredService<IIdeaRepositoryFactory>());
+            //    //var messageReceiver = new InitiativeMessageReceiver(subscriptionClient,
+            //    //    x.GetRequiredService<Serilog.ILogger>(),
+            //    //    x.GetRequiredService<IIdeaRepositoryFactory>());
 
-                return new IntegrationRemedyListenerNewIdeaListener(messageReceiver,
-                    x.GetRequiredService<IInitiativeMessageSender>(),
-                    x.GetRequiredService<IRemedyService>(),
-                    x.GetRequiredService<Serilog.ILogger>());
-            });
-            Services.AddSingleton<NewIdeaListener, IntegrationRemedyListenerNewIdeaListener>(x => x.GetRequiredService<IntegrationRemedyListenerNewIdeaListener>());
-            Services.AddSingleton<RemedyItemUpdatedIdeaListener>();
+            //    return new IntegrationRemedyListenerNewIdeaListener(messageReceiver,
+            //        x.GetRequiredService<IInitiativeMessageSender>(),
+            //        x.GetRequiredService<IRemedyService>(),
+            //        x.GetRequiredService<Serilog.ILogger>());
+            //});
+            //Services.AddSingleton<NewIdeaListener, IntegrationRemedyListenerNewIdeaListener>(x => x.GetRequiredService<IntegrationRemedyListenerNewIdeaListener>());
+            //Services.AddSingleton<RemedyItemUpdatedIdeaListener>();
         }
 
         private void ConfigureOnWorkOrderUpdatedRemedyServices()
@@ -133,25 +128,25 @@ namespace CoE.Ideas.EndToEnd.Tests
 
         private void ConfigureOnRemedyItemChangedServices()
         {
-            // IntegrationRemedyItemUpdatedIdeaListener
-            Services.AddSingleton<IntegrationRemedyItemUpdatedIdeaListener>(x =>
-            {
-                var subscriptionClient = new SubscriptionClient(connectionString: Configuration.GetConnectionString("IdeaServiceBus"),
-                    topicPath: Configuration["Ideas:ServiceBusTopic"],
-                    subscriptionName: Configuration["Ideas:RemedyCheckerServiceBusSubscription"]);
+            //// IntegrationRemedyItemUpdatedIdeaListener
+            //Services.AddSingleton<IntegrationRemedyItemUpdatedIdeaListener>(x =>
+            //{
+            //    var subscriptionClient = new SubscriptionClient(connectionString: Configuration.GetConnectionString("IdeaServiceBus"),
+            //        topicPath: Configuration["Ideas:ServiceBusTopic"],
+            //        subscriptionName: Configuration["Ideas:RemedyCheckerServiceBusSubscription"]);
 
-                var messageReceiver = new InitiativeMessageReceiver(
-                    subscriptionClient, 
-                    x.GetRequiredService<Serilog.ILogger>(),
-                    x.GetRequiredService<IIdeaRepositoryFactory>());
+            //    var messageReceiver = new InitiativeMessageReceiver(
+            //        subscriptionClient, 
+            //        x.GetRequiredService<Serilog.ILogger>(),
+            //        x.GetRequiredService<IIdeaRepositoryFactory>());
 
-            return new IntegrationRemedyItemUpdatedIdeaListener(
-                    x.GetRequiredService<IUpdatableIdeaRepository>(),
-                    messageReceiver, 
-                    x.GetRequiredService<Serilog.ILogger>());
+            //return new IntegrationRemedyItemUpdatedIdeaListener(
+            //        x.GetRequiredService<IUpdatableIdeaRepository>(),
+            //        messageReceiver, 
+            //        x.GetRequiredService<Serilog.ILogger>());
 
-            });
-            Services.AddSingleton<RemedyItemUpdatedIdeaListener>(x => x.GetRequiredService<IntegrationRemedyItemUpdatedIdeaListener>());
+            //});
+            //Services.AddSingleton<RemedyItemUpdatedIdeaListener>(x => x.GetRequiredService<IntegrationRemedyItemUpdatedIdeaListener>());
 
         }
     }

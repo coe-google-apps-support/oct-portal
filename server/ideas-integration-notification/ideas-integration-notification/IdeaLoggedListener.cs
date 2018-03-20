@@ -1,13 +1,8 @@
-﻿using CoE.Ideas.Core;
-using CoE.Ideas.Core.ServiceBus;
-using CoE.Ideas.Core.WordPress;
-using Microsoft.Azure.ServiceBus;
-using Microsoft.Extensions.Logging;
+﻿using CoE.Ideas.Core.ServiceBus;
 using Serilog.Context;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

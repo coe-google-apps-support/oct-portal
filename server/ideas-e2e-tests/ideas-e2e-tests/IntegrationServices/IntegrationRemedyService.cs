@@ -1,4 +1,5 @@
 ﻿using CoE.Ideas.Core;
+using CoE.Ideas.Core.Data;
 using CoE.Ideas.EndToEnd.Tests.Mocks;
 using CoE.Ideas.Remedy;
 using CoE.Ideas.Remedy.RemedyServiceReference;
@@ -21,7 +22,7 @@ namespace CoE.Ideas.EndToEnd.Tests.IntegrationServices
 
         public ICollection<RemedyWorkOrder> WorkOrdersAdded { get; internal set; }
 
-        public override async Task<string> PostNewIdeaAsync(Idea idea, string user3and3)
+        public override async Task<string> PostNewIdeaAsync(Initiative idea, string user3and3)
         {
             var returnValue = await base.PostNewIdeaAsync(idea, user3and3);
             WorkOrdersAdded.Add(new RemedyWorkOrder() { WorkOrderId = returnValue, Idea = idea });
