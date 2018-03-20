@@ -310,6 +310,67 @@ namespace CoE.Ideas.Server.Controllers
             }
         }
 
+        // GET: ideas/5/resources
+        /// <summary>
+        /// Retrieves a single ideas resources based on it's id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("{id}/resources")]
+        public async Task<IActionResult> GetInitiativeResources([FromRoute] int id)
+        {
+            using (LogContext.PushProperty("InitiativeId", id))
+            {
+                Stopwatch watch = null;
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    _logger.Information("Retrieving resources from initiative {InitiativeId}");
+                    watch = new Stopwatch();
+                    watch.Start();
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.Warning("Unable to retrieve resources from initiative {InitiativeId} because model state is not valid");
+                    return BadRequest(ModelState);
+                }
+
+                var idea = await _repository.GetInitiativeAsync(id);
+
+                if (idea == null)
+                    return NotFound();
+
+                var resources = new Resources();
+
+                
+                if (idea.AssigneeId.HasValue)
+                {
+                    var assigneePerson = await _personRepository.GetPersonAsync(idea.AssigneeId.Value);
+                    resources.Assignee = new User()
+                    {
+                        Email = assigneePerson.Email,
+                        Name = assigneePerson.Name,
+                        AvatarUrl = null,
+                        PhoneNumber = null
+                    };                    
+                }
+                else
+                {
+                    resources.Assignee = null;
+                }
+                
+                resources.BusinessCaseUrl = idea.BusinessCaseUrl;
+
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    watch.Stop();
+                    _logger.Information("Retrieved resources for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+                }
+
+                return Ok(resources);
+            }
+        }
+
         // GET: ideas/5
         /// <summary>
         /// Retrieves a single Idea based on its Id
