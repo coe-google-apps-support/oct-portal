@@ -1,7 +1,8 @@
 ﻿using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.Services;
 using CoE.Ideas.Shared.Security;
-using Microsoft.Azure.ServiceBus;
+using CoE.Ideas.Shared.ServiceBus;
+using EnsureThat;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,13 +18,15 @@ namespace CoE.Ideas.Core.ServiceBus
 
     internal abstract class InitiativeMessageReceiver : IInitiativeMessageReceiver
     { 
-        public InitiativeMessageReceiver(ISubscriptionClient subscriptionClient,
+        public InitiativeMessageReceiver(IMessageReceiver messageReceiver,
             Serilog.ILogger logger) 
         {
-            _subscriptionClient = subscriptionClient ?? throw new ArgumentNullException("subscriptionClient");
-            _logger = logger ?? throw new ArgumentNullException("logger");
+            EnsureArg.IsNotNull(messageReceiver);
+            EnsureArg.IsNotNull(logger);
+            _messageReceiver = messageReceiver;
+            _logger = logger;
         }
-        private readonly ISubscriptionClient _subscriptionClient;
+        private readonly IMessageReceiver _messageReceiver;
         private readonly Serilog.ILogger _logger;
 
         protected abstract IInitiativeRepository GetInitiativeRepository(ClaimsPrincipal owner);
@@ -35,7 +38,7 @@ namespace CoE.Ideas.Core.ServiceBus
             Func<WorkOrderCreatedEventArgs, CancellationToken, Task> workOrderCreatedHandler = null, 
             Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> workOrderUpdatedHandler = null,
             Func<InitiativeLoggedEventArgs, CancellationToken, Task> initiativeLoggedHandler = null,
-            MessageHandlerOptions options = null)
+            Microsoft.Azure.ServiceBus.MessageHandlerOptions options = null)
         {
             if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
             {
@@ -60,14 +63,14 @@ namespace CoE.Ideas.Core.ServiceBus
                         handlerNames.Append(", ");
                     handlerNames.Append("initiativeLoggedHandler");
                 }
-                _logger.Information("Starting message pump with handlers " + handlerNames.ToString() + " on topic '{TopicName}' and subscription '{Subscription}'", _subscriptionClient.TopicPath, _subscriptionClient.SubscriptionName);
+                _logger.Information("Starting message pump with handlers " + handlerNames.ToString()); // + " on topic '{TopicName}' and subscription '{Subscription}'", _subscriptionClient.TopicPath, _subscriptionClient.SubscriptionName);
             }
 
-            MessageHandlerOptions messageHandlerOptions = options ?? new MessageHandlerOptions(OnDefaultError);
+            var messageHandlerOptions = options ?? new Microsoft.Azure.ServiceBus.MessageHandlerOptions(OnDefaultError);
             messageHandlerOptions.AutoComplete = false;
-            _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
+            _messageReceiver.RegisterMessageHandler(async (msg, token) =>
             {
-                _logger.Information("Received service bus message {MessageId}: {Label}", msg.MessageId, msg.Label);
+                _logger.Information("Received service bus message {MessageId}: {Label}", msg.Id.ToString(), msg.Label);
 
                 switch (msg.Label)
                 {
@@ -76,37 +79,37 @@ namespace CoE.Ideas.Core.ServiceBus
                         if (initiativeCreatedHandler != null)
                             await ReceiveInitiativeCreated(msg, token, initiativeCreatedHandler);
                         else
-                            await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                            await _messageReceiver.CompleteAsync(msg.LockToken);
                         break;
                     }
                     case InitiativeMessageSender.REMEDY_WORK_ITEM_CREATED:
                         if (workOrderCreatedHandler != null)
                             await ReceiveInitiativeWorkItemCreated(msg, token, workOrderCreatedHandler);
                         else
-                            await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                            await _messageReceiver.CompleteAsync(msg.LockToken);
                         break;
                     case InitiativeMessageSender.WORK_ORDER_UPDATED:
                         if (workOrderUpdatedHandler != null)
                             await ReceiveWorkOrderUpdated(msg, token, workOrderUpdatedHandler);
                         else
-                            await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                            await _messageReceiver.CompleteAsync(msg.LockToken);
                         break;
                     case InitiativeMessageSender.INITIATIVE_LOGGED:
                         if (initiativeLoggedHandler != null)
                             await ReceiveInitiativeLogged(msg, token, initiativeLoggedHandler);
                         else
-                            await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                            await _messageReceiver.CompleteAsync(msg.LockToken);
                         break;
                     default:
                     {
-                        await _subscriptionClient.DeadLetterAsync(msg.SystemProperties.LockToken, $"Unknown message type: { msg.Label }");
+                        await _messageReceiver.DeadLetterAsync(msg.LockToken, $"Unknown message type: { msg.Label }");
                         break;
                     }
                 }
             }, messageHandlerOptions);
         }
 
-        protected virtual Task OnDefaultError(ExceptionReceivedEventArgs err)
+        protected virtual Task OnDefaultError(Microsoft.Azure.ServiceBus.ExceptionReceivedEventArgs err)
         {
             _logger.Error(err.Exception, "Error receiving message: {ErrorMessage}", err.Exception.Message);
             return Task.CompletedTask;
@@ -137,12 +140,12 @@ namespace CoE.Ideas.Core.ServiceBus
                         Initiative = idea.Item,
                         Owner = owner.Item
                     }, token);
-                    await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                    await _messageReceiver.CompleteAsync(msg.LockToken);
                 }
                 catch (Exception err)
                 {
                     System.Diagnostics.Trace.TraceWarning($"InitiativeCreated handler threw the following error, abandoning message for future processing: { err.Message }");
-                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                    await _messageReceiver.AbandonAsync(msg.LockToken);
                     }
             }
         }
@@ -175,12 +178,12 @@ namespace CoE.Ideas.Core.ServiceBus
                         Owner = owner.Item,
                         WorkOrderId = workOrderId.Item
                     }, token);
-                    await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                    await _messageReceiver.CompleteAsync(msg.LockToken);
                 }
                 catch (Exception err)
                 {
                     System.Diagnostics.Trace.TraceWarning($"InitiativeWorkItemCreated handler threw the following error, abandoning message for future processing: { err.Message }");
-                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                    await _messageReceiver.AbandonAsync(msg.LockToken);
                 }
             }
         }
@@ -216,12 +219,12 @@ namespace CoE.Ideas.Core.ServiceBus
                         AssigneeEmail = assigneeEmail.Item,
                         AssigneeDisplayName = assigneeDisplayname.Item
                     }, token);
-                    await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                    await _messageReceiver.CompleteAsync(msg.LockToken);
                 }
                 catch (Exception err)
                 {
                     System.Diagnostics.Trace.TraceWarning($"WorkOrderUpdated handler threw the following error, abandoning message for future processing: { err.Message }");
-                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                    await _messageReceiver.AbandonAsync(msg.LockToken);
                 }
             }
         }
@@ -253,12 +256,12 @@ namespace CoE.Ideas.Core.ServiceBus
                         Owner = owner.Item,
                         RangeUpdated = rangeUpdated.Item
                     }, token);
-                    await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
+                    await _messageReceiver.CompleteAsync(msg.LockToken);
                 }
                 catch (Exception err)
                 {
                     System.Diagnostics.Trace.TraceWarning($"InitiativeLogged handler threw the following error, abandoning message for future processing: { err.Message }");
-                    await _subscriptionClient.AbandonAsync(msg.SystemProperties.LockToken);
+                    await _messageReceiver.AbandonAsync(msg.LockToken);
                 }
             }
         }
@@ -270,7 +273,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 return true;
             else
             {
-                await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, $"Label was unexpected. Expected '{ label }', got '{ message.Label }';");
+                await _messageReceiver.DeadLetterAsync(message.LockToken, $"Label was unexpected. Expected '{ label }', got '{ message.Label }';");
                 return false;
             }
         }
@@ -305,7 +308,7 @@ namespace CoE.Ideas.Core.ServiceBus
                     string errorMessage = $"Unable to get Initiative { initiativeIdResult.Item }: { err.Message }";
                     _logger.Error(err, "Unable to get Initiative {InitiativeId}: {ErrorMessage}", initiativeIdResult.Item, err.Message);
                     result.SetMessageDeadLettered(errorMessage);
-                    await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
+                    await _messageReceiver.DeadLetterAsync(message.LockToken, errorMessage);
 
                 }
 
@@ -337,7 +340,7 @@ namespace CoE.Ideas.Core.ServiceBus
                     string errorMessage = $"Unable to get Owner from token { ownerClaimsResult.Item }: { err.Message }";
                     _logger.Error(err, "Unable to get Owner from token {Token}: {ErrorMessage}", ownerClaimsResult.Item, err.Message);
                     result.SetMessageDeadLettered(errorMessage);
-                    await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
+                    await _messageReceiver.DeadLetterAsync(message.LockToken, errorMessage);
                 }
             }
 
@@ -347,7 +350,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 string errorMessage = $"Unable to get Owner, reason unknown";
                 _logger.Error(errorMessage);
                 result.SetMessageDeadLettered(errorMessage);
-                await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
+                await _messageReceiver.DeadLetterAsync(message.LockToken, errorMessage);
             }
 
             return result;
@@ -365,7 +368,7 @@ namespace CoE.Ideas.Core.ServiceBus
                     string errorMessage = $"{ propertyName } was empty";
                     _logger.Error("{PropertyName} was empty in Service Bus message", propertyName);
                     result.SetMessageDeadLettered(errorMessage);
-                    await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
+                    await _messageReceiver.DeadLetterAsync(message.LockToken, errorMessage);
                 }
             }
             return result;
@@ -377,15 +380,15 @@ namespace CoE.Ideas.Core.ServiceBus
                 throw new ArgumentNullException("msg");
 
             var result = new GetItemResult<T>();
-            if (!message.UserProperties.ContainsKey(propertyName))
+            if (!message.MessageProperties.ContainsKey(propertyName))
             {
                 string errorMessage = $"{ propertyName } not found in message";
                 result.SetMessageDeadLettered(errorMessage);
-                await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
+                await _messageReceiver.DeadLetterAsync(message.LockToken, errorMessage);
             }
             else
             {
-                object propertyObj = message.UserProperties[propertyName];
+                object propertyObj = message.MessageProperties[propertyName];
                 if (propertyObj == null)
                 {
                     if (!allowNull)
@@ -393,7 +396,7 @@ namespace CoE.Ideas.Core.ServiceBus
                         string errorMessage = $"{ propertyName } was null";
                         _logger.Error("{PropertyName} was empty in Service Bus message", propertyName);
                         result.SetMessageDeadLettered(errorMessage);
-                        await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
+                        await _messageReceiver.DeadLetterAsync(message.LockToken, errorMessage);
                     }
                     // else return null (or default) and don't dead letter
                 }
@@ -408,7 +411,7 @@ namespace CoE.Ideas.Core.ServiceBus
                         string errorMessage = $"{ propertyName } was not of type { typeof(T).FullName }";
                         _logger.Error("{PropertyName} had value {Value}, which was not of the expected type '{Type}", propertyName, propertyObj, typeof(T).FullName);
                         result.SetMessageDeadLettered(errorMessage);
-                        await _subscriptionClient.DeadLetterAsync(message.SystemProperties.LockToken, errorMessage);
+                        await _messageReceiver.DeadLetterAsync(message.LockToken, errorMessage);
                     }
                 }
             }

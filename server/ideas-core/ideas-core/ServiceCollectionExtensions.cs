@@ -63,10 +63,15 @@ namespace CoE.Ideas.Core
         {
             if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
             {
-                //AddInitiativeMessaging(services, new SynchronousInitiativeMessageReceiver());
                 services.AddServiceBusEmulator();
-                services.AddScoped<IInitiativeMessageSender, ServiceBusEmulatedMessageSender>();
-                services.AddScoped<IInitiativeMessageReceiver, ServiceBusEmulatedMessageReceiver>();
+                services.AddScoped<IMessageSender, EmulatedServiceBusMessageSender>();
+                services.AddScoped<IMessageReceiver, EmulatedServiceBusMessageReceiver>();
+                services.AddScoped<IInitiativeMessageSender, InitiativeMessageSender>();
+                // this is how we can determine if we can acces the local database...
+                if (services.Any(x => x.ImplementationType == typeof(LocalInitiativeRepository)))
+                    services.AddScoped<IInitiativeMessageReceiver, LocalInitiativeMessageReceiver>();
+                else
+                    services.AddScoped<IInitiativeMessageReceiver, RemoteInitiativeMessageReceiver>();
             }
             else
             {
@@ -74,7 +79,6 @@ namespace CoE.Ideas.Core
                 {
                     return new TopicClient(serviceBusConnectionString, serviceBusTopicName);
                 });
-                services.AddSingleton<IInitiativeMessageSender, InitiativeMessageSender>();
 
                 if (!string.IsNullOrWhiteSpace(serviceBusSubscription))
                 {
@@ -82,15 +86,18 @@ namespace CoE.Ideas.Core
                     {
                         return new SubscriptionClient(serviceBusConnectionString, serviceBusTopicName, serviceBusSubscription);
                     });
-
-                    // this is how we can determine if we can acces the local database...
-                    if (services.Any(x => x.ImplementationType == typeof(LocalInitiativeRepository)))
-                        services.AddSingleton<IInitiativeMessageReceiver, LocalInitiativeMessageReceiver>();
-                    else
-                        services.AddSingleton<IInitiativeMessageReceiver, RemoteInitiativeMessageReceiver>();
                 }
-            }
 
+                services.AddSingleton<IMessageSender, ServiceBusMessageSender>();
+                services.AddSingleton<IMessageReceiver, ServiceBusMessageReceiver>();
+                services.AddSingleton<IInitiativeMessageSender, InitiativeMessageSender>();
+                // this is how we can determine if we can acces the local database...
+                if (services.Any(x => x.ImplementationType == typeof(LocalInitiativeRepository)))
+                    services.AddSingleton<IInitiativeMessageReceiver, LocalInitiativeMessageReceiver>();
+                else
+                    services.AddSingleton<IInitiativeMessageReceiver, RemoteInitiativeMessageReceiver>();
+
+            }
             return services;
         }
 
@@ -100,10 +107,10 @@ namespace CoE.Ideas.Core
             if (string.IsNullOrWhiteSpace(ideasApiUrl))
                 throw new ArgumentNullException("ideasApiUrl");
 
-            //services.Configure<RemoteInitiativeRepositoryOptions>(options =>
-            //{
-            //    options.WordPressUrl = wordpressUrl;
-            //});
+            services.Configure<RemoteInitiativeRepositoryOptions>(options =>
+            {
+                options.IdeasApiUrl = ideasApiUrl;
+            });
             services.AddTransient<RemoteInitiativeRepository>();
             services.AddTransient<IInitiativeRepository>(x => x.GetRequiredService<RemoteInitiativeRepository>());
 

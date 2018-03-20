@@ -7,6 +7,6 @@ namespace CoE.Ideas.Core.Services
     internal class RemoteInitiativeRepositoryOptions
     {
 
-        public string WordPressUrl { get; set; }
+        public string IdeasApiUrl { get; set; }
     }
 }

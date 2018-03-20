@@ -8,7 +8,7 @@ namespace CoE.Ideas.Shared.ServiceBus
 {
     public interface IServiceBusEmulator
     {
-        Task PostAsync(string message, IDictionary<string, object> properties = null, string label = null);
+        Task PostAsync(IDictionary<string, object> properties = null, string label = null);
         void CreateMessagePump(Func<Message, CancellationToken, Task> onMessageReceived);
     }
 }

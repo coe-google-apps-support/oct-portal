@@ -24,9 +24,9 @@ namespace CoE.Ideas.Shared.ServiceBus
         private readonly ServiceBusEmulatorContext _context;
         private readonly ILogger _logger;
 
-        public async Task PostAsync(string message, IDictionary<string, object> properties = null, string label = null)
+        public async Task PostAsync(IDictionary<string, object> properties = null, string label = null)
         {
-            var messageEntity = new Message() { Id = Guid.NewGuid(), Text = message, Label = label, CreatedDateUtc = DateTime.UtcNow };
+            var messageEntity = new Message() { Id = Guid.NewGuid(), Label = label, CreatedDateUtc = DateTime.UtcNow, LockToken = Guid.NewGuid().ToString()};
             _context.Messages.Add(messageEntity);
             if (properties != null)
             {
@@ -69,41 +69,48 @@ namespace CoE.Ideas.Shared.ServiceBus
                 DateTime pollDate = DateTime.UtcNow;
                 while (true)
                 {
-                    var nextDate = DateTime.UtcNow;
-
-                    var messageProperties = _context.MessageProperties
-                        .GroupBy(msgProp => msgProp.MessageId);
-
-                    var items = _context.Messages
-                    .Where(m => m.CreatedDateUtc > pollDate && m.CreatedDateUtc <= nextDate)
-                    .Join(messageProperties, msg => msg.Id, msgProps => msgProps.Key, (msg, msgProps) => new { Message = msg, Properties = msgProps })
-                    .OrderBy(m => m.Message.CreatedDateUtc)
-                    .ToList();
-
-                    foreach (var messageInfo in items)
+                    try
                     {
-                        // fixup for message properties
-                        FixUpMessageProperties(messageInfo.Message, messageInfo.Properties);
+                        var nextDate = DateTime.UtcNow;
 
-                        try
+                        var messageProperties = _context.MessageProperties
+                            .GroupBy(msgProp => msgProp.MessageId);
+
+                        var items = _context.Messages
+                        .Where(m => m.CreatedDateUtc > pollDate && m.CreatedDateUtc <= nextDate)
+                        .Join(messageProperties, msg => msg.Id, msgProps => msgProps.Key, (msg, msgProps) => new { Message = msg, Properties = msgProps })
+                        .OrderBy(m => m.Message.CreatedDateUtc)
+                        .ToList();
+
+                        foreach (var messageInfo in items)
                         {
-                            var cancellationToken = new CancellationToken();
-                            var task = onMessageReceived(messageInfo.Message, cancellationToken);
-                            if (task != null)
+                            // fixup for message properties
+                            FixUpMessageProperties(messageInfo.Message, messageInfo.Properties);
+
+                            try
                             {
-                                task.Wait(cancellationToken);
+                                var cancellationToken = new CancellationToken();
+                                var task = onMessageReceived(messageInfo.Message, cancellationToken);
+                                if (task != null)
+                                {
+                                    task.Wait(cancellationToken);
+                                }
+                            }
+                            catch (Exception err)
+                            {
+                                // eat the message
+                                _logger.Error(err, "ServiceBusEmulator onMessageReceived encountered the following exception upon receiving a message: {ErrorMessage}", err.Message);
                             }
                         }
-                        catch (Exception err)
-                        {
-                            // eat the message
-                            _logger.Error(err, "ServiceBusEmulator onMessageReceived encountered the following exception upon receiving a message: {ErrorMessage}", err.Message);
-                        }
                     }
-
+                    finally
+                    {
+                        pollDate = DateTime.UtcNow;
+                    }
                     Thread.Sleep(1000);
                 }
             });
+            t.Start();
         }
 
         private void FixUpMessageProperties(Message message, IEnumerable<MessageProperty> messageProperties)

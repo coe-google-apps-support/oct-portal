@@ -4,19 +4,21 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using CoE.Ideas.Core.Data;
+using EnsureThat;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 
 namespace CoE.Ideas.Core.ServiceBus
 {
-    public class InitiativeMessageSender : IInitiativeMessageSender
+    internal class InitiativeMessageSender : IInitiativeMessageSender
     {
-        public InitiativeMessageSender(ITopicClient topicClient)
+        public InitiativeMessageSender(IMessageSender messageSender)
         {
-            _topicClient = topicClient ?? throw new ArgumentNullException("topicClient");
+            EnsureArg.IsNotNull(messageSender);
+            _messageSender = messageSender;
         }
 
-        private readonly ITopicClient _topicClient;
+        private readonly IMessageSender _messageSender;
 
         internal const string INITIATIVE_CREATED = "Initiative Created";
         internal const string REMEDY_WORK_ITEM_CREATED = "Remedy Work Item Created";
@@ -32,13 +34,10 @@ namespace CoE.Ideas.Core.ServiceBus
             if (args.Owner == null)
                 throw new ArgumentException("Owner cannot be null");
 
-            var message = new Message
-            {
-                Label = INITIATIVE_CREATED
-            };
-            SetInitiative(args.Initiative, message.UserProperties);
-            SetOwner(args.Owner, message.UserProperties);
-            return _topicClient.SendAsync(message);
+            var userProperties = new Dictionary<string, object>();
+            SetInitiative(args.Initiative, userProperties);
+            SetOwner(args.Owner, userProperties);
+            return _messageSender.SendMessageAsync(INITIATIVE_CREATED, userProperties);
         }
 
 
@@ -53,14 +52,11 @@ namespace CoE.Ideas.Core.ServiceBus
             if (string.IsNullOrWhiteSpace(args.WorkOrderId))
                 throw new ArgumentException("WorkOrderId cannot be null or empty");
 
-            var returnMessage = new Message
-            {
-                Label = REMEDY_WORK_ITEM_CREATED
-            };
-            SetInitiative(args.Initiative, returnMessage.UserProperties);
-            SetOwner(args.Owner, returnMessage.UserProperties);
-            SetWorkOrder(args.WorkOrderId, returnMessage.UserProperties);
-            return _topicClient.SendAsync(returnMessage);
+            var userProperties = new Dictionary<string, object>();
+            SetInitiative(args.Initiative, userProperties);
+            SetOwner(args.Owner, userProperties);
+            SetWorkOrder(args.WorkOrderId, userProperties);
+            return _messageSender.SendMessageAsync(REMEDY_WORK_ITEM_CREATED, userProperties);
         }
 
         internal static void SetInitiative(Initiative initiative, IDictionary<string, object> dictionary)
@@ -107,18 +103,16 @@ namespace CoE.Ideas.Core.ServiceBus
                 throw new ArgumentOutOfRangeException($"UpdatedDateUtc cannot be in the future ({ args.UpdatedDateUtc.ToLocalTime() })");
 
 
-            var message = new Message
-            {
-                Label = WORK_ORDER_UPDATED
-            };
+            var userProperties = new Dictionary<string, object>();
+
             SetWorkOrder(args.WorkOrderId, 
                 args.UpdatedStatus, 
                 args.UpdatedDateUtc, 
                 args.AssigneeEmail, 
-                args.AssigneeDisplayName,  
-                message.UserProperties);
+                args.AssigneeDisplayName,
+                userProperties);
 
-            return _topicClient.SendAsync(message);
+            return _messageSender.SendMessageAsync(WORK_ORDER_UPDATED, userProperties);
         }
 
         internal static void SetRangeUpdated(string rangeUpdated, IDictionary<string, object> dictionary)
@@ -137,14 +131,11 @@ namespace CoE.Ideas.Core.ServiceBus
 
             // note args.RangeUpdated is allowed to be null
 
-            var message = new Message()
-            {
-                Label = INITIATIVE_LOGGED
-            };
-            SetInitiative(args.Initiative, message.UserProperties);
-            SetOwner(args.Owner, message.UserProperties);
-            SetRangeUpdated(args.RangeUpdated, message.UserProperties);
-            return _topicClient.SendAsync(message);
+            var userProperties = new Dictionary<string, object>();
+            SetInitiative(args.Initiative, userProperties);
+            SetOwner(args.Owner, userProperties);
+            SetRangeUpdated(args.RangeUpdated, userProperties);
+            return _messageSender.SendMessageAsync(INITIATIVE_LOGGED, userProperties);
         }
 
 

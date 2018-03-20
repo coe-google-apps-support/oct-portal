@@ -1,5 +1,6 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Remedy.RemedyServiceReference;
+using CoE.Ideas.Shared.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -48,6 +49,8 @@ namespace CoE.Ideas.Remedy
             services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],
                 Configuration["ServiceBus:Subscription"]);
+
+            services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
 
             //services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
             //{

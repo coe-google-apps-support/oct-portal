@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CoE.Ideas.Core.ServiceBus
 {
-    interface IMessageSender
+    internal interface IMessageSender
     {
+        Task SendMessageAsync(string label, IDictionary<string, object> properties);
     }
 }

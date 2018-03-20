@@ -45,6 +45,7 @@ namespace CoE.Ideas.Shared.Extensions
                 ? "http://localhost"
                 : wordPressConfigurationSection["Url"];
 #if DEBUG
+
             // NOTE this our not the keys we use in INT/UAT/Production !!
             if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["AUTH_KEY"])) wordPressConfigurationSection["AUTH_KEY"] = "df66691c29f5c411518e34b63a1596e7b4c8c592f7374f2aa31d18b37a6a706b";
             if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["SECURE_AUTH_KEY"])) wordPressConfigurationSection["SECURE_AUTH_KEY"] = "20833cf1548f33907dc1d22594bc327090fcf36658aa99cc3893d2ac83c60bdc";

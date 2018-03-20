@@ -87,7 +87,7 @@ namespace CoE.Ideas.Shared.WordPress
                                 return Task.CompletedTask;
                             });
                             watch.Stop();
-                            _logger.Information("Authenticated user {UserName} in {ElapsedMilliseconds}", username, watch.ElapsedMilliseconds);
+                            _logger.Information("Authenticated user {UserName} in {ElapsedMilliseconds}ms", username, watch.ElapsedMilliseconds);
                             return result;
                         }
                         catch (Exception err)

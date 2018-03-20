@@ -8,9 +8,9 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     internal class RemoteInitiativeMessageReceiver : InitiativeMessageReceiver
     {
-        public RemoteInitiativeMessageReceiver(ISubscriptionClient subscriptionClient,
+        public RemoteInitiativeMessageReceiver(IMessageReceiver messageReceiver,
                 Serilog.ILogger logger,
-                IServiceProvider serviceProvider) : base(subscriptionClient, logger)
+                IServiceProvider serviceProvider) : base(messageReceiver, logger)
         {
             EnsureArg.IsNotNull(serviceProvider);
             _serviceProvider = serviceProvider;

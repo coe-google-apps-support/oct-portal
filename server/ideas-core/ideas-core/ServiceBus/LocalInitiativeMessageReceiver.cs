@@ -8,9 +8,9 @@ namespace CoE.Ideas.Core.ServiceBus
 {
     internal class LocalInitiativeMessageReceiver : InitiativeMessageReceiver
     {
-        public LocalInitiativeMessageReceiver(ISubscriptionClient subscriptionClient,
+        public LocalInitiativeMessageReceiver(IMessageReceiver messageReceiver,
                 Serilog.ILogger logger,
-                IInitiativeRepository initiativeRepository) : base(subscriptionClient, logger)
+                IInitiativeRepository initiativeRepository) : base(messageReceiver, logger)
         {
             EnsureArg.IsNotNull(initiativeRepository);
             _initiativeRepository = initiativeRepository;
