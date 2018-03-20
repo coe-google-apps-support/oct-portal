@@ -2,6 +2,7 @@
 using CoE.Ideas.Core.Events;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.Services;
+using CoE.Ideas.Shared.Extensions;
 using EnsureThat;
 using MediatR;
 using Microsoft.Azure.ServiceBus;
@@ -62,7 +63,10 @@ namespace CoE.Ideas.Core
         {
             if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
             {
-                AddInitiativeMessaging(services, new SynchronousInitiativeMessageReceiver());
+                //AddInitiativeMessaging(services, new SynchronousInitiativeMessageReceiver());
+                services.AddServiceBusEmulator();
+                services.AddScoped<IInitiativeMessageSender, ServiceBusEmulatedMessageSender>();
+                services.AddScoped<IInitiativeMessageReceiver, ServiceBusEmulatedMessageReceiver>();
             }
             else
             {

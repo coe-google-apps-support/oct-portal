@@ -31,7 +31,7 @@ namespace CoE.Ideas.Core.ServiceBus
 
         private IDictionary<string, ICollection<Func<Message, CancellationToken, Task>>> MessageMap = new Dictionary<string, ICollection<Func<Message, CancellationToken, Task>>>();
 
-        public void ReceiveMessages(Func<InitiativeCreatedEventArgs, CancellationToken, Task> initiativeCreatedHndler = null,
+        public void ReceiveMessages(Func<InitiativeCreatedEventArgs, CancellationToken, Task> initiativeCreatedHandler = null,
             Func<WorkOrderCreatedEventArgs, CancellationToken, Task> workOrderCreatedHandler = null, 
             Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> workOrderUpdatedHandler = null,
             Func<InitiativeLoggedEventArgs, CancellationToken, Task> initiativeLoggedHandler = null,
@@ -40,7 +40,7 @@ namespace CoE.Ideas.Core.ServiceBus
             if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
             {
                 StringBuilder handlerNames = new StringBuilder();
-                if (initiativeCreatedHndler != null)
+                if (initiativeCreatedHandler != null)
                     handlerNames.Append("initiativeCreatedHndler");
                 if (workOrderCreatedHandler != null)
                 {
@@ -71,28 +71,27 @@ namespace CoE.Ideas.Core.ServiceBus
 
                 switch (msg.Label)
                 {
-                    // TODO: These should be moved to a constants file
-                    case "Initiative Created":
+                    case InitiativeMessageSender.INITIATIVE_CREATED:
                     {
-                        if (initiativeCreatedHndler != null)
-                            await ReceiveInitiativeCreated(msg, token, initiativeCreatedHndler);
+                        if (initiativeCreatedHandler != null)
+                            await ReceiveInitiativeCreated(msg, token, initiativeCreatedHandler);
                         else
                             await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
                         break;
                     }
-                    case "Remedy Work Item Created":
+                    case InitiativeMessageSender.REMEDY_WORK_ITEM_CREATED:
                         if (workOrderCreatedHandler != null)
                             await ReceiveInitiativeWorkItemCreated(msg, token, workOrderCreatedHandler);
                         else
                             await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
                         break;
-                    case "Work Order Updated":
+                    case InitiativeMessageSender.WORK_ORDER_UPDATED:
                         if (workOrderUpdatedHandler != null)
                             await ReceiveWorkOrderUpdated(msg, token, workOrderUpdatedHandler);
                         else
                             await _subscriptionClient.CompleteAsync(msg.SystemProperties.LockToken);
                         break;
-                    case "Initiative Logged":
+                    case InitiativeMessageSender.INITIATIVE_LOGGED:
                         if (initiativeLoggedHandler != null)
                             await ReceiveInitiativeLogged(msg, token, initiativeLoggedHandler);
                         else
@@ -120,7 +119,7 @@ namespace CoE.Ideas.Core.ServiceBus
             if (handler == null)
                 throw new ArgumentNullException("handler");
 
-            if (await EnsureMessageLabel(msg, "Initiative Created"))
+            if (await EnsureMessageLabel(msg, InitiativeMessageSender.INITIATIVE_CREATED))
             {
                 _logger.Information("Getting message owner");
 
@@ -155,7 +154,7 @@ namespace CoE.Ideas.Core.ServiceBus
             if (handler == null)
                 throw new ArgumentNullException("handler");
 
-            if (await EnsureMessageLabel(msg, "Remedy Work Item Created"))
+            if (await EnsureMessageLabel(msg, InitiativeMessageSender.REMEDY_WORK_ITEM_CREATED))
             {
                 var owner = await GetMessageOwner(msg);
                 if (owner.WasMessageDeadLettered)
@@ -193,7 +192,7 @@ namespace CoE.Ideas.Core.ServiceBus
             if (handler == null)
                 throw new ArgumentNullException("handler");
 
-            if (await EnsureMessageLabel(msg, "Work Order Updated"))
+            if (await EnsureMessageLabel(msg, InitiativeMessageSender.WORK_ORDER_UPDATED))
             {
                 var updatedStatus = await GetMessageString(msg, propertyName: "WorkOrderStatus");
                 if (updatedStatus.WasMessageDeadLettered)
@@ -234,7 +233,7 @@ namespace CoE.Ideas.Core.ServiceBus
             if (handler == null)
                 throw new ArgumentNullException("handler");
 
-            if (await EnsureMessageLabel(msg, "Initiative Logged"))
+            if (await EnsureMessageLabel(msg, InitiativeMessageSender.INITIATIVE_LOGGED))
             {
                 var owner = await GetMessageOwner(msg);
                 if (owner.WasMessageDeadLettered)
@@ -436,7 +435,7 @@ namespace CoE.Ideas.Core.ServiceBus
         }
 
 
-        private ClaimsPrincipal CreatePrincipal(string claimsSerialized)
+        internal static ClaimsPrincipal CreatePrincipal(string claimsSerialized)
         {
             if (!string.IsNullOrWhiteSpace(claimsSerialized))
             {

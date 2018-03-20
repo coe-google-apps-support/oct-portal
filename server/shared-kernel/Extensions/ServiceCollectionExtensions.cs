@@ -1,5 +1,6 @@
 ﻿using CoE.Ideas.Shared.People;
 using CoE.Ideas.Shared.Security;
+using CoE.Ideas.Shared.ServiceBus;
 using CoE.Ideas.Shared.WordPress;
 using EnsureThat;
 using Microsoft.EntityFrameworkCore;
@@ -97,6 +98,19 @@ namespace CoE.Ideas.Shared.Extensions
                 x.ServiceUrl = peopleServiceUri;
             });
             services.AddSingleton<IPeopleService, PeopleService>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddServiceBusEmulator(this IServiceCollection services,
+            string serviceBusConnectionString = null)
+        {
+            string connectionString = string.IsNullOrWhiteSpace(serviceBusConnectionString)
+                ? "server=.;database=ServiceBusEmulator;Trusted_Connection=True;"
+                : serviceBusConnectionString;
+
+            services.AddDbContext<ServiceBusEmulatorContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<IServiceBusEmulator, ServiceBusEmulator>();
 
             return services;
         }

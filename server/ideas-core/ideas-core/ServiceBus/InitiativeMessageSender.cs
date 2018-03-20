@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CoE.Ideas.Core.Data;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 
@@ -17,6 +18,10 @@ namespace CoE.Ideas.Core.ServiceBus
 
         private readonly ITopicClient _topicClient;
 
+        internal const string INITIATIVE_CREATED = "Initiative Created";
+        internal const string REMEDY_WORK_ITEM_CREATED = "Remedy Work Item Created";
+        internal const string WORK_ORDER_UPDATED = "Work Order Updated";
+        internal const string INITIATIVE_LOGGED = "Initiative Logged";
 
         public Task SendInitiativeCreatedAsync(InitiativeCreatedEventArgs args)
         {
@@ -29,11 +34,10 @@ namespace CoE.Ideas.Core.ServiceBus
 
             var message = new Message
             {
-                Label = "Initiative Created"
+                Label = INITIATIVE_CREATED
             };
-            message.UserProperties["InitiativeId"] = args.Initiative.Id;
-            message.UserProperties["OwnerClaims"] = SerializeUser(args.Owner);
-
+            SetInitiative(args.Initiative, message.UserProperties);
+            SetOwner(args.Owner, message.UserProperties);
             return _topicClient.SendAsync(message);
         }
 
@@ -51,13 +55,44 @@ namespace CoE.Ideas.Core.ServiceBus
 
             var returnMessage = new Message
             {
-                Label = "Remedy Work Item Created"
+                Label = REMEDY_WORK_ITEM_CREATED
             };
-            returnMessage.UserProperties["InitiativeId"] = args.Initiative.Id;
-            returnMessage.UserProperties["OwnerClaims"] = SerializeUser(args.Owner);
-            returnMessage.UserProperties["WorkOrderId"] = args.WorkOrderId;
+            SetInitiative(args.Initiative, returnMessage.UserProperties);
+            SetOwner(args.Owner, returnMessage.UserProperties);
+            SetWorkOrder(args.WorkOrderId, returnMessage.UserProperties);
             return _topicClient.SendAsync(returnMessage);
         }
+
+        internal static void SetInitiative(Initiative initiative, IDictionary<string, object> dictionary)
+        {
+            dictionary["InitiativeId"] = initiative.Id;
+        }
+
+        internal static void SetOwner(ClaimsPrincipal owner, IDictionary<string, object> dictionary)
+        {
+            dictionary["OwnerClaims"] = SerializeUser(owner);
+        }
+
+        internal static void SetWorkOrder(string workOrderId, IDictionary<string, object> dictionary)
+        {
+            dictionary["WorkOrderId"] = workOrderId;
+        }
+
+
+        internal static void SetWorkOrder(string workOrderId, 
+            string updatedStatus,
+            DateTime updateDateUtc,
+            string assigneeEmail,
+            string assigneeDisplayName,
+            IDictionary<string, object> dictionary)
+        {
+            dictionary["WorkOrderId"] = workOrderId;
+            dictionary["WorkOrderStatus"] = updatedStatus;
+            dictionary["WorkOrderUpdateTimeUtc"] = updateDateUtc;
+            dictionary["WorkOrderAssigneeEmail"] = assigneeEmail;
+            dictionary["WorkOrderAssigneeDisplayName"] = assigneeDisplayName;
+        }
+
 
         public Task SendWorkOrderUpdatedAsync(WorkOrderUpdatedEventArgs args)
         {
@@ -74,15 +109,21 @@ namespace CoE.Ideas.Core.ServiceBus
 
             var message = new Message
             {
-                Label = "Work Order Updated"
+                Label = WORK_ORDER_UPDATED
             };
-            message.UserProperties["WorkOrderId"] = args.WorkOrderId;
-            message.UserProperties["WorkOrderStatus"] = args.UpdatedStatus;
-            message.UserProperties["WorkOrderUpdateTimeUtc"] = args.UpdatedDateUtc;
-            message.UserProperties["WorkOrderAssigneeEmail"] = args.AssigneeEmail;
-            message.UserProperties["WorkOrderAssigneeDisplayName"] = args.AssigneeDisplayName;
+            SetWorkOrder(args.WorkOrderId, 
+                args.UpdatedStatus, 
+                args.UpdatedDateUtc, 
+                args.AssigneeEmail, 
+                args.AssigneeDisplayName,  
+                message.UserProperties);
 
             return _topicClient.SendAsync(message);
+        }
+
+        internal static void SetRangeUpdated(string rangeUpdated, IDictionary<string, object> dictionary)
+        {
+            dictionary["RangeUpdated"] = rangeUpdated;
         }
 
         public Task SendInitiativeLoggedAsync(InitiativeLoggedEventArgs args)
@@ -98,16 +139,16 @@ namespace CoE.Ideas.Core.ServiceBus
 
             var message = new Message()
             {
-                Label = "Initiative Logged"
+                Label = INITIATIVE_LOGGED
             };
-            message.UserProperties["InitiativeId"] = args.Initiative.Id;
-            message.UserProperties["OwnerClaims"] = SerializeUser(args.Owner);
-            message.UserProperties["RangeUpdated"] = args.RangeUpdated;
+            SetInitiative(args.Initiative, message.UserProperties);
+            SetOwner(args.Owner, message.UserProperties);
+            SetRangeUpdated(args.RangeUpdated, message.UserProperties);
             return _topicClient.SendAsync(message);
         }
 
 
-        private string SerializeUser(ClaimsPrincipal claimsPrincipal)
+        private static string SerializeUser(ClaimsPrincipal claimsPrincipal)
         {
             if (claimsPrincipal == null)
                 return string.Empty;
