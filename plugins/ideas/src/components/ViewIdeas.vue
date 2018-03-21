@@ -5,8 +5,7 @@
         <initiative v-for="idea in ideas"
           :key="idea.id" 
           :initiative="idea"
-          class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100"
-          @onView="openDialog">
+          class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
         </initiative>
       </div>
     </transition> 
@@ -34,10 +33,6 @@ export default {
     Initiative
   },
   methods: {
-    openDialog (initiative) {
-      console.log('Opening: ' + initiative.id + ' with url ' + initiative.url)
-      window.dispatchEvent(new CustomEvent('navigate', { detail: initiative.url }))
-    },
     setLoading (initiative, state) {
       let foundInit = this.getInitiativeByID(initiative.id)
       let index = this.ideas.indexOf(foundInit)
