@@ -9,8 +9,8 @@ namespace CoE.Ideas.Server.Models
 
     // Contract example:
     //{
-    //    BusinessCaseUrl: 'www.google.com/img.png',
-    //    Assignee: {
+    //    businessCaseUrl: 'www.google.com/img.png',
+    //    assignee: {
     //      name: 'Super BA',
     //      email: 'super.ba@edmonton.ca',
     //      phoneNumber: '555-555-5555',

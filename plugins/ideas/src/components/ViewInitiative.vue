@@ -11,20 +11,20 @@
           <div class="md-caption">{{ initiative.createdDate | formatDate }}</div>
         </div>
         <div class="md-body-1 oct-content-block">{{ initiative.description }}</div>
-        <div>
+        <div v-if="resources">
           <div class="md-headline">Resources</div>
           <md-table>
             <md-table-row>
               <md-table-cell>Assigned to</md-table-cell>
               <md-table-cell>
-                <Assignee v-if="assignee" :user="assignee"></Assignee>
+                <Assignee v-if="resources.assignee" :user="resources.assignee"></Assignee>
                 <div v-else>Unassigned</div>
               </md-table-cell>
             </md-table-row>
             <md-table-row>
               <md-table-cell>Business case</md-table-cell>
               <md-table-cell>
-                <attach-file-button :url="this.initiative.businessCaseUrl" @click.native="attachClicked"></attach-file-button>
+                <attach-file-button :url="resources.businessCaseUrl" @click.native="attachClicked"></attach-file-button>
               </md-table-cell>
             </md-table-row>
           </md-table>
@@ -35,11 +35,11 @@
       </div>
     </div>    
 
-    <md-dialog v-if="initiative" :md-active.sync="showDialog" class="oct-business-case">
+    <md-dialog v-if="initiative && resources" :md-active.sync="showDialog" class="oct-business-case">
       <md-dialog-title>Business Case</md-dialog-title>
       <md-field>
         <label>URL</label>
-        <md-input v-model="initiative.businessCaseUrl"></md-input>
+        <md-input v-model="temp_businessCaseUrl"></md-input>
       </md-field>
       <md-button @click="attachBusinessCase" class="md-primary oct-attach-button">Attach</md-button>
       <md-progress-bar v-if="busCaseLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
@@ -59,13 +59,15 @@ export default {
     'slug'
   ],
   data: () => ({
+    temp_businessCaseUrl: null,
     errors: [],
     initiative: null,
     assignee: null,
     steps: null,
     showDialog: false,
     busCaseLoading: false,
-    isLoading: true
+    isLoading: true,
+    resources: null
   }),
   components: {
     Assignee,
@@ -75,17 +77,15 @@ export default {
   created () {
     this.services.ideas.getInitiative(this.slug).then((initiative) => {
       this.initiative = initiative
-      if (!this.initiative.businessCaseUrl) {
-        this.initiative.businessCaseUrl = ''
-      }
-      return Promise.all([this.services.ideas.getAssignee(initiative.id), this.services.ideas.getInitiativeSteps(initiative.id)])
+      return Promise.all([this.services.ideas.getResources(initiative.id), this.services.ideas.getInitiativeSteps(initiative.id)])
     }).then((response) => {
-      if (response && response[0] && response[0].data) {
-        this.assignee = response[0].data
+      if (response && response[0]) {
+        this.resources = response[0]
       }
       if (response && response[1]) {
         this.steps = response[1]
       }
+
       this.isLoading = false
     })
   },
@@ -94,8 +94,8 @@ export default {
   },
   methods: {
     attachClicked () {
-      if (this.initiative.businessCaseUrl) {
-        window.open(this.initiative.businessCaseUrl)
+      if (this.resources.businessCaseUrl) {
+        window.open(this.resources.businessCaseUrl)
       } else {
         this.showDialog = true
       }
@@ -105,6 +105,7 @@ export default {
       this.services.ideas.updateInitiative(this.initiative).then(() => {
         this.busCaseLoading = false
         this.showDialog = false
+        this.resources.businessCaseUrl = this.temp_businessCaseUrl
       }, (err) => {
         this.errors.push(err)
         console.log(err)
