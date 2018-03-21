@@ -55,6 +55,8 @@ namespace CoE.Ideas.Server
         {
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(config)
+                // .Net Core is too noisy! Just should our own logging!
+                .Filter.ByIncludingOnly(Serilog.Filters.Matching.WithProperty("Application"))
                 .CreateLogger();
 
             //var serilogConfig = config.GetSection("Serilog");
