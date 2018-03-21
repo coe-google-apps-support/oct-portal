@@ -335,17 +335,24 @@ namespace CoE.Ideas.Server.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var idea = await _repository.GetInitiativeAsync(id);
+                var initiative = await _repository.GetInitiativeAsync(id);
 
-                if (idea == null)
+                if (initiative == null)
+                    return NotFound();
+
+                var steps = await _repository.GetInitiativeStepsAsync(id);
+                if (steps == null)
+                    return NotFound();
+
+                var firstStep = steps.First<InitiativeStep>();
+                if (firstStep.CompletionDate == null)
                     return NotFound();
 
                 var resources = new Resources();
-
                 
-                if (idea.AssigneeId.HasValue)
+                if (initiative.AssigneeId.HasValue)
                 {
-                    var assigneePerson = await _personRepository.GetPersonAsync(idea.AssigneeId.Value);
+                    var assigneePerson = await _personRepository.GetPersonAsync(initiative.AssigneeId.Value);
                     resources.Assignee = new User()
                     {
                         Email = assigneePerson.Email,
@@ -359,7 +366,7 @@ namespace CoE.Ideas.Server.Controllers
                     resources.Assignee = null;
                 }
                 
-                resources.BusinessCaseUrl = idea.BusinessCaseUrl;
+                resources.BusinessCaseUrl = initiative.BusinessCaseUrl;
 
                 if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
                 {
