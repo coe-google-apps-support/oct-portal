@@ -36,7 +36,15 @@ namespace CoE.Ideas.Core.Events
 
         public async Task Handle(InitiativeCreatedDomainEvent notification, CancellationToken cancellationToken)
         {
+            _logger.Debug("New Initiative Created, will post message to service bus");
             var initiative = await _initiativeRepository.GetInitiativeAsync(notification.InitiativeId);
+            if (initiative == null)
+            {
+                _logger.Error("Received new initiave event but couldn't get initiative with id {InitiativeUid}", notification.InitiativeId);
+                throw new Exception($"Received new initiave event but couldn't get initiative with id {notification.InitiativeId}");
+            }
+            else
+                _logger.Information("Posting NewInitiativeCreated event to service bus for Initiative {InitiativeId}", initiative.Id);
 
             await _initiativeMessageSender.SendInitiativeCreatedAsync(new InitiativeCreatedEventArgs()
             {
