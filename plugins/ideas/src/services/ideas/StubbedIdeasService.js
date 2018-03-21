@@ -152,6 +152,11 @@ const fakeAssignee = {
   }
 }
 
+const fakeResources = {
+  'businessCaseUrl': null,
+  'assignee': fakeAssignee.data
+}
+
 const QUERY_TIMEOUT = 1000
 
 /**
@@ -275,6 +280,19 @@ let x = class StubbedIdeasService {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(fakeAssignee)
+      }, QUERY_TIMEOUT)
+    })
+  }
+
+  /**
+   * Gets the resources for the given initiative.
+   * @param {string} id The id of the initiative.
+   * @return {Promise} A Promise that resolves with the resources.
+   */
+  static getResources (id) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(fakeResources)
       }, QUERY_TIMEOUT)
     })
   }

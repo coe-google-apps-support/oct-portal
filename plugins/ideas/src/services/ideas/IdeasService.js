@@ -245,6 +245,25 @@ let x = class IdeasService {
   }
 
   /**
+   * Gets the resources for the given initiative.
+   * @param {string} id The id of the initiative.
+   * @return {Promise} A Promise that resolves with the resources.
+   */
+  static getResources (id) {
+    return HTTP.get(`${id}/resources`).then((resources) => {
+      console.log(resources)
+      return resources.data
+    }, (issue) => {
+      if (issue.response && issue.response.status === 404) {
+        console.log('no resources')
+        return null
+      } else {
+        console.error(issue)
+      }
+    })
+  }
+
+  /**
    * Causes an initiative to be updated.
    * @param {Object} initiative The initiative to update.
    * @return {Promise} A promise resolved with the updated initiative.
