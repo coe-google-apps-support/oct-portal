@@ -19,19 +19,22 @@ namespace CoE.Ideas.Shared.WordPress
 {
     internal class WordPressUserSecurity : IWordPressUserSecurity
     {
-        public WordPressUserSecurity(IOptions<WordPressUserSecurityOptions> options,
-            Serilog.ILogger logger)
-        {
-            _options = options?.Value ?? throw new ArgumentNullException("options");
-            _logger = logger ?? throw new ArgumentNullException("logger");
-        }
+        //public WordPressUserSecurity(IOptions<WordPressUserSecurityOptions> options,
+        //    Serilog.ILogger logger)
+        //{
+        //    _options = options?.Value ?? throw new ArgumentNullException("options");
+        //    _logger = logger ?? throw new ArgumentNullException("logger");
+        //}
 
 
         public WordPressUserSecurity(IHttpContextAccessor httpContextAccessor,
             WordPressContext wordPressContext,
             IOptions<WordPressUserSecurityOptions> options,
-            Serilog.ILogger logger) : this(options, logger)
+            Serilog.ILogger logger) 
         {
+            _options = options?.Value ?? throw new ArgumentNullException("options");
+            _logger = logger ?? throw new ArgumentNullException("logger");
+
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException("httpContextAccessor");
             _wordPressContext = wordPressContext ?? throw new ArgumentNullException("wordPressContext");
         }
