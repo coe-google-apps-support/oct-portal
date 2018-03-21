@@ -48,6 +48,7 @@ namespace CoE.Ideas.Core.ServiceBus
                     CreatedDateUtc = msg.SystemProperties.EnqueuedTimeUtc,
                     LockToken = msg.SystemProperties.LockToken
                 };
+                await handler(messageDto, token);
             }, messageHandlerOptions);
         }
 
