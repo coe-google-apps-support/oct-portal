@@ -6,17 +6,22 @@ using System.Threading.Tasks;
 using CoE.Ideas.Shared.ServiceBus;
 using EnsureThat;
 using Microsoft.Azure.ServiceBus;
+using Serilog;
 
 namespace CoE.Ideas.Core.ServiceBus
 {
     internal class ServiceBusMessageReceiver : IMessageReceiver
     {
-        public ServiceBusMessageReceiver(ISubscriptionClient subscriptionClient)
+        public ServiceBusMessageReceiver(ISubscriptionClient subscriptionClient,
+            ILogger logger)
         {
             EnsureArg.IsNotNull(subscriptionClient);
+            EnsureArg.IsNotNull(logger);
             _subscriptionClient = subscriptionClient;
+            _logger = logger;
         }
         private readonly ISubscriptionClient _subscriptionClient;
+        private readonly ILogger _logger;
 
 
         public Task AbandonAsync(string lockToken, IDictionary<string, object> propertiesToModify = null)
@@ -39,6 +44,8 @@ namespace CoE.Ideas.Core.ServiceBus
         {
             _subscriptionClient.RegisterMessageHandler(async (msg, token) =>
             {
+                _logger.Debug("Received service bus message {MessageId}: {Label}", msg.MessageId, msg.Label);
+
                 // transofrm msg to Message
                 var messageDto = new Shared.ServiceBus.Message()
                 {

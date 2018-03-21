@@ -124,7 +124,7 @@ namespace CoE.Ideas.Core.ServiceBus
 
             if (await EnsureMessageLabel(msg, InitiativeMessageSender.INITIATIVE_CREATED))
             {
-                _logger.Information("Getting message owner");
+                _logger.Information("Received InitiativeCreated message. Getting message owner");
 
                 var owner = await GetMessageOwner(msg);
                 if (owner.WasMessageDeadLettered)
