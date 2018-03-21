@@ -26,7 +26,7 @@
     <md-divider></md-divider>
 
     <md-card-actions>
-      <md-button @click="$emit('onView', initiative)" :style="{ color: getColor(initiative) }">View</md-button>
+      <md-button @click="openUrl" :style="{ color: getColor(initiative) }">View</md-button>
     </md-card-actions>
     <md-progress-bar v-if="initiative.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
@@ -51,6 +51,9 @@ export default {
     formatDate
   },
   methods: {
+    openUrl () {
+      window.open(this.initiative.url, '_blank')
+    },
     getImage () {
       const root = process.env.STATIC_ASSETS
       const images = [
