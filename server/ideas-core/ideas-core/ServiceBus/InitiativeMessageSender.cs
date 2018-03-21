@@ -19,6 +19,7 @@ namespace CoE.Ideas.Core.ServiceBus
             EnsureArg.IsNotNull(messageSender);
             EnsureArg.IsNotNull(logger);
             _messageSender = messageSender;
+            _logger = logger;
         }
 
         private readonly IMessageSender _messageSender;
