@@ -6,6 +6,7 @@ using EnsureThat;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -56,6 +57,9 @@ namespace CoE.Ideas.Shared.Extensions
             if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["LOGGED_IN_SALT"])) wordPressConfigurationSection["LOGGED_IN_SALT"] = "2cb69d64dd4a85b634eaf26b8e77b0fa18f430591c2f573485a370f6ed8e4424";
             if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["NONCE_SALT"])) wordPressConfigurationSection["NONCE_SALT"] = "c9e9e4dcccf9fb7dc5daf5275ce88f1aef33bc031a558a9845678c741fdfdf92";
 #endif
+
+            // sometimes IHTtpContextAccessor is not wired up by default, so ensure that it is
+            services.TryAddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
 
             services.Configure<WordPressUserSecurityOptions>(wordPressConfigurationSection);
             services.AddScoped<IWordPressUserSecurity, WordPressUserSecurity>();

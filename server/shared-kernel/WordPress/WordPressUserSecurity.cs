@@ -147,7 +147,8 @@ namespace CoE.Ideas.Shared.WordPress
 
 
             // WordPress cookies explained: https://www.securitysift.com/understanding-wordpress-auth-cookies/
-            var userInfo = await _wordPressContext.Users.Where(x => x.UserName == username)
+            var userInfo = await _wordPressContext.Users
+                .Where(x => x.UserName == username)
                 .Select(x => new
                 {
                     x.Id,
