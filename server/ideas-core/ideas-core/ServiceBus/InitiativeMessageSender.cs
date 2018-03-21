@@ -7,18 +7,22 @@ using CoE.Ideas.Core.Data;
 using EnsureThat;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace CoE.Ideas.Core.ServiceBus
 {
     internal class InitiativeMessageSender : IInitiativeMessageSender
     {
-        public InitiativeMessageSender(IMessageSender messageSender)
+        public InitiativeMessageSender(IMessageSender messageSender,
+            ILogger logger)
         {
             EnsureArg.IsNotNull(messageSender);
+            EnsureArg.IsNotNull(logger);
             _messageSender = messageSender;
         }
 
         private readonly IMessageSender _messageSender;
+        private readonly ILogger _logger;
 
         internal const string INITIATIVE_CREATED = "Initiative Created";
         internal const string REMEDY_WORK_ITEM_CREATED = "Remedy Work Item Created";
@@ -33,6 +37,8 @@ namespace CoE.Ideas.Core.ServiceBus
                 throw new ArgumentException("Initiative cannot be null");
             if (args.Owner == null)
                 throw new ArgumentException("Owner cannot be null");
+
+            _logger.Information("Posting InitiativeCreated event to service bus for Initiative {InitiativeId}", args.Initiative.Id);
 
             var userProperties = new Dictionary<string, object>();
             SetInitiative(args.Initiative, userProperties);
@@ -51,6 +57,8 @@ namespace CoE.Ideas.Core.ServiceBus
                 throw new ArgumentException("Owner cannot be null");
             if (string.IsNullOrWhiteSpace(args.WorkOrderId))
                 throw new ArgumentException("WorkOrderId cannot be null or empty");
+
+            _logger.Information("Posting InitiativeWorkOrderCreated event to service bus for Initiative {InitiativeId} and WorkOrderId {WorkOrderId}", args.Initiative.Id, args.WorkOrderId);
 
             var userProperties = new Dictionary<string, object>();
             SetInitiative(args.Initiative, userProperties);
@@ -102,6 +110,7 @@ namespace CoE.Ideas.Core.ServiceBus
             if (args.UpdatedDateUtc > DateTime.UtcNow)
                 throw new ArgumentOutOfRangeException($"UpdatedDateUtc cannot be in the future ({ args.UpdatedDateUtc.ToLocalTime() })");
 
+            _logger.Information("Posting WorkOrderUpdated event to service bus for Work Order {WorkOrderId}, updated by {AssigneeEmail}", args.WorkOrderId, args.AssigneeEmail);
 
             var userProperties = new Dictionary<string, object>();
 
@@ -128,6 +137,8 @@ namespace CoE.Ideas.Core.ServiceBus
                 throw new ArgumentException("Initiative cannot be null");
             if (args.Owner == null)
                 throw new ArgumentException("Owner cannot be null");
+
+            _logger.Information("Posting InitiativeLogged event to service bus for Initiative {InitiativeId}", args.Initiative.Id);
 
             // note args.RangeUpdated is allowed to be null
 
