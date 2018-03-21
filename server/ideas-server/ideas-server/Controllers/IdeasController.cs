@@ -42,13 +42,13 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public async Task<IEnumerable<InitiativeInfo>> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All)
+        public async Task<IEnumerable<Models.InitiativeInfo>> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All)
         {
             _logger.Information("Retrieving Initiatives");
             Stopwatch watch = new Stopwatch();
             watch.Start();
 
-            IEnumerable<InitiativeInfo> ideas;
+            IEnumerable<Core.Data.InitiativeInfo> ideas;
             if (view == ViewOptions.Mine)
             {
                 ideas = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId());
@@ -58,7 +58,14 @@ namespace CoE.Ideas.Server.Controllers
             var returnValue = ideas.OrderByDescending(x => x.CreatedDate);
             watch.Stop();
             _logger.Information("Retrieved {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
-            return returnValue;
+            return returnValue.Select(x => new Models.InitiativeInfo()
+            {
+                Id = x.Id,
+                Description = x.Description,
+                Title = x.Title,
+                CreatedDate = x.CreatedDate,
+                Url = $"{Request.Scheme}://{Request.Host}/view-ideas/?id={x.Id}"
+            });
         }
 
         // GET: ideas/5

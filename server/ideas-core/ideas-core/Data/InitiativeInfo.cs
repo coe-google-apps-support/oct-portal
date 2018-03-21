@@ -25,8 +25,6 @@ namespace CoE.Ideas.Core.Data
         [Required]
         public DateTimeOffset CreatedDate { get; private set; }
 
-        public string Url { get; private set; }
-
         internal static InitiativeInfo Create(Initiative initiative)
         {
             return new InitiativeInfo()
@@ -34,8 +32,7 @@ namespace CoE.Ideas.Core.Data
                 Id = initiative.Id,
                 Title = initiative.Title,
                 Description = initiative.Description,
-                CreatedDate = initiative.CreatedDate,
-                Url = "http://localhost/initiatives/?id=" + initiative.Id
+                CreatedDate = initiative.CreatedDate
             };
         }
     }
