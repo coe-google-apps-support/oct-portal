@@ -53,14 +53,21 @@ namespace CoE.Ideas.Core.Events
             // update the previous change message to past tense
             if (previousChange != null)
             {
-                previousChange.UpdateText(await _stringTemplateService.GetStatusChangeTextAsync(initiative.Status, assignee, isPastTense: true));
+                var previousStatusTemplate = await _stringTemplateService.GetStatusChangeTextAsync(initiative.Status, isPastTense: true);
+                string previousStatusAssigneeName = string.IsNullOrWhiteSpace(assignee?.Name)
+                    ? "A representative" : assignee.Name;
+                var text = string.Format(previousStatusTemplate, previousStatusAssigneeName);
+
+                previousChange.UpdateText(text);
             }
 
+            var template = await _stringTemplateService.GetStatusChangeTextAsync(initiative.Status, isPastTense: false);
+            string newText = string.Format(template, assignee?.Name);
             var statusChange = InitiativeStatusHistory.CreateInitiativeStatusChange(initiative.Uid,
                 initiative.Status,
                 DateTime.UtcNow,
                 initiative.AssigneeId,
-                await _stringTemplateService.GetStatusChangeTextAsync(initiative.Status, assignee));
+                newText);
 
             // now we add the new status
             _initiativeContext.InitiativeStatusHistories.Add(statusChange);

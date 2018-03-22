@@ -1,4 +1,5 @@
 ﻿using CoE.Ideas.Core.Data;
+using EnsureThat;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace CoE.Ideas.Core.Services
         private readonly InitiativeContext _ideaContext;
 
         private static IDictionary<TemplateKey, string> _stringTemplateCache = new Dictionary<TemplateKey, string>();
-        public async Task<string> GetStatusChangeTextAsync(InitiativeStatus status, Person assignee, bool isPastTense = false)
+        public async Task<string> GetStatusChangeTextAsync(InitiativeStatus status, bool isPastTense = false)
         {
             TemplateKey key = new TemplateKey()
             {
@@ -38,10 +39,8 @@ namespace CoE.Ideas.Core.Services
                 _stringTemplateCache[key] = template;
             }
 
-            string assigneeName = string.IsNullOrWhiteSpace(assignee?.Name)
-                ? "A representative" : assignee.Name;
+            return template;
 
-            return string.Format(template, assigneeName);
         }
 
 
