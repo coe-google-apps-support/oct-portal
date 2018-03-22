@@ -64,7 +64,7 @@ namespace CoE.Ideas.Server.Controllers
                 Description = x.Description,
                 Title = x.Title,
                 CreatedDate = x.CreatedDate,
-                Url = $"{Request.Scheme}://{Request.Host}/view-ideas/?id={x.Id}"
+                Url = "https://octavadev.edmonton.ca/view-ideas/?id=" + x.Id //  $"{Request.Scheme}://{Request.Host}/view-ideas/?id={x.Id}"
             });
         }
 
