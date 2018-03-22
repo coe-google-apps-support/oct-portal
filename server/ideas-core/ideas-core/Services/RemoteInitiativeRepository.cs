@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +12,7 @@ using CoE.Ideas.Shared.WordPress;
 using EnsureThat;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace CoE.Ideas.Core.Services
 {
@@ -62,7 +65,9 @@ namespace CoE.Ideas.Core.Services
                 _logger.Information("Retrieving initiative from {Url}", client.BaseAddress + id.ToString());
                 var ideaString = await client.GetStringAsync(id.ToString());
                 _logger.Debug("Retrieved initative data: {Text}", ideaString);
-                return JsonConvert.DeserializeObject<Initiative>(ideaString);
+                var contractResolver = new InitiativeContractResolver();
+                var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
+                return JsonConvert.DeserializeObject<Initiative>(ideaString, settings);
             });
         }
 
@@ -73,7 +78,9 @@ namespace CoE.Ideas.Core.Services
                 _logger.Information("Retrieving initiative from {Url}", client.BaseAddress + id.ToString());
                 var ideaString = await client.GetStringAsync(id.ToString());
                 _logger.Debug("Retrieved initative {InitiativeId} data: {Text}", id, ideaString);
-                return JsonConvert.DeserializeObject<Initiative>(ideaString);
+                var contractResolver = new InitiativeContractResolver();
+                var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
+                return JsonConvert.DeserializeObject<Initiative>(ideaString, settings);
             });
         }
 
@@ -82,7 +89,9 @@ namespace CoE.Ideas.Core.Services
             return await ExecuteAsync(async client =>
             {
                 var ideaString = await client.GetStringAsync(string.Empty);
-                return JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString);
+                var contractResolver = new InitiativeContractResolver();
+                var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
+                return JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings);
             });
         }
 
@@ -91,7 +100,9 @@ namespace CoE.Ideas.Core.Services
             return await ExecuteAsync(async client =>
             {
                 var ideaString = await client.GetStringAsync("?View=Mine");
-                return JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString);
+                var contractResolver = new InitiativeContractResolver();
+                var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
+                return JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings);
             });
         }
 
@@ -100,7 +111,9 @@ namespace CoE.Ideas.Core.Services
             return await ExecuteAsync(async client =>
             {
                 var ideaString = await client.GetStringAsync(initiativeId.ToString() + "/steps");
-                return JsonConvert.DeserializeObject<IEnumerable<InitiativeStep>>(ideaString);
+                var contractResolver = new InitiativeContractResolver();
+                var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
+                return JsonConvert.DeserializeObject<IEnumerable<InitiativeStep>>(ideaString, settings);
             });
         }
 
@@ -137,5 +150,84 @@ namespace CoE.Ideas.Core.Services
                 return await callback(client);
             }
         }
+
+        private class InitiativeContractResolver : DefaultContractResolver
+        {
+            protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+            {
+                var prop = base.CreateProperty(member, memberSerialization);
+                if (!prop.Writable)
+                {
+                    var property = member as PropertyInfo;
+                    if (property != null)
+                    {
+                        var hasPrivateSetter = property.GetSetMethod(true) != null;
+                        prop.Writable = hasPrivateSetter;
+                    }
+                }
+                return prop;
+            }
+
+            //protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            //{
+            //    var publicProperties = base.CreateProperties(type, memberSerialization)
+            //        .ToDictionary(x => x.PropertyName, x => x);
+
+
+            //    // set public properties with private setters as writable
+            //    var privateProperties = type.GetProperties()
+            //        .Where(p => p.GetSetMethod() != null && !p.GetSetMethod().IsPublic)
+            //        .ToList();
+
+            //    foreach (var p in privateProperties)
+            //    {
+            //        if (publicProperties.ContainsKey(p.Name))
+            //            publicProperties[p.Name].Writable = true;
+            //    }
+
+            //    return publicProperties.Select(x => x.Value).ToList();
+
+            //    //return publicProperties.Union(privateProperties).ToList();
+
+            //    //var props = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            //    //                .Select(p => base.CreateProperty(p, memberSerialization))
+            //    //            .Union(type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            //    //                       .Select(f => base.CreateProperty(f, memberSerialization)))
+            //    //            .ToList();
+            //    //props.ForEach(p => { p.Writable = true; p.Readable = true; });
+            //    //return props;
+            //}
+
+            //protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+            //{
+            //    var returnValue = base.CreateProperty(member, memberSerialization);
+            //    if (memberSerialization == MemberSerialization.OptOut && member is PropertyInfo)
+            //    {
+            //        var p = (PropertyInfo)member;
+            //        var setMethod = p.GetSetMethod();
+            //        if (setMethod != null && !setMethod.IsPublic)
+            //        {
+            //            //setMethod.Invoke()
+            //        }
+            //    }
+            //    return returnValue;
+            //}
+
+            //protected override List<MemberInfo> GetSerializableMembers(Type objectType)
+            //{
+            //    var returnValue = base.GetSerializableMembers(objectType);
+            //    if (objectType == typeof(Initiative))
+            //    {
+            //        var moreMembers = 
+            //        returnValue = returnValue.Union(
+            //            typeof(Initiative)
+            //                .GetProperties()
+            //                .Where(p => !(p.SetMethod != null && p.SetMethod.IsPublic)))
+            //            .ToList();
+            //    }
+            //    return returnValue;
+            //}
+        }
+
     }
 }
