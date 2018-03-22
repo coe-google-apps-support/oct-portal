@@ -33,7 +33,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy-sb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy-watcher", "ideas-integration-remedy\ideas-integration-remedy-watcher\ideas-integration-remedy-watcher.csproj", "{BC692FF2-927B-4E33-AD54-01957D483021}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "remedy-emulator", "ideas-integration-remedy\remedy-emulator\remedy-emulator.csproj", "{F21A2326-EB12-472E-A432-37F1DC4C97C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "remedy-emulator", "ideas-integration-remedy\remedy-emulator\remedy-emulator.csproj", "{F21A2326-EB12-472E-A432-37F1DC4C97C7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-notification", "ideas-integration-notification\ideas-integration-notification\ideas-integration-notification.csproj", "{4943EFBE-8895-417D-A1FD-6D8534F2DC1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +91,10 @@ Global
 		{F21A2326-EB12-472E-A432-37F1DC4C97C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F21A2326-EB12-472E-A432-37F1DC4C97C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F21A2326-EB12-472E-A432-37F1DC4C97C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4943EFBE-8895-417D-A1FD-6D8534F2DC1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4943EFBE-8895-417D-A1FD-6D8534F2DC1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4943EFBE-8895-417D-A1FD-6D8534F2DC1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4943EFBE-8895-417D-A1FD-6D8534F2DC1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +112,7 @@ Global
 		{4DAF33B4-B5B3-47DD-8B63-802A93B7312E} = {6F2D1860-80DC-4074-8F8C-90F435EEF0D1}
 		{BC692FF2-927B-4E33-AD54-01957D483021} = {6F2D1860-80DC-4074-8F8C-90F435EEF0D1}
 		{F21A2326-EB12-472E-A432-37F1DC4C97C7} = {6F2D1860-80DC-4074-8F8C-90F435EEF0D1}
+		{4943EFBE-8895-417D-A1FD-6D8534F2DC1C} = {6F2D1860-80DC-4074-8F8C-90F435EEF0D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5356DFEE-8877-4B02-A9CE-74DCCDCA75E5}

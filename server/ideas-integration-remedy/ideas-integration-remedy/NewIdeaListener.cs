@@ -90,7 +90,7 @@ namespace CoE.Ideas.Remedy
             watch.Start();
             string remedyTicketId = null;
             remedyTicketId = await _remedyService.PostNewIdeaAsync(initiative, user3And3);
-            _logger.Information("Created Remedy Work Order in {ElapsedMilliseconds}ms. Initiative Id { InitiativeId }, WorkOrderId { WorkOrderId }", watch.ElapsedMilliseconds, initiative.Id, remedyTicketId);
+            _logger.Information("Created Remedy Work Order in {ElapsedMilliseconds}ms. Initiative Id {InitiativeId}, WorkOrderId {WorkOrderId}", watch.ElapsedMilliseconds, initiative.Id, remedyTicketId);
             return remedyTicketId;
         }
 
