@@ -9,7 +9,7 @@ namespace CoE.Ideas.Core.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.Sql(@"
-INSERT INTO StringTemplates(Category, [Key], [Text]) VALUES(1, 'Submit_present', 'Thank you! Your initiative has been submitted and will be assigned for review. An OCT representative will contact you by {1}')
+INSERT INTO StringTemplates(Category, [Key], [Text]) VALUES(1, 'Submit_present', 'Thank you! Your initiative has been submitted and will be assigned for review. An OCT representative will contact you by {0}')
 INSERT INTO StringTemplates(Category, [Key], [Text]) VALUES(1, 'Submit_past', 'Thank you! Your initiative was submitted.')
 INSERT INTO StringTemplates(Category, [Key], [Text]) VALUES(1, 'Review_present', 'Your initiative has been assigned for review. {0} will contact you to schedule a project intake meeting.')
 INSERT INTO StringTemplates(Category, [Key], [Text]) VALUES(1, 'Review_past', 'Your initiative has been assigned and reviewed.')

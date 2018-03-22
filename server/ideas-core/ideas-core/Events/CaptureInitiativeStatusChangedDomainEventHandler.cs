@@ -10,13 +10,18 @@ using System.Threading.Tasks;
 
 namespace CoE.Ideas.Core.Events
 {
-    internal class CaptureInitiativeStatusChangedDomainEventHandler : INotificationHandler<InitiativeStatusChangedDomainEvent>
+    public class CaptureInitiativeStatusChangedDomainEventHandler : INotificationHandler<InitiativeStatusChangedDomainEvent>
     {
         public CaptureInitiativeStatusChangedDomainEventHandler(Serilog.ILogger logger,
             IPersonRepository personRepository,
-            IStringTemplateService stringTemplateService,
-            InitiativeContext initiativeContext)
+            IServiceProvider serviceProvider)
+            //IStringTemplateService stringTemplateService,
+            //InitiativeContext initiativeContext)
         {
+            EnsureArg.IsNotNull(serviceProvider);
+            IStringTemplateService stringTemplateService = serviceProvider.GetService(typeof(IStringTemplateService)) as IStringTemplateService;
+            InitiativeContext initiativeContext = serviceProvider.GetService(typeof(InitiativeContext)) as InitiativeContext;
+
             EnsureArg.IsNotNull(logger);
             EnsureArg.IsNotNull(personRepository);
             EnsureArg.IsNotNull(stringTemplateService);

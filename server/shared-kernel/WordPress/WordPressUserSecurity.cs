@@ -111,7 +111,7 @@ namespace CoE.Ideas.Shared.WordPress
 
             var claims = new List<Claim>()
             {
-                new Claim(CLAIM_TYPE_ID, "0"),
+                new Claim(CLAIM_TYPE_ID, "1"),
                 new Claim(ClaimTypes.NameIdentifier, userName),
                 new Claim(ClaimTypes.Email, email),
                 new Claim(ClaimTypes.Name, userName),

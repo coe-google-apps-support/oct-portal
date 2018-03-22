@@ -5,6 +5,6 @@ namespace CoE.Ideas.Core.Services
 {
     internal interface IStringTemplateService
     {
-        Task<string> GetStatusChangeTextAsync(InitiativeStatus status, Person assignee, bool isPastTense = false);
+        Task<string> GetStatusChangeTextAsync(InitiativeStatus status, bool isPastTense = false);
     }
 }

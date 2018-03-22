@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Shared.Extensions;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +57,9 @@ namespace CoE.Ideas.Remedy.SbListener
             // Add Idea Repository
             services.AddLocalInitiativeConfiguration(
                 Configuration.GetConnectionString("IdeaDatabase"));
+
+
+            services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"));
 
             // Add service to talk to ServiceBus
             services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],

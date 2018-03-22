@@ -74,9 +74,11 @@ namespace CoE.Ideas.Core.Services
             return initiatives;
         }
 
-        public Task<Initiative> UpdateInitiativeAsync(Initiative initiative)
+        public async Task<Initiative> UpdateInitiativeAsync(Initiative initiative)
         {
-            throw new NotImplementedException();
+            _initiativeContext.Entry(initiative).State = EntityState.Modified;
+            await _initiativeContext.SaveChangesAsync();
+            return initiative;
         }
 
         private struct InitiativeStepInfo
