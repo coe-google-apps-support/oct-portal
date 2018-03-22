@@ -48,7 +48,7 @@ namespace CoE.Ideas.Remedy
             var owner = e.Owner;
             using (LogContext.PushProperty("InitiativeId", initiative.Id))
             {
-                _logger.Information("Begin OnNewInitiative");
+                _logger.Information("Begin OnNewInitiative for initiative {InitiativeId}", initiative.Id);
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
@@ -56,7 +56,7 @@ namespace CoE.Ideas.Remedy
                 string workOrderId = await CreateWorkOrder(initiative, user3and3);
                 await SendWorkOrderCreatedMessage(initiative, owner, workOrderId);
 
-                _logger.Information("Processed OnNewInitiative in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
+                _logger.Information("Processed OnNewInitiative for initiative {InitiativeId} in {ElapsedMilliseconds}ms", initiative.Id, watch.ElapsedMilliseconds);
             }
         }
 

@@ -59,7 +59,9 @@ namespace CoE.Ideas.Core.Services
         {
             return await ExecuteAsync(async client =>
             {
+                _logger.Information("Retrieving initiative from {Url}", client.BaseAddress + id.ToString());
                 var ideaString = await client.GetStringAsync(id.ToString());
+                _logger.Debug("Retrieved initative data: {Text}", ideaString);
                 return JsonConvert.DeserializeObject<Initiative>(ideaString);
             });
         }
@@ -68,7 +70,9 @@ namespace CoE.Ideas.Core.Services
         {
             return await ExecuteAsync(async client =>
             {
+                _logger.Information("Retrieving initiative from {Url}", client.BaseAddress + id.ToString());
                 var ideaString = await client.GetStringAsync(id.ToString());
+                _logger.Debug("Retrieved initative {InitiativeId} data: {Text}", id, ideaString);
                 return JsonConvert.DeserializeObject<Initiative>(ideaString);
             });
         }
