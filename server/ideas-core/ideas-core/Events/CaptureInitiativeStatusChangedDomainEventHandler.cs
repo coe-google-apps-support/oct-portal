@@ -71,11 +71,7 @@ namespace CoE.Ideas.Core.Events
             }
 
             var template = await _stringTemplateService.GetStatusChangeTextAsync(initiative.Status, isPastTense: false);
-            if (initiative.Status == InitiativeStatus.Submit)
-            {
-
-            }
-            var statusEta = await GetEta(initiative);;
+            var statusEta = await GetEta(initiative.Status);
             string newText = string.Format(template, assignee?.Name, statusEta);
             var statusChange = InitiativeStatusHistory.CreateInitiativeStatusChange(initiative.Uid,
                 initiative.Status,
@@ -90,16 +86,17 @@ namespace CoE.Ideas.Core.Events
         }
 
 
-        protected virtual async Task<DateTime?> GetEta(Initiative initiative)
+        protected virtual async Task<DateTime?> GetEta(InitiativeStatus initiativeStatus)
         {
-            if (initiative == null)
-                return null;
+            var etaDefinition = await _initiativeContext.StatusEtas
+                .FirstOrDefaultAsync(x => x.Status == initiativeStatus);
 
-            // TODO: put the ETA into into the database instead of hard coding
-
-            if (initiative.Status == InitiativeStatus.Submit)
+            if (etaDefinition != null)
             {
-                return await _businessCalendarService.AddBusinessTime(DateTime.Now, new TimeSpan(4, 0, 0));
+                if (etaDefinition.EtaType == EtaType.BusinessSeconds)
+                    return await _businessCalendarService.AddBusinessTime(DateTime.Now, TimeSpan.FromSeconds(etaDefinition.Time));
+                else
+                    return await _businessCalendarService.AddBusinessDays(DateTime.Now, etaDefinition.Time);
             }
             else
                 return null;

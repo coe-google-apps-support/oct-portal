@@ -26,6 +26,7 @@ namespace CoE.Ideas.Core.Data
         public DbSet<Initiative> Initiatives { get; set; }
         public DbSet<InitiativeStatusHistory> InitiativeStatusHistories { get; set; }
         public DbSet<StringTemplate> StringTemplates { get; set; }
+        public DbSet<StatusEta> StatusEtas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
