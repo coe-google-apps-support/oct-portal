@@ -18,24 +18,33 @@ namespace CoE.Ideas.Core.Events
             //IStringTemplateService stringTemplateService,
             //InitiativeContext initiativeContext)
         {
+            // Events are raised through Mediatr which required public classes and public constructors.
+            // IStringTemplateService, IStatusEtaService and InitiativeContext are internal classes so 
+            // cannot be declared as parameters in the constructors. But we can ask for the 
+            // serviceProvider and get those internal classes in the constructor itself.
             EnsureArg.IsNotNull(serviceProvider);
             IStringTemplateService stringTemplateService = serviceProvider.GetService(typeof(IStringTemplateService)) as IStringTemplateService;
+            IBusinessCalendarService businessCalendarService = serviceProvider.GetService(typeof(IBusinessCalendarService)) as IBusinessCalendarService;
             InitiativeContext initiativeContext = serviceProvider.GetService(typeof(InitiativeContext)) as InitiativeContext;
 
             EnsureArg.IsNotNull(logger);
             EnsureArg.IsNotNull(personRepository);
             EnsureArg.IsNotNull(stringTemplateService);
+            EnsureArg.IsNotNull(businessCalendarService);
             EnsureArg.IsNotNull(initiativeContext);
 
             _logger = logger;
             _personRepository = personRepository;
             _stringTemplateService = stringTemplateService;
+            _businessCalendarService = businessCalendarService;
+
             _initiativeContext = initiativeContext;
         }
         private readonly Serilog.ILogger _logger;
         private readonly IPersonRepository _personRepository;
         private readonly InitiativeContext _initiativeContext;
         private readonly IStringTemplateService _stringTemplateService;
+        private readonly IBusinessCalendarService _businessCalendarService;
 
         public async Task Handle(InitiativeStatusChangedDomainEvent notification, CancellationToken cancellationToken)
         {
@@ -62,7 +71,12 @@ namespace CoE.Ideas.Core.Events
             }
 
             var template = await _stringTemplateService.GetStatusChangeTextAsync(initiative.Status, isPastTense: false);
-            string newText = string.Format(template, assignee?.Name);
+            if (initiative.Status == InitiativeStatus.Submit)
+            {
+
+            }
+            var statusEta = await GetEta(initiative);;
+            string newText = string.Format(template, assignee?.Name, statusEta);
             var statusChange = InitiativeStatusHistory.CreateInitiativeStatusChange(initiative.Uid,
                 initiative.Status,
                 DateTime.UtcNow,
@@ -73,6 +87,22 @@ namespace CoE.Ideas.Core.Events
             _initiativeContext.InitiativeStatusHistories.Add(statusChange);
 
             await _initiativeContext.SaveChangesAsync();
+        }
+
+
+        protected virtual async Task<DateTime?> GetEta(Initiative initiative)
+        {
+            if (initiative == null)
+                return null;
+
+            // TODO: put the ETA into into the database instead of hard coding
+
+            if (initiative.Status == InitiativeStatus.Submit)
+            {
+                return await _businessCalendarService.AddBusinessTime(DateTime.Now, new TimeSpan(4, 0, 0));
+            }
+            else
+                return null;
         }
     }
 }
