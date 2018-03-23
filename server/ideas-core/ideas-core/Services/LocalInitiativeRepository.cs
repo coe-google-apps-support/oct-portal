@@ -161,7 +161,8 @@ namespace CoE.Ideas.Core.Services
 
         public Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
         {
-            throw new NotImplementedException();
+            return _initiativeContext.Initiatives
+                .FirstOrDefaultAsync(x => x.WorkOrderId == workOrderId);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using EnsureThat;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
@@ -8,8 +10,12 @@ namespace CoE.Ideas.Shared.People
 {
     internal class PeopleService : IPeopleService
     {
-        public PeopleService(IOptions<PeopleServiceOptions> options)
+        public PeopleService(IOptions<PeopleServiceOptions> options,
+            IMemoryCache memoryCache)
         {
+            EnsureArg.IsNotNull(memoryCache);
+            _memoryCache = memoryCache;
+
             if (options == null || options.Value == null)
                 throw new ArgumentNullException("options");
 
@@ -23,30 +29,34 @@ namespace CoE.Ideas.Shared.People
         }
 
         private readonly Uri _serviceUrl;
+        private readonly IMemoryCache _memoryCache;
 
         public async Task<PersonData> GetPersonAsync(string user3and3)
         {
             if (string.IsNullOrWhiteSpace(user3and3))
                 throw new ArgumentNullException("user3and3");
 
-            string userDataString;
-            using (var client = GetHttpClient())
+            return await _memoryCache.GetOrCreateAsync("3_" + user3and3, async cacheEntry =>
             {
-
-                try
+                string userDataString;
+                using (var client = GetHttpClient())
                 {
-                    userDataString = await client.GetStringAsync($"OrganizationUnits/NetworkId/{user3and3}");
-                }
-                catch (Exception err)
-                {
-                    throw new InvalidOperationException($"Unable to get data for user {user3and3}: {err.Message}", err);
-                }
-            }
 
-            if (string.IsNullOrWhiteSpace(userDataString))
-                throw new InvalidOperationException($"Unable to get data for user {user3and3}");
+                    try
+                    {
+                        userDataString = await client.GetStringAsync($"OrganizationUnits/NetworkId/{user3and3}");
+                    }
+                    catch (Exception err)
+                    {
+                        throw new InvalidOperationException($"Unable to get data for user {user3and3}: {err.Message}", err);
+                    }
+                }
 
-            return JsonConvert.DeserializeObject<PersonData>(userDataString);
+                if (string.IsNullOrWhiteSpace(userDataString))
+                    throw new InvalidOperationException($"Unable to get data for user {user3and3}");
+
+                return JsonConvert.DeserializeObject<PersonData>(userDataString);
+            });
         }
 
         public async Task<PersonData> GetPersonByEmailAsync(string emailAddress)
@@ -54,23 +64,26 @@ namespace CoE.Ideas.Shared.People
             if (string.IsNullOrWhiteSpace(emailAddress))
                 throw new ArgumentNullException("emailAddress");
 
-            string userDataString;
-            using (var client = GetHttpClient())
+            return await _memoryCache.GetOrCreateAsync("E_" + emailAddress, async cacheEntry =>
             {
-                try
+                string userDataString;
+                using (var client = GetHttpClient())
                 {
-                    userDataString = await client.GetStringAsync($"OrganizationUnits/Email/{emailAddress}");
-                }
-                catch (Exception err)
-                {
-                    throw new InvalidOperationException($"Unable to get data for user {emailAddress}: {err.Message}", err);
+                    try
+                    {
+                        userDataString = await client.GetStringAsync($"OrganizationUnits/Email/{emailAddress}");
+                    }
+                    catch (Exception err)
+                    {
+                        throw new InvalidOperationException($"Unable to get data for user {emailAddress}: {err.Message}", err);
+                    }
                 }
 
                 if (string.IsNullOrWhiteSpace(userDataString))
                     throw new InvalidOperationException($"Unable to get data for user {emailAddress}");
 
                 return JsonConvert.DeserializeObject<PersonData>(userDataString);
-            }
+            });
         }
         protected virtual HttpClient GetHttpClient()
         {

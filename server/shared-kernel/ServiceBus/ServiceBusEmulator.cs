@@ -69,9 +69,9 @@ namespace CoE.Ideas.Shared.ServiceBus
                 DateTime pollDate = DateTime.UtcNow;
                 while (true)
                 {
+                    var nextDate = DateTime.UtcNow;
                     try
                     {
-                        var nextDate = DateTime.UtcNow;
 
                         var messageProperties = _context.MessageProperties
                             .GroupBy(msgProp => msgProp.MessageId);
@@ -105,7 +105,7 @@ namespace CoE.Ideas.Shared.ServiceBus
                     }
                     finally
                     {
-                        pollDate = DateTime.UtcNow;
+                        pollDate = nextDate;
                     }
                     Thread.Sleep(1000);
                 }

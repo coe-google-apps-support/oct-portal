@@ -107,6 +107,8 @@ namespace CoE.Ideas.Shared.Extensions
             });
             services.AddSingleton<IPeopleService, PeopleService>();
 
+            services.AddMemoryCache();
+
             return services;
         }
 
