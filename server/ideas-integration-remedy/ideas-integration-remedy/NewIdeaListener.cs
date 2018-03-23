@@ -5,7 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Shared.People;
 using CoE.Ideas.Shared.Security;
+using EnsureThat;
 using Microsoft.Azure.ServiceBus;
 using Serilog.Context;
 
@@ -16,24 +18,29 @@ namespace CoE.Ideas.Remedy
         public NewIdeaListener(IInitiativeMessageReceiver initiativeMessageReceiver,
             IInitiativeMessageSender initiativeMessageSender,
             IRemedyService remedyService,
-            //IActiveDirectoryUserService activeDirectoryUserService,
+            IPeopleService peopleService,
             Serilog.ILogger logger) 
         {
-            _initiativeMessageReceiver = initiativeMessageReceiver ?? throw new ArgumentNullException("initiativeMessageReceiver");
-            _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
-            _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
-            //_activeDirectoryUserService = activeDirectoryUserService ?? throw new ArgumentNullException("activeDirectoryUserService");
+            EnsureArg.IsNotNull(initiativeMessageReceiver);
+            EnsureArg.IsNotNull(initiativeMessageSender);
+            EnsureArg.IsNotNull(remedyService);
+            EnsureArg.IsNotNull(peopleService);
+            EnsureArg.IsNotNull(logger);
+
+            _initiativeMessageReceiver = initiativeMessageReceiver;
+            _initiativeMessageSender = initiativeMessageSender;
+            _remedyService = remedyService;
+            _peopleService = peopleService;
             _logger = logger ?? throw new ArgumentNullException("logger");
 
             _logger.Information("Starting messsage pump for New Initiatives");
             initiativeMessageReceiver.ReceiveMessages(initiativeCreatedHandler: OnNewInitiative);
-
         }
 
         private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
         private readonly IInitiativeMessageSender _initiativeMessageSender;
         private readonly IRemedyService _remedyService;
-        //private readonly IActiveDirectoryUserService _activeDirectoryUserService;
+        private readonly IPeopleService _peopleService;
         private readonly Serilog.ILogger _logger;
 
         protected virtual Task OnError(ExceptionReceivedEventArgs err)
@@ -52,44 +59,39 @@ namespace CoE.Ideas.Remedy
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                string user3and3 = await GetUser3and3(owner.GetEmail());
-                string workOrderId = await CreateWorkOrder(initiative, user3and3);
+                var personData = await GetPersonData(owner.GetEmail());
+                string workOrderId = await CreateWorkOrder(initiative, personData);
                 await SendWorkOrderCreatedMessage(initiative, owner, workOrderId);
 
                 _logger.Information("Processed OnNewInitiative for initiative {InitiativeId} in {ElapsedMilliseconds}ms", initiative.Id, watch.ElapsedMilliseconds);
             }
         }
 
-        protected virtual async Task<string> GetUser3and3(string email)
+        protected virtual async Task<PersonData> GetPersonData(string email)
         {
-            //Stopwatch watch = new Stopwatch();
-            //UserPrincipal adUser = null;
-            //try
-            //{
-            //    //    adUser = _activeDirectoryUserService.GetADUser(wordPressUser.Email);
-            //}
-            ////catch (Exception err)
-            ////{
-            ////    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }: { err.Message }");
-            ////}
+            if (string.IsNullOrWhiteSpace(email))
+                return null;
 
-            ////if (adUser == null)
-            ////    throw new InvalidOperationException($"Unable to find an Active Directory user with email { wordPressUser.Email }");
-            //finally
-            //{
-            //    watch.Restart();
-            //}
-            // return adUser?.SamAccountName;
-
-            return await Task.FromResult<string>(null);
+            Stopwatch watch = new Stopwatch();
+            try
+            {
+                var returnValue = await _peopleService.GetPersonByEmailAsync(email);
+                _logger.Information("Retrieved details about user {EmailAddress} in {ElapsedMilliseconds}ms", email, watch.ElapsedMilliseconds);
+                return returnValue;
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err, "Unable to get information about user with email {EmailAddress}", email);
+                return null;
+            }
         }
 
-        protected virtual async Task<string> CreateWorkOrder(Initiative initiative, string user3And3)
+        protected virtual async Task<string> CreateWorkOrder(Initiative initiative, PersonData personData)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
             string remedyTicketId = null;
-            remedyTicketId = await _remedyService.PostNewIdeaAsync(initiative, user3And3);
+            remedyTicketId = await _remedyService.PostNewIdeaAsync(initiative, personData);
             _logger.Information("Created Remedy Work Order in {ElapsedMilliseconds}ms. Initiative Id {InitiativeId}, WorkOrderId {WorkOrderId}", watch.ElapsedMilliseconds, initiative.Id, remedyTicketId);
             return remedyTicketId;
         }

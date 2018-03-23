@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -43,11 +44,31 @@ namespace CoE.Ideas.Shared.People
             if (string.IsNullOrWhiteSpace(userDataString))
                 throw new InvalidOperationException($"Unable to get data for user {user3and3}");
 
-            // there's lots of information we can get from the userData, but right now all we care about is the email
-            dynamic userData = Newtonsoft.Json.Linq.JObject.Parse(userDataString);
-            return new PersonData() { Email = userData.Mail, DisplayName = $"{ userData.GivenName } { userData.Surname }" };
+            return JsonConvert.DeserializeObject<PersonData>(userDataString);
         }
 
+        public async Task<PersonData> GetPersonByEmailAsync(string emailAddress)
+        {
+            if (string.IsNullOrWhiteSpace(emailAddress))
+                throw new ArgumentNullException("emailAddress");
+
+            var client = GetHttpClient();
+
+            string userDataString;
+            try
+            {
+                userDataString = await client.GetStringAsync($"OrganizationUnits/Email/{emailAddress}");
+            }
+            catch (Exception err)
+            {
+                throw new InvalidOperationException($"Unable to get data for user {emailAddress}: {err.Message}", err);
+            }
+
+            if (string.IsNullOrWhiteSpace(userDataString))
+                throw new InvalidOperationException($"Unable to get data for user {emailAddress}");
+
+            return JsonConvert.DeserializeObject<PersonData>(userDataString);
+        }
         protected virtual HttpClient GetHttpClient()
         {
 
@@ -59,6 +80,5 @@ namespace CoE.Ideas.Shared.People
             // easy - no credentials to set :)
             return client;
         }
-
     }
 }

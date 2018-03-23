@@ -52,13 +52,7 @@ namespace CoE.Ideas.Remedy
 
             services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
 
-            //services.AddSingleton<IActiveDirectoryUserService, ActiveDirectoryUserService>(x =>
-            //{
-            //    return new ActiveDirectoryUserService(
-            //        Configuration["ActiveDirectory:Domain"],
-            //        Configuration["ActiveDirectory:ServiceUserName"],
-            //        Configuration["ActiveDirectory:ServicePassword"]);
-            //});
+            services.AddPeopleService();
 
             services.AddSingleton<New_Port_0PortType>(x =>
             {

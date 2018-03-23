@@ -1,5 +1,6 @@
 ﻿using CoE.Ideas.Core.Data;
 using CoE.Ideas.Remedy.RemedyServiceReference;
+using CoE.Ideas.Shared.People;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace CoE.Ideas.Remedy
         private readonly Serilog.ILogger _logger;
 
 
-        public virtual async Task<string> PostNewIdeaAsync(Initiative idea, string user3and3)
+        public virtual async Task<string> PostNewIdeaAsync(Initiative idea, PersonData personData)
         {
             try
             {

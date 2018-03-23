@@ -84,15 +84,17 @@ namespace CoE.Ideas.Shared.Extensions
         }
 
         public static IServiceCollection AddPeopleService(this IServiceCollection services,
-            string peopleServiceUrl)
+            string peopleServiceUrl = null)
         {
-            if (string.IsNullOrWhiteSpace(peopleServiceUrl))
-                throw new ArgumentNullException("peopleServiceUrl");
+            // default value
+            string url = string.IsNullOrWhiteSpace(peopleServiceUrl)
+                ? "http://webapps.edmonton.ca/CoE.PeopleDirectory.WebApi/api/PeopleDirectory" 
+                : peopleServiceUrl;
 
             Uri peopleServiceUri;
             try
             {
-                peopleServiceUri = new Uri(peopleServiceUrl);
+                peopleServiceUri = new Uri(url);
             }
             catch (Exception err)
             {
