@@ -52,32 +52,17 @@ namespace CoE.Ideas.Core.Events
             EnsureArg.IsNotNull(notification.Initiative);
 
             var initiative = notification.Initiative;
-            // get the previous status change, if any
-            var previousChange = await _initiativeContext.InitiativeStatusHistories.Where(x => x.InitiativeId == initiative.Uid)
-                .OrderByDescending(x => x.StatusEntryDateUtc)
-                .FirstOrDefaultAsync();
 
             var assignee = initiative.AssigneeId.HasValue ? await _personRepository.GetPersonAsync(initiative.AssigneeId.Value) : null;
 
-            // update the previous change message to past tense
-            if (previousChange != null)
-            {
-                var previousStatusTemplate = await _stringTemplateService.GetStatusChangeTextAsync(initiative.Status, isPastTense: true);
-                string previousStatusAssigneeName = string.IsNullOrWhiteSpace(assignee?.Name)
-                    ? "A representative" : assignee.Name;
-                var text = string.Format(previousStatusTemplate, previousStatusAssigneeName);
-
-                previousChange.UpdateText(text);
-            }
-
-            var template = await _stringTemplateService.GetStatusChangeTextAsync(initiative.Status, isPastTense: false);
             var statusEta = await GetEta(initiative.Status);
-            string newText = string.Format(template, assignee?.Name, statusEta);
+            if (statusEta.HasValue)
+                statusEta = statusEta.Value.ToUniversalTime();
             var statusChange = InitiativeStatusHistory.CreateInitiativeStatusChange(initiative.Uid,
                 initiative.Status,
-                DateTime.UtcNow,
-                initiative.AssigneeId,
-                newText);
+                DateTime.UtcNow, 
+                statusEta,
+                initiative.AssigneeId);
 
             // now we add the new status
             _initiativeContext.InitiativeStatusHistories.Add(statusChange);

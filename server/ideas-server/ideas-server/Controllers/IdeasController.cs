@@ -12,6 +12,7 @@ using CoE.Ideas.Core.Data;
 using CoE.Ideas.Shared.Security;
 using CoE.Ideas.Core.Services;
 using EnsureThat;
+using Microsoft.Extensions.Options;
 
 namespace CoE.Ideas.Server.Controllers
 {
@@ -22,17 +23,32 @@ namespace CoE.Ideas.Server.Controllers
         private readonly IInitiativeRepository _repository;
         private readonly IPersonRepository _personRepository;
         private readonly IInitiativeMessageSender _initiativeMessageSender;
+        private readonly IStringTemplateService _stringTemplateService;
+        private readonly ApplicationOptions _applicationOptions;
         private readonly Serilog.ILogger _logger;
 
         public IdeasController(IInitiativeRepository repository,
             IPersonRepository personRepository,
             IInitiativeMessageSender initiativeMessageSender,
-            Serilog.ILogger logger)
+            IStringTemplateService stringTemplateService,
+            Serilog.ILogger logger,
+            IOptions<ApplicationOptions> options)
         {
-            _repository = repository ?? throw new ArgumentNullException("repository");
-            _personRepository = personRepository ?? throw new ArgumentNullException("personRepository");
-            _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
-            _logger = logger ?? throw new ArgumentNullException("logger");
+            EnsureArg.IsNotNull(repository);
+            EnsureArg.IsNotNull(personRepository);
+            EnsureArg.IsNotNull(initiativeMessageSender);
+            EnsureArg.IsNotNull(stringTemplateService);
+            EnsureArg.IsNotNull(logger);
+            EnsureArg.IsNotNull(options);
+            EnsureArg.IsNotNull(options.Value);
+            EnsureArg.IsNotNullOrWhiteSpace(options.Value.ApplicationUrl);
+
+            _repository = repository;
+            _personRepository = personRepository;
+            _initiativeMessageSender = initiativeMessageSender;
+            _stringTemplateService = stringTemplateService;
+            _logger = logger;
+            _applicationOptions = options.Value;
         }
 
         // GET: ideas
@@ -64,7 +80,7 @@ namespace CoE.Ideas.Server.Controllers
                 Description = x.Description,
                 Title = x.Title,
                 CreatedDate = x.CreatedDate,
-                Url = "https://octavadev.edmonton.ca/view-ideas/?id=" + x.Id //  $"{Request.Scheme}://{Request.Host}/view-ideas/?id={x.Id}"
+                Url = _applicationOptions.ApplicationUrl + "/view-ideas/?id=" + x.Id 
             });
         }
 
@@ -302,7 +318,17 @@ namespace CoE.Ideas.Server.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var returnValue = await _repository.GetInitiativeStepsAsync(id);
+                var steps = (await _repository.GetInitiativeStepsAsync(id)).ToList();
+                List<InitiativeStepDetail> returnValue = new List<InitiativeStepDetail>();
+                var currentStep = steps.FirstOrDefault(x => !x.CompletionDate.HasValue);
+                foreach (var step in steps)
+                {
+                    Person assignee = step.AssigneePersonId.HasValue
+                        ? await _personRepository.GetPersonAsync(step.AssigneePersonId.Value)
+                        : null;
+                    returnValue.Add(await InitiativeStepDetail.FromInitiativeStepAsync(
+                        step, assignee, _stringTemplateService, step == currentStep));
+                }
 
                 if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
                 {

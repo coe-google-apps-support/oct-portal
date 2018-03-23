@@ -11,7 +11,7 @@ using System;
 namespace CoE.Ideas.Core.Migrations
 {
     [DbContext(typeof(InitiativeContext))]
-    [Migration("20180323172326_AddedStatusEtas")]
+    [Migration("20180323203736_AddedStatusEtas")]
     partial class AddedStatusEtas
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,8 @@ namespace CoE.Ideas.Core.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime?>("ExpectedExitDateUtc");
+
                     b.Property<Guid>("InitiativeId");
 
                     b.Property<int?>("PersonId");
@@ -71,9 +73,6 @@ namespace CoE.Ideas.Core.Migrations
                     b.Property<int>("Status");
 
                     b.Property<DateTime>("StatusEntryDateUtc");
-
-                    b.Property<string>("Text")
-                        .HasMaxLength(1024);
 
                     b.HasKey("Id");
 

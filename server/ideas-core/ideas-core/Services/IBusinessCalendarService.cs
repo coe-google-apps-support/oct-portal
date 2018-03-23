@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoE.Ideas.Core.Services
 {
-    internal interface IBusinessCalendarService
+    public interface IBusinessCalendarService
     {
         /// <summary>
         /// Add the amount of time specified to the startTime, 

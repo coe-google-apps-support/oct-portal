@@ -63,6 +63,8 @@ namespace CoE.Ideas.Core.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime?>("ExpectedExitDateUtc");
+
                     b.Property<Guid>("InitiativeId");
 
                     b.Property<int?>("PersonId");
@@ -70,9 +72,6 @@ namespace CoE.Ideas.Core.Migrations
                     b.Property<int>("Status");
 
                     b.Property<DateTime>("StatusEntryDateUtc");
-
-                    b.Property<string>("Text")
-                        .HasMaxLength(1024);
 
                     b.HasKey("Id");
 

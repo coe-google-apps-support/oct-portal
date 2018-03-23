@@ -9,6 +9,15 @@ namespace CoE.Ideas.Core.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Text",
+                table: "InitiativeStatusHistories");
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "ExpectedExitDateUtc",
+                table: "InitiativeStatusHistories",
+                nullable: true);
+
             migrationBuilder.CreateTable(
                 name: "StatusEtas",
                 columns: table => new
@@ -28,14 +37,24 @@ namespace CoE.Ideas.Core.Migrations
 
         private void AddSeedData(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("INSERT INTO [dbo].[StatusEtas] ([EtaType],[Status],[Time]) VALUES(1,3,14400)");
+            migrationBuilder.Sql("INSERT INTO [dbo].[StatusEtas] ([EtaType],[Status],[Time]) VALUES(" +
+                (int)Data.EtaType.BusinessSeconds + "," +
+                (int)Data.InitiativeStatus.Submit + ",14400)");
         }
-
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "StatusEtas");
-        }
 
+            migrationBuilder.DropColumn(
+                name: "ExpectedExitDateUtc",
+                table: "InitiativeStatusHistories");
+
+            migrationBuilder.AddColumn<string>(
+                name: "Text",
+                table: "InitiativeStatusHistories",
+                maxLength: 1024,
+                nullable: true);
+        }
     }
 }

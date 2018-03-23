@@ -43,7 +43,7 @@ namespace CoE.Ideas.Core
 
             services.AddScoped<IPersonRepository, PersonRepository>();
 
-            services.AddSingleton<IStringTemplateService, StringTemplateService>();
+            services.AddScoped<IStringTemplateService, StringTemplateService>();
 
             string calendarServiceUrl = string.IsNullOrWhiteSpace(payrollCalenderServiceUrl)
                 ? "http://webapps1.edmonton.ca/CoE.PayrollCalendar.WebApi/api/PayrollCalendar" : payrollCalenderServiceUrl;
