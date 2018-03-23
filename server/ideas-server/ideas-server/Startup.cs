@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Server.Models;
 using CoE.Ideas.Shared.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -70,6 +71,11 @@ namespace CoE.Ideas.Server
             });
 
             services.AddAutoMapper();
+
+            var applicationUrl = Configuration["WordPressUrl"];
+            if (string.IsNullOrWhiteSpace(applicationUrl))
+                applicationUrl = "http://localhost"; // default value
+            services.Configure<ApplicationOptions>(x => x.ApplicationUrl = applicationUrl);
         }
 
         protected void ConfigureCors(IApplicationBuilder app, IHostingEnvironment env)

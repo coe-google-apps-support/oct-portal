@@ -36,13 +36,7 @@ namespace CoE.Ideas.Core.Tests
 
         public TestConfiguration ConfigureBasicServices()
         {
-            // basic stuff - there's probably a better way to register these
-            _services.AddSingleton(
-                typeof(Microsoft.Extensions.Options.IOptions<>),
-                typeof(Microsoft.Extensions.Options.OptionsManager<>));
-            _services.AddSingleton(
-                typeof(Microsoft.Extensions.Options.IOptionsFactory<>),
-                typeof(Microsoft.Extensions.Options.OptionsFactory<>));
+            _services.AddOptions();
 
             return this;
         }
@@ -58,6 +52,15 @@ namespace CoE.Ideas.Core.Tests
             //_services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
 
             _services.AddAutoMapper();
+            return this;
+        }
+
+        internal TestConfiguration ConfigureBusinessCalendarService(string payrollCalenderServiceUrl = null)
+        {
+            string calendarServiceUrl = string.IsNullOrWhiteSpace(payrollCalenderServiceUrl)
+                ? "http://webapps1.edmonton.ca/CoE.PayrollCalendar.WebApi/api/PayrollCalendar" : payrollCalenderServiceUrl;
+            _services.Configure<BusinessCalendarServiceOptions>(x => x.PayrollCalenderServiceUrl = calendarServiceUrl);
+            _services.AddSingleton<IBusinessCalendarService, BusinessCalendarService>();
             return this;
         }
     }

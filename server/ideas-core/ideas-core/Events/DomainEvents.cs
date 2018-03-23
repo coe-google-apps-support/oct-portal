@@ -49,24 +49,7 @@ namespace CoE.Ideas.Core.Events
 
             foreach (var domainEvent in events)
             {
-                //foreach (Type handlerType in _handlers)
-                //{
-                    //bool canHandleEvent = handlerType.GetInterfaces()
-                    //    .Any(x => x.IsGenericType
-                    //    && x.GetGenericTypeDefinition() == typeof(INotificationHandler<>)
-                    //    && x.GenericTypeArguments[0] == domainEvent.GetType());
-
-                    //if (canHandleEvent)
-                    //{
-                    //    var handler = Activator.CreateInstance(handlerType);
-                    //    var map = handlerType.GetInterfaceMap(handlerType);
-                    //    var genericHandlerInterfaceType = typeof(INotificationHandler<>).MakeGenericType(domainEvent.GetType());
-                    //    var index = Array.IndexOf(map.InterfaceMethods, genericHandlerInterfaceType.GetMethod("Handle"));
-                    //    var m = map.TargetMethods[index];
-                    //    m.Invoke(handler, )
-                        await _mediator.Publish(domainEvent);
-                    //}
-                //}
+                await _mediator.Publish(domainEvent);
             }
 
             // finally, we can mark all the events as completed

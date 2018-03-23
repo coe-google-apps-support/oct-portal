@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CoE.Ideas.Core.Data
 {
-    public class InitiativeStatusHistory : Entity<int>
+    internal class InitiativeStatusHistory : Entity<int>
     {
 
         // EF requires an empty constructor
@@ -22,15 +22,11 @@ namespace CoE.Ideas.Core.Data
         /// </summary>
         public DateTime StatusEntryDateUtc { get; private set; }
 
-
         /// <summary>
-        /// Message describing the status of the initiative. 
-        /// It should be present tense if the initiative is currently in this
-        /// status, or it can be updated to a past tense message if this
-        /// record is not the current record.
+        /// The date and time the initiative is expected to exit the current status,
+        /// if known.
         /// </summary>
-        [MaxLength(1024)]
-        public string Text { get; private set; }
+        public DateTime? ExpectedExitDateUtc { get; private set; }
 
         // foreign key to Initiatives
         public Guid InitiativeId { get; private set; }
@@ -44,22 +40,17 @@ namespace CoE.Ideas.Core.Data
         internal static InitiativeStatusHistory CreateInitiativeStatusChange(Guid initiativeId,
             InitiativeStatus newStatus,
             DateTime statusEntryDateUtc,
-            int? personId,
-            string text)
+            DateTime? expectedExitDateUtc,
+            int? personId)
         {
             return new InitiativeStatusHistory()
             {
                 InitiativeId = initiativeId,
                 Status = newStatus,
                 StatusEntryDateUtc = statusEntryDateUtc,
-                PersonId = personId,
-                Text = text
+                ExpectedExitDateUtc = expectedExitDateUtc,
+                PersonId = personId
             };
-        }
-
-        internal void UpdateText(string newText)
-        {
-            Text = newText;
         }
 
     }

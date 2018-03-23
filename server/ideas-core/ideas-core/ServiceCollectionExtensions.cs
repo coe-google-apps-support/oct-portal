@@ -26,7 +26,8 @@ namespace CoE.Ideas.Core
         /// <param name="dbConnectionString">The connection string to the Idea database.</param>
         /// <returns>The passed in services, for chaining</returns>
         public static IServiceCollection AddLocalInitiativeConfiguration(this IServiceCollection services,
-            string dbConnectionString = null)
+            string dbConnectionString = null,
+            string payrollCalenderServiceUrl = null)
         { 
             // default value is one is not supplied
             string connectionString = string.IsNullOrWhiteSpace(dbConnectionString)
@@ -42,7 +43,12 @@ namespace CoE.Ideas.Core
 
             services.AddScoped<IPersonRepository, PersonRepository>();
 
-            services.AddSingleton<IStringTemplateService, StringTemplateService>();
+            services.AddScoped<IStringTemplateService, StringTemplateService>();
+
+            string calendarServiceUrl = string.IsNullOrWhiteSpace(payrollCalenderServiceUrl)
+                ? "http://webapps1.edmonton.ca/CoE.PayrollCalendar.WebApi/api/PayrollCalendar" : payrollCalenderServiceUrl;
+            services.Configure<BusinessCalendarServiceOptions>(x => x.PayrollCalenderServiceUrl = calendarServiceUrl);
+            services.AddSingleton<IBusinessCalendarService, BusinessCalendarService>();
 
             return services;
         }

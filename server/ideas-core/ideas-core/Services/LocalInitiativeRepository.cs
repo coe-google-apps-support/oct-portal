@@ -84,7 +84,7 @@ namespace CoE.Ideas.Core.Services
         private struct InitiativeStepInfo
         {
             public InitiativeStep IdeaStep;
-            public int stateId;
+            public int StateId;
         }
 
         public async Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId)
@@ -103,18 +103,21 @@ namespace CoE.Ideas.Core.Services
             foreach (var sh in statusHistories)
             {
 
-                while (stack.Count > 0 && stack.Peek().stateId > (int)sh.Status && sh.Status != InitiativeStatus.Cancelled)
+                while (stack.Count > 0 && stack.Peek().StateId > (int)sh.Status && sh.Status != InitiativeStatus.Cancelled)
                 {
                     stack.Pop();
                 }
 
-                if (stack.Count > 0 && stack.Peek().stateId == (int)sh.Status)
+                if (stack.Count > 0 && stack.Peek().StateId == (int)sh.Status)
                 {
                     // nothing to do here
                     continue;
                 }
 
                 DateTimeOffset entryDate = new DateTime(sh.StatusEntryDateUtc.Ticks, DateTimeKind.Utc).ToLocalTime();
+                DateTimeOffset? expectedExitDate = null;
+                if (sh.ExpectedExitDateUtc.HasValue)
+                    expectedExitDate = new DateTime(sh.ExpectedExitDateUtc.Value.Ticks, DateTimeKind.Utc).ToLocalTime();
 
                 // update the finish date of the previous entry
                 if (stack.Count > 0)
@@ -125,15 +128,16 @@ namespace CoE.Ideas.Core.Services
                 {
                     IdeaStep = new InitiativeStep()
                     {
-                        Title = GetInitiativeStepsAsync_GetTitle(sh.Status),
-                        Description = sh.Text,
-                        StartDate = entryDate
+                        AssigneePersonId = sh.PersonId,
+                        Status = sh.Status,
+                        StartDate = entryDate,
+                        ExpectedCompletionDate = expectedExitDate
                     },
-                    stateId = (int)sh.Status
+                    StateId = (int)sh.Status
                 });
             }
 
-            var completedItems = stack.Select(x => new { Step = x.IdeaStep, Order = x.stateId }).ToList();
+            var completedItems = stack.ToList();
 
             // now add the remaining ones
             var allStatuses = new InitiativeStatus[]
@@ -144,33 +148,15 @@ namespace CoE.Ideas.Core.Services
                 InitiativeStatus.Deliver
             };
 
-            var remaining = allStatuses.Where(x => !stack.Any(y => y.stateId == (int)x)).OrderBy(x => (int)x);
+            var remaining = allStatuses.Where(x => !stack.Any(y => y.StateId == (int)x)).OrderBy(x => (int)x)
+                .Select(x => new InitiativeStepInfo() { IdeaStep = new InitiativeStep() { Status = x }, StateId = (int)x });
             return completedItems
-                .Concat(remaining.Select(x => new { Step = new InitiativeStep() { Title = GetInitiativeStepsAsync_GetTitle(x) }, Order = (int)x }))
-                .OrderBy(x => x.Order)
-                .Select(x => x.Step);
+                .Concat(remaining)
+                .OrderBy(x => x.StateId)
+                .Select(x => x.IdeaStep);
         }
 
-        private string GetInitiativeStepsAsync_GetTitle(InitiativeStatus status)
-        {
-            switch (status)
-            {
-                case InitiativeStatus.Initiate:
-                    return "Initiated";
-                case InitiativeStatus.Submit:
-                    return "Submitted";
-                case InitiativeStatus.Review:
-                    return "In Review";
-                case InitiativeStatus.Collaborate:
-                    return "In Collaboration";
-                case InitiativeStatus.Deliver:
-                    return "In Delivery";
-                case InitiativeStatus.Cancelled:
-                    return "Cancelled";
-                default:
-                    return status.ToString();
-            }
-        }
+
 
 
         public Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
