@@ -1,9 +1,11 @@
 ﻿using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.Services;
 using CoE.Ideas.Server.Controllers;
+using CoE.Ideas.Server.Models;
 using CoE.Ideas.Shared.WordPress;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Serilog;
 using System;
 using System.Security.Claims;
@@ -66,7 +68,9 @@ namespace CoE.Ideas.EndToEnd.Tests
                 return new IdeasController(x.GetRequiredService<IInitiativeRepository>(),
                     x.GetRequiredService<IPersonRepository>(),
                     x.GetRequiredService<IInitiativeMessageSender>(),
-                    x.GetRequiredService<Serilog.ILogger>())
+                    x.GetRequiredService<IStringTemplateService>(),
+                    x.GetRequiredService<Serilog.ILogger>(),
+                    x.GetRequiredService<IOptions<ApplicationOptions>>())
                 {
                     ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext()
                     {

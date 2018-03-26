@@ -1,6 +1,7 @@
 ﻿using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Remedy;
+using CoE.Ideas.Shared.People;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -13,8 +14,9 @@ namespace CoE.Ideas.EndToEnd.Tests.IntegrationServices
         public IntegrationRemedyListenerNewIdeaListener(IInitiativeMessageReceiver initiativeMessageReceiver,
             IInitiativeMessageSender initiativeMessageSender,
             IRemedyService remedyService,
+            IPeopleService peopleService,
             //IActiveDirectoryUserService activeDirectoryUserService,
-            Serilog.ILogger logger) : base(initiativeMessageReceiver, initiativeMessageSender, remedyService, logger)
+            Serilog.ILogger logger) : base(initiativeMessageReceiver, initiativeMessageSender, remedyService, peopleService, logger)
         {
             _logger = logger ?? throw new ArgumentNullException("logger");
 
