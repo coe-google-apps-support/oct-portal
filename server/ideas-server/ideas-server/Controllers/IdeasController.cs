@@ -112,79 +112,20 @@ namespace CoE.Ideas.Server.Controllers
 
         private async Task<IActionResult> GetInitiativeByInitiativeId(int id)
         {
-            using (LogContext.PushProperty("InitiativeId", id))
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            try
             {
-                _logger.Information("Retrieving initiative {InitiativeId}");
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
-
-                if (id <= 0)
+                return await ValidateAndGetInitiative(id, initiative =>
                 {
-                    _logger.Warning("Unable to retrieve initiative {InitiativeId} because id passed in was less than or equal to zero");
-                    return BadRequest("id must be greater than zero");
-                }
-                else
-                {
-                    var idea = await _repository.GetInitiativeAsync(id);
-
-                    if (idea == null)
-                    {
-                        _logger.Warning("Unable to find an initiative with id {InitiativeId}");
-                        return NotFound();
-                    }
-
-                    watch.Stop();
-                    _logger.Information("Retrieved initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
-                    return Ok(idea);
-                }
+                    return Task.FromResult((IActionResult)Ok(initiative));
+                });
             }
-        }
-
-        // PUT: ideas/5
-        /// <summary>
-        /// Modifies an Idea
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="idea"></param>
-        /// <returns></returns>
-        [HttpPut("{id}")]
-        [Authorize]
-        public async Task<IActionResult> PutIdea([FromRoute] int id, [FromBody] Initiative idea)
-        {
-            using (LogContext.PushProperty("InitiativeId", id))
+            finally
             {
-                _logger.Information("Updating initiative {InitiativeId}");
-                Stopwatch watch = new Stopwatch();
-                watch.Start();
-
-                if (!ModelState.IsValid)
-                {
-                    _logger.Warning("Unable to update initiative {InitiativeId} because model state is not valid: {ModelState}", id, ModelState);
-                    return BadRequest(ModelState);
-                }
-
-                if (id != idea.Id)
-                {
-                    _logger.Warning("Unable to retrieve initiative {InitiativeId} because id of initiative retrieved from database was different than the id passed in");
-                    return BadRequest();
-                }
-
-                try
-                {
-                    await _repository.UpdateInitiativeAsync(idea);
-
-                    watch.Stop();
-                    _logger.Information("Updated initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
-                }
-                catch (Exception err)
-                {
-                    Guid correlationId = Guid.NewGuid();
-                    _logger.Error(err, "Unable to save updated initiative {Initiative} to repository. CorrelationId: {CorrelationId}", idea, correlationId);
-                    return base.StatusCode(500, $"Unable to save idea to repository. CorrelationId: { correlationId }");
-                }
-
-                return NoContent();
-            }
+                watch.Stop();
+                _logger.Information("Retrieved initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+            };
         }
 
         // POST: ideas
@@ -356,9 +297,106 @@ namespace CoE.Ideas.Server.Controllers
                     watch.Start();
                 }
 
+                try
+                {
+                    return await ValidateAndGetInitiative(id, async initiative =>
+                    {
+                        var steps = await _repository.GetInitiativeStepsAsync(id);
+                        if (steps == null)
+                            return NotFound();
+
+                        var firstStep = steps.First<InitiativeStep>();
+                        if (firstStep.CompletionDate == null)
+                            return NotFound();
+
+                        var resources = new Resources();
+
+                        if (initiative.AssigneeId.HasValue)
+                        {
+                            var assigneePerson = await _personRepository.GetPersonAsync(initiative.AssigneeId.Value);
+                            if (assigneePerson != null)
+                            {
+                                resources.Assignee = new User()
+                                {
+                                    Email = assigneePerson.Email,
+                                    Name = assigneePerson.Name,
+                                    AvatarUrl = null,
+                                    PhoneNumber = null
+                                };
+                            }
+                        }
+                        else
+                        {
+                            resources.Assignee = null;
+                        }
+
+                        resources.BusinessCaseUrl = initiative.BusinessCaseUrl;
+                        resources.InvestmentRequestFormUrl = initiative.InvestmentRequestFormUrl;
+                        return Ok(resources);
+                    });
+                }
+                finally
+                {
+                    if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                    {
+                        watch.Stop();
+                        _logger.Information("Retrieved resources for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+                    }
+
+
+                }
+            }
+        }
+
+        [HttpPut("{id}/businessCase")]
+        public async Task<IActionResult> PutInitiativeBusinessCase([FromRoute] int id, [FromBody]Resources resources)
+        {
+            return await ValidateAndGetInitiative(id, async initiative =>
+            {
+                string businessCaseUrl = resources?.BusinessCaseUrl;
+                if (string.Equals(initiative.BusinessCaseUrl, businessCaseUrl, StringComparison.CurrentCulture))
+                {
+                    // idempotent behaviour
+                    return Ok(initiative);
+                }
+                else
+                {
+                    initiative.SetBusinessCaseUrl(businessCaseUrl);
+                    await _repository.UpdateInitiativeAsync(initiative);
+                    return Ok(initiative);
+                }
+            });
+        }
+
+        [HttpPut("{id}/investmentForm")]
+        public async Task<IActionResult> PutInitiativeInvestmentForm([FromRoute] int id, [FromBody]Resources resources)
+        {
+            return await ValidateAndGetInitiative(id, async initiative =>
+            {
+                string investmentRequestFormUrl = resources?.InvestmentRequestFormUrl;
+                if (string.Equals(initiative.InvestmentRequestFormUrl, investmentRequestFormUrl, StringComparison.CurrentCulture))
+                {
+                    // idempotent behaviour
+                    return Ok(initiative);
+                }
+                else
+                {
+                    initiative.SetInvestmentFormUrl(investmentRequestFormUrl);
+                    await _repository.UpdateInitiativeAsync(initiative);
+                    return Ok(initiative);
+                }
+            });
+        }
+
+        private async Task<IActionResult> ValidateAndGetInitiative(int id, Func<Initiative, Task<IActionResult>> callback)
+        {
+            using (LogContext.PushProperty("InitiativeId", id))
+            {
+                _logger.Information("Retrieving initiative {InitiativeId}", id);
+
                 if (!ModelState.IsValid)
                 {
-                    _logger.Warning("Unable to retrieve resources from initiative {InitiativeId} because model state is not valid");
+                    _logger.Warning("Unable to get initiative {InitiativeId} because model state is not valid");
                     return BadRequest(ModelState);
                 }
 
@@ -367,105 +405,65 @@ namespace CoE.Ideas.Server.Controllers
                 if (initiative == null)
                     return NotFound();
 
-                var steps = await _repository.GetInitiativeStepsAsync(id);
-                if (steps == null)
-                    return NotFound();
-
-                var firstStep = steps.First<InitiativeStep>();
-                if (firstStep.CompletionDate == null)
-                    return NotFound();
-
-                var resources = new Resources();
-
-                if (initiative.AssigneeId.HasValue)
-                {
-                    var assigneePerson = await _personRepository.GetPersonAsync(initiative.AssigneeId.Value);
-                    if (assigneePerson != null)
-                    {
-                        resources.Assignee = new User()
-                        {
-                            Email = assigneePerson.Email,
-                            Name = assigneePerson.Name,
-                            AvatarUrl = null,
-                            PhoneNumber = null
-                        };
-                    }
-                }
-                else
-                {
-                    resources.Assignee = null;
-                }
-
-                resources.BusinessCaseUrl = initiative.BusinessCaseUrl;
-                resources.InvestmentRequestFormUrl = initiative.InvestmentRequestFormUrl;
-
-                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                {
-                    watch.Stop();
-                    _logger.Information("Retrieved resources for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
-                }
-
-                return Ok(resources);
+                return await callback(initiative);
             }
         }
 
 
 
+            //// GET: ideas/5
+            ///// <summary>
+            ///// Retrieves a single Idea based on its Id
+            ///// </summary>
+            ///// <param name="id"></param>
+            ///// <returns></returns>
+            //[HttpGet("{id}/assignee")]
 
+            //public async Task<IActionResult> GetInitiativeAssignee([FromRoute] int id)
+            //{
+            //    using (LogContext.PushProperty("InitiativeId", id))
+            //    {
+            //        Stopwatch watch = null;
+            //        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+            //        {
+            //            _logger.Information("Retrieving assignee for initiative {InitiativeId}");
+            //            watch = new Stopwatch();
+            //            watch.Start();
+            //        }
 
-        //// GET: ideas/5
-        ///// <summary>
-        ///// Retrieves a single Idea based on its Id
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        //[HttpGet("{id}/assignee")]
+            //        if (!ModelState.IsValid)
+            //        {
+            //            _logger.Warning("Unable to retrieve assignee from initiative {InitiativeId} because model state is not valid");
+            //            return BadRequest(ModelState);
+            //        }
 
-        //public async Task<IActionResult> GetInitiativeAssignee([FromRoute] int id)
-        //{
-        //    using (LogContext.PushProperty("InitiativeId", id))
-        //    {
-        //        Stopwatch watch = null;
-        //        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-        //        {
-        //            _logger.Information("Retrieving assignee for initiative {InitiativeId}");
-        //            watch = new Stopwatch();
-        //            watch.Start();
-        //        }
+            //        var idea = await _repository.GetInitiativeAsync(id);
 
-        //        if (!ModelState.IsValid)
-        //        {
-        //            _logger.Warning("Unable to retrieve assignee from initiative {InitiativeId} because model state is not valid");
-        //            return BadRequest(ModelState);
-        //        }
+            //        if (idea == null || !idea.AssigneeId.HasValue)
+            //            return NotFound();
 
-        //        var idea = await _repository.GetInitiativeAsync(id);
+            //        var assigneePerson = await _personRepository.GetPersonAsync(idea.AssigneeId.Value);
+            //        if (assigneePerson == null)
+            //            return NotFound();
 
-        //        if (idea == null || !idea.AssigneeId.HasValue)
-        //            return NotFound();
+            //        // convert Person to user
+            //        var assignee = new User()
+            //        {
+            //            Email = assigneePerson.Email,
+            //            Name = assigneePerson.Name,
+            //            AvatarUrl = null,
+            //            PhoneNumber = null
+            //        };
 
-        //        var assigneePerson = await _personRepository.GetPersonAsync(idea.AssigneeId.Value);
-        //        if (assigneePerson == null)
-        //            return NotFound();
+            //        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+            //        {
+            //            watch.Stop();
+            //            _logger.Information("Retrieved assignee for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+            //        }
 
-        //        // convert Person to user
-        //        var assignee = new User()
-        //        {
-        //            Email = assigneePerson.Email,
-        //            Name = assigneePerson.Name,
-        //            AvatarUrl = null,
-        //            PhoneNumber = null
-        //        };
+            //        return Ok(assignee);
+            //    }
+            //}
 
-        //        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-        //        {
-        //            watch.Stop();
-        //            _logger.Information("Retrieved assignee for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
-        //        }
-
-        //        return Ok(assignee);
-        //    }
-        //}
-
-    }
+        }
 }

@@ -273,14 +273,26 @@ let x = class IdeasService {
   }
 
   /**
-   * Updates a businessCaseUrl.
-   * @param {String} id The id of the business case.
-   * @param {Object} url The initiative to update.
+   * Updates a business case.
+   * @param {String} id The id of the initiative.
+   * @param {Object} url The url of the business case.
    * @return {Promise} A promise resolved with the url if successful.
    */
   static updateBusinessCase (id, url) {
-    return HTTP.put(`${id}`, {
+    return HTTP.put(`${id}/businessCase`, {
       businessCaseUrl: url
+    })
+  }
+
+    /**
+   * Updates a investment form Url.
+   * @param {String} id The id of the initiative.
+   * @param {Object} url The url of the investment form.
+   * @return {Promise} A promise resolved with the url if successful.
+   */
+  static updateInvestmentForm (id, url) {
+    return HTTP.put(`${id}/investmentForm`, {
+      investmentRequestFormUrl: url
     })
   }
 }

@@ -96,6 +96,12 @@ namespace CoE.Ideas.Core.Data
         [MaxLength(2048)]
         public string BusinessCaseUrl { get; private set; }
 
+        public void SetBusinessCaseUrl(string newBusinsesCaseUrl)
+        {
+            BusinessCaseUrl = newBusinsesCaseUrl;
+            //AddDomainEvent(new BusinessCaseUrlChangedDomainEvent(Uid, newBusinsesCaseUrl));
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -103,6 +109,11 @@ namespace CoE.Ideas.Core.Data
         [MaxLength(2048)]
         public string InvestmentRequestFormUrl { get; private set; }
 
+        public void SetInvestmentFormUrl(string newInvestmentRequestFormUrl)
+        {
+            InvestmentRequestFormUrl = newInvestmentRequestFormUrl;
+            //AddDomainEvent(new BusinessCaseUrlChangedDomainEvent(Uid, newBusinsesCaseUrl));
+        }
 
         public void SetWorkOrderId(string newWorkOrderId)
         {
@@ -120,7 +131,6 @@ namespace CoE.Ideas.Core.Data
             AssigneeId = assigneeId;
 
             #region InitiativeUpdated Event
-
             #endregion
         }
 

@@ -1,4 +1,5 @@
-﻿using CoE.Ideas.Core.ServiceBus;
+﻿using CoE.Ideas.Core.Events;
+using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.Services;
 using EnsureThat;
 using MediatR;
@@ -9,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoE.Ideas.Core.Events
+namespace CoE.Ideas.Core.EventHandlers
 {
     public class PostInitativeCreatedEventToServiceBus : INotificationHandler<InitiativeCreatedDomainEvent>
     {

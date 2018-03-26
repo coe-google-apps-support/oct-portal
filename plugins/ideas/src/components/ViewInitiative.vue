@@ -121,7 +121,7 @@ export default {
     },
     attachBusinessCase () {
       this.busCaseLoading = true
-      this.services.ideas.updateInitiative(this.initiative).then(() => {
+      this.services.ideas.updateBusinessCase(this.initiative.id, this.temp_businessCaseUrl).then(() => {
         this.busCaseLoading = false
         this.showBusinessCaseDialog = false
         this.resources.businessCaseUrl = this.temp_businessCaseUrl
@@ -139,7 +139,7 @@ export default {
     },
     attachInvestmentForm () {
       this.invFormLoading = true
-      this.services.ideas.updateInitiative(this.initiative).then(() => {
+      this.services.ideas.updateInvestmentForm(this.initiative.id, this.temp_investmentFormUrl).then(() => {
         this.invFormLoading = false
         this.showInvestmentFormDialog = false
         this.resources.investmentFormUrl = this.temp_investmentFormUrl
