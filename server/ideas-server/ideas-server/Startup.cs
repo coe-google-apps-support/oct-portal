@@ -72,7 +72,7 @@ namespace CoE.Ideas.Server
 
             services.AddAutoMapper();
 
-            var applicationUrl = Configuration["WordPressUrl"];
+            var applicationUrl = Configuration["WordPress:Url"];
             if (string.IsNullOrWhiteSpace(applicationUrl))
                 applicationUrl = "http://localhost"; // default value
             services.Configure<ApplicationOptions>(x => x.ApplicationUrl = applicationUrl);
