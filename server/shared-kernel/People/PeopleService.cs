@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,10 +12,13 @@ namespace CoE.Ideas.Shared.People
     internal class PeopleService : IPeopleService
     {
         public PeopleService(IOptions<PeopleServiceOptions> options,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            ILogger logger)
         {
             EnsureArg.IsNotNull(memoryCache);
+            EnsureArg.IsNotNull(logger);
             _memoryCache = memoryCache;
+            _logger = logger;
 
             if (options == null || options.Value == null)
                 throw new ArgumentNullException("options");
@@ -30,6 +34,7 @@ namespace CoE.Ideas.Shared.People
 
         private readonly Uri _serviceUrl;
         private readonly IMemoryCache _memoryCache;
+        private readonly ILogger _logger;
 
         public async Task<PersonData> GetPersonAsync(string user3and3)
         {
@@ -38,6 +43,7 @@ namespace CoE.Ideas.Shared.People
 
             return await _memoryCache.GetOrCreateAsync("3_" + user3and3, async cacheEntry =>
             {
+                _logger.Information("User with NetworkId {NetworkId} not found in cache, retrieving from web service...", user3and3);
                 string userDataString;
                 using (var client = GetHttpClient())
                 {
@@ -66,6 +72,7 @@ namespace CoE.Ideas.Shared.People
 
             return await _memoryCache.GetOrCreateAsync("E_" + emailAddress, async cacheEntry =>
             {
+                _logger.Information("User with Email {EmailAddress} not found in cache, retrieving from web service...", emailAddress);
                 string userDataString;
                 using (var client = GetHttpClient())
                 {

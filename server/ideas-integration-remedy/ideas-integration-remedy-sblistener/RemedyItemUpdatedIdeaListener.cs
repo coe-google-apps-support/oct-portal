@@ -140,14 +140,14 @@ namespace CoE.Ideas.Remedy.SbListener
                 case StatusType.Cancelled:
                     newIdeaStatus = InitiativeStatus.Cancelled;
                     break;
-                case StatusType.Completed:
-                    newIdeaStatus = InitiativeStatus.Deliver;
-                    break;
-                case StatusType.InProgress:
+                case StatusType.Planning:
                     newIdeaStatus = InitiativeStatus.Review;
                     break;
-                case StatusType.Planning:
+                case StatusType.InProgress:
                     newIdeaStatus = InitiativeStatus.Collaborate;
+                    break;
+                case StatusType.Completed:
+                    newIdeaStatus = InitiativeStatus.Deliver;
                     break;
                 case StatusType.Closed:
                 case StatusType.Pending:
