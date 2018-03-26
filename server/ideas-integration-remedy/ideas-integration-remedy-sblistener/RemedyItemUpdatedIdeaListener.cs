@@ -81,8 +81,10 @@ namespace CoE.Ideas.Remedy.SbListener
                     {
                         var workOrderStatus = Enum.Parse<StatusType>(args.UpdatedStatus);
 
-                        await UpdateIdeaAssignee(idea, args.AssigneeEmail, args.AssigneeDisplayName);
-                        await UpdateIdeaWithNewWorkOrderStatus(idea, workOrderStatus, args.UpdatedDateUtc);
+                        bool anyChange = await UpdateIdeaAssignee(idea, args.AssigneeEmail, args.AssigneeDisplayName);
+                        anyChange = UpdateIdeaWithNewWorkOrderStatus(idea, workOrderStatus, args.UpdatedDateUtc) || anyChange;
+                        if (anyChange)
+                            await _ideaRepository.UpdateInitiativeAsync(idea);
                     }
                 }
 
@@ -108,7 +110,14 @@ namespace CoE.Ideas.Remedy.SbListener
             return idea;
         }
 
-        protected async Task UpdateIdeaWithNewWorkOrderStatus(Initiative initiative, StatusType workOrderStatus, DateTime workOrderLastModifiedUtc)
+        /// <summary>
+        /// Sets the status on the initiative according to the Remedy Work Order status
+        /// </summary>
+        /// <param name="initiative"></param>
+        /// <param name="workOrderStatus"></param>
+        /// <param name="workOrderLastModifiedUtc"></param>
+        /// <returns>True if the initiative status is updated, otherwise false</returns>
+        protected bool UpdateIdeaWithNewWorkOrderStatus(Initiative initiative, StatusType workOrderStatus, DateTime workOrderLastModifiedUtc)
         {
             // here we have the business logic of translating Remedy statuses into our statuses
             var newIdeaStatus = GetInitiativeStatusForRemedyStatus(workOrderStatus);
@@ -118,11 +127,12 @@ namespace CoE.Ideas.Remedy.SbListener
                 _logger.Information("Updating status of initiative {InitiativeId} from {FromInitiativeStatus} to {ToIdeaStatus} because Remedy was updated on {LastModifiedDateUtc}",
                     initiative.Id, initiative.Status, newIdeaStatus, workOrderLastModifiedUtc);
                 initiative.UpdateStatus(newIdeaStatus.Value);
-                await _ideaRepository.UpdateInitiativeAsync(initiative);
+                return true;
             }
             else
             {
-                _logger.Debug("Initative is already at status {InitiativeStatus}, so ignoring update to WorkItemId {WorkOrderId}", initiative.Status);
+                _logger.Information("Initative is already at status {InitiativeStatus}, so ignoring update to WorkItemId {WorkOrderId}", initiative.Status);
+                return false;
             }
         }
 
@@ -159,7 +169,14 @@ namespace CoE.Ideas.Remedy.SbListener
             return newIdeaStatus;
         }
 
-        private async Task UpdateIdeaAssignee(Initiative idea, string assigneeEmail, string assigneeDisplayName)
+        /// <summary>
+        /// Updated the person assigned to the initiative
+        /// </summary>
+        /// <param name="idea"></param>
+        /// <param name="assigneeEmail"></param>
+        /// <param name="assigneeDisplayName"></param>
+        /// <returns>True if the assignee was changed from its previous value</returns>
+        private async Task<bool> UpdateIdeaAssignee(Initiative idea, string assigneeEmail, string assigneeDisplayName)
         {
             //Person assignee = null;
             int assigneeId = 0;
@@ -170,9 +187,17 @@ namespace CoE.Ideas.Remedy.SbListener
                 // TODO: create the user if they don't exist?
             }
 
-            idea.SetAssigneeId(assigneeId);
-
-            await _ideaRepository.UpdateInitiativeAsync(idea);
+            if (idea.AssigneeId != assigneeId)
+            {
+                _logger.Information("Updating assignee from id " + idea.AssigneeId + " to {AssigneeId}", assigneeId);
+                idea.SetAssigneeId(assigneeId);
+                return true;
+            }
+            else
+            {
+                _logger.Information("Not updating assignee because the AssigneeId has not changed ({AssigneeId})", assigneeId);
+                return false;
+            }
         }
     }
 }
