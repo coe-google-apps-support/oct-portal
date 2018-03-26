@@ -22,5 +22,6 @@ public class Resources
     {
         public User Assignee { get; set; }
         public string BusinessCaseUrl { get; set; }
+        public string InvestmentRequestFormUrl { get; set; }
     }
 }

@@ -24,9 +24,15 @@
             <md-table-row>
               <md-table-cell>Business case</md-table-cell>
               <md-table-cell>
-                <attach-file-button :url="resources.businessCaseUrl" @click.native="attachClicked"></attach-file-button>
+                <attach-file-button :url="resources.businessCaseUrl" @click.native="attachBusinessCaseClicked"></attach-file-button>
               </md-table-cell>
             </md-table-row>
+            <md-table-row>
+              <md-table-cell>Investment Request Form</md-table-cell>
+              <md-table-cell>
+                <attach-file-button :url="resources.investmentRequestFormUrl" @click.native="attachInvestmentFormClicked"></attach-file-button>
+              </md-table-cell>
+            </md-table-row>            
           </md-table>
         </div>
       </div>
@@ -35,7 +41,7 @@
       </div>
     </div>    
 
-    <md-dialog v-if="initiative && resources" :md-active.sync="showDialog" class="oct-business-case">
+    <md-dialog v-if="initiative && resources" :md-active.sync="showBusinessCaseDialog" class="oct-business-case">
       <md-dialog-title>Business Case</md-dialog-title>
       <md-field>
         <label>URL</label>
@@ -44,6 +50,16 @@
       <md-button @click="attachBusinessCase" class="md-primary oct-attach-button">Attach</md-button>
       <md-progress-bar v-if="busCaseLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
     </md-dialog>
+
+    <md-dialog v-if="initiative && resources" :md-active.sync="showInvestmentFormDialog" class="oct-investment-form">
+      <md-dialog-title>Investment Form</md-dialog-title>
+      <md-field>
+        <label>URL</label>
+        <md-input v-model="temp_investmentFormUrl"></md-input>
+      </md-field>
+      <md-button @click="attachInvestmentForm" class="md-primary oct-attach-button">Attach</md-button>
+      <md-progress-bar v-if="invFormLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
+    </md-dialog>    
   </div>
 </template>
 
@@ -60,12 +76,15 @@ export default {
   ],
   data: () => ({
     temp_businessCaseUrl: null,
+    temp_investmentFormUrl: null,
     errors: [],
     initiative: null,
     assignee: null,
     steps: null,
-    showDialog: false,
+    showBusinessCaseDialog: false,
+    showInvestmentFormDialog: false,
     busCaseLoading: false,
+    invFormLoading: false,
     isLoading: true,
     resources: null
   }),
@@ -93,19 +112,37 @@ export default {
     formatDate
   },
   methods: {
-    attachClicked () {
+    attachBusinessCaseClicked () {
       if (this.resources.businessCaseUrl) {
         window.open(this.resources.businessCaseUrl)
       } else {
-        this.showDialog = true
+        this.showBusinessCaseDialog = true
       }
     },
     attachBusinessCase () {
       this.busCaseLoading = true
       this.services.ideas.updateInitiative(this.initiative).then(() => {
         this.busCaseLoading = false
-        this.showDialog = false
+        this.showBusinessCaseDialog = false
         this.resources.businessCaseUrl = this.temp_businessCaseUrl
+      }, (err) => {
+        this.errors.push(err)
+        console.log(err)
+      })
+    },
+    attachInvestmentFormClicked () {
+      if (this.resources.investmentFormUrl) {
+        window.open(this.resources.investmentFormUrl)
+      } else {
+        this.showInvestmentFormDialog = true
+      }
+    },
+    attachInvestmentForm () {
+      this.invFormLoading = true
+      this.services.ideas.updateInitiative(this.initiative).then(() => {
+        this.invFormLoading = false
+        this.showInvestmentFormDialog = false
+        this.resources.investmentFormUrl = this.temp_investmentFormUrl
       }, (err) => {
         this.errors.push(err)
         console.log(err)
@@ -132,6 +169,10 @@ export default {
   }
 
   .oct-business-case {
+    padding: 22px;
+  }
+
+ .oct-investment-form {
     padding: 22px;
   }
 

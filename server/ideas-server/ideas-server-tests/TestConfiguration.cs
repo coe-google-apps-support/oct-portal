@@ -137,7 +137,6 @@ namespace CoE.Ideas.Server.Tests
             {
                 return new IdeasController(x.GetRequiredService<IInitiativeRepository>(),
                     x.GetRequiredService<IPersonRepository>(),
-                    x.GetRequiredService<IInitiativeMessageSender>(),
                     x.GetRequiredService<IStringTemplateService>(),
                     x.GetRequiredService<Serilog.ILogger>(),
                     x.GetRequiredService<IOptions<Models.ApplicationOptions>>())

@@ -22,21 +22,18 @@ namespace CoE.Ideas.Server.Controllers
     {
         private readonly IInitiativeRepository _repository;
         private readonly IPersonRepository _personRepository;
-        private readonly IInitiativeMessageSender _initiativeMessageSender;
         private readonly IStringTemplateService _stringTemplateService;
         private readonly ApplicationOptions _applicationOptions;
         private readonly Serilog.ILogger _logger;
 
         public IdeasController(IInitiativeRepository repository,
             IPersonRepository personRepository,
-            IInitiativeMessageSender initiativeMessageSender,
             IStringTemplateService stringTemplateService,
             Serilog.ILogger logger,
             IOptions<ApplicationOptions> options)
         {
             EnsureArg.IsNotNull(repository);
             EnsureArg.IsNotNull(personRepository);
-            EnsureArg.IsNotNull(initiativeMessageSender);
             EnsureArg.IsNotNull(stringTemplateService);
             EnsureArg.IsNotNull(logger);
             EnsureArg.IsNotNull(options);
@@ -45,7 +42,6 @@ namespace CoE.Ideas.Server.Controllers
 
             _repository = repository;
             _personRepository = personRepository;
-            _initiativeMessageSender = initiativeMessageSender;
             _stringTemplateService = stringTemplateService;
             _logger = logger;
             _applicationOptions = options.Value;
@@ -291,8 +287,6 @@ namespace CoE.Ideas.Server.Controllers
         //}
 
 
-
-
         // GET: ideas/5/steps
         /// <summary>
         /// Retrieves a single Idea based on its Id
@@ -323,7 +317,7 @@ namespace CoE.Ideas.Server.Controllers
                 var currentStep = steps.FirstOrDefault(x => !x.CompletionDate.HasValue);
                 foreach (var step in steps)
                 {
-                    Person assignee = step.AssigneePersonId.HasValue
+                    var assignee = step.AssigneePersonId.HasValue
                         ? await _personRepository.GetPersonAsync(step.AssigneePersonId.Value)
                         : null;
                     returnValue.Add(await InitiativeStepDetail.FromInitiativeStepAsync(
@@ -382,24 +376,28 @@ namespace CoE.Ideas.Server.Controllers
                     return NotFound();
 
                 var resources = new Resources();
-                
+
                 if (initiative.AssigneeId.HasValue)
                 {
                     var assigneePerson = await _personRepository.GetPersonAsync(initiative.AssigneeId.Value);
-                    resources.Assignee = new User()
+                    if (assigneePerson != null)
                     {
-                        Email = assigneePerson.Email,
-                        Name = assigneePerson.Name,
-                        AvatarUrl = null,
-                        PhoneNumber = null
-                    };                    
+                        resources.Assignee = new User()
+                        {
+                            Email = assigneePerson.Email,
+                            Name = assigneePerson.Name,
+                            AvatarUrl = null,
+                            PhoneNumber = null
+                        };
+                    }
                 }
                 else
                 {
                     resources.Assignee = null;
                 }
-                
+
                 resources.BusinessCaseUrl = initiative.BusinessCaseUrl;
+                resources.InvestmentRequestFormUrl = initiative.InvestmentRequestFormUrl;
 
                 if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
                 {
@@ -411,59 +409,63 @@ namespace CoE.Ideas.Server.Controllers
             }
         }
 
-        // GET: ideas/5
-        /// <summary>
-        /// Retrieves a single Idea based on its Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}/assignee")]
 
-        public async Task<IActionResult> GetInitiativeAssignee([FromRoute] int id)
-        {
-            using (LogContext.PushProperty("InitiativeId", id))
-            {
-                Stopwatch watch = null;
-                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                {
-                    _logger.Information("Retrieving assignee for initiative {InitiativeId}");
-                    watch = new Stopwatch();
-                    watch.Start();
-                }
 
-                if (!ModelState.IsValid)
-                {
-                    _logger.Warning("Unable to retrieve assignee from initiative {InitiativeId} because model state is not valid");
-                    return BadRequest(ModelState);
-                }
 
-                var idea = await _repository.GetInitiativeAsync(id);
 
-                if (idea == null || !idea.AssigneeId.HasValue)
-                    return NotFound();
+        //// GET: ideas/5
+        ///// <summary>
+        ///// Retrieves a single Idea based on its Id
+        ///// </summary>
+        ///// <param name="id"></param>
+        ///// <returns></returns>
+        //[HttpGet("{id}/assignee")]
 
-                var assigneePerson = await _personRepository.GetPersonAsync(idea.AssigneeId.Value);
-                if (assigneePerson == null)
-                    return NotFound();
+        //public async Task<IActionResult> GetInitiativeAssignee([FromRoute] int id)
+        //{
+        //    using (LogContext.PushProperty("InitiativeId", id))
+        //    {
+        //        Stopwatch watch = null;
+        //        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+        //        {
+        //            _logger.Information("Retrieving assignee for initiative {InitiativeId}");
+        //            watch = new Stopwatch();
+        //            watch.Start();
+        //        }
 
-                // convert Person to user
-                var assignee = new User()
-                {
-                    Email = assigneePerson.Email,
-                    Name = assigneePerson.Name,
-                    AvatarUrl = null,
-                    PhoneNumber = null
-                };
+        //        if (!ModelState.IsValid)
+        //        {
+        //            _logger.Warning("Unable to retrieve assignee from initiative {InitiativeId} because model state is not valid");
+        //            return BadRequest(ModelState);
+        //        }
 
-                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                {
-                    watch.Stop();
-                    _logger.Information("Retrieved assignee for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
-                }
+        //        var idea = await _repository.GetInitiativeAsync(id);
 
-                return Ok(assignee);
-            }
-        }
+        //        if (idea == null || !idea.AssigneeId.HasValue)
+        //            return NotFound();
+
+        //        var assigneePerson = await _personRepository.GetPersonAsync(idea.AssigneeId.Value);
+        //        if (assigneePerson == null)
+        //            return NotFound();
+
+        //        // convert Person to user
+        //        var assignee = new User()
+        //        {
+        //            Email = assigneePerson.Email,
+        //            Name = assigneePerson.Name,
+        //            AvatarUrl = null,
+        //            PhoneNumber = null
+        //        };
+
+        //        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+        //        {
+        //            watch.Stop();
+        //            _logger.Information("Retrieved assignee for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+        //        }
+
+        //        return Ok(assignee);
+        //    }
+        //}
 
     }
 }
