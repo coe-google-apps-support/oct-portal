@@ -1,4 +1,5 @@
 ﻿using CoE.Ideas.Core;
+using CoE.Ideas.Shared.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -43,6 +44,9 @@ namespace CoE.Ideas.Integration.Logger
 
 
             services.AddRemoteInitiativeConfiguration(Configuration["IdeasApi"]);
+
+            services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
+            services.AddPeopleService();
 
             services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],

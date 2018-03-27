@@ -1,5 +1,6 @@
 ﻿using CoE.Ideas.Core;
 using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Shared.Extensions;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +47,10 @@ namespace CoE.Ideas.Integration.Notification
                 .CreateLogger());
 
             services.AddRemoteInitiativeConfiguration(Configuration["IdeasApi"]);
+
+            services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
+            services.AddPeopleService();
+
             services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],
                 Configuration["ServiceBus:Subscription"]);
