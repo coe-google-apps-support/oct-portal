@@ -253,7 +253,7 @@ namespace CoE.Ideas.Server.Controllers
 
                 var steps = (await _repository.GetInitiativeStepsAsync(id)).ToList();
                 List<InitiativeStepDetail> returnValue = new List<InitiativeStepDetail>();
-                var currentStep = steps.FirstOrDefault(x => !x.CompletionDate.HasValue);
+                var currentStep = steps.FirstOrDefault(x => x.StartDate.HasValue && !x.CompletionDate.HasValue);
                 foreach (var step in steps)
                 {
                     var assignee = step.AssigneePersonId.HasValue
