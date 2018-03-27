@@ -137,6 +137,13 @@ namespace CoE.Ideas.Core.Services
                 });
             }
 
+            // finally, we need to make sure the current step does not have a completed date
+            // (i.e. if something goes back a step it shouldn't be completed)
+            if (stack.Any() && stack.Peek().IdeaStep.CompletionDate.HasValue)
+            {
+                stack.Peek().IdeaStep.CompletionDate = null;
+            }
+
             var completedItems = stack.ToList();
 
             // now add the remaining ones
