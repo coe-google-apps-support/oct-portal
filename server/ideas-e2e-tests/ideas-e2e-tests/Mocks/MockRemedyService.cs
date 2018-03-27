@@ -17,7 +17,7 @@ namespace CoE.Ideas.EndToEnd.Tests.Mocks
         public ICollection<RemedyWorkOrder> WorkOrdersAdded { get; internal set; }
 
 
-        public Task<string> PostNewIdeaAsync(Initiative idea, PersonData personData)
+        public Task<string> PostNewIdeaAsync(Initiative idea, PersonData personData, Uri initiativeUrl)
         {
 
             string workOrderID = Guid.NewGuid().ToString();
@@ -25,6 +25,5 @@ namespace CoE.Ideas.EndToEnd.Tests.Mocks
 
             return Task.FromResult(workOrderID);
         }
-
     }
 }

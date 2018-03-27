@@ -27,6 +27,7 @@ namespace CoE.Ideas.Core
         /// <returns>The passed in services, for chaining</returns>
         public static IServiceCollection AddLocalInitiativeConfiguration(this IServiceCollection services,
             string dbConnectionString = null,
+            string applicationUrl = null,
             string payrollCalenderServiceUrl = null)
         { 
             // default value is one is not supplied
@@ -37,6 +38,12 @@ namespace CoE.Ideas.Core
                 options.UseSqlServer(connectionString));
 
             services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
+
+            string applicationUrlFormatted = string.IsNullOrWhiteSpace(applicationUrl)
+                ? "http://localhost" : applicationUrl;
+            services.AddSingleton<IInitiativeApplicationInfoProvider, InitiativeApplicationInfoProvider>(
+                x => new InitiativeApplicationInfoProvider(applicationUrlFormatted));
+            services.AddScoped<IInitiativeService, InitiativeService>();
 
             services.AddMediatR();
             services.AddScoped<DomainEvents>();
@@ -108,7 +115,8 @@ namespace CoE.Ideas.Core
         }
 
         public static IServiceCollection AddRemoteInitiativeConfiguration(this IServiceCollection services,
-            string ideasApiUrl)
+            string ideasApiUrl,
+            string applicationUrl = null)
         {
             if (string.IsNullOrWhiteSpace(ideasApiUrl))
                 throw new ArgumentNullException("ideasApiUrl");
@@ -119,6 +127,12 @@ namespace CoE.Ideas.Core
             });
             services.AddTransient<RemoteInitiativeRepository>();
             services.AddTransient<IInitiativeRepository>(x => x.GetRequiredService<RemoteInitiativeRepository>());
+
+            string applicationUrlFormatted = string.IsNullOrWhiteSpace(applicationUrl)
+                ? "http://localhost" : applicationUrl;
+            services.AddSingleton<IInitiativeApplicationInfoProvider, InitiativeApplicationInfoProvider>(
+                x => new InitiativeApplicationInfoProvider(applicationUrlFormatted));
+            services.AddScoped<IInitiativeService, InitiativeService>();
 
 
             //services.Configure<WordPressClientOptions>(options =>

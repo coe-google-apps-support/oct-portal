@@ -43,7 +43,8 @@ namespace CoE.Ideas.Remedy
                 .ReadFrom.Configuration(Configuration)
                 .CreateLogger());
 
-            services.AddRemoteInitiativeConfiguration(Configuration["IdeasApi"]);
+            services.AddRemoteInitiativeConfiguration(Configuration["IdeasApi"],
+                Configuration["WordPress:Url"]);
 
 
             services.AddInitiativeMessaging(Configuration["ServiceBus:ConnectionString"],

@@ -1,11 +1,12 @@
 ﻿using CoE.Ideas.Core.Data;
 using CoE.Ideas.Shared.People;
+using System;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Remedy
 {
     public interface IRemedyService
     {
-        Task<string> PostNewIdeaAsync(Initiative idea, PersonData personData);
+        Task<string> PostNewIdeaAsync(Initiative idea, PersonData personData, Uri initiativeUrl);
     }
 }

@@ -23,9 +23,9 @@ namespace CoE.Ideas.EndToEnd.Tests.IntegrationServices
 
         public ICollection<RemedyWorkOrder> WorkOrdersAdded { get; internal set; }
 
-        public override async Task<string> PostNewIdeaAsync(Initiative idea, PersonData personData)
+        public override async Task<string> PostNewIdeaAsync(Initiative idea, PersonData personData, Uri initiativeUrl)
         {
-            var returnValue = await base.PostNewIdeaAsync(idea, personData);
+            var returnValue = await base.PostNewIdeaAsync(idea, personData, initiativeUrl);
             WorkOrdersAdded.Add(new RemedyWorkOrder() { WorkOrderId = returnValue, Idea = idea });
             return returnValue;
         }

@@ -25,7 +25,7 @@ namespace CoE.Ideas.Remedy
         private readonly Serilog.ILogger _logger;
 
 
-        public virtual async Task<string> PostNewIdeaAsync(Initiative idea, PersonData personData)
+        public virtual async Task<string> PostNewIdeaAsync(Initiative idea, PersonData personData, Uri initiativeUrl)
         {
             try
             {

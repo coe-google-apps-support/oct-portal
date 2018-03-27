@@ -23,28 +23,26 @@ namespace CoE.Ideas.Server.Controllers
         private readonly IInitiativeRepository _repository;
         private readonly IPersonRepository _personRepository;
         private readonly IStringTemplateService _stringTemplateService;
-        private readonly ApplicationOptions _applicationOptions;
+        private readonly IInitiativeService _initiativeService;
         private readonly Serilog.ILogger _logger;
 
         public IdeasController(IInitiativeRepository repository,
             IPersonRepository personRepository,
             IStringTemplateService stringTemplateService,
-            Serilog.ILogger logger,
-            IOptions<ApplicationOptions> options)
+            IInitiativeService initiativeService,
+            Serilog.ILogger logger)
         {
             EnsureArg.IsNotNull(repository);
             EnsureArg.IsNotNull(personRepository);
             EnsureArg.IsNotNull(stringTemplateService);
+            EnsureArg.IsNotNull(initiativeService);
             EnsureArg.IsNotNull(logger);
-            EnsureArg.IsNotNull(options);
-            EnsureArg.IsNotNull(options.Value);
-            EnsureArg.IsNotNullOrWhiteSpace(options.Value.ApplicationUrl);
 
             _repository = repository;
             _personRepository = personRepository;
             _stringTemplateService = stringTemplateService;
+            _initiativeService = initiativeService;
             _logger = logger;
-            _applicationOptions = options.Value;
         }
 
         // GET: ideas
@@ -76,7 +74,7 @@ namespace CoE.Ideas.Server.Controllers
                 Description = x.Description,
                 Title = x.Title,
                 CreatedDate = x.CreatedDate,
-                Url = _applicationOptions.ApplicationUrl + "/view-ideas/?id=" + x.Id 
+                Url = _initiativeService.GetInitiativeUrl(x.Id).ToString()
             });
         }
 

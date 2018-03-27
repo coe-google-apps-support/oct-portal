@@ -138,8 +138,8 @@ namespace CoE.Ideas.Server.Tests
                 return new IdeasController(x.GetRequiredService<IInitiativeRepository>(),
                     x.GetRequiredService<IPersonRepository>(),
                     x.GetRequiredService<IStringTemplateService>(),
-                    x.GetRequiredService<Serilog.ILogger>(),
-                    x.GetRequiredService<IOptions<Models.ApplicationOptions>>())
+                    x.GetRequiredService<IInitiativeService>(),
+                    x.GetRequiredService<Serilog.ILogger>())
                 {
                     ControllerContext = new Microsoft.AspNetCore.Mvc.ControllerContext()
                     {

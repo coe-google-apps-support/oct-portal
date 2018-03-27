@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Core.Services;
 using CoE.Ideas.Shared.People;
 using CoE.Ideas.Shared.Security;
 using EnsureThat;
@@ -17,18 +18,21 @@ namespace CoE.Ideas.Remedy
     {
         public NewIdeaListener(IInitiativeMessageReceiver initiativeMessageReceiver,
             IInitiativeMessageSender initiativeMessageSender,
+            IInitiativeService initiativeService,
             IRemedyService remedyService,
             IPeopleService peopleService,
             Serilog.ILogger logger) 
         {
             EnsureArg.IsNotNull(initiativeMessageReceiver);
             EnsureArg.IsNotNull(initiativeMessageSender);
+            EnsureArg.IsNotNull(initiativeService);
             EnsureArg.IsNotNull(remedyService);
             EnsureArg.IsNotNull(peopleService);
             EnsureArg.IsNotNull(logger);
 
             _initiativeMessageReceiver = initiativeMessageReceiver;
             _initiativeMessageSender = initiativeMessageSender;
+            _initiativeService = initiativeService;
             _remedyService = remedyService;
             _peopleService = peopleService;
             _logger = logger ?? throw new ArgumentNullException("logger");
@@ -39,6 +43,7 @@ namespace CoE.Ideas.Remedy
 
         private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
         private readonly IInitiativeMessageSender _initiativeMessageSender;
+        private readonly IInitiativeService _initiativeService;
         private readonly IRemedyService _remedyService;
         private readonly IPeopleService _peopleService;
         private readonly Serilog.ILogger _logger;
@@ -91,7 +96,9 @@ namespace CoE.Ideas.Remedy
             Stopwatch watch = new Stopwatch();
             watch.Start();
             string remedyTicketId = null;
-            remedyTicketId = await _remedyService.PostNewIdeaAsync(initiative, personData);
+            remedyTicketId = await _remedyService.PostNewIdeaAsync(initiative, 
+                personData, 
+                _initiativeService.GetInitiativeUrl(initiative.Id));
             _logger.Information("Created Remedy Work Order in {ElapsedMilliseconds}ms. Initiative Id {InitiativeId}, WorkOrderId {WorkOrderId}", watch.ElapsedMilliseconds, initiative.Id, remedyTicketId);
             return remedyTicketId;
         }

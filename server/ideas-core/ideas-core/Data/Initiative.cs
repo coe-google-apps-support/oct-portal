@@ -143,5 +143,6 @@ namespace CoE.Ideas.Core.Data
             AddDomainEvent(new InitiativeStatusChangedDomainEvent(this, oldStatus));
         }
 
+
     }
 }

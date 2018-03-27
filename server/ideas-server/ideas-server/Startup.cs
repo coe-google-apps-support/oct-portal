@@ -45,7 +45,9 @@ namespace CoE.Ideas.Server
                 .ReadFrom.Configuration(Configuration)
                 .CreateLogger());
 
-            services.AddLocalInitiativeConfiguration(Configuration.GetConnectionString("IdeaDatabase"));
+            services.AddLocalInitiativeConfiguration(
+                Configuration.GetConnectionString("IdeaDatabase"), 
+                Configuration["WordPress:Url"]);
 
             services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"));
 
@@ -71,11 +73,6 @@ namespace CoE.Ideas.Server
             });
 
             services.AddAutoMapper();
-
-            var applicationUrl = Configuration["WordPress:Url"];
-            if (string.IsNullOrWhiteSpace(applicationUrl))
-                applicationUrl = "http://localhost"; // default value
-            services.Configure<ApplicationOptions>(x => x.ApplicationUrl = applicationUrl);
         }
 
         protected void ConfigureCors(IApplicationBuilder app, IHostingEnvironment env)
