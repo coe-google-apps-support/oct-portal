@@ -39,7 +39,11 @@ namespace CoE.Ideas.Remedy
                     Customer_Login_ID: _options.CustomerLoginId,
                     z1D_Action: _options.Z1D_Action,
                     Summary: idea.Title,
-                    Description: idea.Description,
+                    Description: "Customer Name: " + personData.Surname + " " + personData.GivenName + '\n' +
+                                 "Customer Email: " + personData.Email + '\n' +
+                                 "Customer Phone Number: " + personData.Telephone + '\n' +
+                                 "Initiative's Description: " + idea.Description + '\n' +
+                                 "Initiative's URL: " + initiativeUrl,
                     Requested_For: Requested_ForType.Individual,
                     Location_Company: _options.LocationCompany,
                     Work_Order_Template_Used: _options.WorkOrderTemplateUsed,
