@@ -14,7 +14,7 @@
 
 <script>
 import Initiative from '@/components/initiative'
-import Vue from 'Vue'
+import vue from 'vue'
 
 export default {
   name: 'ViewIdeas',
@@ -36,7 +36,7 @@ export default {
     setLoading (initiative, state) {
       let foundInit = this.getInitiativeByID(initiative.id)
       let index = this.ideas.indexOf(foundInit)
-      let newInit = Vue.util.extend({}, this.ideas[index])
+      let newInit = vue.util.extend({}, this.ideas[index])
       newInit.isLoading = state
       this.ideas.splice(index, 1, newInit)
     },

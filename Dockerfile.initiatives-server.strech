@@ -1,0 +1,29 @@
+FROM microsoft/aspnetcore-build:2.0-stretch AS initiatives-server
+ARG Configuration=Debug
+WORKDIR /usr/src/coe-initiatives/web
+COPY server .
+WORKDIR /usr/src/coe-initiatives/web/ideas-server/ideas-server
+RUN dotnet publish
+WORKDIR /usr/src/coe-initiatives/web/ideas-server/ideas-server/bin/$Configuration/netcoreapp2.0
+
+
+FROM node:9.10 AS initiatives-web
+WORKDIR /usr/src/coe-initiatives/plugins/ideas
+COPY /plugins/ideas .
+RUN npm install
+RUN npm run build -- /usr/src/coe-initiatives/plugins/ideas-build
+
+
+FROM microsoft/aspnetcore:2.0-stretch
+ARG Configuration=Debug
+WORKDIR /var/aspnetcore/coe-initiatives
+COPY --from=initiatives-server /usr/src/coe-initiatives/web/ideas-server/ideas-server/bin/$Configuration/netcoreapp2.0/  .
+COPY --from=initiatives-web /usr/src/coe-initiatives/plugins/ideas-build/ ./wwwroot
+
+ENTRYPOINT ["dotnet"]
+CMD ["ideas-server.dll"]
+
+
+#Build like: docker image build -t octava/initiatives -f Dockerfile.initiatives-server.strech .
+#Push to azure like: docker tag octava/initiatives coeoctava.azurecr.io/octava-initiatives-web
+# And: docker push coeoctava.azurecr.io/octava-initiatives-web
