@@ -8,12 +8,12 @@ namespace CoE.Ideas.Core.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddAuditing();
+            //migrationBuilder.AddAuditing();
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RemoveAuditing();
+            //migrationBuilder.RemoveAuditing();
         }
     }
 }
