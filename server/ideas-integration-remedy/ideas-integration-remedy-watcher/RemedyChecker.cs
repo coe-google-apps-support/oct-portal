@@ -129,6 +129,8 @@ namespace CoE.Ideas.Remedy.Watcher
             int count = 0;
             foreach (var workItem in workItemsChanged)
             {
+                _logger.Information("Processing workItemChanged for id {InstanceId}", workItem.InstanceId);
+
                 // We can do the next line because this service will always be in the same time zone as Remedy
                 DateTime lastModifiedDateUtc = workItem.Last_Modified_Date.ToUniversalTime();
 
@@ -174,7 +176,11 @@ namespace CoE.Ideas.Remedy.Watcher
             string assignee3and3 = workItem.ASLOGID;
 
             PersonData assignee = null;
-            if (!string.IsNullOrWhiteSpace(assignee3and3))
+            if (string.IsNullOrWhiteSpace(assignee3and3))
+            {
+                _logger.Information("Assignee is empty");
+            }
+            else
             {
                 _logger.Information("Looking up assignee with 3+3 {User3and3}", assignee3and3);
                 try

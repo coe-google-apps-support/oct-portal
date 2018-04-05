@@ -183,8 +183,13 @@ namespace CoE.Ideas.Remedy.SbListener
             if (!string.IsNullOrWhiteSpace(assigneeEmail))
             {
                 assigneeId = await _personRepository.GetPersonIdByEmailAsync(assigneeEmail);
+                _logger.Information("PersonId for assigneeEmail {EmailAddress} is {PersonId}", assigneeEmail, assigneeId);
 
                 // TODO: create the user if they don't exist?
+            }
+            else
+            {
+                _logger.Information("Assignee email is {EmailAddress}", assigneeEmail);
             }
 
             if (idea.AssigneeId != assigneeId)
