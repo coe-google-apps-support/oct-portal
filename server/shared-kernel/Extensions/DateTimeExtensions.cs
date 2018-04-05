@@ -20,7 +20,7 @@ namespace CoE.Ideas.Shared.Extensions
         /// Returns string like "Tomorrow at 11:37 AM", or "27 minutes ago"
         /// </summary>
         /// <param name="dateTime"></param>
-        public static string ToStringRelativeToNow(this DateTime dateTime, string timeFormat = "hh:mm tt")
+        public static string ToStringRelativeToNow(this DateTime dateTime, string timeFormat = "h:mm tt")
         {
             DateTime now = DateTime.Now;
             if (dateTime.Subtract(now).Ticks > 0)
