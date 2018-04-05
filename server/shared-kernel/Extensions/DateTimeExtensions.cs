@@ -56,14 +56,14 @@ namespace CoE.Ideas.Shared.Extensions
         {
             // shamelsessly stolen from https://stackoverflow.com/questions/15844451/string-extensions-for-today-yesterday-8-seconds-ago-etc-in-c-sharp
             TimeSpan TS = DateTime.Now - dtEvent;
-            int intYears = DateTime.Now.Year - dtEvent.Year;
-            int intMonths = DateTime.Now.Month - dtEvent.Month;
-            int intDays = DateTime.Now.Day - dtEvent.Day;
-            int intHours = DateTime.Now.Hour - dtEvent.Hour;
-            int intMinutes = DateTime.Now.Minute - dtEvent.Minute;
-            int intSeconds = DateTime.Now.Second - dtEvent.Second;
-            if (intYears > 0) return String.Format("{0} {1} ago", intYears, (intYears == 1) ? "year" : "years");
-            else if (intMonths > 0) return String.Format("{0} {1} ago", intMonths, (intMonths == 1) ? "month" : "months");
+            int intYears = now.Year - dtEvent.Year;
+            int intMonths = now.Month - dtEvent.Month;
+            int intDays = TS.Days;
+            int intHours = TS.Hours;
+            int intMinutes = TS.Minutes;
+            int intSeconds = TS.Seconds;
+            if (intYears > 0 && intDays > 365) return String.Format("{0} {1} ago", intYears, (intYears == 1) ? "year" : "years");
+            else if (intMonths > 0 && intDays > 30) return String.Format("{0} {1} ago", intMonths, (intMonths == 1) ? "month" : "months");
             else if (intDays > 0) return String.Format("{0} {1} ago", intDays, (intDays == 1) ? "day" : "days");
             else if (intHours > 0) return String.Format("{0} {1} ago", intHours, (intHours == 1) ? "hour" : "hours");
             else if (intMinutes > 0) return String.Format("{0} {1} ago", intMinutes, (intMinutes == 1) ? "minute" : "minutes");
