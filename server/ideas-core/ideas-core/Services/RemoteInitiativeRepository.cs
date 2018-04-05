@@ -122,7 +122,7 @@ namespace CoE.Ideas.Core.Services
             throw new NotSupportedException();
         }
 
-        public async Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
+        public Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
         {
             throw new NotImplementedException();
             //return await ExecuteAsync(async client =>

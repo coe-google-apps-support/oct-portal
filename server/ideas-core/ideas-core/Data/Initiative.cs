@@ -131,6 +131,8 @@ namespace CoE.Ideas.Core.Data
             AssigneeId = assigneeId;
 
             #region InitiativeUpdated Event
+            // changing assignee affects status
+            AddDomainEvent(new InitiativeStatusChangedDomainEvent(this, Status));
             #endregion
         }
 

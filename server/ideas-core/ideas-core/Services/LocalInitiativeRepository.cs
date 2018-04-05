@@ -110,7 +110,8 @@ namespace CoE.Ideas.Core.Services
 
                 if (stack.Count > 0 && stack.Peek().StateId == (int)sh.Status)
                 {
-                    // nothing to do here
+                    // update the personId, but otherwise continue
+                    stack.Peek().IdeaStep.AssigneePersonId = sh.PersonId;
                     continue;
                 }
 

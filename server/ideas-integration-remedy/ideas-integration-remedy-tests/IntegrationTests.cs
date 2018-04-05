@@ -33,23 +33,23 @@ namespace CoE.Ideas.Remedy.Tests
 
         private static ServiceProvider serviceProvider;
 
-        [TestMethod]
-        [TestCategory("Integration")]
-        public async Task TestCreateRemedyWorkOrder()
-        {
-            //// mock Idea
-            //var newIdea = Initiative.Create(title: "Test Idea 3", description: "Test Idea 2 Contents");
+        //[TestMethod]
+        //[TestCategory("Integration")]
+        //public Task TestCreateRemedyWorkOrder()
+        //{
+        //    //// mock Idea
+        //    //var newIdea = Initiative.Create(title: "Test Idea 3", description: "Test Idea 2 Contents");
 
-            //// mock user 
-            //var newUser = new WordPressUser()
-            //{
-            //    FirstName = "Jane",
-            //    LastName = "Doe"
-            //};
+        //    //// mock user 
+        //    //var newUser = new WordPressUser()
+        //    //{
+        //    //    FirstName = "Jane",
+        //    //    LastName = "Doe"
+        //    //};
 
-            //var remedyService = serviceProvider.GetRequiredService<IRemedyService>();
-            //await remedyService.PostNewIdeaAsync(newIdea, "COE\\fakeuser");
-        }
+        //    //var remedyService = serviceProvider.GetRequiredService<IRemedyService>();
+        //    //await remedyService.PostNewIdeaAsync(newIdea, "COE\\fakeuser");
+        //}
 
         [TestMethod]
         [TestCategory("Integration")]
