@@ -20,35 +20,35 @@ namespace CoE.Ideas.Shared.Extensions
         /// Returns string like "Tomorrow at 11:37 AM", or "27 minutes ago"
         /// </summary>
         /// <param name="dateTime"></param>
-        public static string ToStringRelativeToNow(this DateTime dateTime)
+        public static string ToStringRelativeToNow(this DateTime dateTime, string timeFormat = "hh:mm tt")
         {
             DateTime now = DateTime.Now;
             if (dateTime.Subtract(now).Ticks > 0)
-                return ToStringRelativeToNowFutureDate(dateTime, now);
+                return ToStringRelativeToNowFutureDate(dateTime, now, timeFormat);
             else
                 return ToStringRelativeToNowPastDate(dateTime, now);
         }
 
-        private static string ToStringRelativeToNowFutureDate(DateTime dtEvent, DateTime now)
+        private static string ToStringRelativeToNowFutureDate(DateTime dtEvent, DateTime now, string timeFormat)
         {
             // special cases for "today" and "tomorrow"
             DateTime eventDay = dtEvent.Date;
             DateTime nowDay = now.Date;
             if (nowDay == eventDay)
-                return $"{dtEvent.ToLongTimeString()} today";
+                return $"{dtEvent.ToString(timeFormat)} today";
             else if (nowDay.AddDays(1) == eventDay)
-                return $"{dtEvent.ToLongTimeString()} tomorrow";
+                return $"{dtEvent.ToString(timeFormat)} tomorrow";
             else if (nowDay.GetWeekOfMonth() == dtEvent.GetWeekOfMonth())
             {
-                return dtEvent.DayOfWeek.ToString() + " at " + dtEvent.ToLongTimeString();
+                return dtEvent.DayOfWeek.ToString() + " at " + dtEvent.ToString(timeFormat);
             }
             else if (nowDay.Year == dtEvent.Year)
             {
-                return $"{dtEvent.ToLongTimeString()} on {dtEvent.ToString("dddd, MMMM dd")}";
+                return $"{dtEvent.ToString(timeFormat)} on {dtEvent.ToString("dddd, MMMM dd")}";
             }
             else
             {
-                return $"{dtEvent.ToLongTimeString()} on {dtEvent.ToLongDateString()}";
+                return $"{dtEvent.ToString(timeFormat)} on {dtEvent.ToLongDateString()}";
             }
         }
 
