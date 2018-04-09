@@ -6,21 +6,20 @@
 # docker tag octava/initiatives-db:latest coeoctava.azurecr.io/initiatives-db:latest
 # docker push coeoctava.azurecr.io/initiatives-db:latest
 
-#based on https://github.com/twright-msft/mssql-node-docker-demo-app/blob/master/Dockerfile
+#based on https://msdn.microsoft.com/en-us/magazine/mt784660.aspx
 #(for using an entrypoint to preload data)
+
+# Currently uses SQL to populate the CoeIdeas database but in the future we should directly
+# add the .mdf files like here: https://dbafromthecold.com/2017/02/08/sql-container-from-dockerfile/
 
 FROM microsoft/mssql-server-linux:2017-latest
 
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+ENV SA_PASSWORD=OctavaDev100!
+ENV ACCEPT_EULA=Y
 
-# Bundle app source
-COPY . /usr/src/app
-
-# Grant permissions for the import-data script to be executable
-RUN chmod +x /usr/src/app/import-data.sh
-
-EXPOSE 8080
+COPY entrypoint.sh entrypoint.sh
+COPY sql-startup.sh sql-startup.sh
+COPY sql-setup.sql sql-setup.sql
+RUN chmod +x ./sql-startup.sh
 
 CMD /bin/bash ./entrypoint.sh

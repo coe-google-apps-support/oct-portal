@@ -30,9 +30,9 @@ namespace CoE.Ideas.Core
             string applicationUrl = null,
             string payrollCalenderServiceUrl = null)
         { 
-            // default value is one is not supplied
+            // default value is one is not supplied - Note this is not what Production/UAT uses, but just a convenience for local dev
             string connectionString = string.IsNullOrWhiteSpace(dbConnectionString)
-                ? "server=.;database=CoeIdeas;Trusted_Connection=True;" : dbConnectionString;
+                ? "server=.;database=CoeIdeas;User Id=OctavaService;Password=P@ssw0rd;MultipleActiveResultSets=True;" : dbConnectionString;
 
             services.AddDbContext<InitiativeContext>(options =>
                 options.UseSqlServer(connectionString));
