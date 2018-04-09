@@ -1,0 +1,26 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t octava/initiatives-notification:stretch -f docker/Dockerfile.initiatives-notification.stretch ./server
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker tag octava/initiatives-notification:stretch coeoctava.azurecr.io/initiatives-notification:stretch
+# docker tag octava/initiatives-notification:stretch coeoctava.azurecr.io/initiatives-notification:latest
+# docker push coeoctava.azurecr.io/initiatives-notification:stretch
+# docker push coeoctava.azurecr.io/initiatives-notification:latest
+
+FROM microsoft/dotnet:2.0-sdk-stretch AS builder
+#ARG Configuration=Debug
+WORKDIR /usr/src/coe-initiatives-notification
+COPY . .
+WORKDIR /usr/src/coe-initiatives-notification/ideas-integration-notification/ideas-integration-notification
+RUN dotnet publish
+WORKDIR /usr/src/coe-initiatives-notification/ideas-integration-notification/ideas-integration-notification/bin/$Configuration/netcoreapp2.0
+
+
+FROM microsoft/dotnet:2.0-runtime-stretch
+ARG Configuration=Debug
+WORKDIR /var/coe/initiatives-integration-notification
+COPY --from=builder /usr/src/coe-initiatives-notification/ideas-integration-notification/ideas-integration-notification/bin/$Configuration/netcoreapp2.0/publish  .
+
+ENTRYPOINT ["dotnet"]
+CMD ["ideas-integration-notification.dll"]

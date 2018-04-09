@@ -1,0 +1,26 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t octava/initiatives-db:latest -f docker/Dockerfile.mssql.ubuntu16 ./docker/mssql
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker tag octava/initiatives-db:latest coeoctava.azurecr.io/initiatives-db:latest
+# docker push coeoctava.azurecr.io/initiatives-db:latest
+
+#based on https://github.com/twright-msft/mssql-node-docker-demo-app/blob/master/Dockerfile
+#(for using an entrypoint to preload data)
+
+FROM microsoft/mssql-server-linux:2017-latest
+
+# Create app directory
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# Bundle app source
+COPY . /usr/src/app
+
+# Grant permissions for the import-data script to be executable
+RUN chmod +x /usr/src/app/import-data.sh
+
+EXPOSE 8080
+
+CMD /bin/bash ./entrypoint.sh

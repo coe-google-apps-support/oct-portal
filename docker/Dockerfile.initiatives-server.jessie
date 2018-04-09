@@ -1,3 +1,11 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t octava/initiatives:jessie -f docker/Dockerfile.initiatives-server.jessie .
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker tag octava/initiatives:jessie coeoctava.azurecr.io/initiatives-webapi:jessie
+# docker push coeoctava.azurecr.io/initiatives-webapi:jessie
+
 FROM microsoft/aspnetcore-build:2.0-stretch AS initiatives-server
 ARG Configuration=Debug
 WORKDIR /usr/src/coe-initiatives/web
@@ -11,10 +19,11 @@ FROM node:9.10 AS initiatives-web
 WORKDIR /usr/src/coe-initiatives/plugins/ideas
 COPY /plugins/ideas .
 RUN npm install
+RUN npm rebuild node-sass # fix for running linux on Windows Docker, doesn't hurt for straight linux either
 RUN npm run build -- /usr/src/coe-initiatives/plugins/ideas-build
 
 
-FROM microsoft/aspnetcore:2.0-stretch
+FROM microsoft/aspnetcore:2.0-jessie
 ARG Configuration=Debug
 WORKDIR /var/aspnetcore/coe-initiatives
 COPY --from=initiatives-server /usr/src/coe-initiatives/web/ideas-server/ideas-server/bin/$Configuration/netcoreapp2.0/publish  .
