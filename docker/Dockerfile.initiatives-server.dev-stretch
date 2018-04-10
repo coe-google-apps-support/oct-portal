@@ -1,0 +1,24 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t octava/initiatives:dev-stretch -f docker/Dockerfile.initiatives-server.dev-stretch ./server
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker tag octava/initiatives:dev-stretch coeoctava.azurecr.io/initiatives-webapi:dev-stretch
+# docker tag octava/initiatives:dev-stretch coeoctava.azurecr.io/initiatives-webapi:dev-latest
+# docker push coeoctava.azurecr.io/initiatives-webapi:dev-stretch
+# docker push coeoctava.azurecr.io/initiatives-webapi:dev-latest
+
+
+FROM microsoft/aspnetcore-build:2.0-stretch AS initiatives-server
+ARG Configuration=Debug
+
+VOLUME /usr/src/coe/initiatives-server
+
+WORKDIR /usr/src/coe/initiatives-server
+COPY ./shared-kernel ./shared-kernel
+COPY ./ideas-core/ideas-core ./ideas-core/ideas-core
+COPY ./ideas-server/ideas-server ./ideas-server/ideas-server
+WORKDIR /usr/src/coe/initiatives-server/ideas-server/ideas-server
+
+ENTRYPOINT ["dotnet"]
+CMD ["run"]

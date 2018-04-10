@@ -59,23 +59,31 @@ namespace CoE.Ideas.Server.Controllers
             watch.Start();
 
             IEnumerable<Core.Data.InitiativeInfo> ideas;
-            if (view == ViewOptions.Mine)
+            try
             {
-                ideas = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId());
+                if (view == ViewOptions.Mine)
+                {
+                    ideas = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId());
+                }
+                else
+                    ideas = await _repository.GetInitiativesAsync();
+                var returnValue = ideas.OrderByDescending(x => x.CreatedDate);
+                watch.Stop();
+                _logger.Information("Retrieved {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
+                return returnValue.Select(x => new Models.InitiativeInfo()
+                {
+                    Id = x.Id,
+                    Description = x.Description,
+                    Title = x.Title,
+                    CreatedDate = x.CreatedDate,
+                    Url = _initiativeService.GetInitiativeUrl(x.Id).ToString()
+                });
             }
-            else
-                ideas = await _repository.GetInitiativesAsync();
-            var returnValue = ideas.OrderByDescending(x => x.CreatedDate);
-            watch.Stop();
-            _logger.Information("Retrieved {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
-            return returnValue.Select(x => new Models.InitiativeInfo()
+            catch (Exception err)
             {
-                Id = x.Id,
-                Description = x.Description,
-                Title = x.Title,
-                CreatedDate = x.CreatedDate,
-                Url = _initiativeService.GetInitiativeUrl(x.Id).ToString()
-            });
+                _logger.Error(err, "Error reading initiatives: {ErrorMessage}", err.Message);
+                throw;
+            }
         }
 
         // GET: ideas/5

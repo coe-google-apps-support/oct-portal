@@ -30,7 +30,7 @@ COPY --from=initiatives-server /usr/src/coe-initiatives/web/ideas-server/ideas-s
 COPY --from=initiatives-web /usr/src/coe-initiatives/plugins/ideas-build/ ./wwwroot
 
 ENTRYPOINT ["dotnet"]
-CMD ["ideas-server.dll", "urls=http://0.0.0.0:8000"]
+CMD ["ideas-server.dll", "urls=http://0.0.0.0:5000"]
 
 
 #Build like: docker image build -t octava/initiatives -f Dockerfile.initiatives-server.strech .

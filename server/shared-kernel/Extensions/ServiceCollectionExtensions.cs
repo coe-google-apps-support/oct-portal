@@ -18,9 +18,9 @@ namespace CoE.Ideas.Shared.Extensions
         public static IServiceCollection AddWordPressServices(this IServiceCollection services,
             string wordPressDbConnectionString)
         {
-            // defaults (for dev environment)
+            // defaults (for dev environment) - this is not the same as Production!!
             string connectionString = string.IsNullOrWhiteSpace(wordPressDbConnectionString)
-                ? "server=127.0.0.1;uid=InitiativeWordPressReader;pwd=octavadev;database=OctPortalWordPress"
+                ? "server=wordpress-db;uid=root;pwd=octavadev;database=OctPortalWordPress"
                 : wordPressDbConnectionString;
 
             services.AddDbContext<WordPressContext>(options =>

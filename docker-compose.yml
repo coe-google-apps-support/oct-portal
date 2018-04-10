@@ -1,0 +1,85 @@
+version: '3.3'
+
+services:
+  wordpress-db:
+    image: coeoctava.azurecr.io/wordpress-db:latest
+    volumes:
+      - wp-dbdata:/var/lib/mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: octavadev
+
+  initiatives-db:
+    image: coeoctava.azurecr.io/initiatives-db
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: OctavaDev100!
+      MSSQL_PID: Developer
+
+  wordpress:
+    depends_on: 
+      - wordpress-db
+    image: coeoctava.azurecr.io/wordpress:latest
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: wordpress-db:3306
+      WORDPRESS_DB_NAME: OctPortalWordPress
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: octavadev
+
+  initiatives-web:
+    depends_on:
+      - initiatives-db
+    image: coeoctava.azurecr.io/initiatives-webapi:dev-latest
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./server/:/usr/src/coe/initiatives-server
+    restart: always
+   
+  initiatives-logger:
+    depends_on:
+      - initiatives-db
+    image: coeoctava.azurecr.io/initiatives-logger
+    restart: always
+
+  initiatives-notification:
+    depends_on:
+      - initiatives-db
+    image: coeoctava.azurecr.io/initiatives-notification
+    restart: always
+
+  initiatives-remedy:
+    depends_on:
+      - initiatives-db
+    image: coeoctava.azurecr.io/initiatives-remedy
+    restart: always
+
+  initiatives-remedy-watcher:
+    depends_on:
+      - initiatives-db
+    image: coeoctava.azurecr.io/initiatives-remedy-watcher
+    restart: always
+
+  initiatives-remedy-sblistener:
+    depends_on:
+      - initiatives-db
+    image: coeoctava.azurecr.io/initiatives-remedy-sblistener
+    restart: always
+
+  nginx:
+    depends_on:
+      - wordpress
+      - initiatives-web
+    image: coeoctava.azurecr.io/nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+    
+volumes:
+  wp-dbdata:
+  

@@ -1,0 +1,23 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t octava/initiatives-vue:dev -f docker/Dockerfile.initiatives-vue.dev.stretch .
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker tag octava/initiatives-vue:dev coeoctava.azurecr.io/initiatives-vue:dev
+# docker tag octava/initiatives-vue:dev coeoctava.azurecr.io/initiatives-vue:dev-stretch
+# docker tag octava/initiatives-vue:dev coeoctava.azurecr.io/initiatives-vue:dev-latest
+# docker push coeoctava.azurecr.io/initiatives-vue:dev
+# docker push coeoctava.azurecr.io/initiatives-vue:dev-stretch
+# docker push coeoctava.azurecr.io/initiatives-vue:dev-latest
+
+FROM node:9.10 AS initiatives-web
+
+VOLUME /usr/src/coe-initiatives/plugins/ideas
+
+WORKDIR /usr/src/coe-initiatives/plugins/ideas
+COPY /plugins/ideas .
+RUN npm install
+RUN npm rebuild node-sass # fix for running linux on Windows Docker, doesn't hurt for straight linux either
+
+ENTRYPOINT ["npm"]
+CMD ["run", "dev"]
