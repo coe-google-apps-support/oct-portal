@@ -32,7 +32,7 @@ namespace CoE.Ideas.Core
         { 
             // default value is one is not supplied - Note this is not what Production/UAT uses, but just a convenience for local dev
             string connectionString = string.IsNullOrWhiteSpace(dbConnectionString)
-                ? "server=.;database=CoeIdeas;User Id=OctavaService;Password=P@ssw0rd;MultipleActiveResultSets=True;" : dbConnectionString;
+                ? "server=initiatives-db;database=CoeIdeas;User Id=OctavaService;Password=P@ssw0rd;MultipleActiveResultSets=True;" : dbConnectionString;
 
             services.AddDbContext<InitiativeContext>(options =>
                 options.UseSqlServer(connectionString));

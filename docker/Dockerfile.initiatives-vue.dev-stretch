@@ -1,6 +1,6 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t octava/initiatives-vue:dev -f docker/Dockerfile.initiatives-vue.dev.stretch .
+# docker image build -t octava/initiatives-vue:dev -f docker/Dockerfile.initiatives-vue.dev-stretch .
 #
 # And to push to the CoE Azure Repo (requires credentials):
 # docker tag octava/initiatives-vue:dev coeoctava.azurecr.io/initiatives-vue:dev
@@ -12,12 +12,11 @@
 
 FROM node:9.10 AS initiatives-web
 
-VOLUME /usr/src/coe-initiatives/plugins/ideas
+VOLUME /usr/src/coe-initiatives/
 
-WORKDIR /usr/src/coe-initiatives/plugins/ideas
-COPY /plugins/ideas .
+WORKDIR /usr/src/coe-initiatives/
+ADD ./plugins/ideas .
+ADD docker/initiatives-vue/entrypoint.sh /coe-entrypoint.sh
 RUN npm install
-RUN npm rebuild node-sass # fix for running linux on Windows Docker, doesn't hurt for straight linux either
 
-ENTRYPOINT ["npm"]
-CMD ["run", "dev"]
+CMD /bin/bash /coe-entrypoint.sh

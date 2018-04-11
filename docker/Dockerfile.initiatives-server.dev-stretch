@@ -21,4 +21,4 @@ COPY ./ideas-server/ideas-server ./ideas-server/ideas-server
 WORKDIR /usr/src/coe/initiatives-server/ideas-server/ideas-server
 
 ENTRYPOINT ["dotnet"]
-CMD ["run"]
+CMD ["run", "urls=http://0.0.0.0:5000"]

@@ -116,7 +116,7 @@ namespace CoE.Ideas.Shared.Extensions
             string serviceBusConnectionString = null)
         {
             string connectionString = string.IsNullOrWhiteSpace(serviceBusConnectionString)
-                ? "server=.;database=ServiceBusEmulator;Trusted_Connection=True;"
+                ? "server=initiatives-db;database=ServiceBusEmulator;User Id=OctavaService;Password=P@ssw0rd;MultipleActiveResultSets=True;"
                 : serviceBusConnectionString;
 
             services.AddDbContext<ServiceBusEmulatorContext>(options => options.UseSqlServer(connectionString));

@@ -13,8 +13,63 @@ GO
 ALTER ROLE [db_ddladmin] ADD MEMBER [OctavaService]
 GO
 
+CREATE DATABASE ServiceBusEmulator;
+GO
+USE [ServiceBusEmulator]
+GO
+CREATE USER [OctavaService] FOR LOGIN [OctavaService]
+GO
+ALTER ROLE [db_datareader] ADD MEMBER [OctavaService]
+GO
+ALTER ROLE [db_datawriter] ADD MEMBER [OctavaService]
+GO
+ALTER ROLE [db_ddladmin] ADD MEMBER [OctavaService]
+GO
+
 
 -- The rest is generated from EntityFrameworkCore:
+IF OBJECT_ID(N'__EFMigrationsHistory') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+
+GO
+
+CREATE TABLE [MessageProperties] (
+    [Id] int NOT NULL IDENTITY,
+    [Key] nvarchar(128) NULL,
+    [MessageId] uniqueidentifier NOT NULL,
+    [Value] nvarchar(1024) NULL,
+    [ValueType] nvarchar(1024) NULL,
+    CONSTRAINT [PK_MessageProperties] PRIMARY KEY ([Id])
+);
+
+GO
+
+CREATE TABLE [Messages] (
+    [Id] uniqueidentifier NOT NULL,
+    [CreatedDateUtc] datetime2 NOT NULL,
+    [Label] nvarchar(128) NULL,
+    [LockToken] nvarchar(max) NULL,
+    CONSTRAINT [PK_Messages] PRIMARY KEY ([Id])
+);
+
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20180320141041_Initial', N'2.0.2-rtm-10011');
+
+GO
+
+
+
+USE [CoeIdeas]
+GO
+
 
 IF OBJECT_ID(N'__EFMigrationsHistory') IS NULL
 BEGIN
