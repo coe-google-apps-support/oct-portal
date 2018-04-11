@@ -25,6 +25,7 @@
               <md-table-cell>Business case</md-table-cell>
               <md-table-cell>
                 <attach-file-button :url="resources.businessCaseUrl" @click.native="attachClicked"></attach-file-button>
+                <md-button @click.native="attachClicked" class="md-primary">Primary</md-button>
               </md-table-cell>
             </md-table-row>
           </md-table>
@@ -48,10 +49,13 @@
 </template>
 
 <script>
+/* global google */
+
 import Assignee from '@/components/Assignee'
 import Steps from '@/components/stepper/Steps'
 import AttachFileButton from '@/components/AttachFileButton'
 import formatDate from '@/utils/format-date-since'
+import Picker from '@/components/Picker'
 
 export default {
   name: 'ViewInitiative',
@@ -67,7 +71,8 @@ export default {
     showDialog: false,
     busCaseLoading: false,
     isLoading: true,
-    resources: null
+    resources: null,
+    filePicker: null
   }),
   components: {
     Assignee,
@@ -75,6 +80,11 @@ export default {
     AttachFileButton
   },
   created () {
+    this.filePicker = Picker({
+      clientId: '395122677472-t6e8ruj4vug46mbof9aede3vscr6n4fo.apps.googleusercontent.com',
+      apiKey: 'AIzaSyDMH_8cCvkL-264YIP0SARSm20c5nZxz70'
+    })
+
     this.services.ideas.getInitiative(this.slug).then((initiative) => {
       this.initiative = initiative
       return Promise.all([this.services.ideas.getResources(initiative.id), this.services.ideas.getInitiativeSteps(initiative.id)])
@@ -94,11 +104,19 @@ export default {
   },
   methods: {
     attachClicked () {
-      if (this.resources.businessCaseUrl) {
-        window.open(this.resources.businessCaseUrl)
-      } else {
-        this.showDialog = true
-      }
+      console.log('Click')
+      this.filePicker({}, function (err, files) {
+        if (err) {
+          console.log('Welp that broke')
+        }
+
+        console.log(files)
+      })
+      // if (this.resources.businessCaseUrl) {
+      //   window.open(this.resources.businessCaseUrl)
+      // } else {
+      //   this.showDialog = true
+      // }
     },
     attachBusinessCase () {
       this.busCaseLoading = true

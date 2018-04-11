@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons">
     <link rel="stylesheet" href="/divi_style.css" />
     <script type="text/javascript" src="https://pym.nprapps.org/pym.v1.min.js"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=temps"></script>
   </head>
   <body style="min-height:auto; background-color: #fff; padding-bottom: 2px">
     <div id="coe-idea-new"></div>
@@ -16,6 +17,10 @@
     <!-- built files will be auto injected -->
 
     <script>
+      function temps() {
+        console.log('Able to open Drive files.')
+      }
+
       var pluginWindow = new pym.Child({ polling: 500 });
         window.addEventListener('navigate', function (e) {
         if (e.detail) {
