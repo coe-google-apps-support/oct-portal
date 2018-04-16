@@ -25,6 +25,7 @@ services:
       - wordpress-db
     image: coeoctava.azurecr.io/wordpress:latest
     ports:
+      - "8000:80"
       - "9000:9000"
     restart: always
     environment:
