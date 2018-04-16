@@ -66,18 +66,21 @@ services:
   initiatives-remedy:
     depends_on:
       - initiatives-db
-    image: coeoctava.azurecr.io/initiatives-remedy
+      - initiatives-web
+    image: coeoctava.azurecr.io/initiatives-remedy:dev-latest
     restart: always
 
   initiatives-remedy-watcher:
     depends_on:
       - initiatives-db
+      - initiatives-web
     image: coeoctava.azurecr.io/initiatives-remedy-watcher
     restart: always
 
   initiatives-remedy-sblistener:
     depends_on:
       - initiatives-db
+      - initiatives-web
     image: coeoctava.azurecr.io/initiatives-remedy-sblistener
     restart: always
 

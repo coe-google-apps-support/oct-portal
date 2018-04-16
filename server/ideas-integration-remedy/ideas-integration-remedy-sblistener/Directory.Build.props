@@ -1,0 +1,6 @@
+﻿<Project>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/../../../obj/ideas-integration-remedy-sblistener/</BaseIntermediateOutputPath>
+    <BaseOutputPath>$(MSBuildProjectDirectory)/../../../bin/ideas-integration-remedy-sblistener/</BaseOutputPath>
+  </PropertyGroup>
+</Project>

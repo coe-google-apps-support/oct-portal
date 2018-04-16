@@ -1,0 +1,6 @@
+﻿<Project>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/../../../obj/ideas-integration-remedy-watcher/</BaseIntermediateOutputPath>
+    <BaseOutputPath>$(MSBuildProjectDirectory)/../../../bin/ideas-integration-remedy-watcher/</BaseOutputPath>
+  </PropertyGroup>
+</Project>

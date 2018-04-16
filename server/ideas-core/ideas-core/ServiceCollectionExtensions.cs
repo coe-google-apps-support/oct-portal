@@ -115,11 +115,11 @@ namespace CoE.Ideas.Core
         }
 
         public static IServiceCollection AddRemoteInitiativeConfiguration(this IServiceCollection services,
-            string ideasApiUrl,
+            string ideasApiUrl = null,
             string applicationUrl = null)
         {
             if (string.IsNullOrWhiteSpace(ideasApiUrl))
-                throw new ArgumentNullException("ideasApiUrl");
+                ideasApiUrl = "http://initiatives-web:5000/api";
 
             services.Configure<RemoteInitiativeRepositoryOptions>(options =>
             {

@@ -26,6 +26,8 @@ namespace CoE.Ideas.Shared.ServiceBus
 
         public async Task PostAsync(IDictionary<string, object> properties = null, string label = null)
         {
+            _logger.Information("Posting {Label} to service bus emulator", label);
+
             var messageEntity = new Message() { Id = Guid.NewGuid(), Label = label, CreatedDateUtc = DateTime.UtcNow, LockToken = Guid.NewGuid().ToString()};
             _context.Messages.Add(messageEntity);
             if (properties != null)
@@ -77,10 +79,10 @@ namespace CoE.Ideas.Shared.ServiceBus
                             .GroupBy(msgProp => msgProp.MessageId);
 
                         var items = _context.Messages
-                        .Where(m => m.CreatedDateUtc > pollDate && m.CreatedDateUtc <= nextDate)
-                        .Join(messageProperties, msg => msg.Id, msgProps => msgProps.Key, (msg, msgProps) => new { Message = msg, Properties = msgProps })
-                        .OrderBy(m => m.Message.CreatedDateUtc)
-                        .ToList();
+                            .Where(m => m.CreatedDateUtc > pollDate && m.CreatedDateUtc <= nextDate)
+                            .Join(messageProperties, msg => msg.Id, msgProps => msgProps.Key, (msg, msgProps) => new { Message = msg, Properties = msgProps })
+                            .OrderBy(m => m.Message.CreatedDateUtc)
+                            .ToList();
 
                         foreach (var messageInfo in items)
                         {

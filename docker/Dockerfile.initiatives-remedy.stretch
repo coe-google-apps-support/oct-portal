@@ -1,10 +1,9 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t octava/initiatives-remedy:stretch -f docker/Dockerfile.initiatives-remedy.stretch ./server
+# docker image build -t coeoctava.azurecr.io/initiatives-remedy:latest -f docker/Dockerfile.initiatives-remedy.stretch ./server
 #
 # And to push to the CoE Azure Repo (requires credentials):
-# docker tag octava/initiatives-remedy:stretch coeoctava.azurecr.io/initiatives-remedy:stretch
-# docker tag octava/initiatives-remedy:stretch coeoctava.azurecr.io/initiatives-remedy:latest
+# docker tag coeoctava.azurecr.io/initiatives-remedy:latest coeoctava.azurecr.io/initiatives-remedy:stretch
 # docker push coeoctava.azurecr.io/initiatives-remedy:stretch
 # docker push coeoctava.azurecr.io/initiatives-remedy:latest
 

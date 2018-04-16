@@ -1,0 +1,27 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t coeoctava.azurecr.io/initiatives-remedy:dev-latest -f docker/Dockerfile.initiatives-remedy.dev-stretch ./server
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker tag coeoctava.azurecr.io/initiatives-remedy:dev-latest coeoctava.azurecr.io/initiatives-remedy:dev-stretch
+# docker push coeoctava.azurecr.io/initiatives-remedy:dev-stretch
+# docker push coeoctava.azurecr.io/initiatives-remedy:dev-latest
+
+FROM microsoft/aspnetcore-build:2.0-stretch AS integration-remedy
+ARG Configuration=Debug
+
+# Required inside Docker, otherwise file-change events may not trigger
+ENV DOTNET_USE_POLLING_FILE_WATCHER 1
+
+VOLUME VOLUME /usr/src/coe/initiatives-integration-remedy
+WORKDIR /usr/src/coe/initiatives-integration-remedy
+
+COPY ./shared-kernel ./shared-kernel
+COPY ./ideas-core/ideas-core ./ideas-core/ideas-core
+COPY ./ideas-integration-remedy/ideas-integration-remedy ./ideas-integration-remedy/ideas-integration-remedy
+WORKDIR /usr/src/coe/initiatives-integration-remedy/ideas-integration-remedy/ideas-integration-remedy
+
+RUN dotnet restore
+RUN dotnet build
+
+ENTRYPOINT dotnet watch run --no-restore
