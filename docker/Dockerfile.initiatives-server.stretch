@@ -1,10 +1,9 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t octava/initiatives:stretch -f docker/Dockerfile.initiatives-server.stretch .
+# docker image build -t coeoctava.azurecr.io/initiatives-webapi:latest -f docker/Dockerfile.initiatives-server.stretch .
 #
 # And to push to the CoE Azure Repo (requires credentials):
-# docker tag octava/initiatives:stretch coeoctava.azurecr.io/initiatives-webapi:stretch
-# docker tag octava/initiatives:stretch coeoctava.azurecr.io/initiatives-webapi:latest
+# docker tag coeoctava.azurecr.io/initiatives-webapi:latest coeoctava.azurecr.io/initiatives-webapi:stretch
 # docker push coeoctava.azurecr.io/initiatives-webapi:stretch
 # docker push coeoctava.azurecr.io/initiatives-webapi:latest
 
@@ -27,9 +26,14 @@ RUN npm run build -- /usr/src/coe-initiatives/plugins/ideas-build
 
 FROM microsoft/aspnetcore:2.0-stretch
 ARG Configuration=Debug
-WORKDIR /var/aspnetcore/coe-initiatives
-COPY --from=initiatives-server /usr/src/coe-initiatives/web/ideas-server/ideas-server/bin/$Configuration/netcoreapp2.0/publish  .
+WORKDIR /app
+COPY --from=initiatives-server /usr/src/coe-initiatives/bin/ideas-server/$Configuration/netcoreapp2.0/publish  .
 COPY --from=initiatives-web /usr/src/coe-initiatives/plugins/ideas-build/ ./wwwroot
 
-ENTRYPOINT ["dotnet"]
-CMD ["ideas-server.dll", "urls=http://0.0.0.0:5000"]
+EXPOSE 5000
+
+# Move our run time scripts into our image
+COPY ./docker/scripts/webapi-entrypoint.sh /usr/local/bin/webapi-entrypoint.sh
+RUN chmod +x /usr/local/bin/webapi-entrypoint.sh
+
+CMD /bin/bash /usr/local/bin/webapi-entrypoint.sh
