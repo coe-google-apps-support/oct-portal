@@ -1,7 +1,8 @@
-if [ -f /etc/secrets/app-settings.json ]; then
-  cp /etc/secrets/app-settings.json /app
+if [ -f /etc/secrets/appsettings.json ]; then
+  cp /etc/secrets/appsettings.json /app
+  echo "appsettings.json config specified."
 else
-  echo "No app-settings.json config specified."
+  echo "No appsettings.json config specified."
 fi
 
 dotnet ideas-server.dll "urls=http://0.0.0.0:5000"
