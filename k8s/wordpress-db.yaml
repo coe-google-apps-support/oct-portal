@@ -1,0 +1,30 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: wordpress-db
+  labels:
+    app: mysql
+    product: octava
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+      product: octava
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: mysql
+        product: octava
+        tier: backend
+    spec:
+      containers:
+      - name: mysql
+        image: coeoctava.azurecr.io/wordpress-db:latest
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "octavadev"

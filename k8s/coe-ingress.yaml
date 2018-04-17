@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: octava-ingress
+  namespace: development
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+  - hosts:
+    - octavadev.edmonton.ca
+    secretName: production-tls
+  rules:
+  - host: octavadev.edmonton.ca
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: wordpress
+          servicePort: 80
+      - path: /plugins/initiatives
+        backend:
+          serviceName: initiatives-webapi
+          servicePort: 5000
+      - path: /two
+        backend:
+          serviceName: ingress-demo
+          servicePort: 80

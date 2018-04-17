@@ -1,0 +1,34 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: initiatives-db
+  labels:
+    app: mssql
+    product: octava
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mssql
+      product: octava
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: mssql
+        product: octava
+        tier: backend
+    spec:
+      containers:
+      - name: mssql
+        image: coeoctava.azurecr.io/initiatives-db
+        ports:
+        - containerPort: 1433
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SA_PASSWORD
+          value: "OctavaDev100!"
+        - name: MSSQL_PID
+          value: "Developer"
