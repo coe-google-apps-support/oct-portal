@@ -5,7 +5,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>c05b4661-416b-4fad-98c4-8164938f9b73</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>http://localhost:{ServicePort}/Initiatives</DockerServiceUrl>
+    <DockerServiceUrl>http://localhost/</DockerServiceUrl>
     <DockerServiceName>ideas-server</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>

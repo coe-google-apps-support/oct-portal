@@ -50,5 +50,15 @@ services:
     volumes:
       - ./plugins/ideas/:/usr/src/coe-initiatives/  
 
+  nginx:
+    depends_on:
+      - wordpress
+      - ideas-server
+      - initiatives-vue
+    image: coeoctava.azurecr.io/nginx:dev-latest
+    restart: always
+    ports:
+      - "80:80"
+
 volumes:
   wp-dbdata:

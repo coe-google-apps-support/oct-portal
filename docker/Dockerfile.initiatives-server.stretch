@@ -3,7 +3,6 @@
 # docker image build -t coeoctava.azurecr.io/initiatives-webapi:latest -t coeoctava.azurecr.io/initiatives-webapi:stretch -f docker/Dockerfile.initiatives-server.stretch .
 #
 # And to push to the CoE Azure Repo (requires credentials):
-# docker tag coeoctava.azurecr.io/initiatives-webapi:latest coeoctava.azurecr.io/initiatives-webapi:stretch
 # docker push coeoctava.azurecr.io/initiatives-webapi:stretch
 # docker push coeoctava.azurecr.io/initiatives-webapi:latest
 

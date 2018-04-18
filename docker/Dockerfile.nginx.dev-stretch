@@ -1,9 +1,8 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t coeoctava.azurecr.io/nginx:dev-latest -f docker/Dockerfile.nginx.dev-stretch ./docker/nginx
+# docker image build -t coeoctava.azurecr.io/nginx:dev-latest -t coeoctava.azurecr.io/nginx:dev-latest -f docker/Dockerfile.nginx.dev-stretch ./docker/nginx
 #
 # And to push to the CoE Azure Repo (requires credentials):
-# docker tag coeoctava.azurecr.io/nginx:dev-latest coeoctava.azurecr.io/nginx:dev-stretch
 # docker push coeoctava.azurecr.io/nginx:dev-stretch
 # docker push coeoctava.azurecr.io/nginx:dev-latest
 
