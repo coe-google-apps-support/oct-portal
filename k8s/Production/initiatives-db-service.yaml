@@ -8,11 +8,5 @@ metadata:
     product: octava
     tier: backend
 spec:
-  type: ClusterIP
-  ports:
-  - port: 1433
-  selector:
-    app: initiatives-db
-    technology: mssql
-    product: octava
-    tier: backend
+  type: ExternalName
+  externalName: octavadb.database.windows.net
