@@ -4,6 +4,7 @@ metadata:
   name: wordpress
   labels:
     app: wordpress
+    technology: wordpress
     tier: frontend
     product: octava
 spec:
@@ -11,12 +12,14 @@ spec:
   selector:
     matchLabels:
       app: wordpress
+      technology: wordpress
       tier: frontend
       product: octava
   template:
     metadata:
       labels:
         app: wordpress
+        technology: wordpress
         tier: frontend
         product: octava
     spec:
@@ -25,15 +28,6 @@ spec:
         image: coeoctava.azurecr.io/wordpress:0.0.1
         ports:
         - containerPort: 80
-        env:
-        - name: WORDPRESS_DB_HOST
-          value: "wordpress-db:3306"
-        - name: WORDPRESS_DB_NAME
-          value: "OctPortalWordPress"
-        - name: WORDPRESS_DB_USER
-          value: "root"
-        - name: WORDPRESS_DB_PASSWORD
-          value: "octavadev"
         volumeMounts:
         - name: secret-volume
           mountPath: "/etc/secrets"

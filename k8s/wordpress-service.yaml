@@ -4,6 +4,7 @@ metadata:
   name: wordpress
   labels:
     app: wordpress
+    technology: wordpress
     tier: frontend
     product: octava
 spec:
@@ -12,5 +13,6 @@ spec:
   - port: 80
   selector:
     app: wordpress
+    technology: wordpress
     tier: frontend
     product: octava
