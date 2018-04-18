@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: octava-ingress
-  namespace: development
+  namespace: uat
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     kubernetes.io/ingress.class: "nginx"
@@ -23,7 +23,3 @@ spec:
         backend:
           serviceName: initiatives-webapi
           servicePort: 5000
-      - path: /two
-        backend:
-          serviceName: ingress-demo
-          servicePort: 80
