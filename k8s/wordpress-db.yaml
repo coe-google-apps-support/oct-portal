@@ -3,20 +3,23 @@ kind: Deployment
 metadata:
   name: wordpress-db
   labels:
-    app: mysql
+    app: wordpress-db
+    technology: mysql
     product: octava
     tier: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql
+      app: wordpress-db
+      technology: mysql
       product: octava
       tier: backend
   template:
     metadata:
       labels:
-        app: mysql
+        app: wordpress-db
+        technology: mysql
         product: octava
         tier: backend
     spec:

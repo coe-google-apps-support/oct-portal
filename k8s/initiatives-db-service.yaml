@@ -3,7 +3,8 @@ kind: Service
 metadata:
   name: initiatives-db
   labels:
-    app: mssql
+    app: initiatives-db
+    technology: mssql
     product: octava
     tier: backend
 spec:
@@ -11,6 +12,7 @@ spec:
   ports:
   - port: 1433
   selector:
-    app: mssql
+    app: initiatives-db
+    technology: mssql
     product: octava
     tier: backend

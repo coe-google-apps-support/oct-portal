@@ -3,20 +3,23 @@ kind: Deployment
 metadata:
   name: initiatives-db
   labels:
-    app: mssql
+    app: initiatives-db
+    technology: mssql
     product: octava
     tier: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mssql
+      app: initiatives-db
+      technology: mssql
       product: octava
       tier: backend
   template:
     metadata:
       labels:
-        app: mssql
+        app: initiatives-db
+        technology: mssql
         product: octava
         tier: backend
     spec:
