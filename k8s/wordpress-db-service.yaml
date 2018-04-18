@@ -3,15 +3,10 @@ kind: Service
 metadata:
   name: wordpress-db
   labels:
-    app: mysql
+    app: wordpress-db
+    technology: mysql
     product: octava
     tier: backend
 spec:
-  type: ClusterIP
-  ports:
-  - port: 3306
-    protocol: TCP
-  selector:
-    app: mysql
-    product: octava
-    tier: backend
+  type: ExternalName
+  externalName: octava-wordpressdb.mysql.database.azure.com
