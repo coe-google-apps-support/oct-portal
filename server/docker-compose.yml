@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  ideas-server:
+    image: ideasserver
+    depends_on: 
+      - initiatives-db
+    build:
+      context: .
+      dockerfile: ideas-server/ideas-server/Dockerfile
+
+  wordpress-db:
+    image: coeoctava.azurecr.io/wordpress-db:latest
+    volumes:
+      - wp-dbdata:/var/lib/mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: octavadev
+
+  initiatives-db:
+    image: coeoctava.azurecr.io/initiatives-db
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: OctavaDev100!
+      MSSQL_PID: Developer
+
+  wordpress:
+    depends_on: 
+      - wordpress-db
+    image: coeoctava.azurecr.io/wordpress:latest
+    ports:
+      - "8000:80"
+      - "9000:9000"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: wordpress-db:3306
+      WORDPRESS_DB_NAME: OctPortalWordPress
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: octavadev
+
+  initiatives-vue:
+    image: coeoctava.azurecr.io/initiatives-vue:dev-latest
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - ./plugins/ideas/:/usr/src/coe-initiatives/  
+
+volumes:
+  wp-dbdata:

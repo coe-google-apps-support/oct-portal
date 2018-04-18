@@ -1,6 +1,0 @@
-﻿<Project>
-  <PropertyGroup>
-    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/../../../obj/ideas-integration-logger/</BaseIntermediateOutputPath>
-    <BaseOutputPath>$(MSBuildProjectDirectory)/../../../bin/ideas-integration-logger/</BaseOutputPath>
-  </PropertyGroup>
-</Project>

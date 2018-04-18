@@ -1,6 +1,0 @@
-﻿<Project>
-  <PropertyGroup>
-    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/../../../obj/ideas-integration-remedy/</BaseIntermediateOutputPath>
-    <BaseOutputPath>$(MSBuildProjectDirectory)/../../../bin/ideas-integration-remedy/</BaseOutputPath>
-  </PropertyGroup>
-</Project>

@@ -1,6 +1,0 @@
-﻿<Project>
-  <PropertyGroup>
-    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/../../../obj/remedy-emulator/</BaseIntermediateOutputPath>
-    <BaseOutputPath>$(MSBuildProjectDirectory)/../../../bin/remedy-emulator/</BaseOutputPath>
-  </PropertyGroup>
-</Project>

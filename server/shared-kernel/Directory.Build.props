@@ -1,6 +1,0 @@
-﻿<Project>
-  <PropertyGroup>
-    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/../../../obj/shared-kernel/</BaseIntermediateOutputPath>
-    <BaseOutputPath>$(MSBuildProjectDirectory)/../../../bin/shared-kernel/</BaseOutputPath>
-  </PropertyGroup>
-</Project>

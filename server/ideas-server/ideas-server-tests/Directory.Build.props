@@ -1,6 +1,0 @@
-﻿<Project>
-  <PropertyGroup>
-    <BaseIntermediateOutputPath>$(MSBuildProjectDirectory)/../../../obj/ideas-server-tests/</BaseIntermediateOutputPath>
-    <BaseOutputPath>$(MSBuildProjectDirectory)/../../../bin/ideas-server-tests/</BaseOutputPath>
-  </PropertyGroup>
-</Project>
