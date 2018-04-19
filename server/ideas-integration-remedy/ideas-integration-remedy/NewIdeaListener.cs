@@ -64,11 +64,31 @@ namespace CoE.Ideas.Remedy
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
-                var personData = await GetPersonData(owner.GetEmail());
-                string workOrderId = await CreateWorkOrder(initiative, personData);
-                await SendWorkOrderCreatedMessage(initiative, owner, workOrderId);
+                PersonData personData;
+                try
+                {
+                    personData = await GetPersonData(owner.GetEmail());
+                }
+                catch (Exception err)
+                {
+                    _logger.Error(err, "Unable to get PersonData for {InitiativeId} from {EmailAddress}: {ErrorMessage}", initiative.Id, owner.GetEmail(), err.Message);
+                    throw;
+                }
 
+                string workOrderId;
+                try
+                {
+                    workOrderId = await CreateWorkOrder(initiative, personData);
+                }
+                catch (Exception err)
+                {
+                    _logger.Error(err, "Unable to get create a workOrder for initiative {InitiativeId} from {EmailAddress}: {ErrorMessage}", initiative.Id, owner.GetEmail(), err.Message);
+                    throw;
+                }
+
+                await SendWorkOrderCreatedMessage(initiative, owner, workOrderId);
                 _logger.Information("Processed OnNewInitiative for initiative {InitiativeId} in {ElapsedMilliseconds}ms", initiative.Id, watch.ElapsedMilliseconds);
+                
             }
         }
 

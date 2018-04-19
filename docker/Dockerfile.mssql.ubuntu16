@@ -1,9 +1,8 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t octava/initiatives-db:latest -f docker/Dockerfile.mssql.ubuntu16 ./docker/mssql
+# docker image build -t coeoctava.azurecr.io/initiatives-db:latest -f docker/Dockerfile.mssql.ubuntu16 ./docker/mssql
 #
 # And to push to the CoE Azure Repo (requires credentials):
-# docker tag octava/initiatives-db:latest coeoctava.azurecr.io/initiatives-db:latest
 # docker push coeoctava.azurecr.io/initiatives-db:latest
 
 #based on https://msdn.microsoft.com/en-us/magazine/mt784660.aspx

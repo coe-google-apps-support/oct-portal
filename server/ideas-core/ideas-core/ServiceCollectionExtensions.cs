@@ -119,7 +119,7 @@ namespace CoE.Ideas.Core
             string applicationUrl = null)
         {
             if (string.IsNullOrWhiteSpace(ideasApiUrl))
-                ideasApiUrl = "http://initiatives-web:5000/api";
+                ideasApiUrl = "http://ideas-server/api";
 
             services.Configure<RemoteInitiativeRepositoryOptions>(options =>
             {
