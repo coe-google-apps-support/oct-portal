@@ -201,3 +201,12 @@ VALUES (N'20180323203736_AddedStatusEtas', N'2.0.2-rtm-10011');
 
 GO
 
+ALTER TABLE [InitiativeStatusHistories] ADD [StatusDescriptionOverride] nvarchar(max) NULL;
+
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20180419152741_OverridableStatusDescriptions', N'2.0.2-rtm-10011');
+
+GO
+

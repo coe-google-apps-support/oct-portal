@@ -9,6 +9,7 @@ namespace CoE.Ideas.Server.Models
 {
     public class InitiativeStepDetail
     {
+        public int StepId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
 
@@ -27,6 +28,7 @@ namespace CoE.Ideas.Server.Models
 
             var returnValue = new InitiativeStepDetail()
             {
+                StepId = (int)step.Status,
                 Title = GetTitle(step.Status),
                 StartDate = step.StartDate,
                 CompletionDate = step.CompletionDate

@@ -1,4 +1,5 @@
 ﻿using CoE.Ideas.Shared.Data;
+using EnsureThat;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -36,6 +37,21 @@ namespace CoE.Ideas.Core.Data
         /// </summary>
         public int? PersonId { get; private set; }
 
+        /// <summary>
+        /// When supplied, overrides the default string templates for the status descriptions
+        /// </summary>
+        public string StatusDescriptionOverride { get; private set; }
+
+        internal void OverrideStatusDescription(string newStatusDescription)
+        {
+            EnsureArg.IsNotNullOrWhiteSpace(newStatusDescription);
+            StatusDescriptionOverride = newStatusDescription;
+        }
+
+        internal void ResetStatusDescriptionToDefault()
+        {
+            StatusDescriptionOverride = null;
+        }
 
         internal static InitiativeStatusHistory CreateInitiativeStatusChange(Guid initiativeId,
             InitiativeStatus newStatus,

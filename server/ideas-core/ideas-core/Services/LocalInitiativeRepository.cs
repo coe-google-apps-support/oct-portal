@@ -132,7 +132,8 @@ namespace CoE.Ideas.Core.Services
                         AssigneePersonId = sh.PersonId,
                         Status = sh.Status,
                         StartDate = entryDate,
-                        ExpectedCompletionDate = expectedExitDate
+                        ExpectedCompletionDate = expectedExitDate,
+                        StatusDescriptionOverride = sh.StatusDescriptionOverride
                     },
                     StateId = (int)sh.Status
                 });
@@ -163,9 +164,6 @@ namespace CoE.Ideas.Core.Services
                 .OrderBy(x => x.StateId)
                 .Select(x => x.IdeaStep);
         }
-
-
-
 
         public Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
         {

@@ -9,5 +9,6 @@ namespace CoE.Ideas.Core.Data
         public DateTimeOffset? StartDate { get; set; }
         public DateTimeOffset? CompletionDate { get; set; }
         public DateTimeOffset? ExpectedCompletionDate { get; set; }
+        public string StatusDescriptionOverride { get; set; }
     }
 }

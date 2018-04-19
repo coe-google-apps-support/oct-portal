@@ -68,7 +68,7 @@ namespace CoE.Ideas.Core.EventHandlers
             // now we add the new status
             _initiativeContext.InitiativeStatusHistories.Add(statusChange);
 
-            await _initiativeContext.SaveChangesAsync();
+            await _initiativeContext.SaveChangesAsync(cancellationToken);
         }
 
 

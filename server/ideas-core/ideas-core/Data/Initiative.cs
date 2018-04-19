@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CoE.Ideas.Core.Data
 {
@@ -145,6 +146,9 @@ namespace CoE.Ideas.Core.Data
             AddDomainEvent(new InitiativeStatusChangedDomainEvent(this, oldStatus));
         }
 
-
+        public Task UpdateStatusDescription(string newDescription)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

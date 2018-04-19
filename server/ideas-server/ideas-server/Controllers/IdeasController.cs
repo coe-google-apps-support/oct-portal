@@ -416,6 +416,32 @@ namespace CoE.Ideas.Server.Controllers
         }
 
 
+        [HttpPut("{id}/statusDescription")]
+        public async Task<IActionResult> UpdateStatusDescription(int id, int stepId, string newDescription)
+        {
+            InitiativeStatus currentStatus;
+            try { currentStatus = (InitiativeStatus)stepId; }
+            catch (InvalidCastException)
+            {
+                var initiativeStatusValues = Enum.GetValues(typeof(InitiativeStatus)).Cast<InitiativeStatus>();
+                ModelState.AddModelError("stepId", $"stepId '{ stepId }' is not a valid value, must be between { (int)initiativeStatusValues.First() } and { (int)initiativeStatusValues.Last() }");
+                return base.BadRequest(ModelState);
+            }
+
+            return await ValidateAndGetInitiative(id, async initiative =>
+            {
+                if (initiative.Status != currentStatus)
+                {
+                    ModelState.AddModelError("stepId", $"stepId '{ stepId }' is not the current state of the initiative ('{(int)initiative.Status}'). This is like a concurrency issue. Please refresh and try again.");
+                    return base.BadRequest(ModelState);
+                }
+
+                await initiative.UpdateStatusDescription(newDescription);
+                return Ok();
+            });
+        }
+
+
 
             //// GET: ideas/5
             ///// <summary>
