@@ -22,6 +22,10 @@ namespace CoE.Ideas.Remedy.SbListener
 
             var serviceProvider = services.BuildServiceProvider();
 
+            // sleep for 30s to ensure are required services are up and running
+            // (most affects local development in Docker but is fine for production)
+            System.Threading.Thread.Sleep(30); 
+
             // TODO: eliminate the need to ask for IIdeaServiceBusReceiver to make sure we're listening
             var listener = serviceProvider.GetRequiredService<RemedyItemUpdatedIdeaListener>();
             
