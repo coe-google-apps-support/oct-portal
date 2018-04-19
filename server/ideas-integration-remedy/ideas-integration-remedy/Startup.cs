@@ -18,6 +18,10 @@ namespace CoE.Ideas.Remedy
 
             var serviceProvider = services.BuildServiceProvider();
 
+            // sleep for 30s to ensure are required services are up and running
+            // (most affects local development in Docker but is fine for production)
+            System.Threading.Thread.Sleep(30);
+
             // instantiate the NewIdeaListener at least once to start the message pump
             serviceProvider.GetRequiredService<NewIdeaListener>();
         }
@@ -31,7 +35,19 @@ namespace CoE.Ideas.Remedy
             // Add logging
             services.AddSingleton(new LoggerFactory()
                 .AddConsole(Configuration)
-                .AddDebug()
+                .AddDebug((str, logLevel) =>
+                {
+                    // Microsoft is too noisy!
+                    //                    return logLevel >= LogLevel.Warning || (!string.IsNullOrWhiteSpace(str) && !str.StartsWith("Microsoft"));
+                    if (logLevel >= LogLevel.Warning)
+                        return true;
+                    else if (string.IsNullOrWhiteSpace(str))
+                        return false;
+                    else if (str.StartsWith("Microsoft"))
+                        return false;
+                    else
+                        return true;
+                })
                 .AddSerilog());
             services.AddLogging();
 
