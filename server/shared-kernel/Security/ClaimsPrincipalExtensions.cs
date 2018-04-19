@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
@@ -36,6 +37,13 @@ namespace CoE.Ideas.Shared.Security
                 else
                     throw new InvalidOperationException($"Expected claim of type {WordPress.WordPressUserSecurity.CLAIM_TYPE_ID} to be an integer, but got '{idClaim.Value}'");
             }
+        }
+
+        public static IEnumerable<string> GetRoles(this ClaimsPrincipal principal)
+        {
+            return principal.Claims
+                .Where(x => x.Type == ClaimTypes.Role)
+                .Select(x => x.Value);
         }
     }
 
