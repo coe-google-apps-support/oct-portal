@@ -1,17 +1,16 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t octava/initiatives-remedy-sblistener:stretch -f docker/Dockerfile.initiatives-remedy-sblistener.stretch ./server
+# docker image build -t coeoctava.azurecr.io/initiatives-remedy-sblistener:stretch -t coeoctava.azurecr.io/initiatives-remedy-sblistener:latest -f docker/Dockerfile.initiatives-remedy-sblistener.stretch .
 #
 # And to push to the CoE Azure Repo (requires credentials):
-# docker tag octava/initiatives-remedy-sblistener:stretch coeoctava.azurecr.io/initiatives-remedy-sblistener:stretch
-# docker tag octava/initiatives-remedy-sblistener:stretch coeoctava.azurecr.io/initiatives-remedy-sblistener:latest
+# docker tag coeoctava.azurecr.io/initiatives-remedy-sblistener:latest coeoctava.azurecr.io/initiatives-remedy-sblistener:v1.0.x
 # docker push coeoctava.azurecr.io/initiatives-remedy-sblistener:stretch
 # docker push coeoctava.azurecr.io/initiatives-remedy-sblistener:latest
 
 FROM microsoft/dotnet:2.0-sdk-stretch AS builder
 #ARG Configuration=Debug
 WORKDIR /usr/src/coe-initiatives-remedy-sblistener
-COPY . .
+COPY ./server .
 WORKDIR /usr/src/coe-initiatives-remedy-sblistener/ideas-integration-remedy/ideas-integration-remedy-sblistener
 RUN dotnet publish
 WORKDIR /usr/src/coe-initiatives-remedy-sblistener/ideas-integration-remedy/ideas-integration-remedy-sblistener/bin/$Configuration/netcoreapp2.0
@@ -22,5 +21,8 @@ ARG Configuration=Debug
 WORKDIR /var/coe/initiatives-remedy-sblistener
 COPY --from=builder /usr/src/coe-initiatives-remedy-sblistener/ideas-integration-remedy/ideas-integration-remedy-sblistener/bin/$Configuration/netcoreapp2.0/publish  .
 
-ENTRYPOINT ["dotnet"]
-CMD ["ideas-integration-remedy-sblistener.dll"]
+# Move our run time scripts into our image
+COPY ./docker/scripts/remedy-sblistener-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/remedy-sblistener-entrypoint.sh
+
+CMD /bin/bash /usr/local/bin/remedy-sblistener-entrypoint.sh
