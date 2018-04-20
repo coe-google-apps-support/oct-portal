@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,6 +17,7 @@ namespace CoE.Ideas.Core.Data
         public Initiative(Guid uid) : base()
         {
             Uid = uid;
+            _statusHistories = new HashSet<InitiativeStatusHistory>();
         }
 
         private Initiative() : base() { } // required for EF
@@ -90,6 +92,9 @@ namespace CoE.Ideas.Core.Data
         /// </summary>
         public InitiativeStatus Status { get; private set; }
 
+        internal ICollection<InitiativeStatusHistory> _statusHistories;
+        public IEnumerable<InitiativeStatusHistory> StatusHistories { get; private set; }
+
         /// <summary>
         /// Business case for the initiative
         /// </summary>
@@ -132,23 +137,52 @@ namespace CoE.Ideas.Core.Data
             AssigneeId = assigneeId;
 
             #region InitiativeUpdated Event
-            // changing assignee affects status
-            AddDomainEvent(new InitiativeStatusChangedDomainEvent(this, Status));
             #endregion
         }
 
-
-        public void UpdateStatus(InitiativeStatus newStatus)
+        public void UpdateStatus(InitiativeStatus newStatus, 
+            DateTime? newEta)
         {
             var oldStatus = Status;
             Status = newStatus;
 
+            // pop any stathistories after or including this one
+            foreach (var toRemove in _statusHistories.Where(x => (int)x.Status > (int)newStatus).ToList())
+            {
+                _statusHistories.Remove(toRemove);
+            }
+            var existingStatus = _statusHistories.SingleOrDefault(x => x.Status == newStatus);
+
+            if (existingStatus == null)
+            {
+                _statusHistories.Add(
+                    InitiativeStatusHistory.CreateInitiativeStatusChange(
+                        Uid, newStatus, DateTime.UtcNow, newEta, AssigneeId));
+            }
+            else
+            {
+                if (existingStatus.PersonId != AssigneeId)
+                    existingStatus.SetPeronId(AssigneeId);
+            }
+
             AddDomainEvent(new InitiativeStatusChangedDomainEvent(this, oldStatus));
         }
 
-        public Task UpdateStatusDescription(string newDescription)
+        public void UpdateCurrentStatusDescription(string newDescription)
         {
-            throw new NotImplementedException();
+            var currentStatusHistory = this._statusHistories
+                .OrderByDescending(x => x.StatusEntryDateUtc)
+                .FirstOrDefault();
+
+            if (currentStatusHistory == null)
+                throw new InvalidOperationException("There is no status history for this initiative");
+
+            if (string.IsNullOrWhiteSpace(newDescription))
+                currentStatusHistory.ResetStatusDescriptionToDefault();
+            else
+                currentStatusHistory.OverrideStatusDescription(newDescription);
+
+            AddDomainEvent(new InitiativeStatusDescriptionUpdatedDomainEvent(this, newDescription));
         }
     }
 }

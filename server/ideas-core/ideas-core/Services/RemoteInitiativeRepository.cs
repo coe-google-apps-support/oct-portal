@@ -106,16 +106,7 @@ namespace CoE.Ideas.Core.Services
             });
         }
 
-        public async Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId)
-        {
-            return await ExecuteAsync(async client =>
-            {
-                var ideaString = await client.GetStringAsync(initiativeId.ToString() + "/steps");
-                var contractResolver = new InitiativeContractResolver();
-                var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
-                return JsonConvert.DeserializeObject<IEnumerable<InitiativeStep>>(ideaString, settings);
-            });
-        }
+
 
         public Task<Initiative> UpdateInitiativeAsync(Initiative initiative)
         {

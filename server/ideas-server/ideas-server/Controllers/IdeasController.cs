@@ -253,34 +253,18 @@ namespace CoE.Ideas.Server.Controllers
                     watch.Start();
                 }
 
-                if (!ModelState.IsValid)
+                return await ValidateAndGetInitiative(id, async initiative =>
                 {
-                    _logger.Warning("Unable to retrieve steps from initiative {InitiativeId} because model state is not valid");
-                    return BadRequest(ModelState);
-                }
-
-                var steps = (await _repository.GetInitiativeStepsAsync(id)).ToList();
-                List<InitiativeStepDetail> returnValue = new List<InitiativeStepDetail>();
-                var currentStep = steps.FirstOrDefault(x => x.StartDate.HasValue && !x.CompletionDate.HasValue);
-                foreach (var step in steps)
-                {
-                    var assignee = step.AssigneePersonId.HasValue
-                        ? await _personRepository.GetPersonAsync(step.AssigneePersonId.Value)
-                        : null;
-                    returnValue.Add(await InitiativeStepDetail.FromInitiativeStepAsync(
-                        step, assignee, _stringTemplateService, step == currentStep));
-                }
-
-                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-                {
-                    watch.Stop();
-                    _logger.Information("Retrieved steps for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
-                }
-
-                if (returnValue == null)
-                    return NotFound();
-                else
-                    return Ok(returnValue);
+                    if (initiative.StatusHistories == null)
+                        return NotFound();
+                    else
+                    {
+                        var steps = await InitiativeStepDetail.FromInitiativeStatusHistoriesAsync(initiative.StatusHistories, _personRepository, _stringTemplateService);
+                        watch.Stop();
+                        _logger.Information("Retrieved steps for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+                        return Ok(steps);
+                    }
+                });
             }
         }
 
@@ -307,11 +291,12 @@ namespace CoE.Ideas.Server.Controllers
                 {
                     return await ValidateAndGetInitiative(id, async initiative =>
                     {
-                        var steps = await _repository.GetInitiativeStepsAsync(id);
+                        var steps = await InitiativeStepDetail.FromInitiativeStatusHistoriesAsync(initiative.StatusHistories, _personRepository, _stringTemplateService);
+
                         if (steps == null)
                             return NotFound();
 
-                        var firstStep = steps.First<InitiativeStep>();
+                        var firstStep = steps.First();
                         if (firstStep.CompletionDate == null)
                             return NotFound();
 
@@ -436,7 +421,8 @@ namespace CoE.Ideas.Server.Controllers
                     return base.BadRequest(ModelState);
                 }
 
-                await initiative.UpdateStatusDescription(newDescription);
+                initiative.UpdateCurrentStatusDescription(newDescription);
+                await _repository.UpdateInitiativeAsync(initiative);
                 return Ok();
             });
         }

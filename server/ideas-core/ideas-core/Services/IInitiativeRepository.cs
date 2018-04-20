@@ -17,6 +17,6 @@ namespace CoE.Ideas.Core.Services
         Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync();
         Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId);
 
-        Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId);
+        //Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId);
     }
 }

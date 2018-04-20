@@ -7,7 +7,7 @@ using System.Text;
 
 namespace CoE.Ideas.Core.Data
 {
-    internal class InitiativeStatusHistory : Entity<int>
+    public class InitiativeStatusHistory : Entity<int>
     {
 
         // EF requires an empty constructor
@@ -29,13 +29,15 @@ namespace CoE.Ideas.Core.Data
         /// </summary>
         public DateTime? ExpectedExitDateUtc { get; private set; }
 
-        // foreign key to Initiatives
-        public Guid InitiativeId { get; private set; }
-
         /// <summary>
         /// The id of the person assigned to the initiative
         /// </summary>
         public int? PersonId { get; private set; }
+        public void SetPeronId(int? newPersonId)
+        {
+            PersonId = newPersonId;
+        }
+
 
         /// <summary>
         /// When supplied, overrides the default string templates for the status descriptions
@@ -61,7 +63,6 @@ namespace CoE.Ideas.Core.Data
         {
             return new InitiativeStatusHistory()
             {
-                InitiativeId = initiativeId,
                 Status = newStatus,
                 StatusEntryDateUtc = statusEntryDateUtc,
                 ExpectedExitDateUtc = expectedExitDateUtc,

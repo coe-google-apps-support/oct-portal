@@ -2,6 +2,7 @@
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.Services;
 using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
+using EnsureThat;
 using Serilog.Context;
 using System;
 using System.Threading;
@@ -15,12 +16,19 @@ namespace CoE.Ideas.Remedy.SbListener
             IInitiativeRepository ideaRepository,
             IPersonRepository personRepository,
             IInitiativeMessageReceiver initiativeMessageReceiver,
+            IInitiativeStatusEtaService initiativeStatusEtaService,
             Serilog.ILogger logger)
         {
-            _ideaRepository = ideaRepository ?? throw new ArgumentNullException("ideaRepository");
-            _personRepository = personRepository ?? throw new ArgumentNullException("personRepository");
-            _initiativeMessageReceiver = initiativeMessageReceiver ?? throw new ArgumentNullException("initiativeMessageReceiver");
-            _logger = logger ?? throw new ArgumentNullException("logger");
+            EnsureArg.IsNotNull(ideaRepository);
+            EnsureArg.IsNotNull(personRepository);
+            EnsureArg.IsNotNull(initiativeMessageReceiver);
+            EnsureArg.IsNotNull(initiativeStatusEtaService);
+            EnsureArg.IsNotNull(logger);
+
+            _ideaRepository = ideaRepository;
+            _personRepository = personRepository;
+            _initiativeMessageReceiver = initiativeMessageReceiver;
+            _initiativeStatusEtaService = initiativeStatusEtaService;
 
             initiativeMessageReceiver.ReceiveMessages(
                 workOrderCreatedHandler: OnInitiativeWorkItemCreated,
@@ -30,6 +38,7 @@ namespace CoE.Ideas.Remedy.SbListener
         private readonly IInitiativeRepository _ideaRepository;
         private readonly IPersonRepository _personRepository;
         private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
+        private readonly IInitiativeStatusEtaService _initiativeStatusEtaService;
         private readonly Serilog.ILogger _logger;
 
         protected virtual async Task OnInitiativeWorkItemCreated(WorkOrderCreatedEventArgs args, CancellationToken token)
@@ -48,7 +57,8 @@ namespace CoE.Ideas.Remedy.SbListener
                 try
                 {
                     args.Initiative.SetWorkOrderId(args.WorkOrderId);
-                    args.Initiative.UpdateStatus(InitiativeStatus.Submit);
+                    args.Initiative.UpdateStatus(InitiativeStatus.Submit, 
+                        await _initiativeStatusEtaService.GetStatusEtaFromNowUtcAsync(InitiativeStatus.Submit));
                     await _ideaRepository.UpdateInitiativeAsync(args.Initiative);
                 }
                 catch (Exception err)
@@ -82,7 +92,7 @@ namespace CoE.Ideas.Remedy.SbListener
                         var workOrderStatus = Enum.Parse<StatusType>(args.UpdatedStatus);
 
                         bool anyChange = await UpdateIdeaAssignee(idea, args.AssigneeEmail, args.AssigneeDisplayName);
-                        anyChange = UpdateIdeaWithNewWorkOrderStatus(idea, workOrderStatus, args.UpdatedDateUtc) || anyChange;
+                        anyChange = await UpdateIdeaWithNewWorkOrderStatus(idea, workOrderStatus, args.UpdatedDateUtc) || anyChange;
                         if (anyChange)
                             await _ideaRepository.UpdateInitiativeAsync(idea);
                     }
@@ -117,7 +127,7 @@ namespace CoE.Ideas.Remedy.SbListener
         /// <param name="workOrderStatus"></param>
         /// <param name="workOrderLastModifiedUtc"></param>
         /// <returns>True if the initiative status is updated, otherwise false</returns>
-        protected bool UpdateIdeaWithNewWorkOrderStatus(Initiative initiative, StatusType workOrderStatus, DateTime workOrderLastModifiedUtc)
+        protected async Task<bool> UpdateIdeaWithNewWorkOrderStatus(Initiative initiative, StatusType workOrderStatus, DateTime workOrderLastModifiedUtc)
         {
             // here we have the business logic of translating Remedy statuses into our statuses
             var newIdeaStatus = GetInitiativeStatusForRemedyStatus(workOrderStatus);
@@ -126,7 +136,8 @@ namespace CoE.Ideas.Remedy.SbListener
                 // we must update our database!
                 _logger.Information("Updating status of initiative {InitiativeId} from {FromInitiativeStatus} to {ToIdeaStatus} because Remedy was updated on {LastModifiedDateUtc}",
                     initiative.Id, initiative.Status, newIdeaStatus, workOrderLastModifiedUtc);
-                initiative.UpdateStatus(newIdeaStatus.Value);
+                initiative.UpdateStatus(newIdeaStatus.Value, 
+                    await _initiativeStatusEtaService.GetStatusEtaFromNowUtcAsync(newIdeaStatus.Value));
                 return true;
             }
             else
