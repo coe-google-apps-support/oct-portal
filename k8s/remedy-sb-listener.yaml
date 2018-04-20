@@ -1,33 +1,31 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: wordpress
+  name: remedy-sb-listener
   labels:
-    app: wordpress
-    technology: wordpress
-    tier: frontend
+    app: remedy-sb-listener
+    technology: dotnetcore
+    tier: backend
     product: octava
 spec:
   replicas: 5
   selector:
     matchLabels:
-      app: wordpress
-      technology: wordpress
-      tier: frontend
+      app: remedy-sb-listener
+      technology: dotnetcore
+      tier: backend
       product: octava
   template:
     metadata:
       labels:
-        app: wordpress
-        technology: wordpress
-        tier: frontend
+        app: remedy-sb-listener
+        technology: dotnetcore
+        tier: backend
         product: octava
     spec:
       containers:
-      - name: wordpress
-        image: coeoctava.azurecr.io/wordpress:0.0.1
-        ports:
-        - containerPort: 80
+      - name: remedy-sb-listener
+        image: coeoctava.azurecr.io/initiatives-remedy-sblistener:v1.0.1
         volumeMounts:
         - name: secret-volume
           mountPath: "/etc/secrets"
@@ -35,4 +33,4 @@ spec:
       volumes:
       - name: secret-volume
         secret:
-          secretName: wordpress-config
+          secretName: remedysblistener-config
