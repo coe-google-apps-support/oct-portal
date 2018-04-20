@@ -31,6 +31,7 @@ namespace CoE.Ideas.Remedy.Watcher
 
 
             TryReadLastPollTime();
+            _logger.Information("Using last poll time of {PollTime}", lastPollTimeUtc);
         }
 
 
