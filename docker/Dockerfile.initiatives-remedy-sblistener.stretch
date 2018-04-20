@@ -18,7 +18,7 @@ WORKDIR /usr/src/coe-initiatives-remedy-sblistener/ideas-integration-remedy/idea
 
 FROM microsoft/dotnet:2.0-runtime-stretch
 ARG Configuration=Debug
-WORKDIR /var/coe/initiatives-remedy-sblistener
+WORKDIR /app
 COPY --from=builder /usr/src/coe-initiatives-remedy-sblistener/ideas-integration-remedy/ideas-integration-remedy-sblistener/bin/$Configuration/netcoreapp2.0/publish  .
 
 # Move our run time scripts into our image
