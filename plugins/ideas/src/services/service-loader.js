@@ -4,11 +4,11 @@
 
 // Services
 import { IdeasService } from './ideas/IdeasService'
-import { GithubService } from './github/github-service'
+import { StubbedIdeasService } from './ideas/StubbedIdeasService'
 let idea
 
 if (process.env.NODE_ENV === 'development') {
-  idea = IdeasService
+  idea = StubbedIdeasService
 } else if (process.env.NODE_ENV === 'production') {
   idea = IdeasService
 } else if (process.env.NODE_ENV === 'integration') {
@@ -27,7 +27,6 @@ const ServiceLoader = {
           this.services = {}
         }
         this.services.ideas = idea
-        this.services.github = GithubService
       }
     })
   }
