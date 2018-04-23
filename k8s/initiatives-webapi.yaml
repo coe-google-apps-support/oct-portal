@@ -1,0 +1,39 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: initiatives-webapi
+  labels:
+    app: initiatives-webapi
+    technology: dotnetcore
+    tier: frontend
+    product: octava
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: initiatives-webapi
+      technology: dotnetcore
+      tier: frontend
+      product: octava
+  template:
+    metadata:
+      labels:
+        app: initiatives-webapi
+        technology: dotnetcore
+        tier: frontend
+        product: octava
+    spec:
+      containers:
+      - name: initiatives-webapi
+        image: coeoctava.azurecr.io/initiatives-webapi:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: secret-volume
+          mountPath: "/etc/secrets"
+          readOnly: true
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: initiatives-webapi-config

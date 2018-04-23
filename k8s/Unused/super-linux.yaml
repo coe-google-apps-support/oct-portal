@@ -1,0 +1,37 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: super-linux
+  labels:
+    app: linux
+    tier: frontend
+    product: garbage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: linux
+      tier: frontend
+      product: garbage
+  template:
+    metadata:
+      labels:
+        app: linux
+        tier: frontend
+        product: garbage
+    spec:
+      containers:
+      - name: super-linux
+        image: ubuntu
+        command: ["sleep", "1d"]
+        ports:
+        - containerPort: 9000
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: "wordpress-db.development:3307"
+        - name: WORDPRESS_DB_NAME
+          value: "OctPortalWordPress"
+        - name: WORDPRESS_DB_USER
+          value: "root"
+        - name: WORDPRESS_DB_PASSWORD
+          value: "octavadev"
