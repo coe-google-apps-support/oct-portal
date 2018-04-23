@@ -7,7 +7,6 @@ const merge = require('webpack-merge')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const PhpOutputPlugin = require('webpack-php-output');
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
@@ -82,15 +81,6 @@ const webpackConfig = merge(baseWebpackConfig, {
       },
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency'
-    }),
-    new PhpOutputPlugin({
-      devServer: false, // false or string with server entry point, e.g: app.js or
-      outPutPath: false, // false for default webpack path of pass string to specify
-      assetsPathPrefix: '',
-      phpClassName: 'CoeIdeasWebpackBuiltFiles', //
-      phpFileName: 'CoeIdeasWebpackBuiltFiles',
-      nameSpace: false, // false {nameSpace: 'name', use: ['string'] or empty property or don't pass "use" property}
-      path: ''
     }),
     // keep module.id stable when vendor modules does not change
     new webpack.HashedModuleIdsPlugin(),

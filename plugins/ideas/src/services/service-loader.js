@@ -5,16 +5,22 @@
 // Services
 import { IdeasService } from './ideas/IdeasService'
 import { StubbedIdeasService } from './ideas/StubbedIdeasService'
+import { UserService } from './user/UserService'
 let idea
+let user
 
 if (process.env.NODE_ENV === 'development') {
   idea = StubbedIdeasService
+  user = UserService
 } else if (process.env.NODE_ENV === 'production') {
   idea = IdeasService
+  user = UserService
 } else if (process.env.NODE_ENV === 'integration') {
   idea = IdeasService
+  user = UserService
 } else if (process.env.NODE_ENV === 'local') {
   idea = IdeasService
+  user = UserService
 } else {
   throw new Error(`Unknown environment: ${process.env.NODE_ENV}`)
 }
@@ -27,6 +33,7 @@ const ServiceLoader = {
           this.services = {}
         }
         this.services.ideas = idea
+        this.services.user = user
       }
     })
   }
