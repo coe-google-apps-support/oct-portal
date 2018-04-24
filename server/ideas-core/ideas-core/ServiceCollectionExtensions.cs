@@ -2,6 +2,7 @@
 using CoE.Ideas.Core.Events;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.Services;
+using CoE.Ideas.Shared;
 using CoE.Ideas.Shared.Extensions;
 using EnsureThat;
 using MediatR;
@@ -38,6 +39,7 @@ namespace CoE.Ideas.Core
                 options.UseSqlServer(connectionString));
 
             services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
+            services.AddScoped<IHealthCheckable, LocalInitiativeRepository>();
 
             string applicationUrlFormatted = string.IsNullOrWhiteSpace(applicationUrl)
                 ? "http://localhost" : applicationUrl;

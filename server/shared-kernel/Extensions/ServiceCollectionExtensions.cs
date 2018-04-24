@@ -27,6 +27,7 @@ namespace CoE.Ideas.Shared.Extensions
                 options.UseMySql(connectionString));
 
             services.AddScoped<IWordPressRepository, WordPressRepository>();
+            services.AddScoped<IHealthCheckable, WordPressRepository>();
 
             return services;
 
