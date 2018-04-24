@@ -26,7 +26,8 @@ namespace CoE.Ideas.Core.Data
         public static Initiative Create(
             string title, 
             string description,
-            int ownerPersonId)
+            int ownerPersonId,
+            bool skipEmailNotification = false)
         {
             Ensure.String.IsNotNullOrWhiteSpace(title, nameof(title));
             Ensure.String.IsNotNullOrWhiteSpace(description, nameof(description));
@@ -43,7 +44,7 @@ namespace CoE.Ideas.Core.Data
             initiative.StatusHistories = new HashSet<InitiativeStatusHistory>();
             initiative.CreatedDate = DateTimeOffset.Now;
 
-            initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId));
+            initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId, skipEmailNotification));
 
             return initiative;
         }

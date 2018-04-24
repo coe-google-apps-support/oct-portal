@@ -13,11 +13,13 @@ namespace CoE.Ideas.Core.Events
     {
         public Guid InitiativeId { get; private set; }
         public int OwnerPeronId { get; private set; }
+        public bool SkipEmailNotification { get; private set; }
 
-        internal InitiativeCreatedDomainEvent(Guid initiativeId, int ownerPersonId)
+        internal InitiativeCreatedDomainEvent(Guid initiativeId, int ownerPersonId, bool skipEmailNotification)
         {
             InitiativeId = initiativeId;
             OwnerPeronId = ownerPersonId;
+            SkipEmailNotification = skipEmailNotification;
         }
     }
 }

@@ -41,7 +41,14 @@ namespace CoE.Ideas.Integration.Notification
 
             using (LogContext.PushProperty("InitiativeId", args.Initiative.Id))
             {
-                _logger.Information("Recieved message that an initiative has been logged");
+                _logger.Information("Recieved message that initiative {InitiativeId} has been logged", args.Initiative.Id);
+
+                if (args.SkipEmailNotification)
+                {
+                    _logger.Information("Skipping initiative {InitiativeId} because SkipEmailNotification was specified", args.Initiative.Id);
+                    return;
+                }
+
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
