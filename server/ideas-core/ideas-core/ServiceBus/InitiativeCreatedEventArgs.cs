@@ -7,5 +7,6 @@ namespace CoE.Ideas.Core.ServiceBus
     {
         public Initiative Initiative { get; set; }
         public ClaimsPrincipal Owner { get; set; }
+        public bool SkipEmailNotification { get; set; }
     }
 }

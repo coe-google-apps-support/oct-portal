@@ -86,7 +86,7 @@ namespace CoE.Ideas.Remedy
                     throw;
                 }
 
-                await SendWorkOrderCreatedMessage(initiative, owner, workOrderId);
+                await SendWorkOrderCreatedMessage(initiative, owner, workOrderId, e.SkipEmailNotification);
                 _logger.Information("Processed OnNewInitiative for initiative {InitiativeId} in {ElapsedMilliseconds}ms", initiative.Id, watch.ElapsedMilliseconds);
                 
             }
@@ -123,7 +123,7 @@ namespace CoE.Ideas.Remedy
             return remedyTicketId;
         }
 
-        protected virtual async Task SendWorkOrderCreatedMessage(Initiative initiative, ClaimsPrincipal owner, string workOrderId)
+        protected virtual async Task SendWorkOrderCreatedMessage(Initiative initiative, ClaimsPrincipal owner, string workOrderId, bool skipEmailNotification)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -133,7 +133,8 @@ namespace CoE.Ideas.Remedy
                 {
                     Initiative = initiative,
                     Owner = owner,
-                    WorkOrderId = workOrderId
+                    WorkOrderId = workOrderId,
+                    SkipEmailNotification = skipEmailNotification
                 });
 
             _logger.Information("Send remedy work order created message to service bus in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);

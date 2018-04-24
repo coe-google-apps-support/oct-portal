@@ -142,7 +142,7 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> PostInitiative([FromBody] AddInitiativeDto initiativeData)
+        public async Task<IActionResult> PostInitiative([FromBody] AddInitiativeDto initiativeData, bool skipEmailNotification = false)
         {
             EnsureArg.IsNotNull(initiativeData);
 
@@ -164,7 +164,7 @@ namespace CoE.Ideas.Server.Controllers
             {
                 int personId = User.GetPersonId();
 
-                newInitiative = Initiative.Create(initiativeData.Title, initiativeData.Description, personId);
+                newInitiative = Initiative.Create(initiativeData.Title, initiativeData.Description, personId, skipEmailNotification);
                 newInitiative = await _repository.AddInitiativeAsync(newInitiative);
 
                 watch.Stop();

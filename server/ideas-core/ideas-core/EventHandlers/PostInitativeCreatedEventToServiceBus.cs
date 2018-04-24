@@ -50,7 +50,8 @@ namespace CoE.Ideas.Core.EventHandlers
             await _initiativeMessageSender.SendInitiativeCreatedAsync(new InitiativeCreatedEventArgs()
             {
                 Initiative = initiative,
-                Owner = _httpContextAccessor.HttpContext.User
+                Owner = _httpContextAccessor.HttpContext.User,
+                SkipEmailNotification = notification.SkipEmailNotification
             });
         }
     }
