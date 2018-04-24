@@ -88,7 +88,7 @@ namespace CoE.Ideas.Shared.WordPress
                         watch.Start();
                         var result = cmd.ExecuteScalar();
                         watch.Stop();
-                        returnValue["Version"] = result;
+                        returnValue["version"] = result;
                         returnValue["pingMilliseconds"] = watch.ElapsedMilliseconds;
                     }
                 }

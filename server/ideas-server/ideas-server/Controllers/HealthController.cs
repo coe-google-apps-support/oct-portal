@@ -42,15 +42,15 @@ namespace CoE.Ideas.Server.Controllers
                     }
                     if (checkResult == null /*|| !User.IsInRole("Administrator")*/) // uncomment before going to production
                         checkResult = new Dictionary<string, object>();
-                    checkResult["Name"] = svc.GetType().Name;
-                    checkResult["FullName"] = svc.GetType().FullName;
+                    checkResult["name"] = svc.GetType().Name;
+                    checkResult["fullName"] = svc.GetType().FullName;
                     if (svcError != null)
                     {
-                        checkResult["Result"] = svcError.Message;
+                        checkResult["result"] = svcError.Message;
                         anyError = true;
                     }
                     else
-                        checkResult["Result"] = "OK";
+                        checkResult["result"] = "OK";
                     svcResults.Add(checkResult);
                 }
                 if (anyError)
