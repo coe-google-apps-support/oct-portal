@@ -48,7 +48,7 @@ services:
       - "8080:8080"
     restart: always
     volumes:
-      - ./plugins/ideas/:/usr/src/coe-initiatives/  
+      - ./plugins/ideas/:/app
 
   nginx:
     depends_on:
