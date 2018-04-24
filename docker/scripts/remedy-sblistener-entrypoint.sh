@@ -5,4 +5,4 @@ else
   echo "No appsettings.json config specified."
 fi
 
-dotnet ideas-server.dll "urls=http://0.0.0.0:5000"
+dotnet ideas-integration-remedy-sblistener.dll
