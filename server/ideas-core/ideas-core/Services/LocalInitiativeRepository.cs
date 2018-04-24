@@ -203,6 +203,9 @@ namespace CoE.Ideas.Core.Services
                         watch.Stop();
                         returnValue["version"] = result;
                         returnValue["pingMilliseconds"] = watch.ElapsedMilliseconds;
+
+                        cmd.CommandText = "SELECT TOP (1) [MigrationId] FROM[CoeIdeas].[dbo].[__EFMigrationsHistory] ORDER BY MigrationId DESC";
+                        returnValue["CurrentMigration"] = cmd.ExecuteScalar();
                     }
                 }
                 catch (Exception) { /* eat the exception */ }
