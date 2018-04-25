@@ -150,7 +150,7 @@ let x = class IdeasService {
     })
   }
 
-    /**
+  /**
    * Updates a investment form Url.
    * @param {String} id The id of the initiative.
    * @param {Object} url The url of the investment form.
@@ -159,6 +159,22 @@ let x = class IdeasService {
   static updateInvestmentForm (id, url) {
     return HTTP.put(`${id}/investmentForm`, {
       investmentRequestFormUrl: url
+    })
+  }
+
+  /**
+   * Updates a steps status description.
+   * @param {String} id The id of the initiative.
+   * @param {String} stepId The id of the step.
+   * @param {String} newDescription The new description.
+   * @return {Promise} A promise resolved if the operation was successful.
+   */
+  static updateStatusDescription (id, stepId, newDescription) {
+    return HTTP.put(`${id}/statusDescription`, { stepId, newDescription }).then(() => {
+      console.log('Success')
+    }, (err) => {
+      console.error(`Failed at route ${id}/statusDescription`)
+      throw err
     })
   }
 }

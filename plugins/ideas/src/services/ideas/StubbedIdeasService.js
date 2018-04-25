@@ -89,24 +89,28 @@ const fakeIdeas = {
 
 const steps1 = {
   data: [{
+    'stepId': 4,
     'title': 'Submitted',
     'description': 'Thank you! Your initiative has been submitted and will be assigned for review. An OCT representative will contact you within three (3) business days.',
     'startDate': 'Jan 28 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
     'completionDate': null
   },
   {
+    'stepId': 7,
     'title': 'In Review',
     'description': 'Etiam id vehicula metus. Fusce tristique vestibulum nulla, vitae vestibulum mi scelerisque ut. Sed consequat elit in lacus tristique, id mattis elit eleifend. Vestibulum nec augue maximus, feugiat justo sollicitudin, interdum metus.',
     'startDate': null,
     'completionDate': null
   },
   {
+    'stepId': 99,
     'title': 'In Collaboration',
     'description': 'Maecenas non enim a eros imperdiet scelerisque et a urna. Nunc at tincidunt massa, sit amet faucibus neque.',
     'startDate': null,
     'completionDate': null
   },
   {
+    'stepId': 123,
     'title': 'In Delivery',
     'description': 'Pellentesque ut neque tempus, placerat purus volutpat, scelerisque velit. Vivamus porta urna vel ligula lobortis, id porttitor quam maximus.',
     'startDate': null,
@@ -117,24 +121,28 @@ const steps1 = {
 
 const steps2 = {
   data: [{
+    'stepId': 0,
     'title': 'Submitted',
     'description': 'Thank you! Your initiative was submitted.',
     'startDate': 'Feb 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
     'completionDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
   },
   {
+    'stepId': 3,
     'title': 'In Review',
     'description': 'Your initiative has been assigned and reviewed.',
     'startDate': 'Feb 14 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
     'completionDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)'
   },
   {
+    'stepId': 7,
     'title': 'In Collaboration',
     'description': 'We are actively working with you to complete an Investment Request for your initiative.',
     'startDate': 'Feb 17 2018 12:23:47 GMT-0700 (Mountain Standard Time)',
     'completionDate': null
   },
   {
+    'stepId': 123,
     'title': 'In Delivery',
     'description': 'Pellentesque ut neque tempus, placerat purus volutpat, scelerisque velit. Vivamus porta urna vel ligula lobortis, id porttitor quam maximus.',
     'startDate': null,
@@ -320,6 +328,30 @@ let x = class StubbedIdeasService {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(url)
+      }, QUERY_TIMEOUT)
+    })
+  }
+
+  /**
+   * Updates a steps status description.
+   * @param {String} id The id of the initiative.
+   * @param {String} stepId The id of the step.
+   * @param {String} newDescription The new description.
+   * @return {Promise} A promise resolved if the operation was successful.
+   */
+  static updateStatusDescription (id, stepId, newDescription) {
+    let shouldFail = false
+    if (id == null || stepId == null || newDescription == null) {
+      shouldFail = true
+    }
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (shouldFail) {
+          reject(new Error('Failed updating status description.'))
+        } else {
+          resolve()
+        }
       }, QUERY_TIMEOUT)
     })
   }
