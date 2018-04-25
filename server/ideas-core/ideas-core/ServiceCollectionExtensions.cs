@@ -59,6 +59,10 @@ namespace CoE.Ideas.Core
             services.Configure<BusinessCalendarServiceOptions>(x => x.PayrollCalenderServiceUrl = calendarServiceUrl);
             services.AddSingleton<IBusinessCalendarService, BusinessCalendarService>();
 
+            services.AddSingleton<IInitiativeStatusEtaService, InitiativeStatusEtaService>();
+
+            services.AddPermissionSecurity(connectionString);
+
             return services;
         }
 

@@ -84,6 +84,20 @@ namespace CoE.Ideas.Shared.Extensions
             return services;
         }
 
+        public static IServiceCollection AddPermissionSecurity(this IServiceCollection services,
+            string permissionDbConnectionString)
+        {
+            // defaults (for dev environment) - this is not the same as Production!!
+            string connectionString = string.IsNullOrWhiteSpace(permissionDbConnectionString)
+                ? "server=wordpress-db;uid=root;pwd=octavadev;database=OctPortalWordPress"
+                : permissionDbConnectionString;
+
+            services.AddDbContext<SecurityContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            return services;
+        }
+
         public static IServiceCollection AddPeopleService(this IServiceCollection services,
             string peopleServiceUrl = null)
         {

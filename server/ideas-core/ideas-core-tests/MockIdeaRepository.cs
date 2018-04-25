@@ -50,10 +50,6 @@ namespace CoE.Ideas.Core.Tests
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<Initiative> UpdateInitiativeAsync(Initiative initiative)
         {
