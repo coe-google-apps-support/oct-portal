@@ -29,6 +29,7 @@ namespace CoE.Ideas.Remedy.SbListener
             _personRepository = personRepository;
             _initiativeMessageReceiver = initiativeMessageReceiver;
             _initiativeStatusEtaService = initiativeStatusEtaService;
+            _logger = logger;
 
             initiativeMessageReceiver.ReceiveMessages(
                 workOrderCreatedHandler: OnInitiativeWorkItemCreated,
@@ -57,8 +58,13 @@ namespace CoE.Ideas.Remedy.SbListener
                 try
                 {
                     args.Initiative.SetWorkOrderId(args.WorkOrderId);
-                    args.Initiative.UpdateStatus(InitiativeStatus.Submit, 
-                        await _initiativeStatusEtaService.GetStatusEtaFromNowUtcAsync(InitiativeStatus.Submit));
+                    _logger.Information("Getting ETA");
+                    DateTime? eta = await _initiativeStatusEtaService.GetStatusEtaFromNowUtcAsync(InitiativeStatus.Submit);
+                    _logger.Information("ETA Is {ETA}", eta);
+
+                    args.Initiative.UpdateStatus(InitiativeStatus.Submit, eta);
+
+                    _logger.Information("Saving Initiative {InitiativeId} to database", args.Initiative.Id);
                     await _ideaRepository.UpdateInitiativeAsync(args.Initiative);
                 }
                 catch (Exception err)
