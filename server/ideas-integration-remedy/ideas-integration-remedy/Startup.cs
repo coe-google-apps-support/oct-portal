@@ -18,10 +18,6 @@ namespace CoE.Ideas.Remedy
 
             var serviceProvider = services.BuildServiceProvider();
 
-            // sleep for 30s to ensure are required services are up and running
-            // (most affects local development in Docker but is fine for production)
-            System.Threading.Thread.Sleep(30);
-
             // instantiate the NewIdeaListener at least once to start the message pump
             serviceProvider.GetRequiredService<NewIdeaListener>();
         }

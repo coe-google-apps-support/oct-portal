@@ -210,3 +210,32 @@ VALUES (N'20180419152741_OverridableStatusDescriptions', N'2.0.2-rtm-10011');
 
 GO
 
+IF OBJECT_ID(N'__EFMigrationsHistory') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+
+GO
+
+CREATE TABLE [PermissionRoles] (
+    [Id] int NOT NULL IDENTITY,
+    [Permssion] nvarchar(max) NULL,
+    [Role] nvarchar(max) NULL,
+    CONSTRAINT [PK_PermissionRoles] PRIMARY KEY ([Id])
+);
+
+GO
+
+INSERT INTO [dbo].[PermissionRoles]([Permssion],[Role]) VALUES ('UpdateStatusDescription','Octava Business Analyst')
+
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20180424031308_Permissions', N'2.0.2-rtm-10011');
+
+GO
+
