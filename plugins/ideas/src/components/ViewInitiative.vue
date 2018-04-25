@@ -86,7 +86,8 @@ export default {
     busCaseLoading: false,
     invFormLoading: false,
     isLoading: true,
-    resources: null
+    resources: null,
+    activeUser: null
   }),
   components: {
     Assignee,
@@ -94,6 +95,13 @@ export default {
     AttachFileButton
   },
   created () {
+    this.services.user.getMe().then((user) => {
+      this.activeUser = user
+    }, (err) => {
+      this.errors.push(err)
+      console.err('ViewInitiative: failed getMe().')
+    })
+
     this.services.ideas.getInitiative(this.slug).then((initiative) => {
       this.initiative = initiative
       return Promise.all([this.services.ideas.getResources(initiative.id), this.services.ideas.getInitiativeSteps(initiative.id)])

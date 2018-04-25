@@ -1,2 +1,5 @@
-#start SQL Server, start the script to create the DB and import the data
-./sql-startup.sh & /opt/mssql/bin/sqlservr
+echo "Running the startup script."
+./sql-startup.sh > sql-startup.log 2>&1 &
+
+echo "Starting sqlservr."
+/opt/mssql/bin/sqlservr

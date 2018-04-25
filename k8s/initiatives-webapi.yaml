@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: initiatives-webapi
-        image: coeoctava.azurecr.io/initiatives-webapi:latest
+        image: coeoctava.azurecr.io/initiatives-webapi:v1.0.4
         imagePullPolicy: Always
         ports:
         - containerPort: 5000

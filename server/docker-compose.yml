@@ -20,7 +20,7 @@ services:
       MYSQL_ROOT_PASSWORD: octavadev
 
   initiatives-db:
-    image: coeoctava.azurecr.io/initiatives-db
+    image: coeoctava.azurecr.io/initiatives-db:v1.0.0
     ports:
       - "1433:1433"
     environment:
@@ -48,7 +48,7 @@ services:
       - "8080:8080"
     restart: always
     volumes:
-      - ./plugins/ideas/:/usr/src/coe-initiatives/  
+      - ./plugins/ideas/:/app
 
   nginx:
     depends_on:

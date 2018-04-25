@@ -1,9 +1,9 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t coeoctava.azurecr.io/initiatives-db:latest -f docker/Dockerfile.mssql.ubuntu16 ./docker/mssql
+# docker image build -t coeoctava.azurecr.io/initiatives-db:${PUT VERSION HERE} -f docker/Dockerfile.mssql.ubuntu16 ./docker/mssql
 #
 # And to push to the CoE Azure Repo (requires credentials):
-# docker push coeoctava.azurecr.io/initiatives-db:latest
+# docker push coeoctava.azurecr.io/initiatives-db:${PUT VERSION HERE}
 
 #based on https://msdn.microsoft.com/en-us/magazine/mt784660.aspx
 #(for using an entrypoint to preload data)
@@ -20,5 +20,6 @@ COPY entrypoint.sh entrypoint.sh
 COPY sql-startup.sh sql-startup.sh
 COPY sql-setup.sql sql-setup.sql
 RUN chmod +x ./sql-startup.sh
+RUN chmod +x ./entrypoint.sh
 
 CMD /bin/bash ./entrypoint.sh

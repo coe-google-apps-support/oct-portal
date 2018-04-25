@@ -55,22 +55,21 @@ export default {
       window.open(this.initiative.url, '_blank')
     },
     getImage () {
-      const root = process.env.STATIC_ASSETS
       const images = [
-        `${root}/assets/cards/card1.png`,
-        `${root}/assets/cards/card2.png`,
-        `${root}/assets/cards/card3.png`,
-        `${root}/assets/cards/card4.png`,
-        `${root}/assets/cards/card5.png`,
-        `${root}/assets/cards/card6.png`,
-        `${root}/assets/cards/card7.png`,
-        `${root}/assets/cards/card8.png`,
-        `${root}/assets/cards/card9.png`,
-        `${root}/assets/cards/card10.png`,
-        `${root}/assets/cards/card11.png`,
-        `${root}/assets/cards/card12.png`,
-        `${root}/assets/cards/card13.png`,
-        `${root}/assets/cards/card14.png`
+        `https://octava.blob.core.windows.net/cdn-store/cards/card1.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card2.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card3.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card4.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card5.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card6.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card7.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card8.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card9.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card10.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card11.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card12.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card13.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card14.png`
       ]
 
       const randIndex = (this.initiative.title.charCodeAt(0) + this.initiative.title.charCodeAt(1) + this.initiative.id) % images.length
