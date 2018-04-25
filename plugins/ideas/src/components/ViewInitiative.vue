@@ -37,7 +37,7 @@
         </div>
       </div>
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
-        <Steps :steps="steps"></Steps>
+        <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
       </div>
     </div>    
 
@@ -87,7 +87,8 @@ export default {
     invFormLoading: false,
     isLoading: true,
     resources: null,
-    activeUser: null
+    activeUser: null,
+    canEditSteps: false
   }),
   components: {
     Assignee,
@@ -97,6 +98,7 @@ export default {
   created () {
     this.services.user.getMe().then((user) => {
       this.activeUser = user
+      this.canEditSteps = user.permissions.indexOf('editStatusDescription') !== -1
     }, (err) => {
       this.errors.push(err)
       console.err('ViewInitiative: failed getMe().')
@@ -154,6 +156,18 @@ export default {
       }, (err) => {
         this.errors.push(err)
         console.log(err)
+      })
+    },
+    updateDescription (stepIndex) {
+      console.log('update description')
+      let newDescription = this.steps[stepIndex].description
+      let stepId = this.steps[stepIndex].stepId
+      console.log(`Okay for real now, setting to "${newDescription}"`)
+      this.services.ideas.updateStatusDescription(this.initiative.id, stepId, newDescription).then(() => {
+        console.log('Status description update successful.')
+      }, (err) => {
+        console.error('Failed updating status description.')
+        this.errors.push(err)
       })
     }
   }

@@ -13,8 +13,22 @@
             :description="getCompletion(steps[index].completionDate)"
             v-on:expand="expand"/>
 
-          <div class="md-stepper-content" :class="{ 'md-active': stepStates[index] }">
-            {{ steps[index].description }}
+          <div class="md-stepper-content" style="overflow: visible;" :class="{ 'md-active': stepStates[index] }">
+            <div style="position: relative" v-if="isEditable && isEditing === index">
+              <md-field :class="[textfieldClasses]">
+                <label>Step Description</label>
+                <md-textarea v-model="steps[index].description"></md-textarea>
+              </md-field>
+              <md-button v-on:click="$emit('description-updated', index); isEditing = -1" class="md-icon-button md-raised md-primary octava-text-confirm">
+                <md-icon>thumb_up</md-icon>
+              </md-button>
+            </div>
+            <div v-else>
+              {{ steps[index].description }}
+              <md-button v-if="isEditable" v-on:click="isEditing = index" class="md-icon-button octava-text-confirm">
+                <md-icon>edit</md-icon>
+              </md-button>
+            </div>
           </div>
         </div>
       </div>
@@ -29,17 +43,22 @@ import StepHeader from '@/components/stepper/StepHeader'
 export default {
   name: 'Steps',
   props: [
-    'steps'
+    'steps',
+    'isEditable'
   ],
   data: () => ({
     containerStyles: {},
-    contentStyles: {},
+    contentStyles: {
+      overflow: 'visible'
+    },
     stepStates: [],
     headerState: {
       ACTIVE: 'active',
       DISABLED: 'disabled',
       DONE: 'done'
-    }
+    },
+    activeStepDescription: '',
+    isEditing: -1
   }),
   computed: {
     steppersClasses () {
@@ -47,6 +66,12 @@ export default {
         'md-vertical': true,
         'md-dynamic-height': true,
         'md-theme-default': true
+      }
+    },
+    textfieldClasses () {
+      // md-field md-theme-default md-has-value md-has-textarea
+      return {
+        'md-highlight': true
       }
     }
   },
@@ -97,6 +122,13 @@ export default {
   @import "node_modules/vue-material/src/components/MdElevation/mixins";
   @import "node_modules/vue-material/src/components/MdLayout/mixins";
   
+  .octava-text-confirm {
+    position: absolute;
+    right: -26px;
+    top: calc(50% - 20px);
+    z-index: 2;
+  }
+
   $md-stepper-icon-size: 24px;
   .md-steppers {
     transition: .3s $md-transition-default-timing;

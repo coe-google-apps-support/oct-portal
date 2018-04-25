@@ -10,7 +10,7 @@ const me = {
   permissions: [
     'canWhisperHorses',
     'canUnclogDrains',
-    'canEditStatusDescriptions'
+    'editStatusDescription'
   ]
 }
 
