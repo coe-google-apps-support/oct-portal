@@ -1,5 +1,6 @@
 ﻿using CoE.Ideas.Shared.Security.Events;
 using CoE.Ideas.Shared.WordPress;
+using EnsureThat;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -15,20 +16,19 @@ namespace CoE.Ideas.Shared.Security
     {
         public WordPressCookieAuthenticationHandler(IOptionsMonitor<WordPressCookieAuthenticationOptions> options,
             IWordPressUserSecurity wordPressUserSecurity,
-            ILoggerFactory logger,
+            ILoggerFactory loggerFactory,
+            Serilog.ILogger logger,
             UrlEncoder encoder,
-            //IDataProtectionProvider dataProtection, 
-            ISystemClock clock) : base(options, logger, encoder, clock)
+            ISystemClock clock) : base(options, loggerFactory, encoder, clock)
         {
-            _wordPressUserSecurity = wordPressUserSecurity ?? throw new ArgumentNullException("wordPressUserSecurity");
-
-            if (logger == null)
-                throw new ArgumentNullException("logger");
-            _logger = logger.CreateLogger<WordPressCookieAuthenticationHandler>() ?? throw new ArgumentNullException("logger");
+            EnsureArg.IsNotNull(wordPressUserSecurity);
+            EnsureArg.IsNotNull(logger);
+            _wordPressUserSecurity = wordPressUserSecurity;
+            _logger = logger;
         }
 
         private readonly IWordPressUserSecurity _wordPressUserSecurity;
-        private readonly ILogger<WordPressCookieAuthenticationHandler> _logger;
+        private readonly Serilog.ILogger _logger;
 
         /// <summary>
         /// The handler calls methods on the events which give the application control at certain points where processing is occurring. 
@@ -57,7 +57,7 @@ namespace CoE.Ideas.Shared.Security
             }
             else
             {
-                _logger.LogInformation("Validating WordPress cookie using custom event");
+                _logger.Information("Validating WordPress cookie using custom event");
                 await Events.OnValidateCookie(context);
             }
 
@@ -82,31 +82,31 @@ namespace CoE.Ideas.Shared.Security
 
         protected virtual async Task OnValidateCookieDefaultHandler(CookieReceivedContext context)
         {
-            _logger.LogInformation("Validating WordPress cookie using default event and WordPress url {WordPressUrl}", Options.WordPressUrl);
+            _logger.Information("Validating WordPress cookie using default event and WordPress url {WordPressUrl}", Options.WordPressUrl);
             var cookie = context.HttpContext.Request.Cookies[GetWordPressCookieName(wordPressUrl: Options.WordPressUrl)];
             if (string.IsNullOrWhiteSpace(cookie))
             {
-                _logger.LogError("WordPress cookie not found for url {WordPressUrl}", Options.WordPressUrl);
+                _logger.Error("WordPress cookie not found for url {WordPressUrl}", Options.WordPressUrl);
 #if !DEBUG
                 context.Fail($"WordPress cookie not found for url { Options.WordPressUrl }");
 #endif
             }
             else
             {
-                _logger.LogDebug("WordPress cookie found with value {WordPressCookie}", cookie);
+                _logger.Debug("WordPress cookie found with value {WordPressCookie}", cookie);
                 try
                 {
                     context.Principal = await _wordPressUserSecurity.AuthenticateUserAsync(cookie);
                     if (context.Principal.Identity.IsAuthenticated)
-                        _logger.LogInformation("Authenticated user {UserName}", context.Principal.Identity.Name);
+                        _logger.Information("Authenticated user {UserName}", context.Principal.Identity.Name);
                     else
                     {
-                        _logger.LogWarning("WordPressCookie reported success however identity was not authenticated. Cookie: { WordPressCookie }", cookie);
+                        _logger.Warning("WordPressCookie reported success however identity was not authenticated. Cookie: { WordPressCookie }", cookie);
                     }
                 }
                 catch (Exception err)
                 {
-                    _logger.LogError(err, "Unable to create Principal from cookie '{WordPressCookie}'; {ErrorMessage}", cookie, err.Message);
+                    _logger.Error(err, "Unable to create Principal from cookie '{WordPressCookie}'; {ErrorMessage}", cookie, err.Message);
 #if !DEBUG
                     context.Fail(err);
 #endif
