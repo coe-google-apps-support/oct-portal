@@ -89,6 +89,8 @@ namespace CoE.Ideas.Core.Data
         [MaxLength(128)]
         public string WorkOrderId { get; private set; }
 
+        public int ApexId { get; private set; }
+
         /// <summary>
         /// Status of the Initiative
         /// </summary>
@@ -144,6 +146,17 @@ namespace CoE.Ideas.Core.Data
             Ensure.String.IsNotNullOrWhiteSpace(newWorkOrderId, nameof(newWorkOrderId));
 
             WorkOrderId = newWorkOrderId;           
+
+            #region InitiativeUpdated Event
+
+            #endregion
+        }
+
+        public void SetApexId(int newApexId)
+        {
+            //Ensure.That.IsNotNullOrWhiteSpace(newApexId, nameof(newApexId));
+
+            ApexId = newApexId;
 
             #region InitiativeUpdated Event
 
