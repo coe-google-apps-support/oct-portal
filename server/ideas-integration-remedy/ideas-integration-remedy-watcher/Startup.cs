@@ -57,6 +57,8 @@ namespace CoE.Ideas.Remedy.Watcher
             services.AddInitiativeMessaging(Configuration.GetConnectionString("ServiceBus"), 
                 Configuration["Ideas:ServiceBusTopic"]);
 
+            services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
+
             // Add services to talk to Remedy
             services.Configure<RemedyCheckerOptions>(Configuration.GetSection("Remedy"));
             services.AddSingleton<New_Port_0PortType, 
