@@ -66,6 +66,8 @@ namespace CoE.Ideas.Remedy
             services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
 
             services.AddPeopleService();
+            
+            services.AddStatusEtaService();
 
             services.AddSingleton<New_Port_0PortType>(x =>
             {

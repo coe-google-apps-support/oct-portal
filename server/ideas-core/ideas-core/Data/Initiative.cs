@@ -40,6 +40,7 @@ namespace CoE.Ideas.Core.Data
                 Stakeholder.Create(ownerPersonId, StakeholderType.Owner)
             };
             initiative.Status = InitiativeStatus.Initiate;
+            initiative.StatusHistories = new HashSet<InitiativeStatusHistory>();
             initiative.CreatedDate = DateTimeOffset.Now;
 
             initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId));
@@ -93,7 +94,23 @@ namespace CoE.Ideas.Core.Data
         public InitiativeStatus Status { get; private set; }
 
         internal ICollection<InitiativeStatusHistory> _statusHistories;
-        public IEnumerable<InitiativeStatusHistory> StatusHistories { get; private set; }
+        public IEnumerable<InitiativeStatusHistory> StatusHistories
+        {
+            get { return _statusHistories; }
+            private set
+            {
+                if (value == null)
+                    _statusHistories = new HashSet<InitiativeStatusHistory>();
+                else
+                {
+                    var theValue = value as ICollection<InitiativeStatusHistory>;
+                    if (theValue == null)
+                        _statusHistories = value.ToList();
+                    else
+                        _statusHistories = theValue;
+                }
+            }
+        }
 
         /// <summary>
         /// Business case for the initiative
@@ -162,7 +179,7 @@ namespace CoE.Ideas.Core.Data
             else
             {
                 if (existingStatus.PersonId != AssigneeId)
-                    existingStatus.SetPeronId(AssigneeId);
+                    existingStatus.SetPersonId(AssigneeId);
             }
 
             AddDomainEvent(new InitiativeStatusChangedDomainEvent(this, oldStatus));

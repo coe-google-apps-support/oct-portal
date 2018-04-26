@@ -28,8 +28,7 @@ namespace CoE.Ideas.Core
         /// <returns>The passed in services, for chaining</returns>
         public static IServiceCollection AddLocalInitiativeConfiguration(this IServiceCollection services,
             string dbConnectionString = null,
-            string applicationUrl = null,
-            string payrollCalenderServiceUrl = null)
+            string applicationUrl = null)
         { 
             // default value is one is not supplied - Note this is not what Production/UAT uses, but just a convenience for local dev
             string connectionString = string.IsNullOrWhiteSpace(dbConnectionString)
@@ -54,14 +53,9 @@ namespace CoE.Ideas.Core
 
             services.AddScoped<IStringTemplateService, StringTemplateService>();
 
-            string calendarServiceUrl = string.IsNullOrWhiteSpace(payrollCalenderServiceUrl)
-                ? "http://webapps1.edmonton.ca/CoE.PayrollCalendar.WebApi/api/PayrollCalendar" : payrollCalenderServiceUrl;
-            services.Configure<BusinessCalendarServiceOptions>(x => x.PayrollCalenderServiceUrl = calendarServiceUrl);
-            services.AddSingleton<IBusinessCalendarService, BusinessCalendarService>();
-
-            services.AddSingleton<IInitiativeStatusEtaService, InitiativeStatusEtaService>();
-
             services.AddPermissionSecurity(connectionString);
+
+            services.AddScoped<IInitiativeStatusEtaRepository, InitiativeStatusEtaRepository>();
 
             return services;
         }
@@ -140,6 +134,12 @@ namespace CoE.Ideas.Core
                 x => new InitiativeApplicationInfoProvider(applicationUrlFormatted));
             services.AddScoped<IInitiativeService, InitiativeService>();
 
+            services.Configure<RemoteStatusEtaRepositoryOptions>(x =>
+            {
+                x.IdeasApiUrl = ideasApiUrl;
+            });
+            services.AddScoped<IInitiativeStatusEtaRepository, RemoteStatusEtaRepository>();
+            services.AddScoped<IInitiativeStatusEtaService, InitiativeStatusEtaService>();
 
             //services.Configure<WordPressClientOptions>(options =>
             //{
@@ -153,6 +153,17 @@ namespace CoE.Ideas.Core
             return services;
         }
 
+
+        public static IServiceCollection AddStatusEtaService(this IServiceCollection services,
+            string payrollCalenderServiceUrl = null)
+        {
+            string calendarServiceUrl = string.IsNullOrWhiteSpace(payrollCalenderServiceUrl)
+                 ? "http://webapps1.edmonton.ca/CoE.PayrollCalendar.WebApi/api/PayrollCalendar" : payrollCalenderServiceUrl;
+            services.Configure<BusinessCalendarServiceOptions>(x => x.PayrollCalenderServiceUrl = calendarServiceUrl);
+            services.AddSingleton<IBusinessCalendarService, BusinessCalendarService>();
+            services.AddSingleton<IInitiativeStatusEtaService, InitiativeStatusEtaService>();
+            return services;
+        }
 
     }
 }

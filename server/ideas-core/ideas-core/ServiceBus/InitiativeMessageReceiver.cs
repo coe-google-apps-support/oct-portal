@@ -146,7 +146,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 {
                     System.Diagnostics.Trace.TraceWarning($"InitiativeCreated handler threw the following error, abandoning message for future processing: { err.Message }");
                     await _messageReceiver.AbandonAsync(msg.LockToken);
-                    }
+                }
             }
         }
 
@@ -166,8 +166,11 @@ namespace CoE.Ideas.Core.ServiceBus
                 var idea = await GetMessageInitiative(msg, owner.Item);
                 if (idea.WasMessageDeadLettered)
                     return;
-                var workOrderId = await GetMessageString(msg, propertyName: "WorkOrderId");
+                var workOrderId = await GetMessageString(msg, propertyName: nameof(WorkOrderCreatedEventArgs.WorkOrderId));
                 if (workOrderId.WasMessageDeadLettered)
+                    return;
+                var eta = await GetMessageProperty<DateTime?>(msg, propertyName: nameof(WorkOrderCreatedEventArgs.EtaUtc));
+                if (eta.WasMessageDeadLettered)
                     return;
 
                 try
@@ -176,7 +179,8 @@ namespace CoE.Ideas.Core.ServiceBus
                     {
                         Initiative = idea.Item,
                         Owner = owner.Item,
-                        WorkOrderId = workOrderId.Item
+                        WorkOrderId = workOrderId.Item,
+                        EtaUtc = eta.Item
                     }, token);
                     await _messageReceiver.CompleteAsync(msg.LockToken);
                 }
@@ -197,22 +201,27 @@ namespace CoE.Ideas.Core.ServiceBus
 
             if (await EnsureMessageLabel(msg, InitiativeMessageSender.WORK_ORDER_UPDATED))
             {
-                var updatedStatus = await GetMessageString(msg, propertyName: "WorkOrderStatus");
-                if (updatedStatus.WasMessageDeadLettered)
-                    return;
-                var workOrderId = await GetMessageString(msg, propertyName: "WorkOrderId");
+                var workOrderId = await GetMessageString(msg, propertyName: nameof(WorkOrderCreatedEventArgs.WorkOrderId));
                 if (workOrderId.WasMessageDeadLettered)
                     return;
-                var updateTime = await GetMessageProperty<DateTime>(msg, propertyName: "WorkOrderUpdateTimeUtc");
+                var remedyStatus = await GetMessageString(msg, propertyName: nameof(WorkOrderUpdatedEventArgs.RemedyStatus));
+                if (remedyStatus.WasMessageDeadLettered)
+                    return;
+                var updatedStatus = await GetMessageString(msg, propertyName: nameof(WorkOrderUpdatedEventArgs.UpdatedStatus));
+                if (updatedStatus.WasMessageDeadLettered)
+                    return;
+                var updateTime = await GetMessageProperty<DateTime>(msg, propertyName: nameof(WorkOrderUpdatedEventArgs.UpdatedDateUtc)); // "WorkOrderUpdateTimeUtc");
                 if (updateTime.WasMessageDeadLettered)
                     return;
-                var assigneeEmail = await GetMessageString(msg, propertyName: "WorkOrderAssigneeEmail", allowNullOrEmptyString: true);
-                var assigneeDisplayname = await GetMessageString(msg, propertyName: "WorkOrderAssigneeDisplayName", allowNullOrEmptyString: true);
+                var assigneeEmail = await GetMessageString(msg, propertyName: nameof(WorkOrderUpdatedEventArgs.AssigneeEmail), allowNullOrEmptyString: true);
+                var assigneeDisplayname = await GetMessageString(msg, propertyName: nameof(WorkOrderUpdatedEventArgs.AssigneeDisplayName), allowNullOrEmptyString: true);
+                var eta = await GetMessageProperty<DateTime?>(msg, propertyName: nameof(WorkOrderUpdatedEventArgs.EtaUtc));
 
                 try
                 {
                     await handler(new WorkOrderUpdatedEventArgs()
                     {
+                        RemedyStatus = remedyStatus.Item,
                         UpdatedStatus = updatedStatus.Item,
                         UpdatedDateUtc = updateTime.Item,
                         WorkOrderId = workOrderId.Item,

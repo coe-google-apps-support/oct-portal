@@ -7,5 +7,6 @@ namespace CoE.Ideas.Core.ServiceBus
     public class WorkOrderCreatedEventArgs : InitiativeCreatedEventArgs
     {
         public string WorkOrderId { get; set; }
+        public DateTime? EtaUtc { get; set; }
     }
 }
