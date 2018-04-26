@@ -1,0 +1,38 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t coeoctava.azurecr.io/wordpress-backup:v0.0.whatever -f docker/mysql-backup/Dockerfile.wordpress-backup ./docker/mysql-backup
+#
+# To run this image, you must provide a bunch of secrets:
+# docker run -e DB_NAME=database -e DB_USER=useruser -e DB_PASSWORD=password -e DB_HOST=localhost -e DB_PORT=3306 -e AZ_COPY_KEY=please_set_me coeoctava.azurecr.io/wordpress-backup:v0.0.whatever
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker push coeoctava.azurecr.io/wordpress-backup:v0.0.whatever
+
+FROM microsoft/dotnet:2.0-runtime
+
+LABEL authors = "Jared Rewerts (jared.rewerts@edmonton.ca)"
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends rsync \
+    && apt-get install -y --no-install-recommends mysql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN set -ex \
+    && curl -L -o azcopy.tar.gz https://aka.ms/downloadazcopyprlinux \
+    && tar -xf azcopy.tar.gz && rm -f azcopy.tar.gz \
+    && ./install.sh && rm -f install.sh \
+    && rm -rf azcopy
+
+# These should be overridden with real secrets
+ENV DB_NAME database
+ENV DB_USER useruser
+ENV DB_PASSWORD password
+ENV DB_HOST localhost
+ENV DB_PORT 3306
+
+ENV AZ_COPY_KEY please_set_me
+
+COPY ./backup-db.sh /
+RUN chmod +x /backup-db.sh
+
+CMD /bin/bash /backup-db.sh

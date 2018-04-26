@@ -33,7 +33,7 @@ namespace CoE.Ideas.Core.Data
         /// The id of the person assigned to the initiative
         /// </summary>
         public int? PersonId { get; private set; }
-        public void SetPeronId(int? newPersonId)
+        public void SetPersonId(int? newPersonId)
         {
             PersonId = newPersonId;
         }

@@ -68,6 +68,8 @@ namespace CoE.Ideas.Remedy.Watcher
 
             services.AddPeopleService(Configuration["PeopleService"]);
 
+            services.AddStatusEtaService();
+
             return services;
         }
 

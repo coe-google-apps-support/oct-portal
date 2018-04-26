@@ -16,19 +16,17 @@ namespace CoE.Ideas.Remedy.SbListener
             IInitiativeRepository ideaRepository,
             IPersonRepository personRepository,
             IInitiativeMessageReceiver initiativeMessageReceiver,
-            IInitiativeStatusEtaService initiativeStatusEtaService,
             Serilog.ILogger logger)
         {
             EnsureArg.IsNotNull(ideaRepository);
             EnsureArg.IsNotNull(personRepository);
             EnsureArg.IsNotNull(initiativeMessageReceiver);
-            EnsureArg.IsNotNull(initiativeStatusEtaService);
             EnsureArg.IsNotNull(logger);
 
             _ideaRepository = ideaRepository;
             _personRepository = personRepository;
             _initiativeMessageReceiver = initiativeMessageReceiver;
-            _initiativeStatusEtaService = initiativeStatusEtaService;
+            _logger = logger;
 
             initiativeMessageReceiver.ReceiveMessages(
                 workOrderCreatedHandler: OnInitiativeWorkItemCreated,
@@ -38,7 +36,6 @@ namespace CoE.Ideas.Remedy.SbListener
         private readonly IInitiativeRepository _ideaRepository;
         private readonly IPersonRepository _personRepository;
         private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
-        private readonly IInitiativeStatusEtaService _initiativeStatusEtaService;
         private readonly Serilog.ILogger _logger;
 
         protected virtual async Task OnInitiativeWorkItemCreated(WorkOrderCreatedEventArgs args, CancellationToken token)
@@ -57,8 +54,10 @@ namespace CoE.Ideas.Remedy.SbListener
                 try
                 {
                     args.Initiative.SetWorkOrderId(args.WorkOrderId);
-                    args.Initiative.UpdateStatus(InitiativeStatus.Submit, 
-                        await _initiativeStatusEtaService.GetStatusEtaFromNowUtcAsync(InitiativeStatus.Submit));
+
+                    args.Initiative.UpdateStatus(InitiativeStatus.Submit, args.EtaUtc);
+
+                    _logger.Information("Saving Initiative {InitiativeId} to database", args.Initiative.Id);
                     await _ideaRepository.UpdateInitiativeAsync(args.Initiative);
                 }
                 catch (Exception err)
@@ -89,10 +88,10 @@ namespace CoE.Ideas.Remedy.SbListener
                 {
                     using (LogContext.PushProperty("InitiativeId", idea.Id))
                     {
-                        var workOrderStatus = Enum.Parse<StatusType>(args.UpdatedStatus);
+                        var workOrderStatus = Enum.Parse<InitiativeStatus>(args.UpdatedStatus);
 
                         bool anyChange = await UpdateIdeaAssignee(idea, args.AssigneeEmail, args.AssigneeDisplayName);
-                        anyChange = await UpdateIdeaWithNewWorkOrderStatus(idea, workOrderStatus, args.UpdatedDateUtc) || anyChange;
+                        anyChange = UpdateIdeaWithNewWorkOrderStatus(idea, workOrderStatus, args.UpdatedDateUtc, args.EtaUtc) || anyChange;
                         if (anyChange)
                             await _ideaRepository.UpdateInitiativeAsync(idea);
                     }
@@ -127,58 +126,22 @@ namespace CoE.Ideas.Remedy.SbListener
         /// <param name="workOrderStatus"></param>
         /// <param name="workOrderLastModifiedUtc"></param>
         /// <returns>True if the initiative status is updated, otherwise false</returns>
-        protected async Task<bool> UpdateIdeaWithNewWorkOrderStatus(Initiative initiative, StatusType workOrderStatus, DateTime workOrderLastModifiedUtc)
+        protected bool UpdateIdeaWithNewWorkOrderStatus(Initiative initiative, InitiativeStatus newIdeaStatus, DateTime workOrderLastModifiedUtc, DateTime? etaUtc)
         {
-            // here we have the business logic of translating Remedy statuses into our statuses
-            var newIdeaStatus = GetInitiativeStatusForRemedyStatus(workOrderStatus);
-            if (newIdeaStatus.HasValue && newIdeaStatus.Value != initiative.Status)
+            if (initiative.Status != newIdeaStatus)
             {
-                // we must update our database!
                 _logger.Information("Updating status of initiative {InitiativeId} from {FromInitiativeStatus} to {ToIdeaStatus} because Remedy was updated on {LastModifiedDateUtc}",
                     initiative.Id, initiative.Status, newIdeaStatus, workOrderLastModifiedUtc);
-                initiative.UpdateStatus(newIdeaStatus.Value, 
-                    await _initiativeStatusEtaService.GetStatusEtaFromNowUtcAsync(newIdeaStatus.Value));
+                initiative.UpdateStatus(newIdeaStatus, etaUtc);
                 return true;
             }
             else
-            {
-                _logger.Information("Initative is already at status {InitiativeStatus}, so ignoring update to WorkItemId {WorkOrderId}", initiative.Status);
                 return false;
-            }
         }
 
 
 
-        protected virtual InitiativeStatus? GetInitiativeStatusForRemedyStatus(StatusType remedyStatusType)
-        {
-            // here we have the business logic of translating Remedy statuses into our statuses
-            InitiativeStatus newIdeaStatus;
-            switch (remedyStatusType)
-            {
-                case StatusType.Assigned:
-                    newIdeaStatus = InitiativeStatus.Submit;
-                    break;
-                case StatusType.Cancelled:
-                    newIdeaStatus = InitiativeStatus.Cancelled;
-                    break;
-                case StatusType.Planning:
-                    newIdeaStatus = InitiativeStatus.Review;
-                    break;
-                case StatusType.InProgress:
-                    newIdeaStatus = InitiativeStatus.Collaborate;
-                    break;
-                case StatusType.Completed:
-                    newIdeaStatus = InitiativeStatus.Deliver;
-                    break;
-                case StatusType.Closed:
-                case StatusType.Pending:
-                case StatusType.Rejected:
-                case StatusType.WaitingApproval:
-                default:
-                    return null; // no change
-            }
-            return newIdeaStatus;
-        }
+
 
         /// <summary>
         /// Updated the person assigned to the initiative

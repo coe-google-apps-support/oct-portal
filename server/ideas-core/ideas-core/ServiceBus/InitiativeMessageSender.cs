@@ -64,7 +64,8 @@ namespace CoE.Ideas.Core.ServiceBus
             var userProperties = new Dictionary<string, object>();
             SetInitiative(args.Initiative, userProperties);
             SetOwner(args.Owner, userProperties);
-            SetWorkOrder(args.WorkOrderId, userProperties);
+            SetWorkOrder(args.WorkOrderId, args.EtaUtc, userProperties);
+            //ADD ETA!
             return _messageSender.SendMessageAsync(REMEDY_WORK_ITEM_CREATED, userProperties);
         }
 
@@ -78,24 +79,25 @@ namespace CoE.Ideas.Core.ServiceBus
             dictionary["OwnerClaims"] = SerializeUser(owner);
         }
 
-        internal static void SetWorkOrder(string workOrderId, IDictionary<string, object> dictionary)
+        internal static void SetWorkOrder(string workOrderId, DateTime? etaUtc, IDictionary<string, object> dictionary)
         {
-            dictionary["WorkOrderId"] = workOrderId;
+            dictionary[nameof(WorkOrderCreatedEventArgs.WorkOrderId)] = workOrderId;
+            dictionary[nameof(WorkOrderCreatedEventArgs.EtaUtc)] = etaUtc;
         }
 
 
-        internal static void SetWorkOrder(string workOrderId, 
+        internal static void SetWorkOrder(string remedyStatus,
             string updatedStatus,
             DateTime updateDateUtc,
             string assigneeEmail,
             string assigneeDisplayName,
             IDictionary<string, object> dictionary)
         {
-            dictionary["WorkOrderId"] = workOrderId;
-            dictionary["WorkOrderStatus"] = updatedStatus;
-            dictionary["WorkOrderUpdateTimeUtc"] = updateDateUtc;
-            dictionary["WorkOrderAssigneeEmail"] = assigneeEmail;
-            dictionary["WorkOrderAssigneeDisplayName"] = assigneeDisplayName;
+            dictionary[nameof(WorkOrderUpdatedEventArgs.RemedyStatus)] = remedyStatus;
+            dictionary[nameof(WorkOrderUpdatedEventArgs.UpdatedStatus)] = updatedStatus;
+            dictionary[nameof(WorkOrderUpdatedEventArgs.UpdatedDateUtc)] = updateDateUtc;
+            dictionary[nameof(WorkOrderUpdatedEventArgs.AssigneeEmail)] = assigneeEmail;
+            dictionary[nameof(WorkOrderUpdatedEventArgs.AssigneeDisplayName)] = assigneeDisplayName;
         }
 
 
@@ -115,11 +117,13 @@ namespace CoE.Ideas.Core.ServiceBus
 
             var userProperties = new Dictionary<string, object>();
 
-            SetWorkOrder(args.WorkOrderId, 
+            SetWorkOrder(args.WorkOrderId, args.EtaUtc, userProperties);
+            SetWorkOrder(args.RemedyStatus,
                 args.UpdatedStatus, 
                 args.UpdatedDateUtc, 
                 args.AssigneeEmail, 
-                args.AssigneeDisplayName,
+                args.AssigneeDisplayName, 
+                
                 userProperties);
 
             return _messageSender.SendMessageAsync(WORK_ORDER_UPDATED, userProperties);

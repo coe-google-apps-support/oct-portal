@@ -42,17 +42,20 @@ namespace CoE.Ideas.Core.Services
 
         public Task<Initiative> GetInitiativeAsync(Guid id)
         {
-            return _initiativeContext.Initiatives.SingleOrDefaultAsync(x => x.Uid == id);
+            return _initiativeContext.Initiatives
+                .Include(x => x.StatusHistories)
+                .SingleOrDefaultAsync(x => x.Uid == id);
         }
 
         public Task<Initiative> GetInitiativeAsync(int id)
         {
-            return _initiativeContext.Initiatives.FindAsync(id);
+            return _initiativeContext.Initiatives.Include(x => x.StatusHistories).SingleOrDefaultAsync(x => x.Id == id);
         }
 
         private static IQueryable<InitiativeInfo> CreateInitiativeInfoQuery(IQueryable<Initiative> query)
         {
             return query
+                .Include(x => x.StatusHistories)
                 .Select(x => InitiativeInfo.Create(x));
         }
 
@@ -85,6 +88,7 @@ namespace CoE.Ideas.Core.Services
         public Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
         {
             return _initiativeContext.Initiatives
+                .Include(x => x.StatusHistories)
                 .FirstOrDefaultAsync(x => x.WorkOrderId == workOrderId);
         }
 

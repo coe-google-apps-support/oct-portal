@@ -16,7 +16,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace CoE.Ideas.Core.Services
 {
-    internal class RemoteInitiativeRepository : IInitiativeRepository
+    internal class RemoteInitiativeRepository : IInitiativeRepository, IRemoteRepository
     {
         public RemoteInitiativeRepository(IWordPressUserSecurity wordPressUserSecurity,
             IOptions<RemoteInitiativeRepositoryOptions> options,
@@ -142,7 +142,7 @@ namespace CoE.Ideas.Core.Services
             }
         }
 
-        private class InitiativeContractResolver : DefaultContractResolver
+        internal class InitiativeContractResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
             {

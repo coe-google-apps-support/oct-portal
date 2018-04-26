@@ -8,7 +8,7 @@ metadata:
     tier: backend
     product: octava
 spec:
-  replicas: 5
+  replicas: 1
   selector:
     matchLabels:
       app: remedy-sb-listener
@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: remedy-sb-listener
-        image: coeoctava.azurecr.io/initiatives-remedy-sblistener:v1.0.1
+        image: coeoctava.azurecr.io/initiatives-remedy-sblistener:v1.0.2
         volumeMounts:
         - name: secret-volume
           mountPath: "/etc/secrets"

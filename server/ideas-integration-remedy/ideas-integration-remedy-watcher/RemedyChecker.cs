@@ -1,4 +1,6 @@
-﻿using CoE.Ideas.Core.ServiceBus;
+﻿using CoE.Ideas.Core.Data;
+using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Core.Services;
 using CoE.Ideas.Remedy.Watcher.RemedyServiceReference;
 using CoE.Ideas.Shared.People;
 using Microsoft.Extensions.Options;
@@ -15,14 +17,18 @@ namespace CoE.Ideas.Remedy.Watcher
     public class RemedyChecker : IRemedyChecker
     {
         public RemedyChecker(IRemedyService remedyService,
+            IInitiativeRepository initiativeRepository,
             IInitiativeMessageSender initiativeMessageSender,
             IPeopleService peopleService,
+            IInitiativeStatusEtaService initiativeStatusEtaService,
             Serilog.ILogger logger,
             IOptions<RemedyCheckerOptions> options)
         {
             _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
+            _initiativeRepository = initiativeRepository ?? throw new ArgumentNullException("initiativeRepository");
             _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
             _peopleService = peopleService ?? throw new ArgumentNullException("peopleService");
+            _initiativeStatusEtaService = initiativeStatusEtaService ?? throw new ArgumentNullException("initiativeStatusEtaService");
             _logger = logger ?? throw new ArgumentException("logger");
 
             if (options == null || options.Value == null)
@@ -36,8 +42,10 @@ namespace CoE.Ideas.Remedy.Watcher
 
 
         private readonly IRemedyService _remedyService;
+        private readonly IInitiativeRepository _initiativeRepository;
         private readonly IInitiativeMessageSender _initiativeMessageSender;
         private readonly IPeopleService _peopleService;
+        private readonly IInitiativeStatusEtaService _initiativeStatusEtaService;
         private readonly Serilog.ILogger _logger;
         private RemedyCheckerOptions _options;
 
@@ -184,15 +192,24 @@ namespace CoE.Ideas.Remedy.Watcher
             else
             {
                 _logger.Information("Looking up assignee with 3+3 {User3and3}", assignee3and3);
-                try
-                {
-                    assignee = await _peopleService.GetPersonAsync(assignee3and3);
-                }
-                catch (Exception err)
-                {
-                    _logger.Warning("Unable to get email for Remedy Work Order Assignee {User3and3}: {ErrorMessage}", assignee3and3, err.Message);
-                }
+                try { assignee = await _peopleService.GetPersonAsync(assignee3and3); }
+                catch (Exception err) { _logger.Warning(err, "Unable to get email for Remedy Work Order Assignee {User3and3}: {ErrorMessage}", assignee3and3, err.Message); }
             }
+
+            InitiativeStatus? newInitiativeStatus = GetInitiativeStatusForRemedyStatus(workItem.Status);
+            if (newInitiativeStatus == null)
+            {
+                _logger.Information("Abondining updated work item because an appropriate InitiativeStatus could not be determined from the Remedy Status {WorkItemStatus}", workItem.Status);
+                return null;
+            }
+
+            DateTime? etaUtc = null;
+
+            try
+            {
+                etaUtc = await _initiativeStatusEtaService.GetStatusEtaFromNowUtcAsync(newInitiativeStatus.Value);
+            }
+            catch (Exception err) { _logger.Warning(err, "Unable to get an updated ETA for initiative status {InitiativeStatus}: {ErrorMessage}", newInitiativeStatus.Value, err.Message); }
 
             try
             {
@@ -202,9 +219,11 @@ namespace CoE.Ideas.Remedy.Watcher
                 {
                     WorkOrderId = workItem.InstanceId,
                     UpdatedDateUtc = workItem.Last_Modified_Date.ToUniversalTime(),
-                    UpdatedStatus = workItem.Status.ToString(),
+                    RemedyStatus = workItem.Status.ToString(),
+                    UpdatedStatus = newInitiativeStatus.Value.ToString(),
                     AssigneeEmail = assignee?.Email,
-                    AssigneeDisplayName = assignee?.DisplayName
+                    AssigneeDisplayName = assignee?.DisplayName,
+                    EtaUtc = etaUtc
                 };
                 await _initiativeMessageSender.SendWorkOrderUpdatedAsync(args);
                 return args;
@@ -219,5 +238,41 @@ namespace CoE.Ideas.Remedy.Watcher
         }
 
 
+        protected virtual async Task<Initiative> GetInitiativeForWorkOrderId(string workOrderId)
+        {
+            return await _initiativeRepository.GetInitiativeByWorkOrderIdAsync(workOrderId);
+        }
+
+
+        protected virtual InitiativeStatus? GetInitiativeStatusForRemedyStatus(StatusType remedyStatusType)
+        {
+            // here we have the business logic of translating Remedy statuses into our statuses
+            InitiativeStatus newIdeaStatus;
+            switch (remedyStatusType)
+            {
+                case StatusType.Assigned:
+                    newIdeaStatus = InitiativeStatus.Submit;
+                    break;
+                case StatusType.Cancelled:
+                    newIdeaStatus = InitiativeStatus.Cancelled;
+                    break;
+                case StatusType.Planning:
+                    newIdeaStatus = InitiativeStatus.Review;
+                    break;
+                case StatusType.InProgress:
+                    newIdeaStatus = InitiativeStatus.Collaborate;
+                    break;
+                case StatusType.Completed:
+                    newIdeaStatus = InitiativeStatus.Deliver;
+                    break;
+                case StatusType.Closed:
+                case StatusType.Pending:
+                case StatusType.Rejected:
+                case StatusType.WaitingApproval:
+                default:
+                    return null; // no change
+            }
+            return newIdeaStatus;
+        }
     }
 }

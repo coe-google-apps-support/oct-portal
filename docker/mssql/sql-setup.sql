@@ -239,3 +239,8 @@ VALUES (N'20180424031308_Permissions', N'2.0.2-rtm-10011');
 
 GO
 
+
+
+ALTER TABLE [dbo].[InitiativeStatusHistories] DROP COLUMN InitiativeId;
+
+ALTER TABLE [dbo].[InitiativeStatusHistories] ADD InitiativeId INT NOT NULL;

@@ -21,6 +21,7 @@ namespace CoE.Ideas.Remedy
             IInitiativeService initiativeService,
             IRemedyService remedyService,
             IPeopleService peopleService,
+            IInitiativeStatusEtaService initiativeStatusEtaService,
             Serilog.ILogger logger) 
         {
             EnsureArg.IsNotNull(initiativeMessageReceiver);
@@ -28,6 +29,7 @@ namespace CoE.Ideas.Remedy
             EnsureArg.IsNotNull(initiativeService);
             EnsureArg.IsNotNull(remedyService);
             EnsureArg.IsNotNull(peopleService);
+            EnsureArg.IsNotNull(initiativeStatusEtaService);
             EnsureArg.IsNotNull(logger);
 
             _initiativeMessageReceiver = initiativeMessageReceiver;
@@ -35,6 +37,7 @@ namespace CoE.Ideas.Remedy
             _initiativeService = initiativeService;
             _remedyService = remedyService;
             _peopleService = peopleService;
+            _initiativeStatusEtaService = initiativeStatusEtaService;
             _logger = logger ?? throw new ArgumentNullException("logger");
 
             _logger.Information("Starting messsage pump for New Initiatives");
@@ -46,6 +49,7 @@ namespace CoE.Ideas.Remedy
         private readonly IInitiativeService _initiativeService;
         private readonly IRemedyService _remedyService;
         private readonly IPeopleService _peopleService;
+        private readonly IInitiativeStatusEtaService _initiativeStatusEtaService;
         private readonly Serilog.ILogger _logger;
 
         protected virtual Task OnError(ExceptionReceivedEventArgs err)
@@ -86,7 +90,20 @@ namespace CoE.Ideas.Remedy
                     throw;
                 }
 
-                await SendWorkOrderCreatedMessage(initiative, owner, workOrderId);
+                DateTime? eta;
+                try
+                {
+                    _initiativeStatusEtaService.Authenticate(e.Owner);
+                    eta = await _initiativeStatusEtaService.GetStatusEtaFromNowUtcAsync(InitiativeStatus.Submit);
+                }
+                catch (Exception err)
+                {
+                    _logger.Error(err, "Unable to get ETA for Submitted status");
+                    throw;
+                }
+                
+
+                await SendWorkOrderCreatedMessage(initiative, owner, workOrderId, eta);
                 _logger.Information("Processed OnNewInitiative for initiative {InitiativeId} in {ElapsedMilliseconds}ms", initiative.Id, watch.ElapsedMilliseconds);
                 
             }
@@ -123,7 +140,8 @@ namespace CoE.Ideas.Remedy
             return remedyTicketId;
         }
 
-        protected virtual async Task SendWorkOrderCreatedMessage(Initiative initiative, ClaimsPrincipal owner, string workOrderId)
+
+        protected virtual async Task SendWorkOrderCreatedMessage(Initiative initiative, ClaimsPrincipal owner, string workOrderId, DateTime? etaUtc)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -133,7 +151,8 @@ namespace CoE.Ideas.Remedy
                 {
                     Initiative = initiative,
                     Owner = owner,
-                    WorkOrderId = workOrderId
+                    WorkOrderId = workOrderId,
+                    EtaUtc = etaUtc
                 });
 
             _logger.Information("Send remedy work order created message to service bus in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);

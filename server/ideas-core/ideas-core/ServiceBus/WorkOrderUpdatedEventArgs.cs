@@ -11,5 +11,7 @@ namespace CoE.Ideas.Core.ServiceBus
         public string UpdatedStatus { get; set; }
         public string AssigneeEmail { get; set; }
         public string AssigneeDisplayName { get; set; }
+        public DateTime? EtaUtc { get; set; }
+        public string RemedyStatus { get; set; }
     }
 }
