@@ -18,6 +18,11 @@ spec:
                 secretKeyRef:
                   name: wordpress-backup
                   key: AZ_COPY_KEY
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: DB_NAME
             - name: DB_HOST
               valueFrom:
                 secretKeyRef:
