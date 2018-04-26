@@ -49,6 +49,10 @@ namespace CoE.Ideas.Remedy.Watcher
                 .ReadFrom.Configuration(Configuration)
                 .CreateLogger());
 
+            services.AddRemoteInitiativeConfiguration(Configuration["IdeasApi"],
+                Configuration["WordPress:Url"]);
+
+
             // Add service to talk to ServiceBus
             services.AddInitiativeMessaging(Configuration.GetConnectionString("ServiceBus"), 
                 Configuration["Ideas:ServiceBusTopic"]);
