@@ -1,0 +1,41 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: wordpress-backup
+spec:
+  schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: wordpress-backup
+            image: coeoctava.azurecr.io/wordpress-backup:v1.0.0
+            env:
+            - name: AZ_COPY_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: AZ_COPY_KEY
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: DB_HOST
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: DB_PASSWORD
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: DB_PORT
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: DB_USER
+          restartPolicy: Never
