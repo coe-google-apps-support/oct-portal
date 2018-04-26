@@ -244,3 +244,53 @@ GO
 ALTER TABLE [dbo].[InitiativeStatusHistories] DROP COLUMN InitiativeId;
 
 ALTER TABLE [dbo].[InitiativeStatusHistories] ADD InitiativeId INT NOT NULL;
+
+DECLARE @var0 sysname;
+SELECT @var0 = [d].[name]
+FROM [sys].[default_constraints] [d]
+INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+WHERE ([d].[parent_object_id] = OBJECT_ID(N'InitiativeStatusHistories') AND [c].[name] = N'InitiativeId');
+IF @var0 IS NOT NULL EXEC(N'ALTER TABLE [InitiativeStatusHistories] DROP CONSTRAINT [' + @var0 + '];');
+ALTER TABLE [InitiativeStatusHistories] ALTER COLUMN [InitiativeId] int NULL;
+
+GO
+
+ALTER TABLE [Initiatives] ADD [ApexId] int NOT NULL DEFAULT 0;
+
+GO
+
+CREATE INDEX [IX_InitiativeStatusHistories_InitiativeId] ON [InitiativeStatusHistories] ([InitiativeId]);
+
+GO
+
+ALTER TABLE [InitiativeStatusHistories] ADD CONSTRAINT [FK_InitiativeStatusHistories_Initiatives_InitiativeId] FOREIGN KEY ([InitiativeId]) REFERENCES [Initiatives] ([Id]) ON DELETE NO ACTION;
+
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20180426212005_AddApexId', N'2.0.2-rtm-10011');
+
+GO
+
+SET IDENTITY_INSERT [dbo].[Initiatives] ON 
+GO
+INSERT [dbo].[Initiatives] ([Id], [AssigneeId], [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], [Status], [Title], [Uid], [WorkOrderId]) VALUES (20, 33, NULL, CAST(N'2018-04-26T21:49:30.5515831+00:00' AS DateTimeOffset), N'There was initially a concern over the networking ability of the computer system at the funicular site.  Through discussions with IT Networking this has been resolved and is no longer an issue.', NULL, 5, N' Funicular - System implementation ', N'1f5f98fd-3c4e-4c2b-9245-5b4a9688efbf', N'AGGCMB6PF7AHNAPHT109PGWOGC8EBH')
+GO
+SET IDENTITY_INSERT [dbo].[Initiatives] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Stakeholder] ON 
+GO
+INSERT [dbo].[Stakeholder] ([Id], [InitiativeId], [PersonId], [Type]) VALUES (20, 20, 3, 0)
+GO
+SET IDENTITY_INSERT [dbo].[Stakeholder] OFF
+GO
+SET IDENTITY_INSERT [dbo].[InitiativeStatusHistories] ON 
+GO
+INSERT [dbo].[InitiativeStatusHistories] ([Id], [PersonId], [Status], [StatusEntryDateUtc], [ExpectedExitDateUtc], [StatusDescriptionOverride], [InitiativeId]) VALUES (7, NULL, 3, CAST(N'2018-04-26T21:49:32.2059619' AS DateTime2), CAST(N'2018-04-27T15:49:32.0430000' AS DateTime2), NULL, 20)
+GO
+INSERT [dbo].[InitiativeStatusHistories] ([Id], [PersonId], [Status], [StatusEntryDateUtc], [ExpectedExitDateUtc], [StatusDescriptionOverride], [InitiativeId]) VALUES (8, 33, 4, CAST(N'2018-04-26T21:51:17.8431642' AS DateTime2), NULL, NULL, 20)
+GO
+INSERT [dbo].[InitiativeStatusHistories] ([Id], [PersonId], [Status], [StatusEntryDateUtc], [ExpectedExitDateUtc], [StatusDescriptionOverride], [InitiativeId]) VALUES (9, 33, 5, CAST(N'2018-04-26T21:53:21.1775655' AS DateTime2), NULL, NULL, 20)
+GO
+SET IDENTITY_INSERT [dbo].[InitiativeStatusHistories] OFF
+GO

@@ -20,7 +20,7 @@ services:
       MYSQL_ROOT_PASSWORD: octavadev
 
   initiatives-db:
-    image: coeoctava.azurecr.io/initiatives-db:v1.0.0
+    image: coeoctava.azurecr.io/initiatives-db:v1.0.1
     ports:
       - "1433:1433"
     environment:

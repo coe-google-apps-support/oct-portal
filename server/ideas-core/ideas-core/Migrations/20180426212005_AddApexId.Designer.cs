@@ -11,9 +11,10 @@ using System;
 namespace CoE.Ideas.Core.Migrations
 {
     [DbContext(typeof(InitiativeContext))]
-    partial class InitiativeContextModelSnapshot : ModelSnapshot
+    [Migration("20180426212005_AddApexId")]
+    partial class AddApexId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
