@@ -131,11 +131,35 @@ namespace CoE.Ideas.Shared.Extensions
             string serviceBusConnectionString = null)
         {
             string connectionString = string.IsNullOrWhiteSpace(serviceBusConnectionString)
-                ? "server=initiatives-db;database=ServiceBusEmulator;User Id=OctavaService;Password=P@ssw0rd;MultipleActiveResultSets=True;"
+                ? "server=initiatives-db;database=ServiceBusEmulator;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;"
                 : serviceBusConnectionString;
 
             services.AddDbContext<ServiceBusEmulatorContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IServiceBusEmulator, ServiceBusEmulator>();
+
+
+#if DEBUG
+            int retryCount = 0;
+            while (true)
+            {
+                try
+                {
+                    using (var context = new ServiceBusEmulatorContext(
+                        new DbContextOptionsBuilder<ServiceBusEmulatorContext>()
+                        .UseSqlServer(connectionString).Options))
+                    {
+                        context.Database.Migrate();
+                        break;
+                    }
+                }
+                catch (Exception)
+                {
+                    if (retryCount++ > 30)
+                        throw;
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+#endif
 
             return services;
         }
