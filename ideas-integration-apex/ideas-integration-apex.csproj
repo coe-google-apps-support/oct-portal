@@ -18,4 +18,10 @@
     <ProjectReference Include="..\server\shared-kernel\shared-kernel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

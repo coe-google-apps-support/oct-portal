@@ -9,5 +9,7 @@ namespace CoE.Ideas.Shared.WordPress
     {
         Task<WordPressUser> GetUserAsync(int id);
         Task<WordPressUser> GetUserByEmailAsync(string email);
+
+        Task<WordPressUser> CreateUser(string firstName, string lastName, string email, string phoneNumber);
     }
 }

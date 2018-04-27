@@ -49,13 +49,13 @@ namespace CoE.Ideas.Server.Controllers
                 }
 
                 var personId = await _personRepository.GetPersonIdByEmailAsync(email);
-                if (personId <= 0)
+                if (personId == null)
                 {
                     _logger.Error("Unable to find a user for {EmailAddress}", email);
                     return NotFound($"Unable to find a user for {email}");
                 }
 
-                var person = await _personRepository.GetPersonAsync(personId);
+                var person = await _personRepository.GetPersonAsync(personId.Value);
                 if (person == null)
                 {
                     _logger.Error("Unable to find a user for {EmailAddress} with id {PersonId}", email, personId);

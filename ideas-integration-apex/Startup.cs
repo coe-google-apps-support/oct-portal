@@ -1,5 +1,6 @@
 ﻿using System;
 using CoE.Ideas.Core;
+using CoE.Ideas.Server.Controllers;
 using CoE.Ideas.Shared.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,7 +63,17 @@ namespace CoE.Ideas.Integration.Apex
 
             services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"));
 
+            services.AddPeopleService();
+
+            services.Configure<ApexOptions>(x => x.ApexConnectionString = Configuration.GetConnectionString("Apex"));
+
             services.AddSingleton<ApexListener>();
+
+            services.AddScoped<IdeasController>();
+
+            services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
+
+            services.AddInitiativeMessaging(serviceBusEmulatorConnectionString: Configuration.GetConnectionString("ServiceBusEmulator"));
 
             return services;
         }

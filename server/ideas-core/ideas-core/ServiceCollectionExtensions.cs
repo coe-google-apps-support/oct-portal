@@ -96,11 +96,12 @@ namespace CoE.Ideas.Core
         public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
             string serviceBusConnectionString = null,
             string serviceBusTopicName = null,
-            string serviceBusSubscription = null)
+            string serviceBusSubscription = null,
+            string serviceBusEmulatorConnectionString = null)
         {
             if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
             {
-                services.AddServiceBusEmulator();
+                services.AddServiceBusEmulator(serviceBusEmulatorConnectionString);
                 services.AddScoped<IMessageSender, EmulatedServiceBusMessageSender>();
                 services.AddScoped<IMessageReceiver, EmulatedServiceBusMessageReceiver>();
                 services.AddScoped<IInitiativeMessageSender, InitiativeMessageSender>();

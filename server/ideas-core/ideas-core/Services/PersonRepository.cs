@@ -30,13 +30,21 @@ namespace CoE.Ideas.Core.Services
                 return Person.Create(id: user.Id, name: user.Name, email: user.Email);
         }
 
-        public async Task<int> GetPersonIdByEmailAsync(string email)
+        public async Task<int?> GetPersonIdByEmailAsync(string email)
         {
             var user = await _wordPressRepository.GetUserByEmailAsync(email);
             if (user == null)
-                return 0; // should we throw an exception?
+                return null; // should we throw an exception?
             else
                 return user.Id;
+        }
+
+
+        public async Task<Person> CreatePerson(string firstName, string lastName, string email, string phoneNumber)
+        {
+
+            var user = await _wordPressRepository.CreateUser(firstName,lastName,email,phoneNumber);
+            return Person.Create(id: user.Id, name: user.Name, email: user.Email);
         }
     }
 }
