@@ -11,8 +11,8 @@ let idea
 let user
 
 if (process.env.NODE_ENV === 'development') {
-  idea = StubbedIdeasService
-  user = StubbedUserService
+  idea = IdeasService
+  user = UserService
 } else if (process.env.NODE_ENV === 'production') {
   idea = IdeasService
   user = UserService
