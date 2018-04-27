@@ -89,7 +89,7 @@ namespace CoE.Ideas.Core.Data
         [MaxLength(128)]
         public string WorkOrderId { get; private set; }
 
-        public int ApexId { get; private set; }
+        public int? ApexId { get; private set; }
 
         /// <summary>
         /// Status of the Initiative
