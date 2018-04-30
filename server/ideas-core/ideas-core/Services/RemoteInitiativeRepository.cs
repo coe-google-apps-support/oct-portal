@@ -142,6 +142,11 @@ namespace CoE.Ideas.Core.Services
             }
         }
 
+        public Task<Initiative> GetInitiativeByApexId(int apexId)
+        {
+            throw new NotImplementedException();
+        }
+
         internal class InitiativeContractResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)

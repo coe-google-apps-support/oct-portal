@@ -29,6 +29,11 @@ namespace CoE.Ideas.Core.Tests
             return Task.FromResult(initiatives.Single(x => x.Id == id));
         }
 
+        public Task<Initiative> GetInitiativeByApexId(int apexId)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<Initiative> GetInitiativeByWordpressKeyAsync(int wordpressKey)
         {
             throw new NotImplementedException();

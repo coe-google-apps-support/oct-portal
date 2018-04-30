@@ -1,9 +1,11 @@
-﻿using CoE.Ideas.Core.Services;
+﻿using CoE.Ideas.Core.Data;
+using CoE.Ideas.Core.Services;
 using CoE.Ideas.Server.Controllers;
 using CoE.Ideas.Server.Models;
 using CoE.Ideas.Shared.People;
 using CoE.Ideas.Shared.WordPress;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
@@ -54,6 +56,11 @@ namespace CoE.Ideas.Integration.Apex
                 while (reader.Read())
                 {
                     int apexId = reader.GetInt32(0);
+
+                    // check to ensure we don't create the initiatives twice
+                    if ((await _initiativeRepository.GetInitiativeByApexId(apexId)) != null)
+                        continue;
+
                     string user3and3 = reader.GetString(1);
                     var userInfo = await _peopleService.GetPersonAsync(user3and3);
                     var userId = await _userRepository.GetPersonIdByEmailAsync(userInfo.Email);
@@ -63,22 +70,22 @@ namespace CoE.Ideas.Integration.Apex
                         userId = newUserInfo.Id;
                     }
 
-                    await CreateInitiative(reader.GetString(2), reader.GetString(3), userId.Value);
-
-                    //ideasController.PostInitiative(dto, true);
-
-                    Console.WriteLine(apexId);
-
-
+                    var newInitiative = await CreateInitiative(reader.GetString(2), reader.GetString(3), userId.Value);
+                    if (newInitiative == null)
+                        _logger.Error("Created Initiative but controller returned null");
+                    else
+                    {
+                        newInitiative.SetApexId(apexId);
+                        await _initiativeRepository.UpdateInitiativeAsync(newInitiative);
+                    }
                 }
 
                 con.Close();
 
             }
-            Console.ReadLine();
         }
 
-        private async Task CreateInitiative(string title, string description, int userId)
+        private async Task<Initiative> CreateInitiative(string title, string description, int userId)
         {
             var httpContext = new DefaultHttpContext
             {
@@ -91,7 +98,13 @@ namespace CoE.Ideas.Integration.Apex
             _httpContextAccessor.HttpContext = httpContext;
 
 
-            await _ideasController.PostInitiative(new AddInitiativeDto() { Title = title, Description = description }, true);
+            var result = await _ideasController.PostInitiative(new AddInitiativeDto() { Title = title, Description = description }, true);
+
+            var objectResult = result as ObjectResult;
+            if (objectResult != null)
+                return objectResult.Value as Initiative;
+            else
+                return null;
 
         }
     }
