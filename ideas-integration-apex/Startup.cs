@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CoE.Ideas.Core;
 using CoE.Ideas.Server.Controllers;
 using CoE.Ideas.Shared.Extensions;
@@ -21,7 +22,8 @@ namespace CoE.Ideas.Integration.Apex
             var serviceProvider = services.BuildServiceProvider();
 
             // instantiate the NewIdeaListener at least once to start the message pump
-            serviceProvider.GetRequiredService<ApexListener>();
+            var listener = serviceProvider.GetRequiredService<ApexListener>();
+            Task.Run(() => listener.Read()).Wait();
         }
 
         private IServiceCollection ConfigureServices(IServiceCollection services)

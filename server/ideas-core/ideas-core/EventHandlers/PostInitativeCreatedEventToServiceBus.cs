@@ -38,21 +38,28 @@ namespace CoE.Ideas.Core.EventHandlers
         public async Task Handle(InitiativeCreatedDomainEvent notification, CancellationToken cancellationToken)
         {
             _logger.Debug("New Initiative Created, will post message to service bus");
-            var initiative = await _initiativeRepository.GetInitiativeAsync(notification.InitiativeId);
-            if (initiative == null)
+            try
             {
-                _logger.Error("Received new initiave event but couldn't get initiative with id {InitiativeUid}", notification.InitiativeId);
-                throw new Exception($"Received new initiave event but couldn't get initiative with id {notification.InitiativeId}");
-            }
-            else
-                _logger.Information("Posting NewInitiativeCreated event to service bus for Initiative {InitiativeId}", initiative.Id);
+                var initiative = await _initiativeRepository.GetInitiativeAsync(notification.InitiativeId);
+                if (initiative == null)
+                {
+                    _logger.Error("Received new initiave event but couldn't get initiative with id {InitiativeUid}", notification.InitiativeId);
+                    throw new Exception($"Received new initiave event but couldn't get initiative with id {notification.InitiativeId}");
+                }
+                else
+                    _logger.Information("Posting NewInitiativeCreated event to service bus for Initiative {InitiativeId}", initiative.Id);
 
-            await _initiativeMessageSender.SendInitiativeCreatedAsync(new InitiativeCreatedEventArgs()
+                await _initiativeMessageSender.SendInitiativeCreatedAsync(new InitiativeCreatedEventArgs()
+                {
+                    Initiative = initiative,
+                    Owner = _httpContextAccessor.HttpContext.User,
+                    SkipEmailNotification = notification.SkipEmailNotification
+                });
+            }
+            catch (Exception err)
             {
-                Initiative = initiative,
-                Owner = _httpContextAccessor.HttpContext.User,
-                SkipEmailNotification = notification.SkipEmailNotification
-            });
+                _logger.Error(err, "Error posting Initative Created event to Service Bus: {ErrorMessage}", err.Message);
+            }
         }
     }
 }

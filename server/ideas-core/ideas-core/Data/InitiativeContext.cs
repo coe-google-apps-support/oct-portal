@@ -15,12 +15,15 @@ namespace CoE.Ideas.Core.Data
     {
         public InitiativeContext(
             DbContextOptions<InitiativeContext> options,
+            Serilog.ILogger logger,
             DomainEvents domainEvents) : base(options)
         {
             _domainEvents = domainEvents;
+            _logger = logger;
         }
 
         private readonly DomainEvents _domainEvents;
+        private readonly Serilog.ILogger _logger;
 
         public DbSet<Initiative> Initiatives { get; set; }
         public DbSet<InitiativeStatusHistory> InitiativeStatusHistories { get; set; }
@@ -59,7 +62,19 @@ namespace CoE.Ideas.Core.Data
             var result = await base.SaveChangesAsync(cancellationToken);
 
             if (_domainEvents != null)
-                await _domainEvents.DispatchDomainEventsAsync(this);
+            {
+                try
+                {
+                    await _domainEvents.DispatchDomainEventsAsync(this);
+                }
+                catch (Exception err)
+                {
+                    if (_logger == null)
+                        throw;
+                    else
+                        _logger.Error(err, "Error dispatching domain events: {ErrorMessage}", err.Message);
+                }
+            }
 
             return result;
         }
