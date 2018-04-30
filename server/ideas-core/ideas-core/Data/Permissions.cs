@@ -6,6 +6,6 @@ namespace CoE.Ideas.Core.Data
 {
     public enum Permissions
     {
-        UpdateStatusDescription = 1
+        EditStatusDescription = 1
     }
 }

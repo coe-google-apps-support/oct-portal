@@ -29,6 +29,7 @@ namespace CoE.Ideas.Core.ServiceBus
         internal const string REMEDY_WORK_ITEM_CREATED = "Remedy Work Item Created";
         internal const string WORK_ORDER_UPDATED = "Work Order Updated";
         internal const string INITIATIVE_LOGGED = "Initiative Logged";
+        internal const string STATUS_DESCRIPTION_CHANGED = "Status Description Changed";
 
         public Task SendInitiativeCreatedAsync(InitiativeCreatedEventArgs args)
         {
@@ -162,6 +163,20 @@ namespace CoE.Ideas.Core.ServiceBus
 
             var claims = claimsPrincipal.Claims.Select(x => new KeyValuePair<string, string>(x.Type, x.Value)).ToArray();
             return JsonConvert.SerializeObject(claims);
+        }
+
+        public Task SendInitiativeStatusDescriptionChangedAsync(InitiativeStatusDescriptionChangedEventArgs args)
+        {
+            if (args == null)
+                throw new ArgumentNullException("args");
+            if (args.Initiative == null)
+                throw new ArgumentException("Initiative cannot be null");
+
+            var userProperties = new Dictionary<string, object>();
+            SetInitiative(args.Initiative, userProperties);
+            SetOwner(args.Owner, userProperties);
+            return _messageSender.SendMessageAsync(STATUS_DESCRIPTION_CHANGED, userProperties);
+
         }
     }
 }

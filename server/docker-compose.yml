@@ -72,11 +72,7 @@ services:
       context: .
       dockerfile: ideas-integration-remedy/ideas-integration-remedy-sblistener/Dockerfile
 
-  ideas-integration-apex:
-    image: ideasintegrationapex
-    build:
-      context: .
-      dockerfile: ../ideas-integration-apex/Dockerfile
+
 
 volumes:
   wp-dbdata:

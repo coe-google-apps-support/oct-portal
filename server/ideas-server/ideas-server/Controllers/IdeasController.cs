@@ -402,14 +402,16 @@ namespace CoE.Ideas.Server.Controllers
 
 
         [HttpPut("{id}/statusDescription")]
-        public async Task<IActionResult> UpdateStatusDescription(int id, int stepId, string newDescription)
+        public async Task<IActionResult> UpdateStatusDescription(int id, [FromBody]UpdateStatusDescriptionDto updateStatusDescriptionDto)
         {
+            EnsureArg.IsNotNull(updateStatusDescriptionDto);
+
             InitiativeStatus currentStatus;
-            try { currentStatus = (InitiativeStatus)stepId; }
+            try { currentStatus = (InitiativeStatus)updateStatusDescriptionDto.StepId; }
             catch (InvalidCastException)
             {
                 var initiativeStatusValues = Enum.GetValues(typeof(InitiativeStatus)).Cast<InitiativeStatus>();
-                ModelState.AddModelError("stepId", $"stepId '{ stepId }' is not a valid value, must be between { (int)initiativeStatusValues.First() } and { (int)initiativeStatusValues.Last() }");
+                ModelState.AddModelError("stepId", $"stepId '{ updateStatusDescriptionDto.StepId }' is not a valid value, must be between { (int)initiativeStatusValues.First() } and { (int)initiativeStatusValues.Last() }");
                 return base.BadRequest(ModelState);
             }
 
@@ -417,11 +419,11 @@ namespace CoE.Ideas.Server.Controllers
             {
                 if (initiative.Status != currentStatus)
                 {
-                    ModelState.AddModelError("stepId", $"stepId '{ stepId }' is not the current state of the initiative ('{(int)initiative.Status}'). This is like a concurrency issue. Please refresh and try again.");
+                    ModelState.AddModelError("stepId", $"stepId '{ updateStatusDescriptionDto.StepId }' is not the current state of the initiative ('{(int)initiative.Status}'). This is likely a concurrency issue. Please refresh and try again.");
                     return base.BadRequest(ModelState);
                 }
 
-                initiative.UpdateCurrentStatusDescription(newDescription);
+                initiative.UpdateCurrentStatusDescription(updateStatusDescriptionDto.NewDescription);
                 await _repository.UpdateInitiativeAsync(initiative);
                 return Ok();
             });

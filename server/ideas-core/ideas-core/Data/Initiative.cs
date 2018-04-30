@@ -213,7 +213,7 @@ namespace CoE.Ideas.Core.Data
             else
                 currentStatusHistory.OverrideStatusDescription(newDescription);
 
-            AddDomainEvent(new InitiativeStatusDescriptionUpdatedDomainEvent(this, newDescription));
+            AddDomainEvent(new InitiativeStatusDescriptionUpdatedDomainEvent(this.Uid, newDescription));
         }
     }
 }

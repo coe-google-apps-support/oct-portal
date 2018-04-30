@@ -18,17 +18,17 @@ namespace CoE.Ideas.Core.ServiceBus
         }
 
         public IList<Func<InitiativeCreatedEventArgs, CancellationToken, Task>> CreatedHandlers { get; private set; }
-
         public IList<Func<WorkOrderCreatedEventArgs, CancellationToken, Task>> WorkOrderCreatedHandlers { get; private set; }
         public IList<Func<WorkOrderUpdatedEventArgs, CancellationToken, Task>> WorkOrderUpdatedHandlers { get; private set; }
-
         public IList<Func<InitiativeLoggedEventArgs, CancellationToken, Task>> InitiativeLoggedHandlers { get; private set; }
+        public IList<Func<InitiativeStatusDescriptionChangedEventArgs, CancellationToken, Task>> InitiativeStatusDescriptionChangedHandlers { get; private set; }
 
 
         public void ReceiveMessages(Func<InitiativeCreatedEventArgs, CancellationToken, Task> initiativeCreatedHandler = null,
             Func<WorkOrderCreatedEventArgs, CancellationToken, Task> workOrderCreatedHandler = null,
             Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> workOrderUpdatedHandler = null,
             Func<InitiativeLoggedEventArgs, CancellationToken, Task> initiativeLoggedHandler = null,
+            Func<InitiativeStatusDescriptionChangedEventArgs, CancellationToken, Task> statusDescriptionChangedHandler = null,
             MessageHandlerOptions options = null)
         {
             if (initiativeCreatedHandler != null)
@@ -39,6 +39,8 @@ namespace CoE.Ideas.Core.ServiceBus
                 WorkOrderUpdatedHandlers.Add(workOrderUpdatedHandler);
             if (initiativeLoggedHandler != null)
                 InitiativeLoggedHandlers.Add(initiativeLoggedHandler);
+            if (statusDescriptionChangedHandler != null)
+                InitiativeStatusDescriptionChangedHandlers.Add(statusDescriptionChangedHandler);
         }
     }
 }

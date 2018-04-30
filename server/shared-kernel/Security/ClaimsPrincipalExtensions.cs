@@ -45,6 +45,13 @@ namespace CoE.Ideas.Shared.Security
                 .Where(x => x.Type == ClaimTypes.Role)
                 .Select(x => x.Value);
         }
+
+        public static bool IsAdmin(this ClaimsPrincipal principal)
+        {
+            return principal.Claims
+                .Any(x => x.Type == ClaimTypes.Role && string.Equals(x.Value, "Administrator", StringComparison.InvariantCultureIgnoreCase));
+
+        }
     }
 
 }

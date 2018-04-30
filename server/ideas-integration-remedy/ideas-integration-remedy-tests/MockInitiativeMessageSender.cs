@@ -17,6 +17,12 @@ namespace CoE.Ideas.Remedy.Tests
             throw new System.NotImplementedException();
         }
 
+        public Task SendInitiativeStatusDescriptionChangedAsync(InitiativeStatusDescriptionChangedEventArgs initiativeCreatedEventArgs)
+        {
+            // do nothing
+            return Task.CompletedTask;
+        }
+
         public Task SendInitiativeWorkOrderCreatedAsync(WorkOrderCreatedEventArgs args)
         {
             // do nothing

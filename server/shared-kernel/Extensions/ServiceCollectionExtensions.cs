@@ -152,7 +152,7 @@ namespace CoE.Ideas.Shared.Extensions
                         break;
                     }
                 }
-                catch (Exception err)
+                catch (Exception)
                 {
                     if (retryCount++ > 30)
                         throw;

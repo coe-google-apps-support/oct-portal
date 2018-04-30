@@ -158,8 +158,8 @@ namespace CoE.Ideas.Server.Tests
         {
             var repository = serviceProvider.GetRequiredService<IInitiativeRepository>();
             var personRepository = serviceProvider.GetRequiredService<IPersonRepository>();
-            int snowWhiteId = await personRepository.GetPersonIdByEmailAsync(SnowWhite.GetEmail());
-            int sleepingBeautyId = await personRepository.GetPersonIdByEmailAsync(SleepingBeauty.GetEmail());
+            int snowWhiteId = (await personRepository.GetPersonIdByEmailAsync(SnowWhite.GetEmail())).Value;
+            int sleepingBeautyId = (await personRepository.GetPersonIdByEmailAsync(SleepingBeauty.GetEmail())).Value;
 
             await repository.AddInitiativeAsync(Initiative.Create(title: "Test Idea 1", description: "Test Idea 1 Description ", ownerPersonId: snowWhiteId));
             await repository.AddInitiativeAsync(Initiative.Create(title: "Test Idea 2", description: "Test Idea 2 Description ", ownerPersonId: snowWhiteId));

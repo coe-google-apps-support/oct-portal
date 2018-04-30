@@ -8,6 +8,5 @@ namespace CoE.Ideas.Core.ServiceBus
     {
         public string WorkOrderId { get; set; }
         public DateTime? EtaUtc { get; set; }
-        public bool SkipEmailNotification { get; set; }
     }
 }

@@ -62,7 +62,16 @@ namespace CoE.Ideas.Server.Controllers
                     return NotFound($"Unable to find a user for {email} with id {personId}");
                 }
 
-                return Ok(new { person.Id, person.Name, person.Email, Roles = User.GetRoles().ToArray() });
+                // The following is temporary and should be replaced by real logic after our demo on tuesday.
+                var permissions = new List<string>();
+                if (User.IsAdmin() || User.IsInRole("Octava Business Analyst"))
+                {
+                    string permissionName = Core.Data.Permissions.EditStatusDescription.ToString();
+                    permissionName = permissionName.First().ToString().ToLower() + permissionName.Substring(1);
+                    permissions.Add(permissionName);
+                }
+
+                return Ok(new { person.Id, person.Name, person.Email, Roles = User.GetRoles().ToArray(), Permissions = permissions.ToArray() });
             }
         }
     }

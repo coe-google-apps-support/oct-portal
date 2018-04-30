@@ -38,6 +38,7 @@ namespace CoE.Ideas.Core.ServiceBus
             Func<WorkOrderCreatedEventArgs, CancellationToken, Task> workOrderCreatedHandler = null, 
             Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> workOrderUpdatedHandler = null,
             Func<InitiativeLoggedEventArgs, CancellationToken, Task> initiativeLoggedHandler = null,
+            Func<InitiativeStatusDescriptionChangedEventArgs, CancellationToken, Task> statusDescriptionChangedHandler = null,
             Microsoft.Azure.ServiceBus.MessageHandlerOptions options = null)
         {
             if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
@@ -62,6 +63,12 @@ namespace CoE.Ideas.Core.ServiceBus
                     if (handlerNames.Length > 0)
                         handlerNames.Append(", ");
                     handlerNames.Append("initiativeLoggedHandler");
+                }
+                if (statusDescriptionChangedHandler != null)
+                {
+                    if (handlerNames.Length > 0)
+                        handlerNames.Append(", ");
+                    handlerNames.Append("statusDescriptionChangedHandler");
                 }
                 _logger.Information("Starting message pump with handlers " + handlerNames.ToString()); // + " on topic '{TopicName}' and subscription '{Subscription}'", _subscriptionClient.TopicPath, _subscriptionClient.SubscriptionName);
             }
@@ -100,6 +107,12 @@ namespace CoE.Ideas.Core.ServiceBus
                         else
                             await _messageReceiver.CompleteAsync(msg.LockToken);
                         break;
+                    case InitiativeMessageSender.STATUS_DESCRIPTION_CHANGED:
+                        if (statusDescriptionChangedHandler != null)
+                            await ReceiveInitiativeStatusDescriptionChanged(msg, token, statusDescriptionChangedHandler);
+                        else
+                            await _messageReceiver.CompleteAsync(msg.LockToken);
+                        break;
                     default:
                     {
                         await _messageReceiver.DeadLetterAsync(msg.LockToken, $"Unknown message type: { msg.Label }");
@@ -107,6 +120,42 @@ namespace CoE.Ideas.Core.ServiceBus
                     }
                 }
             }, messageHandlerOptions);
+        }
+
+        protected virtual async Task ReceiveInitiativeStatusDescriptionChanged(Message msg, CancellationToken token, Func<InitiativeStatusDescriptionChangedEventArgs, CancellationToken, Task> handler)
+        {
+            if (msg == null)
+                throw new ArgumentNullException("msg");
+            if (handler == null)
+                throw new ArgumentNullException("handler");
+
+            if (await EnsureMessageLabel(msg, InitiativeMessageSender.STATUS_DESCRIPTION_CHANGED))
+            {
+                _logger.Information("Received StatusDescriptionChanged message. Getting message owner");
+
+                var owner = await GetMessageOwner(msg);
+                if (owner.WasMessageDeadLettered)
+                    return;
+                var idea = await GetMessageInitiative(msg, owner.Item);
+                if (idea.WasMessageDeadLettered)
+                    return;
+
+                try
+                {
+                    await handler(new InitiativeStatusDescriptionChangedEventArgs()
+                    {
+                        Initiative = idea.Item,
+                        Owner = owner.Item
+                    }, token);
+                    await _messageReceiver.CompleteAsync(msg.LockToken);
+                }
+                catch (Exception err)
+                {
+                    System.Diagnostics.Trace.TraceWarning($"InitiativeStatusDescriptionChanged handler threw the following error, abandoning message for future processing: { err.Message }");
+                    await _messageReceiver.AbandonAsync(msg.LockToken);
+                }
+
+            }
         }
 
         protected virtual Task OnDefaultError(Microsoft.Azure.ServiceBus.ExceptionReceivedEventArgs err)
