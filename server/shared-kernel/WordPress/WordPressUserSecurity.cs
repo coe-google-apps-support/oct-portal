@@ -131,7 +131,51 @@ namespace CoE.Ideas.Shared.WordPress
 
             return new ClaimsPrincipal(new ClaimsIdentity(claims, "WordPress"));
         }
+
 #endif
+
+        public async Task<ClaimsPrincipal> GetPrincipalAsync(int userId)
+        {
+            // WordPress cookies explained: https://www.securitysift.com/understanding-wordpress-auth-cookies/
+            var userInfo = await _wordPressContext.Users
+                .Where(x => x.Id == userId)
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Email,
+                    x.Password,
+                    x.Url,
+                    x.Name // display name
+                })
+                .SingleOrDefaultAsync();
+
+           var metaKeys = new string[] { "wp_capabilities", "first_name", "last_name" };
+            var metadataInfoTask = _wordPressContext.UserMetadata
+                .Where(x => x.UserId == userInfo.Id && metaKeys.Contains(x.Key))
+                .Select(x => new { x.Key, x.Value })
+                .ToListAsync();
+
+            // TODO: implement cookie hash verification like WordPress
+            //VeryifyCookieHash(cookieHash, expiration, username, userInfo.Password, scheme);
+
+            var claims = new List<Claim>()
+            {
+                new Claim(CLAIM_TYPE_ID, userInfo.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, userInfo.Name),
+                new Claim(ClaimTypes.Email, userInfo.Email),
+                new Claim(ClaimTypes.Name, userInfo.Name),
+                new Claim(ClaimTypes.Uri, userInfo.Url)
+            };
+
+            // augment with user metadata
+            var userMetadata = await metadataInfoTask;
+            claims.Add(new Claim(ClaimTypes.GivenName, userMetadata.SingleOrDefault(x => x.Key == "first_name")?.Value));
+            claims.Add(new Claim(ClaimTypes.Surname, userMetadata.SingleOrDefault(x => x.Key == "last_name")?.Value));
+            AddRoleClaims(claims, userMetadata.SingleOrDefault(x => x.Key == "wp_capabilities")?.Value);
+
+            return new ClaimsPrincipal(new ClaimsIdentity(claims, "WordPress"));
+        }
+
 
         private async Task<ClaimsPrincipal> VerifyHashAndCreatePrincipal(string username, long expiration, string cookieHash, string scheme = "auth", Func<ICollection<Claim>, Task> onCreatingClaims = null)
         {

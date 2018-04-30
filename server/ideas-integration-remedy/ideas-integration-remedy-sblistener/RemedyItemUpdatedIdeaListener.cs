@@ -153,7 +153,7 @@ namespace CoE.Ideas.Remedy.SbListener
         private async Task<bool> UpdateIdeaAssignee(Initiative idea, string assigneeEmail, string assigneeDisplayName)
         {
             //Person assignee = null;
-            int assigneeId = 0;
+            int? assigneeId = 0;
             if (!string.IsNullOrWhiteSpace(assigneeEmail))
             {
                 assigneeId = await _personRepository.GetPersonIdByEmailAsync(assigneeEmail);

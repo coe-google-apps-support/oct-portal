@@ -6,6 +6,12 @@ namespace CoE.Ideas.Shared.WordPress
     [Table("wp_users")]
     internal class User
     {
+
+        public User()
+        {
+            Metadata = new HashSet<UserMetadata>();
+
+        }
         /// <summary>
         /// Unique identifier for the user.
         /// </summary>
@@ -41,6 +47,9 @@ namespace CoE.Ideas.Shared.WordPress
         /// </summary>
         [Column("user_url")]
         public string Url { get; set; }
+
+        [Column("user_nicename")]
+        public string NiceName { get; set; }
 
         [InverseProperty("User")]
         public virtual ICollection<UserMetadata> Metadata { get; set; }

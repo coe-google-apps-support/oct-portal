@@ -11,8 +11,8 @@ using System;
 namespace CoE.Ideas.Core.Migrations
 {
     [DbContext(typeof(InitiativeContext))]
-    [Migration("20180315203940_StatusHistoryStringTemplates")]
-    partial class StatusHistoryStringTemplates
+    [Migration("20180427190539_InitialConsolidated")]
+    partial class InitialConsolidated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,6 +25,8 @@ namespace CoE.Ideas.Core.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("ApexId");
 
                     b.Property<int?>("AssigneeId");
 
@@ -64,18 +66,21 @@ namespace CoE.Ideas.Core.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("InitiativeId");
+                    b.Property<DateTime?>("ExpectedExitDateUtc");
+
+                    b.Property<int?>("InitiativeId");
 
                     b.Property<int?>("PersonId");
 
                     b.Property<int>("Status");
 
+                    b.Property<string>("StatusDescriptionOverride");
+
                     b.Property<DateTime>("StatusEntryDateUtc");
 
-                    b.Property<string>("Text")
-                        .HasMaxLength(1024);
-
                     b.HasKey("Id");
+
+                    b.HasIndex("InitiativeId");
 
                     b.ToTable("InitiativeStatusHistories");
                 });
@@ -98,6 +103,22 @@ namespace CoE.Ideas.Core.Migrations
                     b.ToTable("Stakeholder");
                 });
 
+            modelBuilder.Entity("CoE.Ideas.Core.Data.StatusEta", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("EtaType");
+
+                    b.Property<int>("Status");
+
+                    b.Property<int>("Time");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StatusEtas");
+                });
+
             modelBuilder.Entity("CoE.Ideas.Core.Data.StringTemplate", b =>
                 {
                     b.Property<int>("Id")
@@ -114,6 +135,13 @@ namespace CoE.Ideas.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StringTemplates");
+                });
+
+            modelBuilder.Entity("CoE.Ideas.Core.Data.InitiativeStatusHistory", b =>
+                {
+                    b.HasOne("CoE.Ideas.Core.Data.Initiative")
+                        .WithMany("StatusHistories")
+                        .HasForeignKey("InitiativeId");
                 });
 
             modelBuilder.Entity("CoE.Ideas.Core.Data.Stakeholder", b =>

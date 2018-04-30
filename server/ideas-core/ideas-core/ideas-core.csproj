@@ -6,7 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20180315203805_Initial.cs" />
+    <Compile Remove="Migrations\20180315203850_Auditing.cs" />
+    <Compile Remove="Migrations\20180315203940_StatusHistoryStringTemplates.cs" />
     <Compile Remove="Migrations\20180323172326_AddedStatusEtas.cs" />
+    <Compile Remove="Migrations\20180323203736_AddedStatusEtas.cs" />
+    <Compile Remove="Migrations\20180419152741_OverridableStatusDescriptions.cs" />
+    <Compile Remove="Migrations\20180426212005_AddApexId.cs" />
+    <Compile Remove="Migrations\20180427151619_MakeApexIdNullable.cs" />
   </ItemGroup>
 
   <ItemGroup>

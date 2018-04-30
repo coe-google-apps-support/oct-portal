@@ -58,7 +58,7 @@ namespace CoE.Ideas.Integration.Logger
                 _logger.Information("Received message that a new initiative has been created with id {InitiativeId}");
 
                 var loggerResponse = await LogNewInitiative(idea, owner);
-                await SendInitiativeLoggerMessage(idea, owner, loggerResponse);
+                await SendInitiativeLoggedMessage(idea, owner, loggerResponse, args.SkipEmailNotification);
                 watch.Stop();
                 _logger.Information("Logger processed message in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
             }
@@ -85,9 +85,10 @@ namespace CoE.Ideas.Integration.Logger
             return loggerResponse;
         }
 
-        protected virtual async Task SendInitiativeLoggerMessage(Initiative initiative, 
+        protected virtual async Task SendInitiativeLoggedMessage(Initiative initiative, 
             ClaimsPrincipal owner, 
-            Google.Apis.Sheets.v4.Data.AppendValuesResponse loggerResponse)
+            Google.Apis.Sheets.v4.Data.AppendValuesResponse loggerResponse,
+            bool skipEmailNotification)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -98,7 +99,8 @@ namespace CoE.Ideas.Integration.Logger
                 {
                     Initiative = initiative,
                     Owner = owner,
-                    RangeUpdated = loggerResponse?.TableRange
+                    RangeUpdated = loggerResponse?.TableRange,
+                    SkipEmailNotification = skipEmailNotification
                 });
                 _logger.Information("Sent message on Service Bus that initiative has been logged in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
             }

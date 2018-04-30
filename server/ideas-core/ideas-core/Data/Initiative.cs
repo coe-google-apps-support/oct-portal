@@ -26,7 +26,8 @@ namespace CoE.Ideas.Core.Data
         public static Initiative Create(
             string title, 
             string description,
-            int ownerPersonId)
+            int ownerPersonId,
+            bool skipEmailNotification = false)
         {
             Ensure.String.IsNotNullOrWhiteSpace(title, nameof(title));
             Ensure.String.IsNotNullOrWhiteSpace(description, nameof(description));
@@ -43,7 +44,7 @@ namespace CoE.Ideas.Core.Data
             initiative.StatusHistories = new HashSet<InitiativeStatusHistory>();
             initiative.CreatedDate = DateTimeOffset.Now;
 
-            initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId));
+            initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId, skipEmailNotification));
 
             return initiative;
         }
@@ -87,6 +88,8 @@ namespace CoE.Ideas.Core.Data
         /// </summary>
         [MaxLength(128)]
         public string WorkOrderId { get; private set; }
+
+        public int? ApexId { get; private set; }
 
         /// <summary>
         /// Status of the Initiative
@@ -143,6 +146,17 @@ namespace CoE.Ideas.Core.Data
             Ensure.String.IsNotNullOrWhiteSpace(newWorkOrderId, nameof(newWorkOrderId));
 
             WorkOrderId = newWorkOrderId;           
+
+            #region InitiativeUpdated Event
+
+            #endregion
+        }
+
+        public void SetApexId(int newApexId)
+        {
+            //Ensure.That.IsNotNullOrWhiteSpace(newApexId, nameof(newApexId));
+
+            ApexId = newApexId;
 
             #region InitiativeUpdated Event
 

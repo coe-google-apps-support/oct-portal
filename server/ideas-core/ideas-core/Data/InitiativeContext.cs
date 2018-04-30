@@ -17,7 +17,6 @@ namespace CoE.Ideas.Core.Data
             DbContextOptions<InitiativeContext> options,
             DomainEvents domainEvents) : base(options)
         {
-            EnsureArg.IsNotNull(domainEvents);
             _domainEvents = domainEvents;
         }
 
@@ -59,7 +58,8 @@ namespace CoE.Ideas.Core.Data
 
             var result = await base.SaveChangesAsync(cancellationToken);
 
-            await _domainEvents.DispatchDomainEventsAsync(this);
+            if (_domainEvents != null)
+                await _domainEvents.DispatchDomainEventsAsync(this);
 
             return result;
         }

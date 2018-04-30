@@ -32,7 +32,7 @@ namespace CoE.Ideas.Core
         { 
             // default value is one is not supplied - Note this is not what Production/UAT uses, but just a convenience for local dev
             string connectionString = string.IsNullOrWhiteSpace(dbConnectionString)
-                ? "server=initiatives-db;database=CoeIdeas;User Id=OctavaService;Password=P@ssw0rd;MultipleActiveResultSets=True;" : dbConnectionString;
+                ? "server=initiatives-db;database=CoeIdeas;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;" : dbConnectionString;
 
             services.AddDbContext<InitiativeContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -57,6 +57,30 @@ namespace CoE.Ideas.Core
 
             services.AddScoped<IInitiativeStatusEtaRepository, InitiativeStatusEtaRepository>();
 
+#if DEBUG
+            int retryCount = 0;
+            while (true)
+            {
+                try
+                {
+                    using (var context = new InitiativeContext(
+                        new DbContextOptionsBuilder<InitiativeContext>()
+                        .UseSqlServer(connectionString).Options, null))
+                    {
+
+                        context.Database.Migrate();
+                        break;
+                    }
+                }
+                catch (Exception)
+                {
+                    if (retryCount++>30)
+                        throw;
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+#endif
+
             return services;
         }
 
@@ -72,11 +96,12 @@ namespace CoE.Ideas.Core
         public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
             string serviceBusConnectionString = null,
             string serviceBusTopicName = null,
-            string serviceBusSubscription = null)
+            string serviceBusSubscription = null,
+            string serviceBusEmulatorConnectionString = null)
         {
             if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
             {
-                services.AddServiceBusEmulator();
+                services.AddServiceBusEmulator(serviceBusEmulatorConnectionString);
                 services.AddScoped<IMessageSender, EmulatedServiceBusMessageSender>();
                 services.AddScoped<IMessageReceiver, EmulatedServiceBusMessageReceiver>();
                 services.AddScoped<IInitiativeMessageSender, InitiativeMessageSender>();

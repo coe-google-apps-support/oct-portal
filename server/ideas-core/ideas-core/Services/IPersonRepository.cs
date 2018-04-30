@@ -8,7 +8,9 @@ namespace CoE.Ideas.Core.Services
 {
     public interface IPersonRepository
     {
-        Task<int> GetPersonIdByEmailAsync(string email);
+        Task<int?> GetPersonIdByEmailAsync(string email);
         Task<Person> GetPersonAsync(int id);
+
+        Task<Person> CreatePerson(string firstName, string lastName, string email, string phoneNumber);
     }
 }

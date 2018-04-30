@@ -25,6 +25,8 @@ namespace CoE.Ideas.Core.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("ApexId");
+
                     b.Property<int?>("AssigneeId");
 
                     b.Property<string>("BusinessCaseUrl")
@@ -65,7 +67,7 @@ namespace CoE.Ideas.Core.Migrations
 
                     b.Property<DateTime?>("ExpectedExitDateUtc");
 
-                    b.Property<Guid>("InitiativeId");
+                    b.Property<int?>("InitiativeId");
 
                     b.Property<int?>("PersonId");
 
@@ -76,6 +78,8 @@ namespace CoE.Ideas.Core.Migrations
                     b.Property<DateTime>("StatusEntryDateUtc");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("InitiativeId");
 
                     b.ToTable("InitiativeStatusHistories");
                 });
@@ -130,6 +134,13 @@ namespace CoE.Ideas.Core.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StringTemplates");
+                });
+
+            modelBuilder.Entity("CoE.Ideas.Core.Data.InitiativeStatusHistory", b =>
+                {
+                    b.HasOne("CoE.Ideas.Core.Data.Initiative")
+                        .WithMany("StatusHistories")
+                        .HasForeignKey("InitiativeId");
                 });
 
             modelBuilder.Entity("CoE.Ideas.Core.Data.Stakeholder", b =>

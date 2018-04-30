@@ -101,5 +101,45 @@ namespace CoE.Ideas.Shared.WordPress
 
             return Task.FromResult(returnValue);
         }
+
+        public async Task<WordPressUser> CreateUser(string firstName, string lastName, string email, string phoneNumber)
+        {
+            var user = new User();
+            user.Email = email;
+            user.Name = firstName +" "+ lastName;
+            user.NiceName = user.Name.Replace(" ","-").ToLowerInvariant();
+            user.UserName = email;
+            user.Password = "$P$BOctava";
+            user.Url = string.Empty;
+           
+            user.Metadata.Add(new UserMetadata("nickname", email));
+            user.Metadata.Add(new UserMetadata("first_name", firstName));
+            user.Metadata.Add(new UserMetadata("last_name", lastName));
+            user.Metadata.Add(new UserMetadata("description", string.Empty));
+            user.Metadata.Add(new UserMetadata("rich_editing", "true"));
+            user.Metadata.Add(new UserMetadata("syntax_highlighting", "true"));
+            user.Metadata.Add(new UserMetadata("comment_shortcuts", "false"));
+            user.Metadata.Add(new UserMetadata("admin_color", "fresh"));
+            user.Metadata.Add(new UserMetadata("use_ssl", "0"));
+            user.Metadata.Add(new UserMetadata("show_admin_bar_front", "true"));
+            user.Metadata.Add(new UserMetadata("locale", string.Empty));
+            user.Metadata.Add(new UserMetadata("wp_capabilities", "a:1:{s:10:\"subscriber\";b:1;}"));
+            user.Metadata.Add(new UserMetadata("wp_user_level", "0"));
+            user.Metadata.Add(new UserMetadata("session_tokens", string.Empty));
+            user.Metadata.Add(new UserMetadata("community-events-location", string.Empty));
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return new WordPressUser()
+            {
+                Id = user.Id,
+                Name = user.Name,
+                UserName = user.UserName,
+                Email = user.Email,
+                Url = user.Url
+            };
+
+        }
     }
 }

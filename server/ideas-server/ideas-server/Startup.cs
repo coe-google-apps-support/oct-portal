@@ -49,7 +49,11 @@ namespace CoE.Ideas.Server
                 Configuration.GetConnectionString("IdeaDatabase"), 
                 Configuration["WordPress:Url"]);
 
+            System.Diagnostics.Trace.WriteLine("Does this get hit?");
+
             services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"));
+
+            
 
             if (HostingEnvironment.IsDevelopment())
             {

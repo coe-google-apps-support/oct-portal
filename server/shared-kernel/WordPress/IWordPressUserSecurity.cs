@@ -11,5 +11,6 @@ namespace CoE.Ideas.Shared.WordPress
 
         void SetWordPressCredentials(HttpClient httpClient, CookieContainer cookieContainer);
         void SetWordPressCredentials(HttpClient httpClient, CookieContainer cookieContainer, ClaimsPrincipal user);
+        Task<ClaimsPrincipal> GetPrincipalAsync(int userId);
     }
 }

@@ -5,6 +5,15 @@ namespace CoE.Ideas.Shared.WordPress
     [Table("wp_usermeta")]
     internal class UserMetadata
     {
+        public UserMetadata()
+        { }
+
+        public UserMetadata(string key, string value)
+        {
+            Key = key;
+            Value = value;
+        }
+
         [Column("umeta_id")]
         public int Id { get; set; }
 
