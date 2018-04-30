@@ -62,7 +62,16 @@ namespace CoE.Ideas.Integration.Apex
                         continue;
 
                     string user3and3 = reader.GetString(1);
-                    var userInfo = await _peopleService.GetPersonAsync(user3and3);
+                    PersonData userInfo;
+                    try { userInfo = await _peopleService.GetPersonAsync(user3and3); }
+                    catch (Exception err)
+                    {
+                        // what to do?
+                        _logger.Error("User not found for id {UserId}: {ErrorMessage}", user3and3, err.Message);
+                        userInfo = null;
+                        continue;
+                    } 
+
                     var userId = await _userRepository.GetPersonIdByEmailAsync(userInfo.Email);
                     if (userId == null)
                     {
