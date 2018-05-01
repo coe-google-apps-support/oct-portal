@@ -58,6 +58,10 @@ namespace CoE.Ideas.Shared.Extensions
             if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["SECURE_AUTH_SALT"])) wordPressConfigurationSection["SECURE_AUTH_SALT"] = "633b9c2b2eaaba702c5fb1130951cdaadd8a1940504c7f85879453776cc59fe0";
             if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["LOGGED_IN_SALT"])) wordPressConfigurationSection["LOGGED_IN_SALT"] = "2cb69d64dd4a85b634eaf26b8e77b0fa18f430591c2f573485a370f6ed8e4424";
             if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["NONCE_SALT"])) wordPressConfigurationSection["NONCE_SALT"] = "c9e9e4dcccf9fb7dc5daf5275ce88f1aef33bc031a558a9845678c741fdfdf92";
+
+            if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["AdminServicePrincipalName"])) wordPressConfigurationSection["AdminServicePrincipalName"] = "octavadev";
+            if (string.IsNullOrWhiteSpace(wordPressConfigurationSection["AdminServicePrincipalPassword"])) wordPressConfigurationSection["AdminServicePrincipalPassword"] = "password";
+
 #endif
 
             // sometimes IHTtpContextAccessor is not wired up by default, so ensure that it is

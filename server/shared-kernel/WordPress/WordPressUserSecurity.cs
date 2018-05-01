@@ -46,12 +46,14 @@ namespace CoE.Ideas.Shared.WordPress
 
         internal const string CLAIM_TYPE_ID = "http://octavia.edmonton.ca/schemas/2018/02/id";
         internal const string CLAIM_AUTH = "http://octavia.edmonton.ca/schemas/2018/02/auth";
+        internal const string CLAIM_AUTH_SERVICE_PRINCIPAL_PASSWORD = "http://octavia.edmonton.ca/schemas/2018/02/authSerivicePrincipalPassword";
 
         #region Authentication (Incoming)
         public async Task<ClaimsPrincipal> AuthenticateUserAsync(string cookie, string scheme = "auth")
         {
             if (string.IsNullOrWhiteSpace(cookie))
                 throw new ArgumentNullException("cookie");
+
 
             _logger.Information("Attempting to authenticate user using WordPress");
             var watch = new Stopwatch();
@@ -166,6 +168,14 @@ namespace CoE.Ideas.Shared.WordPress
                 new Claim(ClaimTypes.Name, userInfo.Name),
                 new Claim(ClaimTypes.Uri, userInfo.Url)
             };
+
+            if (!string.IsNullOrWhiteSpace(_options.AdminServicePrincipalName) &&
+                !string.IsNullOrWhiteSpace(_options.AdminServicePrincipalPassword))
+            {
+                claims.Add(new Claim(ClaimTypes.Spn, _options.AdminServicePrincipalName));
+                claims.Add(new Claim(CLAIM_AUTH_SERVICE_PRINCIPAL_PASSWORD, _options.AdminServicePrincipalPassword));
+                claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "SPN"));
+            }
 
             // augment with user metadata
             var userMetadata = await metadataInfoTask;
@@ -301,14 +311,30 @@ namespace CoE.Ideas.Shared.WordPress
                 throw new InvalidOperationException("Creating WordPressCredentials without specifying a user requires a non null httpContextAccessor");
             if (_httpContextAccessor.HttpContext == null)
                 throw new InvalidOperationException("httpContextAccessor returned a null HTTPContext");
-            var user = _httpContextAccessor.HttpContext.User;
+            var user = _httpContextAccessor?.HttpContext?.User;
             if (user == null)
                 throw new InvalidOperationException("httpContextAccessor.HTTPContext.User cannot be null");
             if (!user.Identity.IsAuthenticated)
                 throw new InvalidOperationException("httpContextAccessor.HTTPContext.User is not authenticated");
 
+
             var authCookie = TrySetWordPressCookiesFromHttpContext(cookieContainer);
-            if (authCookie == null)
+
+
+            string spn = null, spv = null;
+            if (user != null)
+            {
+                spn = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Spn)?.Value;
+                spv = user.Claims.FirstOrDefault(x => x.Type == CLAIM_AUTH_SERVICE_PRINCIPAL_PASSWORD)?.Value;
+            }
+
+            // ServicePrincipalNames take precendence if specified
+            if (!string.IsNullOrWhiteSpace(spn) && !string.IsNullOrWhiteSpace(spv))
+            {
+                // This should be symmetrically encrypted...
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"SPN {spn}|{spv}");
+            }
+            else if (authCookie == null)
             {
                 if (_httpContextAccessor?.HttpContext?.User != null)
                 {
@@ -334,14 +360,30 @@ namespace CoE.Ideas.Shared.WordPress
             if (user == null)
                 throw new ArgumentNullException("user");
 
-            var authCookie = CreateWordPressCookie(user);
-            if (authCookie == null)
-                throw new InvalidOperationException("Unable to create an authorization cookie for current user");
+            string spn = null, spv = null;
+            if (user != null)
+            {
+                spn = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Spn)?.Value;
+                spv = user.Claims.FirstOrDefault(x => x.Type == CLAIM_AUTH_SERVICE_PRINCIPAL_PASSWORD)?.Value;
+            }
 
-            cookieContainer.Add(authCookie);
+            // ServicePrincipalNames take precendence if specified
+            if (!string.IsNullOrWhiteSpace(spn) && !string.IsNullOrWhiteSpace(spv))
+            {
+                // This should be symmetrically encrypted...
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"SPN {spn}|{spv}");
+            }
+            else
+            {
+                var authCookie = CreateWordPressCookie(user);
+                if (authCookie == null)
+                    throw new InvalidOperationException("Unable to create an authorization cookie for current user");
 
-            // now for the nonce
-            httpClient.DefaultRequestHeaders.Add("X-WP-Nonce", CreateNonce(user, new AuthCookie(authCookie)));
+                cookieContainer.Add(authCookie);
+
+                // now for the nonce
+                httpClient.DefaultRequestHeaders.Add("X-WP-Nonce", CreateNonce(user, new AuthCookie(authCookie)));
+            }
         }
 
         private Cookie TrySetWordPressCookiesFromHttpContext(CookieContainer cookieContainer, Scheme? scheme = null)
@@ -413,6 +455,30 @@ namespace CoE.Ideas.Shared.WordPress
             }
             return returnValue;
         }
+
+        public virtual ClaimsPrincipal TryCreateServicePrincipal(string spnHeader)
+        {
+            string[] parts = spnHeader.Split("|");
+            if (parts.Length == 2)
+            {
+                if (parts[0] == _options.AdminServicePrincipalName)
+                {
+                    var pwd = parts[1]; //.ToSecureString();
+                    if (pwd != null && pwd.Equals(_options.AdminServicePrincipalPassword))
+                    {
+                        var claims = new List<Claim>();
+                        claims.Add(new Claim(ClaimTypes.Spn, parts[0]));
+                        claims.Add(new Claim(CLAIM_AUTH_SERVICE_PRINCIPAL_PASSWORD, parts[1]));
+                        claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "SPN"));
+
+                        return new ClaimsPrincipal(new ClaimsIdentity(claims, "Octava"));
+                    }
+                }
+            }
+
+            return null;
+        }
+
 
 
         private string CreateNonce(ClaimsPrincipal user, AuthCookie authCookie)
@@ -513,7 +579,9 @@ namespace CoE.Ideas.Shared.WordPress
                 return new Cookie(WordPressCookieAuthenticationHandler.GetWordPressCookieName(_options.Url), authClaim.Value, "/", new Uri(_options.Url).Host);
             }
             else
+            {
                 throw new NotImplementedException();
+            }
             //var authCookie = new AuthCookie() { UserName = principal.Identity.Name };
 
             //// let's give sufficient time to time for the cookie, say 5 minutes

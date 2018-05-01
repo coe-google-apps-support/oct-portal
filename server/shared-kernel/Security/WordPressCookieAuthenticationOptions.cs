@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
 
 namespace CoE.Ideas.Shared.Security
 {
