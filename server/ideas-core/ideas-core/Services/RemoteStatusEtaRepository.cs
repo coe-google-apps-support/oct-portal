@@ -66,6 +66,9 @@ namespace CoE.Ideas.Core.Services
                 throw new ArgumentNullException("callback");
 
             if (_user == null)
+                _user = await _wordPressUserSecurity.TryCreateAdminServicePrincipalAsync();
+
+            if (_user == null)
                 throw new InvalidOperationException("User must be set before making remote calls to Initiative service");
 
             var cookieContainer = new CookieContainer();
