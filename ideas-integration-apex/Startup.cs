@@ -75,7 +75,9 @@ namespace CoE.Ideas.Integration.Apex
 
             services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
 
-            services.AddInitiativeMessaging(serviceBusEmulatorConnectionString: Configuration.GetConnectionString("ServiceBusEmulator"));
+            services.AddInitiativeMessaging(Configuration.GetConnectionString("IdeaServiceBus"),
+                Configuration["Ideas:ServiceBusTopic"],
+                serviceBusEmulatorConnectionString: Configuration.GetConnectionString("ServiceBusEmulator"));
 
             return services;
         }
