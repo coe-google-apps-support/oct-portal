@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: remedy-sb-listener
-        image: coeoctava.azurecr.io/initiatives-remedy-sblistener:v1.0.2
+        image: coeoctava.azurecr.io/initiatives-remedy-sblistener:v1.0.4
         volumeMounts:
         - name: secret-volume
           mountPath: "/etc/secrets"

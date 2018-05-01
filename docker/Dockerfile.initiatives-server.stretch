@@ -7,11 +7,11 @@
 # docker push coeoctava.azurecr.io/initiatives-webapi:latest
 
 FROM microsoft/aspnetcore-build:2.0-stretch AS initiatives-server
-ARG Configuration=Debug
+ARG Configuration=Release
 WORKDIR /usr/src/coe-initiatives/web
 COPY server .
 WORKDIR /usr/src/coe-initiatives/web/ideas-server/ideas-server
-RUN dotnet publish
+RUN dotnet publish --configuration $Configuration
 WORKDIR /usr/src/coe-initiatives/web/ideas-server/ideas-server/bin/$Configuration/netcoreapp2.0
 
 
