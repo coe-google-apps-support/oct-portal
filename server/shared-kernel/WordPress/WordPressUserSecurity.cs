@@ -480,6 +480,21 @@ namespace CoE.Ideas.Shared.WordPress
         }
 
 
+        public Task<ClaimsPrincipal> TryCreateAdminServicePrincipalAsync()
+        {
+            if (string.IsNullOrWhiteSpace(_options.AdminServicePrincipalName) ||
+                string.IsNullOrWhiteSpace(_options.AdminServicePrincipalPassword))
+                return Task.FromResult<ClaimsPrincipal>(null);
+
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Spn, _options.AdminServicePrincipalName));
+            claims.Add(new Claim(CLAIM_AUTH_SERVICE_PRINCIPAL_PASSWORD, _options.AdminServicePrincipalPassword));
+            claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "SPN"));
+
+            return Task.FromResult(new ClaimsPrincipal(new ClaimsIdentity(claims, "Octava")));
+        }
+
+
 
         private string CreateNonce(ClaimsPrincipal user, AuthCookie authCookie)
         {
