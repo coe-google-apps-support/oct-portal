@@ -10,7 +10,7 @@ services:
       dockerfile: ideas-server/ideas-server/Dockerfile
 
   wordpress-db:
-    image: coeoctava.azurecr.io/wordpress-db:latest
+    image: coeoctava.azurecr.io/wordpress-db:v1.0.0
     volumes:
       - wp-dbdata:/var/lib/mysql
     restart: always
@@ -18,6 +18,8 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: octavadev
+      MYSQL_DATABASE: OctPortalWordPress
+
 
   initiatives-db:
     image: coeoctava.azurecr.io/initiatives-db:v1.0.2
