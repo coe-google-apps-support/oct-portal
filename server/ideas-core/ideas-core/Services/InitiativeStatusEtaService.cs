@@ -49,10 +49,9 @@ namespace CoE.Ideas.Core.Services
 
         public async Task<DateTime?> GetStatusEtaFromNowUtcAsync(InitiativeStatus initiativeStatus)
         {
-            var etaDefinition = StatusToEtaMap[initiativeStatus];
-
-            if (etaDefinition != null)
+            if (StatusToEtaMap.ContainsKey(initiativeStatus))
             {
+                var etaDefinition = StatusToEtaMap[initiativeStatus];
                 TimeZoneInfo albertaTimeZone;
                 try { albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton"); }
                 catch (TimeZoneNotFoundException)
