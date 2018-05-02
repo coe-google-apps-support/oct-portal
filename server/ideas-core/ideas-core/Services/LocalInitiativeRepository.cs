@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CoE.Ideas.Core.Data;
 using CoE.Ideas.Shared;
@@ -29,13 +30,14 @@ namespace CoE.Ideas.Core.Services
         private readonly Serilog.ILogger _logger;
 
 
-        public async Task<Initiative> AddInitiativeAsync(Initiative initiative)
+        public async Task<Initiative> AddInitiativeAsync(Initiative initiative,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             EnsureArg.IsNotNull(initiative);
 
             _logger.Debug("Adding to Ideas database");
             _initiativeContext.Initiatives.Add(initiative);
-            await _initiativeContext.SaveChangesAsync();
+            await _initiativeContext.SaveChangesAsync(cancellationToken);
 
             return initiative;
         }

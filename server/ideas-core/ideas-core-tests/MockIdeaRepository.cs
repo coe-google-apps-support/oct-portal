@@ -3,6 +3,7 @@ using CoE.Ideas.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Core.Tests
@@ -13,7 +14,8 @@ namespace CoE.Ideas.Core.Tests
         #region Initiatives
         private ICollection<Initiative> initiatives = new HashSet<Initiative>();
 
-        public Task<Initiative> AddInitiativeAsync(Initiative initiative)
+        public Task<Initiative> AddInitiativeAsync(Initiative initiative,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             initiatives.Add(initiative);
             return Task.FromResult(initiative);

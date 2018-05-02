@@ -27,6 +27,7 @@ namespace CoE.Ideas.Core.Data
             string title, 
             string description,
             int ownerPersonId,
+            int? businessContactId = null,
             bool skipEmailNotification = false)
         {
             Ensure.String.IsNotNullOrWhiteSpace(title, nameof(title));
@@ -38,8 +39,11 @@ namespace CoE.Ideas.Core.Data
             initiative.Description = description;
             initiative.Stakeholders = new List<Stakeholder>()
             {
-                Stakeholder.Create(ownerPersonId, StakeholderType.Owner)
+                Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
             };
+            if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
+                initiative.Stakeholders.Add(Stakeholder.Create(businessContactId.Value, StakeholderType.BusinessContact));
+
             initiative.Status = InitiativeStatus.Initiate;
             initiative.StatusHistories = new HashSet<InitiativeStatusHistory>();
             initiative.CreatedDate = DateTimeOffset.Now;
@@ -213,7 +217,15 @@ namespace CoE.Ideas.Core.Data
             else
                 currentStatusHistory.OverrideStatusDescription(newDescription);
 
-            AddDomainEvent(new InitiativeStatusDescriptionUpdatedDomainEvent(this.Uid, newDescription));
+            AddDomainEvent(new InitiativeStatusDescriptionUpdatedDomainEvent(Uid, newDescription));
+        }
+
+        public void AddStakeholder(int userId, StakeholderType type)
+        {
+            Stakeholders.Add(Stakeholder.Create(userId, type));
+
+            // raise domain event
+            AddDomainEvent(new StakeholderAddedDomainEvent(Uid, userId, type));
         }
     }
 }

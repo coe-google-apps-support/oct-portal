@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoE.Ideas.Shared.WordPress
@@ -50,6 +51,9 @@ namespace CoE.Ideas.Shared.WordPress
 
         [Column("user_nicename")]
         public string NiceName { get; set; }
+
+        [Column("user_registered")]
+        public DateTime UserRegisteredUtc { get; set; }
 
         [InverseProperty("User")]
         public virtual ICollection<UserMetadata> Metadata { get; set; }

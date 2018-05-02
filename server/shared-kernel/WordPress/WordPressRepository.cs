@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoE.Ideas.Shared.WordPress
@@ -102,7 +103,11 @@ namespace CoE.Ideas.Shared.WordPress
             return Task.FromResult(returnValue);
         }
 
-        public async Task<WordPressUser> CreateUser(string firstName, string lastName, string email, string phoneNumber)
+        public async Task<WordPressUser> CreateUser(string firstName, 
+            string lastName,
+            string email,
+            string phoneNumber, 
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             var user = new User();
             user.Email = email;
@@ -111,6 +116,7 @@ namespace CoE.Ideas.Shared.WordPress
             user.UserName = email;
             user.Password = "$P$BOctava";
             user.Url = string.Empty;
+            user.UserRegisteredUtc = DateTime.UtcNow;
            
             user.Metadata.Add(new UserMetadata("nickname", email));
             user.Metadata.Add(new UserMetadata("first_name", firstName));
@@ -129,7 +135,7 @@ namespace CoE.Ideas.Shared.WordPress
             user.Metadata.Add(new UserMetadata("community-events-location", string.Empty));
 
             _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             return new WordPressUser()
             {

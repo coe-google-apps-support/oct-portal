@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CoE.Ideas.Core.Data;
 using CoE.Ideas.Shared.WordPress;
@@ -53,7 +54,8 @@ namespace CoE.Ideas.Core.Services
         private ClaimsPrincipal _user;
 
 
-        public Task<Initiative> AddInitiativeAsync(Initiative initiative)
+        public Task<Initiative> AddInitiativeAsync(Initiative initiative,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             throw new NotSupportedException();
         }

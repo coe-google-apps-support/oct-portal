@@ -13,6 +13,7 @@ namespace CoE.Ideas.Shared.WordPress
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserMetadata> UserMetadata { get; set; }
+
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CoE.Ideas.Core.Data;
 using CoE.Ideas.Shared.WordPress;
@@ -40,10 +41,11 @@ namespace CoE.Ideas.Core.Services
         }
 
 
-        public async Task<Person> CreatePerson(string firstName, string lastName, string email, string phoneNumber)
+        public async Task<Person> CreatePerson(string firstName, string lastName, string email, string phoneNumber,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
 
-            var user = await _wordPressRepository.CreateUser(firstName,lastName,email,phoneNumber);
+            var user = await _wordPressRepository.CreateUser(firstName,lastName,email,phoneNumber, cancellationToken);
             return Person.Create(id: user.Id, name: user.Name, email: user.Email);
         }
     }

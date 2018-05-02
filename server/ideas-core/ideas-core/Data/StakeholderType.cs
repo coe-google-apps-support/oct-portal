@@ -12,6 +12,12 @@ namespace CoE.Ideas.Core.Data
         /// <summary>
         /// Person who created the idea
         /// </summary>
-        Owner
+        Requestor = 1,
+
+        /// <summary>
+        /// The person responsible for the idea when the Owner is different than the BusinessContact
+        /// </summary>
+        BusinessContact = 2
+            
     }
 }
