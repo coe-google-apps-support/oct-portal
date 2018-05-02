@@ -2,6 +2,7 @@
 using CoE.Ideas.Shared.Data;
 using EnsureThat;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,9 @@ using System.Threading.Tasks;
 namespace CoE.Ideas.Core.Data
 {
     internal class InitiativeContext : DbContext
+#if DEBUG
+     , Microsoft.EntityFrameworkCore.Design.IDesignTimeDbContextFactory<InitiativeContext>   
+#endif
     {
         public InitiativeContext(
             DbContextOptions<InitiativeContext> options,
@@ -78,6 +82,22 @@ namespace CoE.Ideas.Core.Data
 
             return result;
         }
+
+#if DEBUG
+        // This section adds Suport for Entity Framework PowerShell commands like Add-Migration
+        // examples: 
+        //     - Update-Database -Context InitiativeContext -Project ideas-core -StartupProject ideas-core 
+        //     - Add-Migration -Context InitiativeContext -Project ideas-core -StartupProject ideas-core -Name MyNewMigration
+        public InitiativeContext() { }
+
+        InitiativeContext IDesignTimeDbContextFactory<InitiativeContext>.CreateDbContext(string[] args)
+        {
+            var builder = new DbContextOptionsBuilder<InitiativeContext>();
+            builder.UseSqlServer("server=.;database=CoeIdeas;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;");
+
+            return new InitiativeContext(builder.Options, null, null);
+        }
+#endif
 
     }
 }
