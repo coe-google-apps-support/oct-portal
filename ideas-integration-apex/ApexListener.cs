@@ -48,35 +48,53 @@ namespace CoE.Ideas.Integration.Apex
             {
                 await ReadApexItemsAsync(async (apexItem, cancellationToken) =>
                 {
-                // Don't create duplicate Octava records. In the future we can update instead of quitting here
-                if ((await _initiativeRepository.GetInitiativeByApexId(apexItem.ApexId)) != null)
+                    // Don't create duplicate Octava records. In the future we can update instead of quitting here
+                    if ((await _initiativeRepository.GetInitiativeByApexId(apexItem.ApexId)) != null)
                         return;
 
-                // Convert apex item creator (in 3+3 format) to email address and then get their Octava user id
-                string requestorEmail = await GetEmailForUser3and3Async(apexItem.Requestor3and3);
-                    int? userId = string.IsNullOrWhiteSpace(requestorEmail)
-                        ? null : await GetOrCreateUserIdAsync(requestorEmail, cancellationToken);
+                    // Convert apex item creator (in 3+3 format) to email address and then get their Octava user id
+                    string requestorEmail = await GetEmailForUser3and3Async(apexItem.Requestor3and3);
+                    int? userId;
+                    try
+                    {
+                        userId = string.IsNullOrWhiteSpace(requestorEmail)
+                      ? null : await GetOrCreateUserIdAsync(requestorEmail, cancellationToken);
+                    }
+                    catch (Exception err)
+                    {
+                        userId = null;
+                        _logger.Warning(err, "Error retrieving user details for {EmailAddress}", requestorEmail);
+                    }
 
 
-                // Convert apex item business contact to Octava user id
-                int? busContactUserId = string.Equals(apexItem.BusinessContactEmail, requestorEmail, StringComparison.InvariantCultureIgnoreCase)
-                        ? userId : await GetOrCreateUserIdAsync(apexItem.BusinessContactEmail, cancellationToken);
+                    // Convert apex item business contact to Octava user id
+                    int? busContactUserId;
+                    try
+                    {
+                        busContactUserId = string.Equals(apexItem.BusinessContactEmail, requestorEmail, StringComparison.InvariantCultureIgnoreCase)
+                      ? userId : await GetOrCreateUserIdAsync(apexItem.BusinessContactEmail, cancellationToken);
+                    }
+                    catch (Exception err)
+                    {
+                        busContactUserId = null;
+                        _logger.Warning(err, "Error retrieving user details for {EmailAddress}", apexItem.BusinessContactEmail);
+                    }
 
 
-                // in case we couldn't find the creator but we did find a business contact, use that instead
-                if (!userId.HasValue && busContactUserId.HasValue)
+                    // in case we couldn't find the creator but we did find a business contact, use that instead
+                    if (!userId.HasValue && busContactUserId.HasValue)
                         userId = busContactUserId;
 
-                // abort it we couldn't find an appropriate stakeholder - Octava requires at least one
-                if (!userId.HasValue)
+                    // abort it we couldn't find an appropriate stakeholder - Octava requires at least one
+                    if (!userId.HasValue)
                     {
                         _logger.Warning("Could not find an appropriate user for apex id {ApexId} by submittor {User3and3} with project title {ApexProjectName}",
                             apexItem.ApexId, apexItem.Requestor3and3, apexItem.ProjectName);
                         return;
                     }
 
-                // Create initiative
-                var newInitiative = await CreateInitiativeAsync(apexItem.ProjectName,
+                    // Create initiative
+                    var newInitiative = await CreateInitiativeAsync(apexItem.ProjectName,
                         apexItem.ProjectDescription, userId.Value, busContactUserId, apexItem.ApexId, cancellationToken);
 
                     if (newInitiative == null)
