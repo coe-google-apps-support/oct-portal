@@ -14,6 +14,13 @@
     <Compile Remove="Migrations\20180419152741_OverridableStatusDescriptions.cs" />
     <Compile Remove="Migrations\20180426212005_AddApexId.cs" />
     <Compile Remove="Migrations\20180427151619_MakeApexIdNullable.cs" />
+    <Compile Remove="Migrations\20180504143321_Jackson.cs" />
+    <Compile Remove="Migrations\20180504143702_Jackson.cs" />
+    <Compile Remove="Migrations\20180504144147_Jackson.cs" />
+    <Compile Remove="Migrations\20180504144230_Jackson.cs" />
+    <Compile Remove="Migrations\20180504190424_Jackson.cs" />
+    <Compile Remove="Migrations\20180504195523_Jackson.cs" />
+    <Compile Remove="Migrations\20180504201504_AddSupportingDocuments.cs" />
   </ItemGroup>
 
   <ItemGroup>

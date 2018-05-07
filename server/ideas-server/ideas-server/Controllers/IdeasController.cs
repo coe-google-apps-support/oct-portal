@@ -164,7 +164,7 @@ namespace CoE.Ideas.Server.Controllers
             {
                 int personId = User.GetPersonId();
 
-                newInitiative = Initiative.Create(initiativeData.Title, initiativeData.Description, personId, skipEmailNotification: skipEmailNotification);
+				newInitiative = Initiative.Create(initiativeData.Title, initiativeData.Description, personId, skipEmailNotification: skipEmailNotification);
                 newInitiative = await _repository.AddInitiativeAsync(newInitiative);
 
                 watch.Stop();
