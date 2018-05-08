@@ -46,7 +46,7 @@ namespace CoE.Ideas.Core.Data
 
             initiative.Status = InitiativeStatus.Initiate;
             initiative.StatusHistories = new HashSet<InitiativeStatusHistory>();
-			initiative.CreatedDate = DateTime.Now.AddHours(-6);
+			initiative.CreatedDate = DateTime.Now.AddHours(-6); // subtract 6 hours for converting to MDT 
 			initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId, skipEmailNotification));
 
             return initiative;
