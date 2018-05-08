@@ -46,9 +46,8 @@ namespace CoE.Ideas.Core.Data
 
             initiative.Status = InitiativeStatus.Initiate;
             initiative.StatusHistories = new HashSet<InitiativeStatusHistory>();
-            initiative.CreatedDate = DateTimeOffset.Now;
-
-            initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId, skipEmailNotification));
+			initiative.CreatedDate = DateTime.Now.AddHours(-6);
+			initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId, skipEmailNotification));
 
             return initiative;
         }

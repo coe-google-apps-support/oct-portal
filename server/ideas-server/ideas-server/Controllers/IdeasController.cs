@@ -55,7 +55,11 @@ namespace CoE.Ideas.Server.Controllers
         public async Task<IEnumerable<Models.InitiativeInfo>> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All, [FromQuery]int page =1, [FromQuery]int pageSize = 20)
         {
             _logger.Information("Retrieving Initiatives");
-            Stopwatch watch = new Stopwatch();
+			EnsureArg.IsGte(page, 1, nameof(page));
+			EnsureArg.IsGte(pageSize, 1, nameof(pageSize));
+
+
+			Stopwatch watch = new Stopwatch();
             watch.Start();
 
             IEnumerable<Core.Data.InitiativeInfo> ideas;
