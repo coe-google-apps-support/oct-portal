@@ -86,18 +86,18 @@ namespace CoE.Ideas.Core.Services
             });
         }
 
-        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync()
+        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync(int pageNumber, int pageSize)
         {
             return await ExecuteAsync(async client =>
             {
-                var ideaString = await client.GetStringAsync(string.Empty);
-                var contractResolver = new InitiativeContractResolver();
+				var ideaString = await client.GetStringAsync($"?page={pageNumber}&pageSize={pageSize}");
+				var contractResolver = new InitiativeContractResolver();
                 var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
                 return JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings);
             });
         }
 
-        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId)
+        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber, int pageSize)
         {
             return await ExecuteAsync(async client =>
             {
@@ -152,7 +152,7 @@ namespace CoE.Ideas.Core.Services
             throw new NotImplementedException();
         }
 
-        internal class InitiativeContractResolver : DefaultContractResolver
+		internal class InitiativeContractResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
             {
