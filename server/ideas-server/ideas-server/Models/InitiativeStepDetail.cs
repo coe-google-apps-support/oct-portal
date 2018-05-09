@@ -48,10 +48,15 @@ namespace CoE.Ideas.Server.Models
                     if (!string.IsNullOrWhiteSpace(textTemplate))
                     {
                         string expectedCompletionDateString = null;
-                        if (step.ExpectedExitDateUtc.HasValue)
-                            expectedCompletionDateString = step.ExpectedExitDateUtc.Value.ToLocalTime().ToStringRelativeToNow();
-
-                        Person assignee = null;
+						if (step.ExpectedExitDateUtc.HasValue)
+						{
+							TimeZoneInfo albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton");
+							var expectedExitDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(step.ExpectedExitDateUtc.Value, albertaTimeZone);
+							var nowDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, albertaTimeZone);
+							expectedCompletionDateString = expectedExitDateAlberta.ToStringRelativeToNow(nowDateAlberta);
+							//expectedCompletionDateString = expectedExitDateAlberta.ToString();
+						}
+						Person assignee = null;
                         if (step.PersonId.HasValue)
                             assignee = await personRepository.GetPersonAsync(step.PersonId.Value);
 
