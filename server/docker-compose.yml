@@ -61,5 +61,18 @@ services:
       - "80:80"
 
 
+  ideas-integration-remedy:
+    image: ideasintegrationremedy
+    build:
+      context: .
+      dockerfile: ideas-integration-remedy/ideas-integration-remedy/Dockerfile
+
+  ideas-integration-remedy-sblistener:
+    image: ideasintegrationremedysblistener
+    build:
+      context: .
+      dockerfile: ideas-integration-remedy/ideas-integration-remedy-sblistener/Dockerfile
+
 volumes:
   wp-dbdata:
+

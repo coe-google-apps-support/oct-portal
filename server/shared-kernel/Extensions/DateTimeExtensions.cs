@@ -20,20 +20,19 @@ namespace CoE.Ideas.Shared.Extensions
         /// Returns string like "Tomorrow at 11:37 AM", or "27 minutes ago"
         /// </summary>
         /// <param name="dateTime"></param>
-        public static string ToStringRelativeToNow(this DateTime dateTime, string timeFormat = "h:mm tt")
+        public static string ToStringRelativeToNow(this DateTime dateTime, DateTime relativeToNow, string timeFormat = "h:mm tt")
         {
-            DateTime now = DateTime.Now;
-            if (dateTime.Subtract(now).Ticks > 0)
-                return ToStringRelativeToNowFutureDate(dateTime, now, timeFormat);
+            if (dateTime.Subtract(relativeToNow).Ticks > 0)
+                return ToStringRelativeToNowFutureDate(dateTime, relativeToNow, timeFormat);
             else
-                return ToStringRelativeToNowPastDate(dateTime, now);
-        }
+				return ToStringRelativeToNowPastDate(dateTime, relativeToNow);
+		}
 
-        private static string ToStringRelativeToNowFutureDate(DateTime dtEvent, DateTime now, string timeFormat)
+        private static string ToStringRelativeToNowFutureDate(DateTime dtEvent, DateTime relativeToNow, string timeFormat)
         {
-            // special cases for "today" and "tomorrow"
-            DateTime eventDay = dtEvent.Date;
-            DateTime nowDay = now.Date;
+			// special cases for "today" and "tomorrow"
+			DateTime eventDay = dtEvent.Date;
+            DateTime nowDay = relativeToNow.Date;
             if (nowDay == eventDay)
                 return $"{dtEvent.ToString(timeFormat)} today";
             else if (nowDay.AddDays(1) == eventDay)
