@@ -129,6 +129,9 @@ namespace CoE.Ideas.Core.Services
                 throw new ArgumentNullException("callback");
 
             if (_user == null)
+                _user = await _wordPressUserSecurity.TryCreateAdminServicePrincipalAsync();
+
+            if (_user == null)
                 throw new InvalidOperationException("User must be set before making remote calls to Initiative service");
 
             var cookieContainer = new CookieContainer();
@@ -140,6 +143,11 @@ namespace CoE.Ideas.Core.Services
                 _wordPressUserSecurity.SetWordPressCredentials(client, cookieContainer, _user);
                 return await callback(client);
             }
+        }
+
+        public Task<Initiative> GetInitiativeByApexId(int apexId)
+        {
+            throw new NotImplementedException();
         }
 
         internal class InitiativeContractResolver : DefaultContractResolver

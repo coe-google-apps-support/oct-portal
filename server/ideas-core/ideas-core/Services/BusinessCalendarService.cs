@@ -107,7 +107,10 @@ namespace CoE.Ideas.Core.Services
                 currentTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day).Add(StartBusinessHoursTime);
             // fix if time is after end hours time
             if (currentTime.Subtract(currentTime.Date) > EndBusinessHoursTime)
-                currentTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day+1).Add(StartBusinessHoursTime);
+            {
+                currentTime = currentTime.AddDays(1);
+                currentTime = new DateTime(currentTime.Year, currentTime.Month, currentTime.Day).Add(StartBusinessHoursTime);
+            }
 
             DateTime eta = currentTime.AddTicks(ticksToAdd);
             var amountPastBusinessDay = eta.Subtract(currentTime.Date.Add(EndBusinessHoursTime));

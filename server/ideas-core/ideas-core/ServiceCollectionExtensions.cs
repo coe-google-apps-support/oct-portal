@@ -65,7 +65,7 @@ namespace CoE.Ideas.Core
                 {
                     using (var context = new InitiativeContext(
                         new DbContextOptionsBuilder<InitiativeContext>()
-                        .UseSqlServer(connectionString).Options, null))
+                        .UseSqlServer(connectionString).Options, null, null))
                     {
 
                         context.Database.Migrate();

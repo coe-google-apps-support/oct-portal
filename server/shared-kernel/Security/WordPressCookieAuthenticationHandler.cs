@@ -1,4 +1,5 @@
-﻿using CoE.Ideas.Shared.Security.Events;
+﻿using CoE.Ideas.Shared.Extensions;
+using CoE.Ideas.Shared.Security.Events;
 using CoE.Ideas.Shared.WordPress;
 using EnsureThat;
 using Microsoft.AspNetCore.Authentication;
@@ -50,15 +51,31 @@ namespace CoE.Ideas.Shared.Security
         {
             var context = new CookieReceivedContext(Context, Scheme, Options);
 
-
-            if (Events.OnValidateCookie == null)
+            // SPN take precedence
+            var headers = context.HttpContext?.Request?.Headers;
+            if (headers != null)
             {
-                await OnValidateCookieDefaultHandler(context);
+                Microsoft.Extensions.Primitives.StringValues authHeader;
+                if (headers.TryGetValue("Authorization", out authHeader))
+                {
+                    if (authHeader.Count > 0 && authHeader[0].StartsWith("SPN ") && authHeader[0].Length > 4)
+                    {
+                        context.Principal = _wordPressUserSecurity.TryCreateServicePrincipal(authHeader[0].Substring(4));
+                    }
+                }
             }
-            else
+
+            if (context.Principal == null || !context.Principal.Identity.IsAuthenticated)
             {
-                _logger.Information("Validating WordPress cookie using custom event");
-                await Events.OnValidateCookie(context);
+                if (Events.OnValidateCookie == null)
+                {
+                    await OnValidateCookieDefaultHandler(context);
+                }
+                else
+                {
+                    _logger.Information("Validating WordPress cookie using custom event");
+                    await Events.OnValidateCookie(context);
+                }
             }
 
 #if DEBUG
@@ -79,6 +96,8 @@ namespace CoE.Ideas.Shared.Security
 
             return AuthenticateResult.Success(new AuthenticationTicket(context.Principal, context.Properties, Scheme.Name));
         }
+
+        // this whole method should be moved to WordPressUserSecurity -DC
 
         protected virtual async Task OnValidateCookieDefaultHandler(CookieReceivedContext context)
         {
@@ -145,5 +164,6 @@ namespace CoE.Ideas.Shared.Security
             wordPressCookieNameMap[wordPressUrl] = returnValue;
             return returnValue;
         }
+
     }
 }

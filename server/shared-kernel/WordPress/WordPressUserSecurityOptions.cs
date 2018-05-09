@@ -1,4 +1,6 @@
 ﻿
+using System.Security;
+
 namespace CoE.Ideas.Shared.WordPress
 {
     internal class WordPressUserSecurityOptions
@@ -18,5 +20,9 @@ namespace CoE.Ideas.Shared.WordPress
         public string SECRET_SALT { get; set; }
 
         public bool IS_SSL { get; set; }
+
+        public string AdminServicePrincipalName { get; set; }
+        public /*SecureString*/ string AdminServicePrincipalPassword { get; set; }
+
     }
 }

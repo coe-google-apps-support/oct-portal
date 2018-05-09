@@ -135,5 +135,10 @@ namespace CoE.Ideas.Core.Services
 
             return Task.FromResult(returnValue);
         }
+
+        public Task<Initiative> GetInitiativeByApexId(int apexId)
+        {
+            return _initiativeContext.Initiatives.FirstOrDefaultAsync(x => x.ApexId == apexId);
+        }
     }
 }

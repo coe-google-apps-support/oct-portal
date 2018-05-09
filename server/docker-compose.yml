@@ -74,7 +74,28 @@ services:
 
 
 
+  ideas-integration-apex:
+    image: ideasintegrationapex
+    build:
+      context: .
+      dockerfile: ../ideas-integration-apex/Dockerfile
+
+  ideas-integration-logger:
+    image: ideasintegrationlogger
+    build:
+      context: .
+      dockerfile: ideas-integration-logger/ideas-integration-logger/Dockerfile
+
+  ideas-integration-notification:
+    image: ideasintegrationnotification
+    build:
+      context: .
+      dockerfile: ideas-integration-notification/ideas-integration-notification/Dockerfile
+
 volumes:
   wp-dbdata:
+
+
+
 
 
