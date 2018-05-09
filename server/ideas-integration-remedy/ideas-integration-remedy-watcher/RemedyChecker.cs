@@ -34,10 +34,6 @@ namespace CoE.Ideas.Remedy.Watcher
             if (options == null || options.Value == null)
                 throw new ArgumentNullException("options");
             _options = options.Value;
-
-
-            TryReadLastPollTime();
-            _logger.Information("Using last poll time of {PollTime}", lastPollTimeUtc);
         }
 
 
@@ -87,6 +83,9 @@ namespace CoE.Ideas.Remedy.Watcher
 
         public async Task<RemedyPollResult> Poll()
         {
+            TryReadLastPollTime();
+            _logger.Information("Using last poll time of {PollTime}", lastPollTimeUtc);
+
             var result = await PollAsync(lastPollTimeUtc);
             SaveResult(result);
             return result;

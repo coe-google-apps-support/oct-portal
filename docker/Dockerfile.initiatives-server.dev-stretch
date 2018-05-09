@@ -27,4 +27,4 @@ WORKDIR /usr/src/coe/initiatives-server/ideas-server/ideas-server
 RUN dotnet restore
 RUN dotnet build
 
-ENTRYPOINT dotnet watch run --no-restore urls=http://0.0.0.0:5000
+ENTRYPOINT dotnet run urls=http://0.0.0.0:5000

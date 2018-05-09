@@ -24,7 +24,7 @@ RUN npm run build -- /usr/src/coe-initiatives/plugins/ideas-build
 
 
 FROM microsoft/aspnetcore:2.0-stretch
-ARG Configuration=Debug
+ARG Configuration=Release
 WORKDIR /app
 COPY --from=initiatives-server /usr/src/coe-initiatives/web/ideas-server/ideas-server/bin/$Configuration/netcoreapp2.0/publish  .
 COPY --from=initiatives-web /usr/src/coe-initiatives/plugins/ideas-build/ ./wwwroot
