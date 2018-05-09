@@ -10,9 +10,10 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: octavadev
+      MYSQL_DATABASE: OctPortalWordPress
 
   initiatives-db:
-    image: coeoctava.azurecr.io/initiatives-db
+    image: coeoctava.azurecr.io/initiatives-db:latest
     ports:
       - "1433:1433"
     environment:
@@ -40,9 +41,9 @@ services:
       - "8080:8080"
     restart: always
     volumes:
-      - ./plugins/ideas/:/usr/src/coe-initiatives/    
+      - ./plugins/ideas/:/app    
 
-  initiatives-web:
+  ideas-server:
     depends_on:
       - initiatives-db
     image: coeoctava.azurecr.io/initiatives-webapi:dev-latest
@@ -66,28 +67,28 @@ services:
   initiatives-remedy:
     depends_on:
       - initiatives-db
-      - initiatives-web
+      - ideas-server
     image: coeoctava.azurecr.io/initiatives-remedy:dev-latest
     restart: always
 
   initiatives-remedy-watcher:
     depends_on:
       - initiatives-db
-      - initiatives-web
+      - ideas-server
     image: coeoctava.azurecr.io/initiatives-remedy-watcher
     restart: always
 
   initiatives-remedy-sblistener:
     depends_on:
       - initiatives-db
-      - initiatives-web
+      - ideas-server
     image: coeoctava.azurecr.io/initiatives-remedy-sblistener
     restart: always
 
   nginx:
     depends_on:
       - wordpress
-      - initiatives-web
+      - ideas-server
       - initiatives-vue
     image: coeoctava.azurecr.io/nginx:dev-latest
     restart: always
