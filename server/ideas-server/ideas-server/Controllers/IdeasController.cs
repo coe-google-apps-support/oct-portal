@@ -52,10 +52,14 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public async Task<IEnumerable<Models.InitiativeInfo>> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All)
+        public async Task<IEnumerable<Models.InitiativeInfo>> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All, [FromQuery]int page =1, [FromQuery]int pageSize = 20)
         {
             _logger.Information("Retrieving Initiatives");
-            Stopwatch watch = new Stopwatch();
+			EnsureArg.IsGte(page, 1, nameof(page));
+			EnsureArg.IsGte(pageSize, 1, nameof(pageSize));
+
+
+			Stopwatch watch = new Stopwatch();
             watch.Start();
 
             IEnumerable<Core.Data.InitiativeInfo> ideas;
@@ -66,7 +70,7 @@ namespace CoE.Ideas.Server.Controllers
                     ideas = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId());
                 }
                 else
-                    ideas = await _repository.GetInitiativesAsync();
+                    ideas = await _repository.GetInitiativesAsync(page, pageSize);
                 var returnValue = ideas.OrderByDescending(x => x.CreatedDate);
                 watch.Stop();
                 _logger.Information("Retrieved {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);

@@ -12,13 +12,16 @@ namespace CoE.Ideas.Remedy
             //     ContextType.Domain, domain, serviceUserName, servicePassword);
         }
 
-        //private PrincipalContext principalContext;
+		//private PrincipalContext principalContext;
 
-        //public UserPrincipal GetADUser(string email)
-        //{
-        //    return UserPrincipal.FindByIdentity(principalContext,
-        //        IdentityType.UserPrincipalName, email);
-        //}
+		//public UserPrincipal GetADUser(string email)
+		//{
+		//    return UserPrincipal.FindByIdentity(principalContext,
+		//        IdentityType.UserPrincipalName, email);
+		//}
+
+
+
 
         //#region IDisposable Support
         //private bool disposedValue = false; // To detect redundant calls

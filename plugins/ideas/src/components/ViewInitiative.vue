@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div id="status"> 0 | 0</div>
     <div v-if="isLoading" class="oct-loader">
       <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
     </div>
@@ -11,6 +12,7 @@
           <div class="md-caption">{{ initiative.createdDate | formatDate }}</div>
         </div>
         <div class="md-body-1 oct-content-block">{{ initiative.description }}</div>
+        <md-button class="md-raised md-primary"> Clear Form </md-button>
         <div v-if="resources">
           <div class="md-headline">Resources</div>
           <md-table>
@@ -49,7 +51,8 @@ export default {
     isLoading: true,
     resources: null,
     activeUser: null,
-    canEditSteps: false
+    canEditSteps: false,
+    supportingdocs: null
   }),
   components: {
     Assignee,

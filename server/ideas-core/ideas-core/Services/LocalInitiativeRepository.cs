@@ -51,30 +51,35 @@ namespace CoE.Ideas.Core.Services
 
         public Task<Initiative> GetInitiativeAsync(int id)
         {
-            return _initiativeContext.Initiatives.Include(x => x.StatusHistories).SingleOrDefaultAsync(x => x.Id == id);
+            return _initiativeContext.Initiatives
+				.Include(x => x.StatusHistories)
+				.SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        private static IQueryable<InitiativeInfo> CreateInitiativeInfoQuery(IQueryable<Initiative> query)
+        private static IQueryable<InitiativeInfo> CreateInitiativeInfoQuery(IQueryable<Initiative> query, int pageNumber, int pageSize)
         {
             return query
                 .Include(x => x.StatusHistories)
-                .Select(x => InitiativeInfo.Create(x));
+				.Skip((pageNumber - 1)*pageSize)
+				.Take(pageSize)
+				.OrderByDescending(x => x.CreatedDate)
+				.Select(x => InitiativeInfo.Create(x));
         }
 
-        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync()
+        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync(int pageNumber, int pageSize)
         {
             //TODO: restrict to a reasonable amount of initiatives
-            var initiatives = await CreateInitiativeInfoQuery(_initiativeContext.Initiatives)
+            var initiatives = await CreateInitiativeInfoQuery(_initiativeContext.Initiatives, pageNumber, pageSize)
                 .ToListAsync();
-            return initiatives;
+			return initiatives;
         }
 
-        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId)
+        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber, int pageSize)
         {
             //TODO: restrict to a reasonable amount of initiatives
             var initiatives = await(CreateInitiativeInfoQuery(
                 _initiativeContext.Initiatives
-                    .Where(x => x.Stakeholders.Any(y => y.PersonId == personId))))
+                    .Where(x => x.Stakeholders.Any(y => y.PersonId == personId)), pageNumber, pageSize))
                 .ToListAsync();
 
             return initiatives;
@@ -142,5 +147,5 @@ namespace CoE.Ideas.Core.Services
         {
             return _initiativeContext.Initiatives.FirstOrDefaultAsync(x => x.ApexId == apexId);
         }
-    }
+	}
 }

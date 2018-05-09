@@ -20,8 +20,10 @@
     "dateformat": "^3.0.2",
     "javascript-time-ago": "^1.0.28",
     "vue": "^2.5.2",
+    "vue-infinite-loading": "^2.3.1",
     "vue-material": "1.0.0-beta-7",
     "vue-router": "^3.0.1",
+    "vue-toasted": "^1.1.24",
     "vuelidate": "^0.6.1"
   },
   "devDependencies": {
