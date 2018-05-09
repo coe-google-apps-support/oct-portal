@@ -54,7 +54,11 @@ namespace CoE.Ideas.Server.Models
                         Person assignee = null;
                         if (step.PersonId.HasValue)
                             assignee = await personRepository.GetPersonAsync(step.PersonId.Value);
-                        stepDto.Description = string.Format(textTemplate, assignee?.Name, expectedCompletionDateString);
+
+                        string assigneeName = assignee?.Name;
+                        if (string.IsNullOrWhiteSpace(assigneeName))
+                            assigneeName = "An OCT representative";
+                        stepDto.Description = string.Format(textTemplate, assigneeName, expectedCompletionDateString);
                     }
                 }
 
