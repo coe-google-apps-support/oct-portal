@@ -168,7 +168,7 @@ namespace CoE.Ideas.Server.Controllers
             {
                 int personId = User.GetPersonId();
 
-                newInitiative = Initiative.Create(initiativeData.Title, initiativeData.Description, personId, skipEmailNotification: skipEmailNotification);
+				newInitiative = Initiative.Create(initiativeData.Title, initiativeData.Description, personId, skipEmailNotification: skipEmailNotification);
                 newInitiative = await _repository.AddInitiativeAsync(newInitiative);
 
                 watch.Stop();
@@ -433,61 +433,67 @@ namespace CoE.Ideas.Server.Controllers
             });
         }
 
+		[HttpPost("{id}/supportingdocuments")]
+		public async Task<IActionResult> AddSupportingDocuments(int id, [FromBody]UpdateStatusDescriptionDto updateStatusDescriptionDto)
+		{
 
+			throw new NotImplementedException();
 
-            //// GET: ideas/5
-            ///// <summary>
-            ///// Retrieves a single Idea based on its Id
-            ///// </summary>
-            ///// <param name="id"></param>
-            ///// <returns></returns>
-            //[HttpGet("{id}/assignee")]
+		}
 
-            //public async Task<IActionResult> GetInitiativeAssignee([FromRoute] int id)
-            //{
-            //    using (LogContext.PushProperty("InitiativeId", id))
-            //    {
-            //        Stopwatch watch = null;
-            //        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-            //        {
-            //            _logger.Information("Retrieving assignee for initiative {InitiativeId}");
-            //            watch = new Stopwatch();
-            //            watch.Start();
-            //        }
+			//// GET: ideas/5
+			///// <summary>
+			///// Retrieves a single Idea based on its Id
+			///// </summary>
+			///// <param name="id"></param>
+			///// <returns></returns>
+			//[HttpGet("{id}/assignee")]
 
-            //        if (!ModelState.IsValid)
-            //        {
-            //            _logger.Warning("Unable to retrieve assignee from initiative {InitiativeId} because model state is not valid");
-            //            return BadRequest(ModelState);
-            //        }
+			//public async Task<IActionResult> GetInitiativeAssignee([FromRoute] int id)
+			//{
+			//    using (LogContext.PushProperty("InitiativeId", id))
+			//    {
+			//        Stopwatch watch = null;
+			//        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+			//        {
+			//            _logger.Information("Retrieving assignee for initiative {InitiativeId}");
+			//            watch = new Stopwatch();
+			//            watch.Start();
+			//        }
 
-            //        var idea = await _repository.GetInitiativeAsync(id);
+			//        if (!ModelState.IsValid)
+			//        {
+			//            _logger.Warning("Unable to retrieve assignee from initiative {InitiativeId} because model state is not valid");
+			//            return BadRequest(ModelState);
+			//        }
 
-            //        if (idea == null || !idea.AssigneeId.HasValue)
-            //            return NotFound();
+			//        var idea = await _repository.GetInitiativeAsync(id);
 
-            //        var assigneePerson = await _personRepository.GetPersonAsync(idea.AssigneeId.Value);
-            //        if (assigneePerson == null)
-            //            return NotFound();
+			//        if (idea == null || !idea.AssigneeId.HasValue)
+			//            return NotFound();
 
-            //        // convert Person to user
-            //        var assignee = new User()
-            //        {
-            //            Email = assigneePerson.Email,
-            //            Name = assigneePerson.Name,
-            //            AvatarUrl = null,
-            //            PhoneNumber = null
-            //        };
+			//        var assigneePerson = await _personRepository.GetPersonAsync(idea.AssigneeId.Value);
+			//        if (assigneePerson == null)
+			//            return NotFound();
 
-            //        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
-            //        {
-            //            watch.Stop();
-            //            _logger.Information("Retrieved assignee for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
-            //        }
+			//        // convert Person to user
+			//        var assignee = new User()
+			//        {
+			//            Email = assigneePerson.Email,
+			//            Name = assigneePerson.Name,
+			//            AvatarUrl = null,
+			//            PhoneNumber = null
+			//        };
 
-            //        return Ok(assignee);
-            //    }
-            //}
+			//        if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+			//        {
+			//            watch.Stop();
+			//            _logger.Information("Retrieved assignee for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+			//        }
 
-        }
+			//        return Ok(assignee);
+			//    }
+			//}
+
+		}
 }
