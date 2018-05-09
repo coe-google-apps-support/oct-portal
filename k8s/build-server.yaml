@@ -1,0 +1,38 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: build-agent
+  labels:
+    app: build-agent
+    version: v1.0.0
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: build-agent
+      version: v1.0.0
+  template:
+    metadata:
+      labels:
+        app: build-agent
+        version: v1.0.0
+    spec:
+      containers:
+      - name: build-agent
+        image: microsoft/vsts-agent:ubuntu-16.04-docker-17.12.0-ce-standard
+        env:
+          - name: VSTS_ACCOUNT
+            valueFrom:
+              secretKeyRef:
+                name: vsts-tokens
+                key: VSTS_ACCOUNT
+          - name: VSTS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: vsts-tokens
+                key: VSTS_TOKEN
+          - name: VSTS_POOL
+            valueFrom:
+              secretKeyRef:
+                name: vsts-tokens
+                key: VSTS_POOL
