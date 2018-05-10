@@ -127,7 +127,7 @@ namespace CoE.Ideas.Core.Services
                         var result = cmd.ExecuteScalar();
                         watch.Stop();
                         returnValue["version"] = result;
-                        returnValue["pingMilliseconds"] = watch.ElapsedMilliseconds;
+                        returnValue["pingMilliseconds"] = watch.Elapsed.TotalMilliseconds;
 
                         cmd.CommandText = "SELECT TOP (1) [MigrationId] FROM[CoeIdeas].[dbo].[__EFMigrationsHistory] ORDER BY MigrationId DESC";
                         returnValue["CurrentMigration"] = cmd.ExecuteScalar();
