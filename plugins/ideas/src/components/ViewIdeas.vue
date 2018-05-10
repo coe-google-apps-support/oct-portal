@@ -143,8 +143,8 @@ export default {
   right: -30%;
   padding: 10px;
   transform: translate(50%, 10%);
-  background: rgb(133, 223, 223);
-  border: 2px solid #383838;
+  background: rgb(162, 190, 184);
+  border: 1px solid #338033;
   border-radius: 4px;
   overflow: hidden;
   transition: .6s;
@@ -156,7 +156,7 @@ export default {
   content: '';
   display: block;
   position: absolute;
-  background: rgba(255,255,255,.5);
+  background: rgba(135, 255, 151, 0.5);
   width: 60px;
   height: 100%;
   left: 0;
@@ -169,7 +169,7 @@ export default {
   content: '';
   display: block;
   position: absolute;
-  background: rgba(255,255,255,.2);
+  background: rgba(135,255,151,.2);
   width: 30px;
   height: 100%;
   left: 30px;
