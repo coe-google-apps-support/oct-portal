@@ -9,4 +9,4 @@ metadata:
     tier: backend
 spec:
   type: ExternalName
-  externalName: octava-wordpressdb.mysql.database.azure.com
+  externalName: octavawordpressdb.mysql.database.azure.com
