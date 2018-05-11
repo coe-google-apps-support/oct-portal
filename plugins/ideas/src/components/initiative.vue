@@ -141,9 +141,6 @@ export default {
   vertical-align: top;
   background-color: #fafafa;
 }
-.md-card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.1);
-}
 .first-card {
   margin: 12px;
   display: inline-block;
@@ -165,12 +162,6 @@ export default {
   }
 }
 
-.viewbutton {
-  border: 0.5px solid rgb(192, 192, 192);
-}
-.viewbutton:hover {
-  border: 3px solid rgb(0, 182, 182);
-}
 .title {
   color: #fefefe;
   text-overflow: ellipsis;
