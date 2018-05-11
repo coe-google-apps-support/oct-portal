@@ -103,8 +103,8 @@ export default {
       return colors[randIndex]
     },
     openCard (idea) {
-      this.$router.push({path: '/my-profile', query: {isNewIdea: true}})
-      // this.$router.push({path: '/view-ideas/${idea.id}'})
+      // this.$router.push({path: '/my-profile', query: {isNewIdea: true}})
+      this.$router.push({path: '/view-ideas/${idea.id}'})
     }
   }
 }
@@ -140,7 +140,6 @@ export default {
   display: inline-block;
   vertical-align: top;
   background-color: #fafafa;
-  // animation: pulseanimation 1s linear infinite;
 }
 .md-card:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.1);
