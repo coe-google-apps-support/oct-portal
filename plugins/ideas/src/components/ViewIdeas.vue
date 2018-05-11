@@ -10,7 +10,9 @@
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
-        <div v-if="ideas[currentCards.length + 1] != null"><button id='loadMore' v-on:click='infiniteHandler'>Load More </button></div>
+       <div>
+        <!-- <div v-if="ideas[currentCards.length + 1] != null"> -->
+          <md-button class='loadMore md-raised md-secondary' v-on:click='infiniteHandler'> Load More </md-button></div>
         <infinite-loading @infinite="infiniteHandler">
           <span slot="no-more">
             There are no more initiatives!
@@ -124,61 +126,10 @@ export default {
   .md-overlay.md-fixed.md-dialog-overlay {
     z-index: 9!important;
   }
+  .loadMore {
+    position: relative;
+    width: 20%;
+    right: -40%;
+  }
 
-#loadMore {
-  position: relative;
-  margin: auto;
-  width: 20%;
-  right: -30%;
-  padding: 10px;
-  transform: translate(50%, 10%);
-  background: rgb(162, 190, 184);
-  border: 1px solid #338033;
-  border-radius: 4px;
-  overflow: hidden;
-  transition: .6s;
-}
-#loadMore:focus {
-  outline: none;
-}
-#loadMore:before {
-  content: '';
-  display: block;
-  position: absolute;
-  background: rgba(135, 255, 151, 0.5);
-  width: 60px;
-  height: 100%;
-  left: 0;
-  top: 0;
-  opacity: .5s;
-  filter: blur(30px);
-  transform: translateX(-130px) skewX(-25deg);
-}
-#loadMore:after {
-  content: '';
-  display: block;
-  position: absolute;
-  background: rgba(135,255,151,.2);
-  width: 30px;
-  height: 100%;
-  left: 30px;
-  top: 0;
-  opacity: 0;
-  filter: blur(30px);
-  transform: translate(-100px) scaleX(-15deg);
-}
-#loadMore:hover {
-  background: rgb(0, 182, 182);
-  cursor: pointer;
-}
-#loadMore:hover:before {
-  transform: translate(300px) skewX(-15deg);
-  opacity: .6;
-  transition: 1.5s;
-}
-#loadMore:hover:after {
-  transform: translate(300px) skewX(-15deg);
-  opacity: 1;
-  transition:.7s;
-}
 </style>
