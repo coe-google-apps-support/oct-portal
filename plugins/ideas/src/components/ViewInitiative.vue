@@ -140,6 +140,10 @@ export default {
   .oct-min-size {
     min-width: 400px;
   }
+  
+  .sd-headline {
+    font-size: 25px;
+  }
 
   tbody .md-table-row td {
     border-top: 0px;

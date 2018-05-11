@@ -26,7 +26,7 @@
     <md-divider></md-divider>
   
     <md-card-actions>
-      <md-button class='viewbutton' @click="openUrl" :style="{ color: getColor(initiative) }">View</md-button>
+      <md-button v-on:click="openUrl" :style="{ color: getColor(initiative) }">View</md-button>
     </md-card-actions>
     <md-progress-bar v-if="initiative.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
@@ -103,7 +103,8 @@ export default {
       return colors[randIndex]
     },
     openCard (idea) {
-      this.$router.push(`/ViewIdeas/${idea.id}`)
+      this.$router.push({path: '/my-profile', query: {isNewIdea: true}})
+      // this.$router.push({path: '/view-ideas/${idea.id}'})
     }
   }
 }
