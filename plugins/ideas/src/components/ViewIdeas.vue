@@ -10,8 +10,7 @@
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
-       <div>
-        <!-- <div v-if="ideas[currentCards.length + 1] != null"> -->
+        <div v-if="ideas[currentCards.length + 1] != null">
           <md-button class='loadMore md-raised md-secondary' v-on:click='infiniteHandler'> Load More </md-button></div>
         <infinite-loading @infinite="infiniteHandler">
           <span slot="no-more">
