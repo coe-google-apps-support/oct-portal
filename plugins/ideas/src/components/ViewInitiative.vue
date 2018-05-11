@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div id="status"> 0 | 0</div>
     <div v-if="isLoading" class="oct-loader">
       <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
     </div>
@@ -12,7 +11,7 @@
           <div class="md-caption">{{ initiative.createdDate | formatDate }}</div>
         </div>
         <div class="md-body-1 oct-content-block">{{ initiative.description }}</div>
-        <md-button class="md-raised md-primary"> Clear Form </md-button>
+        <!-- <md-button class="md-raised md-primary"> Clear Form </md-button> -->
         <div v-if="resources">
           <div class="md-headline">Resources</div>
           <md-table>
@@ -25,6 +24,19 @@
             </md-table-row>
           </md-table>
         </div>
+        <md-divider class="oct-divider"></md-divider>
+        <div class="sd-headline"> Supporting Documents              
+          <md-button class="sd-add-button">
+            <md-icon>add</md-icon>
+            </md-button>
+        </div>
+        <md-divider class="oct-divider"></md-divider>
+          <md-table>
+            <md-table-row>
+              <md-table-cell> Business case
+              </md-table-cell>
+            </md-table-row>
+          </md-table>
       </div>
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
@@ -59,6 +71,7 @@ export default {
     Steps
   },
   created () {
+    console.log(this.slug)
     this.services.user.getMe().then((user) => {
       this.activeUser = user
       this.canEditSteps = user.permissions.indexOf('editStatusDescription') !== -1
@@ -130,5 +143,12 @@ export default {
 
   tbody .md-table-row td {
     border-top: 0px;
+  }
+
+  .sd-add-button {
+    position: absolute;
+    margin: auto;
+    right: 80%;
+    width: -100%;
   }
 </style>

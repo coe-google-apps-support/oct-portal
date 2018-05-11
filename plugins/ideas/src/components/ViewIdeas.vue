@@ -10,9 +10,9 @@
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
-        <div v-if="ideas[currentCards.length + 1] != null"><button id='loadMore' v-on:click='infiniteHandler'>Load More </button></div>
+        <div><button id='loadMore' v-on:click='infiniteHandler'>Load More </button></div>
         <infinite-loading @infinite="infiniteHandler">
-         <!--  -->
+         <!-- v-if="ideas[currentCards.length + 1] != null" -->
           <span slot="no-more">
             There are no more initiatives!
           </span>
@@ -137,13 +137,14 @@ export default {
   }
 
 #loadMore {
-  position: absolute;
+  position: relative;
   margin: auto;
   width: 20%;
-  right: 50%;
+  right: -30%;
   padding: 10px;
   transform: translate(50%, 10%);
-  border: 1px solid #338033;
+  background: rgb(133, 223, 223);
+  border: 2px solid #383838;
   border-radius: 4px;
   overflow: hidden;
   transition: .6s;
@@ -178,7 +179,7 @@ export default {
   transform: translate(-100px) scaleX(-15deg);
 }
 #loadMore:hover {
-  background: #338033;
+  background: rgb(0, 182, 182);
   cursor: pointer;
 }
 #loadMore:hover:before {
