@@ -12,7 +12,6 @@
         </div>
         <div v-if="ideas[currentCards.length + 1] != null"><button id='loadMore' v-on:click='infiniteHandler'>Load More </button></div>
         <infinite-loading @infinite="infiniteHandler">
-         <!--  -->
           <span slot="no-more">
             There are no more initiatives!
           </span>
@@ -26,7 +25,6 @@
 <script>
 import Initiative from '@/components/initiative'
 import InfiniteLoading from 'vue-infinite-loading'
-// import axios from 'axios'
 import vue from 'vue'
 
 export default {
@@ -66,7 +64,6 @@ export default {
       return null
     },
     infiniteHandler ($state) {
-      // console.log('starting infinite handler')
       const self = this
       setTimeout(() => {
         const temp = []
@@ -79,19 +76,12 @@ export default {
         if ($state.loaded) {
           $state.loaded()
         }
-        if (self.currentCards.length === 0) {
-          // console.error('currentCards length is 0.')
-        } else {
-          // console.log('All good! currentCards length is not 0!')
-          // console.log(self.currentCards)
-        }
         if (self.ideas[self.currentCards.length + 1] == null) {
           if ($state.complete) {
             $state.complete()
           }
         }
       }, 1000)
-      // console.log('finishing infinite handler')
     }
   },
   created () {
@@ -115,7 +105,6 @@ export default {
     let initiativeFunction = null
     if (this.filter === 'mine') {
       initiativeFunction = this.services.ideas.getMyInitiatives
-      // console.log('Getting my inits')
     } else {
       initiativeFunction = this.services.ideas.getIdeas
     }
