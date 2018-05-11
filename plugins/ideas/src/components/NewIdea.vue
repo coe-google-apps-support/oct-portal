@@ -5,36 +5,24 @@
         <md-card-header id="custom-header">
           <div class="md-title">Submit an initiative!</div>
         </md-card-header>
-
-        <md-steppers :md-active-step.sync="active" md-alternative md-linear>
-
-          <md-step id="first" md-label="Personalize" :md-error="firstStepError" :md-done.sync="first">
-            <div class="md-flex md-flex-small-100">
-              <md-field :class="getValidationClass('title')">
-                <label for="idea-title">What is your technology initiative?</label>
-                <md-input name="title" id="idea-title" v-model="form.title" />
-                <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
-                <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
-              </md-field>
-            </div>
-            <div class="md-flex md-flex-small-100">
-              <md-field :class="getValidationClass('description')">
-                <label for="idea-desc">What is the purpose for this request?</label>
-                <md-textarea name="description" id="idea-desc" v-model="form.description" />
-                <span class="md-error" v-if="!$v.form.description.required">Description is required</span>
-                <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
-              </md-field>
-            </div>
-            <md-button class="md-raised md-primary"  v-on:click="saveIdea"> Submit </md-button>
-            <md-button class="md-raised" v-on:click="clearForm"> Clear Form </md-button>
-          </md-step>
-
-          <!-- <md-step id="second" md-label="Finalize" :md-done.sync="second">
-            <div id="whats-next">What's next?</div>
-            <StolenFromDivi :url="ideaURL"></StolenFromDivi>
-          </md-step> -->
-
-        </md-steppers>
+          <div class="md-flex md-flex-small-100">
+            <md-field :class="getValidationClass('title')">
+              <label for="idea-title">What is your technology initiative?</label>
+              <md-input name="title" id="idea-title" v-model="form.title" />
+              <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
+              <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
+            </md-field>
+          </div>
+          <div class="md-flex md-flex-small-100">
+            <md-field :class="getValidationClass('description')">
+              <label for="idea-desc">What is the purpose for this request?</label>
+              <md-textarea name="description" id="idea-desc" v-model="form.description" />
+              <span class="md-error" v-if="!$v.form.description.required">Description is required</span>
+              <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
+            </md-field>
+          </div>
+          <md-button class="md-raised md-primary"  v-on:click="saveIdea"> Submit </md-button>
+          <md-button class="md-raised" v-on:click="clearForm"> Clear Form </md-button>
         <md-progress-bar md-mode="indeterminate" class="md-accent" v-if="sending" />
       </md-card>
     </form>
@@ -57,11 +45,7 @@ export default {
     StolenFromDivi
   },
   data: () => ({
-    active: 'first',
     ideaURL: '',
-    first: false,
-    second: false,
-    firstStepError: null,
     sending: false,
     form: {
       title: null,
@@ -87,23 +71,12 @@ export default {
     }
   },
   methods: {
-    setDone (id, index) {
+    setDone () {
       this.$v.$touch()
 
-      if (!this.$v.$invalid) {
-        this[id] = true
-
-        this.firstStepError = null
-
-        if (index) {
-          this.active = index
-        }
-      } else {
-        this.setError()
-      }
-    },
-    setError () {
-      this.firstStepError = 'Uh oh!'
+      // if (!this.$v.$invalid) {
+      //   this[id] = true
+      // }
     },
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName]
@@ -122,7 +95,7 @@ export default {
     },
     saveIdea () {
       this.sending = true
-      // const isNewIdea = true
+
       console.log('saving new idea')
       this.services.ideas.createInitiative(
         this.form.title,
@@ -132,9 +105,9 @@ export default {
         this.sending = false
         var idea = x.data
         if (idea && idea.url && idea.url.length > 0) {
-          this.ideaURL = '#/my-profile'
+          this.ideaURL = idea.url
         }
-        this.setDone('first', 'second')
+        this.setDone()
         // If title/description are entered, then go to view-ideas.
         if (!this.form.description.required && !this.form.title.required) {
           // this.$toasted.show('Initiative successfully submitted!', {
@@ -173,24 +146,8 @@ export default {
     }
   }
 
-  .md-steppers {
-    :first-child {
-      box-shadow: none;
-    }
-  }
-
   .md-card {
     margin: 12px;
-  }
-
-  #whats-next {
-    color: $oct-primary;
-    font-size: 48px;
-    letter-spacing: 0;
-    line-height: 32px;
-    font-weight: 400;
-    text-align: center;
-    margin: 40px 0px 20px 0px;
   }
 
 </style>
