@@ -10,9 +10,9 @@
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
-        <div><button id='loadMore' v-on:click='infiniteHandler'>Load More </button></div>
+        <div v-if="ideas[currentCards.length + 1] != null"><button id='loadMore' v-on:click='infiniteHandler'>Load More </button></div>
         <infinite-loading @infinite="infiniteHandler">
-         <!-- v-if="ideas[currentCards.length + 1] != null" -->
+         <!--  -->
           <span slot="no-more">
             There are no more initiatives!
           </span>
@@ -97,19 +97,19 @@ export default {
   created () {
     console.log(this.newInitiative)
     console.log(this.filter)
-    // if (this.newInitiative !== null && this.filter === 'mine') {
-    //   this.$toasted.show('Initiative successfully submitted!', {
-    //     theme: 'primary',
-    //     position: 'top-right',
-    //     icon: 'check_circle',
-    //     action: {
-    //       text: 'Close',
-    //       onClick: (e, toastObject) => {
-    //         toastObject.goAway(0)
-    //       }
-    //     }
-    //   })
-    // }
+    if (this.newInitiative !== null && this.filter === 'mine') {
+      this.$toasted.show('Initiative successfully submitted!', {
+        theme: 'primary',
+        position: 'top-right',
+        icon: 'check_circle',
+        action: {
+          text: 'Close',
+          onClick: (e, toastObject) => {
+            toastObject.goAway(0)
+          }
+        }
+      })
+    }
     this.ideas.splice(0, this.ideas.length)
 
     let initiativeFunction = null

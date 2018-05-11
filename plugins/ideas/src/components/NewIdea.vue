@@ -137,17 +137,17 @@ export default {
         this.setDone('first', 'second')
         // If title/description are entered, then go to view-ideas.
         if (!this.form.description.required && !this.form.title.required) {
-          this.$toasted.show('Initiative successfully submitted!', {
-            theme: 'primary',
-            position: 'top-right',
-            icon: 'check_circle',
-            action: {
-              text: 'Close',
-              onClick: (e, toastObject) => {
-                toastObject.goAway(0)
-              }
-            }
-          })
+          // this.$toasted.show('Initiative successfully submitted!', {
+          //   theme: 'primary',
+          //   position: 'top-right',
+          //   icon: 'check_circle',
+          //   action: {
+          //     text: 'Close',
+          //     onClick: (e, toastObject) => {
+          //       toastObject.goAway(0)
+          //     }
+          //   }
+          // })
           // document.location.href = this.ideaURL
           this.$router.push({path: '/my-profile', query: {isNewIdea: true}})
         }
