@@ -37,6 +37,21 @@ namespace CoE.Ideas.Core.Migrations
                 column: "InitiativeId");
 
 
+			migrationBuilder.Sql(@"
+
+			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(1, 1, 'www.test.com', '2018-05-10 22:24:19.5789984 +00:00', 'test description', 'www.google.com', 2, 'test title', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '1')
+
+			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(2, 2, 'www.test.com', '2018-05-10 22:24:19.5789984 +00:00', 'test description', 'www.google.com', 2, 'test title', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '2')
+
+			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(3, 3, 'www.test.com', '2018-05-10 22:24:19.5789984 +00:00', 'test description', 'www.google.com', 2, 'test title', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '3')
+
+			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(4, 4, 'www.test.com', '2018-05-10 22:24:19.5789984 +00:00', 'test description', 'www.google.com', 2, 'test title', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '4')
+
+			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(5, 5, 'www.test.com', '2018-05-10 22:24:19.5789984 +00:00', 'test description', 'www.google.com', 2, 'test title', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '5')
+
+			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(6, 6, 'www.test.com', '2018-05-10 22:24:19.5789984 +00:00', 'test description', 'www.google.com', 2, 'test title', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '6')");
+
+
 		}
 
 
