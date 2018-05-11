@@ -25,7 +25,7 @@
                 <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
               </md-field>
             </div>
-            <md-button class="md-raised md-primary"  v-on:click="saveIdea"> Continue </md-button>
+            <md-button class="md-raised md-primary"  v-on:click="saveIdea"> Submit </md-button>
             <md-button class="md-raised" v-on:click="clearForm"> Clear Form </md-button>
           </md-step>
 
