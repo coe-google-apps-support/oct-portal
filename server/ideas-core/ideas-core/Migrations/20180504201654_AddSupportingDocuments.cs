@@ -35,9 +35,12 @@ namespace CoE.Ideas.Core.Migrations
                 name: "IX_SupportingDocuments_InitiativeId",
                 table: "SupportingDocuments",
                 column: "InitiativeId");
-        }
 
-        protected override void Down(MigrationBuilder migrationBuilder)
+
+		}
+
+
+		protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "SupportingDocuments");
