@@ -5,6 +5,7 @@
         <md-card-header id="custom-header">
           <div class="md-title">Submit an initiative!</div>
         </md-card-header>
+        <div>
           <div class="md-flex md-flex-small-100">
             <md-field :class="getValidationClass('title')">
               <label for="idea-title">What is your technology initiative?</label>
@@ -22,7 +23,7 @@
             </md-field>
           </div>
           <md-button class="md-raised md-primary"  v-on:click="saveIdea"> Submit </md-button>
-          <md-button class="md-raised" v-on:click="clearForm"> Clear Form </md-button>
+        </div>
         <md-progress-bar md-mode="indeterminate" class="md-accent" v-if="sending" />
       </md-card>
     </form>
@@ -73,10 +74,6 @@ export default {
   methods: {
     setDone () {
       this.$v.$touch()
-
-      // if (!this.$v.$invalid) {
-      //   this[id] = true
-      // }
     },
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName]
@@ -86,12 +83,6 @@ export default {
           'md-invalid': field.$invalid && field.$dirty
         }
       }
-    },
-    clearForm () {
-      this.$v.$reset()
-      this.form.title = null
-      this.form.description = null
-      this.form.tags = []
     },
     saveIdea () {
       this.sending = true
