@@ -10,4 +10,4 @@ FROM nginx:1.13
 
 LABEL authors = "Dan Chenier (daniel.chenier@edmonton.ca)"
 
-COPY octava.conf /etc/nginx/conf.d/default.conf
+COPY ./docker/nginx/octava.conf /etc/nginx/conf.d/default.conf
