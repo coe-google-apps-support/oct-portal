@@ -52,18 +52,25 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public async Task<IEnumerable<Models.InitiativeInfo>> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All, [FromQuery]int page =1, [FromQuery]int pageSize = 20)
+        public async Task<IActionResult> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All, [FromQuery]int page =1, [FromQuery]int pageSize = 20)
         {
-            _logger.Information("Retrieving Initiatives");
-			EnsureArg.IsGte(page, 1, nameof(page));
-			EnsureArg.IsGte(pageSize, 1, nameof(pageSize));
-
+			if (page < 1)
+			{
+				ModelState.AddModelError(nameof(page), "page cannot be less than or equal to zero");
+				return BadRequest(ModelState);
+			}
+			if (pageSize < 1)
+			{
+				ModelState.AddModelError(nameof(pageSize), "pageSize cannot be less than or equal to zero");
+				return BadRequest(ModelState);
+			}
 
 			Stopwatch watch = new Stopwatch();
             watch.Start();
 
-            IEnumerable<Core.Data.InitiativeInfo> ideas;
-            try
+			IEnumerable<Core.Data.InitiativeInfo> ideas;
+
+			try
             {
                 if (view == ViewOptions.Mine)
                 {
@@ -74,14 +81,14 @@ namespace CoE.Ideas.Server.Controllers
                 var returnValue = ideas.OrderByDescending(x => x.CreatedDate);
                 watch.Stop();
                 _logger.Information("Retrieved {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", returnValue.Count(), watch.ElapsedMilliseconds);
-                return returnValue.Select(x => new Models.InitiativeInfo()
-                {
-                    Id = x.Id,
+				return Ok(returnValue.Select(x => new Models.InitiativeInfo()
+				{
+					Id = x.Id,
                     Description = x.Description,
                     Title = x.Title,
                     CreatedDate = x.CreatedDate,
                     Url = _initiativeService.GetInitiativeUrl(x.Id).ToString()
-                });
+                }));
             }
             catch (Exception err)
             {
@@ -90,13 +97,14 @@ namespace CoE.Ideas.Server.Controllers
             }
         }
 
-        // GET: ideas/5
-        /// <summary>
-        /// Retrieves a single Idea based on its Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}")]
+
+		// GET: ideas/5
+		/// <summary>
+		/// Retrieves a single Idea based on its Id
+		/// </summary>
+		/// <param name="id"></param>
+		/// <returns></returns>
+		[HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetIdea([FromRoute] string id)
         {
@@ -433,13 +441,13 @@ namespace CoE.Ideas.Server.Controllers
             });
         }
 
-		[HttpPost("{id}/supportingdocuments")]
-		public async Task<IActionResult> AddSupportingDocuments(int id, [FromBody]UpdateStatusDescriptionDto updateStatusDescriptionDto)
-		{
+		//[HttpPost("{id}/supportingdocuments")]
+		//public async Task<IActionResult> AddSupportingDocuments(int id, [FromBody]UpdateStatusDescriptionDto updateStatusDescriptionDto)
+		//{
 
-			throw new NotImplementedException();
+			//});
 
-		}
+	//	}
 
 			//// GET: ideas/5
 			///// <summary>
