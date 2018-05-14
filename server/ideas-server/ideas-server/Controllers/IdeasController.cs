@@ -113,7 +113,7 @@ namespace CoE.Ideas.Server.Controllers
                 ModelState.AddModelError("id", "id cannot be empty");
                 return BadRequest(ModelState);
             }
-            else
+            else 
             {
                 if (!int.TryParse(id, out int initiativeId))
                 {
