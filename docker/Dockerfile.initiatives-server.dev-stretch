@@ -16,13 +16,13 @@ ARG Configuration=Debug
 # Required inside Docker, otherwise file-change events may not trigger
 ENV DOTNET_USE_POLLING_FILE_WATCHER 1
 
-VOLUME /usr/src/coe/initiatives-server
+VOLUME /app
 
-WORKDIR /usr/src/coe/initiatives-server
-COPY ./shared-kernel ./shared-kernel
-COPY ./ideas-core/ideas-core ./ideas-core/ideas-core
-COPY ./ideas-server/ideas-server ./ideas-server/ideas-server
-WORKDIR /usr/src/coe/initiatives-server/ideas-server/ideas-server
+WORKDIR /app
+COPY ./server/shared-kernel ./shared-kernel
+COPY ./server/ideas-core/ideas-core ./ideas-core/ideas-core
+COPY ./server/ideas-server/ideas-server ./ideas-server/ideas-server
+WORKDIR /app/ideas-server/ideas-server
 
 RUN dotnet restore
 RUN dotnet build
