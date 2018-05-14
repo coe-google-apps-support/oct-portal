@@ -43,12 +43,7 @@ namespace CoE.Ideas.Core.Data
                 Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
             };
 
-			//Pending Add: Supporting Documents 
 			initiative.SupportingDocuments = new List<SupportingDocument>();
-			//{
-			//	SupportingDocument.Create("supportingDocumentsTitle", "supportingDocumentsURL",SupportingDocumentsType.BusinessCases)
-			//};
-			//Pending Add: Supporting Documents 
 
 			if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
                 initiative.Stakeholders.Add(Stakeholder.Create(businessContactId.Value, StakeholderType.BusinessContact));
@@ -60,10 +55,7 @@ namespace CoE.Ideas.Core.Data
 
 			return initiative;
         }
-		//Pending Add: Supporting Documents 
 		public ICollection<SupportingDocument> SupportingDocuments{ get; private set; }
-		//Pending Add: Supporting Documents 
-
 
 		public Guid Uid { get; private set; }
 
