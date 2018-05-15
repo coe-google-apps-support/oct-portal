@@ -53,4 +53,4 @@ foreach ($svcName in $servicesInfo.Keys) {
   }
 }
 
-$od > ./docker-compose.yml
+$od > $BUILD_ARTIFACTSTAGINGDIRECTORY/docker-compose.yml
