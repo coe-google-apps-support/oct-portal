@@ -12,8 +12,7 @@ $od.ReplaceImage("nginx", "coeoctava.azurecr.io/nginx:v1.0.$BUILD_BUILDID")
 
 foreach ($svcName in $od.services.Keys)
 {
-  #Ensure unique names for the services
-  $serviceNames.add($svcName)
+  $svc = $od.services[$svcName]
 
   #Remove all exposed ports
   $svc.Remove("ports")
