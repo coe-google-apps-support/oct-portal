@@ -47,6 +47,14 @@ foreach ($svcName in $serviceNames) {
   }
 }
 
+#Add ports back somes images to allow us to map to a host port
+$od.services.nginx.ports = @("${PORT}:80")
+$od.services.'wordpress-db'.ports = @("${MYSQL_PORT}:3306")
+$od.services.'initiatives-db'.ports = @("${MSSQL_PORT}:1433")
+
+# Finally, we can remove the root "volumes" section since we won't have any left here
+$od.Remove("volumes")
+
 Write-Host "docker-compose:"
 $od.ToString()
 
