@@ -10,13 +10,8 @@ $od.ReplaceImage("initiatives-vue", "coeoctava.azurecr.io/initiatives-vue:dev-1.
 $od.ReplaceImage("initiatives-webapi", "coeoctava.azurecr.io/initiatives-webapi:v1.0.$BUILD_BUILDID")
 $od.ReplaceImage("nginx", "coeoctava.azurecr.io/nginx:v1.0.$BUILD_BUILDID")
 
-#We have a temporary collection because we can't change collections directly
-$serviceNames = New-Object "System.Collections.Generic.List[string]" ($od.services.Keys.Count)
-
 foreach ($svcName in $od.services.Keys)
 {
-  $svc = $od.services[$svcName]
-
   #Ensure unique names for the services
   $serviceNames.add($svcName)
 
@@ -35,22 +30,6 @@ foreach ($svcName in $od.services.Keys)
 $od.services.nginx["ports"] = @('${PORT}:80')
 $od.services.'wordpress-db'["ports"] = @('${MYSQL_PORT}:3306')
 $od.services.'initiatives-db'["ports"] = @('${MSSQL_PORT}:1433')
-
-# Postfix _$(BuildId) to the services names to ensure uniqueness
-foreach ($svcName in $serviceNames) {
-  $svc = $od.services[$svcName];
-  $od.services.Remove($svcName);
-  $od.services[$svcName + "_$BUILD_BUILDID"] = $svc
-
-  # same goes for the "depends_on" collection
-  if ($svc.Contains("depends_on")) {
-    $dependencies = $svc["depends_on"];
-    #dependencies is an array of strings so we can do this a little easier
-    for ($i=0; $i -lt $dependencies.length; $i++) {
-      $dependencies[$i] = $dependencies[$i].ToString() + "_$BUILD_BUILDID"
-    }
-  }
-}
 
 # Finally, we can remove the root "volumes" section since we won't have any left here
 $od.Remove("volumes")
