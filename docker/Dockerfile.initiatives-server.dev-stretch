@@ -1,6 +1,6 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t coeoctava.azurecr.io/initiatives-webapi:dev-latest -f docker/Dockerfile.initiatives-server.dev-stretch ./server
+# docker image build -t coeoctava.azurecr.io/initiatives-webapi:dev-latest -f docker/Dockerfile.initiatives-server.dev-stretch .
 #
 # And to push to the CoE Azure Repo (requires credentials):
 # docker tag coeoctava.azurecr.io/initiatives-webapi:dev-latest coeoctava.azurecr.io/initiatives-webapi:dev-stretch
