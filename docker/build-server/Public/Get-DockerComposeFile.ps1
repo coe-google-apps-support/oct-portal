@@ -20,7 +20,7 @@ function Get-DockerComposeFile {
       $od = Get-Content $Path | Out-String | ConvertFrom-Yaml
 
       #Someday I may replace this with an actual .Net type in a compiled library
-      $od | Add-Member -MemberType ScriptMethod -Name ToString -Value { $this | ConvertTo-Yaml } -Force
+      $od | Add-Member -MemberType ScriptMethod -Name ToString -Value { ($this | ConvertTo-Yaml)[1] } -Force
       $od | Add-Member -MemberType ScriptMethod -Name ReplaceImage -Value {
         param([string]$OldValue, [string]$NewValue)
         foreach ($k in $this.services.Keys) { 
