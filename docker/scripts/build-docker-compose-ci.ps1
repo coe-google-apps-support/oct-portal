@@ -22,11 +22,10 @@ foreach ($svcName in $od.services.Keys)
 
   #Ensure unique names for the services
   $serviceNames.add($svcName);
-
 }
 
 # Postfix _$(BuildId) to the services names to ensure uniqueness
-foreach ($svcName in $servicesInfo.Keys) {
+foreach ($svcName in $serviceNames) {
   $svc = $od.services[$svcName];
   $od.services.Remove($svcName);
   $od.services[$svcName + "_$BUILD_BUILDID"] = $svc
