@@ -47,6 +47,9 @@ foreach ($svcName in $serviceNames) {
   }
 }
 
+Write-Host "docker-compose so far:"
+$od.ToString()
+
 #Add ports back somes images to allow us to map to a host port
 $od.services.nginx["ports"] = @('${PORT}:80')
 $od.services.'wordpress-db'["ports"] = @('${MYSQL_PORT}:3306')
