@@ -33,15 +33,9 @@ foreach ($svcName in $serviceNames) {
   # same goes for the "depends_on" collection
   if ($svc.Contains("depends_on")) {
     $dependencies = $svc["depends_on"];
-    #again, we are not allowed to modify collections while enuerating, so multiple passes required
-    $dependencyNames = New-Object "System.Collections.Generic.List[string]" ($dependencies.Keys.Count)
-    foreach ($dependencyName in $dependencies.Keys) {
-      $dependencyNames.add($dependencyName)
-    }
-    foreach ($dependencyName in $dependencyNames) {
-      $dependency = $dependencies[$dependencyName]
-      $dependencies.Remove($dependency);
-      $dependencies[$dependencyName + "_$BUILD_BUILDID"] = $dependency;
+    #dependencies is an array of strings so we can do this a little easier
+    for ($i=0; $i -lt $dependencies.length; $i++) {
+      $dependencies[$i] = $dependencies[$i].ToString() + "_$BUILD_BUILDID"
     }
   }
 }
