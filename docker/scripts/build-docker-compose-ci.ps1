@@ -4,7 +4,8 @@
 Write-Host "Environment variables:"
 Get-ChildItem Env:
 
-$BUILD_BUILDID = Get-ChildItem Env:BUILD_BUILDID
+$BUILD_BUILDID = (Get-ChildItem Env:BUILD_BUILDID).Value
+$BUILD_ARTIFACTSTAGINGDIRECTORY = (Get-ChildItem Env:BUILD_ARTIFACTSTAGINGDIRECTORY).Value
 Write-Host "BuildId is $BUILD_BUILDID"
 Write-Host "Staging Directory is $BUILD_ARTIFACTSTAGINGDIRECTORY"
 
