@@ -1,15 +1,9 @@
 #This PowerShell script runs on the Docker-Container-CI build agent, 
 # built by Dockerfile.build-server
 
-Write-Host "Environment variables:"
-Get-ChildItem Env:
-
 $BUILD_BUILDID = (Get-ChildItem Env:BUILD_BUILDID).Value
 $BUILD_ARTIFACTSTAGINGDIRECTORY = (Get-ChildItem Env:BUILD_ARTIFACTSTAGINGDIRECTORY).Value
 Write-Host "BuildId is $BUILD_BUILDID"
-Write-Host "Staging Directory is $BUILD_ARTIFACTSTAGINGDIRECTORY"
-
-
 
 $od = Get-DockerComposeFile ./docker-compose.yml
 $od.ReplaceImage("initiatives-vue", "coeoctava.azurecr.io/initiatives-vue:dev-1.0.$BUILD_BUILDID")
@@ -53,4 +47,9 @@ foreach ($svcName in $servicesInfo.Keys) {
   }
 }
 
-$od > $BUILD_ARTIFACTSTAGINGDIRECTORY/docker-compose.yml
+Write-Host "docker-compose:"
+$od.ToString()
+
+Write-Host "Saving docker-compose to $BUILD_ARTIFACTSTAGINGDIRECTORY"
+
+$od.ToString() > $BUILD_ARTIFACTSTAGINGDIRECTORY/docker-compose.yml
