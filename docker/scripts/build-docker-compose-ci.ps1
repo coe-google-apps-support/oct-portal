@@ -31,6 +31,11 @@ foreach ($svcName in $od.services.Keys)
   $svc.Remove("restart")
 }
 
+#Add ports back somes images to allow us to map to a host port
+$od.services.nginx["ports"] = @('${PORT}:80')
+$od.services.'wordpress-db'["ports"] = @('${MYSQL_PORT}:3306')
+$od.services.'initiatives-db'["ports"] = @('${MSSQL_PORT}:1433')
+
 # Postfix _$(BuildId) to the services names to ensure uniqueness
 foreach ($svcName in $serviceNames) {
   $svc = $od.services[$svcName];
@@ -46,14 +51,6 @@ foreach ($svcName in $serviceNames) {
     }
   }
 }
-
-Write-Host "docker-compose so far:"
-$od.ToString()
-
-#Add ports back somes images to allow us to map to a host port
-$od.services.nginx["ports"] = @('${PORT}:80')
-$od.services.'wordpress-db'["ports"] = @('${MYSQL_PORT}:3306')
-$od.services.'initiatives-db'["ports"] = @('${MSSQL_PORT}:1433')
 
 # Finally, we can remove the root "volumes" section since we won't have any left here
 $od.Remove("volumes")
