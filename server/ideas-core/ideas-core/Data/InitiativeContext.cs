@@ -33,8 +33,9 @@ namespace CoE.Ideas.Core.Data
         public DbSet<InitiativeStatusHistory> InitiativeStatusHistories { get; set; }
         public DbSet<StringTemplate> StringTemplates { get; set; }
         public DbSet<StatusEta> StatusEtas { get; set; }
+		public DbSet<SupportingDocument> SupportingDocuments { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
