@@ -10,7 +10,7 @@ $od.ReplaceImage("initiatives-webapi", "coeoctava.azurecr.io/initiatives-webapi:
 $od.ReplaceImage("nginx", "coeoctava.azurecr.io/nginx:v1.0.$BUILD_BUILDID")
 
 #We have a temporary collection because we can't change collections directly
-$serviceNames = New-Object string[] ($od.services.Keys.Count)
+$serviceNames = New-Object "System.Collections.Generic.List[string]" ($od.services.Keys.Count)
 
 foreach ($svcName in $od.services.Keys)
 {
@@ -34,7 +34,7 @@ foreach ($svcName in $servicesInfo.Keys) {
   if ($svc.Contains("depends_on")) {
     $dependencies = $svc["depends_on"];
     #again, we are not allowed to modify collections while enuerating, so multiple passes required
-    $dependencyNames = New-Object string[] ($dependencies.Keys.Count)
+    $dependencyNames = New-Object "System.Collections.Generic.List[string]" ($dependencies.Keys.Count)
     foreach ($dependencyName in $dependencies.Keys) {
       $dependencyNames.add($dependencyName)
     }
