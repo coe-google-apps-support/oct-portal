@@ -15,13 +15,20 @@ $serviceNames = New-Object "System.Collections.Generic.List[string]" ($od.servic
 
 foreach ($svcName in $od.services.Keys)
 {
-  $svc = $od.services[$svcName];
-
-  #Remove all exposed ports
-  $svc.Remove("ports");
+  $svc = $od.services[$svcName]
 
   #Ensure unique names for the services
-  $serviceNames.add($svcName);
+  $serviceNames.add($svcName)
+
+  #Remove all exposed ports
+  $svc.Remove("ports")
+
+  #remove all volume, as they could interfere with multiple running instances
+  $svc.Remove("volumes")  
+
+  #remove the "restart" section if it exists, since if there are errors
+  #we don't need to waste resources constantly restarting
+  $svc.Remove("restart")
 }
 
 # Postfix _$(BuildId) to the services names to ensure uniqueness
