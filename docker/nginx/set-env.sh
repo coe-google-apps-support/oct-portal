@@ -21,4 +21,7 @@ echo "Replacing HOST_NAME using regex: $REGEX"
 
 REGEX2=$(printf "s/%s/%s/g" '\${HOST_PORT}' "$OCTAVA_PORT")
 echo "Replacing HOST_PORT using regex: $REGEX2"
-#/bin/sed -i $REGEX2 /etc/nginx/conf.d/default.conf
+/bin/sed -i $REGEX2 /etc/nginx/conf.d/default.conf
+
+echo "Current state of config:"
+cat /etc/nginx/conf.d/default.conf
