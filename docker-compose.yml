@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 
 services:
   wordpress-db:
@@ -90,7 +90,7 @@ services:
       - wordpress
       - ideas-server
       - initiatives-vue
-    image: coeoctava.azurecr.io/nginx:dev-latest
+    image: coeoctava.azurecr.io/nginx:v1.0.0
     restart: always
     ports:
       - "80:80"
