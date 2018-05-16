@@ -8,7 +8,7 @@ Write-Host "BuildId is $BUILD_BUILDID"
 $od = Get-DockerComposeFile ./docker-compose.yml
 
 # The Yaml reader thinks the version is a decimal - this fixes that
-$od["version"] = """" + $od.version.ToString().Replace("""", "") + """"
+$od["version"] = $od.version.ToString()
 
 $od.ReplaceImage("initiatives-vue", "coeoctava.azurecr.io/initiatives-vue:dev-1.0.$BUILD_BUILDID")
 $od.ReplaceImage("initiatives-webapi", "coeoctava.azurecr.io/initiatives-webapi:v1.0.$BUILD_BUILDID")
