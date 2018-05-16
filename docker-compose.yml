@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
   wordpress-db:
-    image: coeoctava.azurecr.io/wordpress-db:v1.0.2
+    image: coeoctava.azurecr.io/wordpress-db:v1.0.3
     volumes:
       - wp-dbdata:/var/lib/mysql
     restart: always
