@@ -405,7 +405,7 @@ namespace CoE.Ideas.Server.Controllers
 		{
 
 			SupportingDocument newSupportingDocuments = null;
-			newSupportingDocuments = SupportingDocument.Create(supportingDocumentsDto.Title, supportingDocumentsDto.Url, supportingDocumentsDto.Type);
+			newSupportingDocuments = SupportingDocument.Create(id,supportingDocumentsDto.Title, supportingDocumentsDto.Url, supportingDocumentsDto.Type);
 			newSupportingDocuments = await _repository.AddSupportingDocumentsAsync(newSupportingDocuments);
 			return CreatedAtAction("PostSupportingDocuments", new { id = newSupportingDocuments.Id }, newSupportingDocuments);
 
