@@ -3,7 +3,7 @@
 echo "Setting NGINX config variables"
 
 #remove all quotes (if any)
-DOMAIN_NAME=$(echo "$OCTAVA_URL" | tr -d '"')
+DOMAIN_NAME="$(echo "$OCTAVA_URL" | tr -d '"')"
 
 echo "Setting NGINX config variables -1"
 
