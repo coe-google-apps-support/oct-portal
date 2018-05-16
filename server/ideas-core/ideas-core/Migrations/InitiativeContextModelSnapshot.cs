@@ -29,16 +29,10 @@ namespace CoE.Ideas.Core.Migrations
 
                     b.Property<int?>("AssigneeId");
 
-                    b.Property<string>("BusinessCaseUrl")
-                        .HasMaxLength(2048);
-
                     b.Property<DateTimeOffset>("CreatedDate");
 
                     b.Property<string>("Description")
                         .IsRequired();
-
-                    b.Property<string>("InvestmentRequestFormUrl")
-                        .HasMaxLength(2048);
 
                     b.Property<int>("Status");
 

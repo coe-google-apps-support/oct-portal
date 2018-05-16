@@ -25,9 +25,14 @@ namespace CoE.Ideas.Core.Data
 
 		public SupportingDocumentsType Type { get; private set; }
 
-		internal static SupportingDocument Create(string title, string url, SupportingDocumentsType type)
+		public static SupportingDocument Create(string title, string url, SupportingDocumentsType type)
 		{
 			return new SupportingDocument() { Title = title, URL = url, Type = type};
+		}
+
+		public static SupportingDocument Create(string title, string url, int type)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

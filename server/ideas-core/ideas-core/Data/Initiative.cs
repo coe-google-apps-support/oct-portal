@@ -43,12 +43,7 @@ namespace CoE.Ideas.Core.Data
                 Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
             };
 
-			//Pending Add: Supporting Documents 
 			initiative.SupportingDocuments = new List<SupportingDocument>();
-			//{
-			//	SupportingDocument.Create("supportingDocumentsTitle", "supportingDocumentsURL",SupportingDocumentsType.BusinessCases)
-			//};
-			//Pending Add: Supporting Documents 
 
 			if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
                 initiative.Stakeholders.Add(Stakeholder.Create(businessContactId.Value, StakeholderType.BusinessContact));
@@ -60,9 +55,7 @@ namespace CoE.Ideas.Core.Data
 
 			return initiative;
         }
-		//Pending Add: Supporting Documents 
 		public ICollection<SupportingDocument> SupportingDocuments{ get; private set; }
-		//Pending Add: Supporting Documents 
 
 
 		public Guid Uid { get; private set; }
@@ -130,32 +123,6 @@ namespace CoE.Ideas.Core.Data
                         _statusHistories = theValue;
                 }
             }
-        }
-
-        /// <summary>
-        /// Business case for the initiative
-        /// </summary>
-        [Display(Name = "Business Case URL", Description = "The location of the businses case for the initiative")]
-        [MaxLength(2048)]
-        public string BusinessCaseUrl { get; private set; }
-
-        public void SetBusinessCaseUrl(string newBusinsesCaseUrl)
-        {
-            BusinessCaseUrl = newBusinsesCaseUrl;
-            //AddDomainEvent(new BusinessCaseUrlChangedDomainEvent(Uid, newBusinsesCaseUrl));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Display(Name = "Investment Request Form Url", Description = "The link the to associated Investment Request Form")]
-        [MaxLength(2048)]
-        public string InvestmentRequestFormUrl { get; private set; }
-
-		public void SetInvestmentFormUrl(string newInvestmentRequestFormUrl)
-        {
-            InvestmentRequestFormUrl = newInvestmentRequestFormUrl;
-            //AddDomainEvent(new BusinessCaseUrlChangedDomainEvent(Uid, newBusinsesCaseUrl));
         }
 
         public void SetWorkOrderId(string newWorkOrderId)

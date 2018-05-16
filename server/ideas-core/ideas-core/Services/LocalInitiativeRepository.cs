@@ -147,5 +147,15 @@ namespace CoE.Ideas.Core.Services
         {
             return _initiativeContext.Initiatives.FirstOrDefaultAsync(x => x.ApexId == apexId);
         }
+
+		public async Task<SupportingDocument> AddSupportingDocumentsAsync(SupportingDocument newSupportingDocuments, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			EnsureArg.IsNotNull(newSupportingDocuments);
+
+			_logger.Debug("Adding newSupportingDocuments Ideas database");
+			_initiativeContext.SupportingDocuments.Add(newSupportingDocuments);
+			await _initiativeContext.SaveChangesAsync(cancellationToken);
+			return newSupportingDocuments;
+		}
 	}
 }

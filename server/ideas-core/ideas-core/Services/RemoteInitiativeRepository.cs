@@ -152,6 +152,11 @@ namespace CoE.Ideas.Core.Services
             throw new NotImplementedException();
         }
 
+		public Task<SupportingDocument> AddSupportingDocumentsAsync(SupportingDocument newSupportingDocuments, CancellationToken cancellationToken = default(CancellationToken))
+		{
+			throw new NotImplementedException();
+		}
+
 		internal class InitiativeContractResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
