@@ -32,6 +32,8 @@ $od.services.'initiatives-db'["ports"] = @('${MSSQL_PORT}:1433')
 
 # Declare the OCTAVA_URL environment variable so we can set it on startup
 $od.services.'wordpress-db'.environment["OCTAVA_URL"] = '${OCTAVA_URL}'
+#NOTE: environment won't exist on the NGINX image!
+#$od.services.nginx.environment["OCTAVA_URL"] = '${OCTAVA_URL}'
 
 # Finally, we can remove the root "volumes" section since we won't have any left here
 $od.Remove("volumes")
