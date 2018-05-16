@@ -403,11 +403,33 @@ namespace CoE.Ideas.Server.Controllers
 		[HttpPost("{id}/supportingdocuments")]
 		public async Task<IActionResult> AddSupportingDocuments(int id, [FromBody]SupportingDocumentsDto supportingDocumentsDto)
 		{
+			EnsureArg.IsNotNull(supportingDocumentsDto);
+			if (!ModelState.IsValid)
+			{
+				_logger.Warning("Unable to create initiative because model state is not valid: {ModelState}", ModelState);
+				return BadRequest(ModelState);
+			}
 
-			SupportingDocument newSupportingDocuments = null;
-			newSupportingDocuments = SupportingDocument.Create(id,supportingDocumentsDto.Title, supportingDocumentsDto.Url, supportingDocumentsDto.Type);
-			newSupportingDocuments = await _repository.AddSupportingDocumentsAsync(newSupportingDocuments);
-			return CreatedAtAction("PostSupportingDocuments", new { id = newSupportingDocuments.Id }, newSupportingDocuments);
+			try
+			{
+				SupportingDocument newSupportingDocuments = null;
+				newSupportingDocuments = SupportingDocument.Create(id, supportingDocumentsDto.Title, supportingDocumentsDto.Url, supportingDocumentsDto.Type);
+				newSupportingDocuments = await _repository.AddSupportingDocumentsAsync(newSupportingDocuments);
+				return CreatedAtAction("PostSupportingDocuments", new { id = newSupportingDocuments.Id }, newSupportingDocuments);
+
+			}
+
+
+			catch (Exception err)
+			{
+				Guid correlationId = Guid.NewGuid();
+				_logger.Error(err, "Unable to save new supportingdocuments. CorrelationId: {CorrelationId}", correlationId);
+#if DEBUG
+				return base.StatusCode(500, $"Unable to save supportingdocuments to repository. Error: { err }");
+#else
+                return base.StatusCode(500, $"Unable to save idea to repository. CorrelationId: { correlationId }");
+#endif
+			}
 
 		}
 
