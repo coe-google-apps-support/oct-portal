@@ -1,2 +1,2 @@
 #!/bin/bash
-set-env.sh & nginx "$@"
+/usr/local/bin/set-env.sh & nginx "$@"

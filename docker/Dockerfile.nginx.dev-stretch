@@ -16,6 +16,6 @@ COPY ./docker/nginx/set-env.sh /usr/local/bin/set-env.sh
 
 ENV OCTAVA_URL http://localhost
 
-ENTRYPOINT ["coe-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/coe-entrypoint.sh"]
 
 CMD ["-g", "daemon off;"]
