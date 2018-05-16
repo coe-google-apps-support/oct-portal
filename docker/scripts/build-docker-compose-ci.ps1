@@ -6,6 +6,10 @@ $BUILD_ARTIFACTSTAGINGDIRECTORY = (Get-ChildItem Env:BUILD_ARTIFACTSTAGINGDIRECT
 Write-Host "BuildId is $BUILD_BUILDID"
 
 $od = Get-DockerComposeFile ./docker-compose.yml
+
+# The Yaml reader thinks the version is a decimal - this fixes that
+$od["version"] = """" + $od.version.ToString().Replace("""", "") + """"
+
 $od.ReplaceImage("initiatives-vue", "coeoctava.azurecr.io/initiatives-vue:dev-1.0.$BUILD_BUILDID")
 $od.ReplaceImage("initiatives-webapi", "coeoctava.azurecr.io/initiatives-webapi:v1.0.$BUILD_BUILDID")
 $od.ReplaceImage("nginx", "coeoctava.azurecr.io/nginx:v1.0.$BUILD_BUILDID")
@@ -33,7 +37,9 @@ $od.services.'initiatives-db'["ports"] = @('${MSSQL_PORT}:1433')
 # Declare the OCTAVA_URL environment variable so we can set it on startup
 $od.services.'wordpress-db'.environment["OCTAVA_URL"] = '${OCTAVA_URL}'
 #NOTE: environment won't exist on the NGINX image!
-#$od.services.nginx.environment["OCTAVA_URL"] = '${OCTAVA_URL}'
+$nginxEnv = New-Object System.Collections.Specialized.OrderedDictionary
+$nginxEnv["OCTAVA_URL"] = '${OCTAVA_URL}'
+$od.services.nginx["environment"]  = $nginxEnv
 
 # Finally, we can remove the root "volumes" section since we won't have any left here
 $od.Remove("volumes")
