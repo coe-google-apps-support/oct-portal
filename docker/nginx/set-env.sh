@@ -5,7 +5,7 @@ echo "Setting NGINX config variables"
 #remove all quotes (if any)
 DOMAIN_NAME="$(echo $OCTAVA_URL | tr -d '"')"
 
-echo "Setting NGINX config variables -1"
+echo "Using URL $DOMAIN_NAME"
 
 #parse out the domain name of OCTAVA_URL
 DOMAIN_NAME="$(echo $DOMAIN_NAME | awk -F'/' '{print $3}')"
