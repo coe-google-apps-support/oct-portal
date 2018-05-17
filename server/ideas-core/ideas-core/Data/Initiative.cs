@@ -14,16 +14,21 @@ namespace CoE.Ideas.Core.Data
     // Initiative is a Domain Driven Design aggregate root 
     public class Initiative : AggregateRoot<int>
     {
-        public Initiative(Guid uid) : base()
+        public Initiative(Guid uid) : this()
         {
             Uid = uid;
-            _statusHistories = new HashSet<InitiativeStatusHistory>();
         }
 
-        private Initiative() : base() { } // required for EF
+        private Initiative() : base()
+		{
+			this.SupportingDocuments = new List<SupportingDocument>();
+			_statusHistories = new HashSet<InitiativeStatusHistory>();
 
-        // Factory method for creation
-        public static Initiative Create(
+
+		} // required for EF
+
+		// Factory method for creation
+		public static Initiative Create(
             string title, 
             string description,
             int ownerPersonId,
@@ -44,7 +49,6 @@ namespace CoE.Ideas.Core.Data
             };
 
 			initiative.SupportingDocuments = new List<SupportingDocument>();
-
 			if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
                 initiative.Stakeholders.Add(Stakeholder.Create(businessContactId.Value, StakeholderType.BusinessContact));
 
@@ -122,32 +126,6 @@ namespace CoE.Ideas.Core.Data
                         _statusHistories = theValue;
                 }
             }
-        }
-
-        /// <summary>
-        /// Business case for the initiative
-        /// </summary>
-        [Display(Name = "Business Case URL", Description = "The location of the businses case for the initiative")]
-        [MaxLength(2048)]
-        public string BusinessCaseUrl { get; private set; }
-
-        public void SetBusinessCaseUrl(string newBusinsesCaseUrl)
-        {
-            BusinessCaseUrl = newBusinsesCaseUrl;
-            //AddDomainEvent(new BusinessCaseUrlChangedDomainEvent(Uid, newBusinsesCaseUrl));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Display(Name = "Investment Request Form Url", Description = "The link the to associated Investment Request Form")]
-        [MaxLength(2048)]
-        public string InvestmentRequestFormUrl { get; private set; }
-
-		public void SetInvestmentFormUrl(string newInvestmentRequestFormUrl)
-        {
-            InvestmentRequestFormUrl = newInvestmentRequestFormUrl;
-            //AddDomainEvent(new BusinessCaseUrlChangedDomainEvent(Uid, newBusinsesCaseUrl));
         }
 
         public void SetWorkOrderId(string newWorkOrderId)

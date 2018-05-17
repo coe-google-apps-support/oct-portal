@@ -152,6 +152,8 @@ namespace CoE.Ideas.Core.Services
             throw new NotImplementedException();
         }
 
+
+
 		internal class InitiativeContractResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)

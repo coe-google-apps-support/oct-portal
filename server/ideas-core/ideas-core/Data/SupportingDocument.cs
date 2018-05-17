@@ -11,6 +11,7 @@ namespace CoE.Ideas.Core.Data
 
 
 		private SupportingDocument() : base() { }
+
 		public string Title { get; private set; }
 		public void SetTitle(string newTitle)
 		{
@@ -25,9 +26,14 @@ namespace CoE.Ideas.Core.Data
 
 		public SupportingDocumentsType Type { get; private set; }
 
-		internal static SupportingDocument Create(string title, string url, SupportingDocumentsType type)
+		public void SetType(SupportingDocumentsType newType)
 		{
-			return new SupportingDocument() { Title = title, URL = url, Type = type};
+			Type = newType;
+		}
+
+		public static SupportingDocument Create(string title, string url, SupportingDocumentsType type)
+		{
+			return new SupportingDocument() {Title = title, URL = url, Type = type};
 		}
 	}
 }
