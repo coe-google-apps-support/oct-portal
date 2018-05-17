@@ -14,16 +14,21 @@ namespace CoE.Ideas.Core.Data
     // Initiative is a Domain Driven Design aggregate root 
     public class Initiative : AggregateRoot<int>
     {
-        public Initiative(Guid uid) : base()
+        public Initiative(Guid uid) : this()
         {
             Uid = uid;
-            _statusHistories = new HashSet<InitiativeStatusHistory>();
         }
 
-        private Initiative() : base() { } // required for EF
+        private Initiative() : base()
+		{
+			this.SupportingDocuments = new List<SupportingDocument>();
+			_statusHistories = new HashSet<InitiativeStatusHistory>();
 
-        // Factory method for creation
-        public static Initiative Create(
+
+		} // required for EF
+
+		// Factory method for creation
+		public static Initiative Create(
             string title, 
             string description,
             int ownerPersonId,
@@ -43,7 +48,6 @@ namespace CoE.Ideas.Core.Data
                 Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
             };
 
-			initiative.SupportingDocuments = new List<SupportingDocument>();
 
 			if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
                 initiative.Stakeholders.Add(Stakeholder.Create(businessContactId.Value, StakeholderType.BusinessContact));

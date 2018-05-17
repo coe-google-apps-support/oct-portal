@@ -18,8 +18,6 @@ namespace CoE.Ideas.Core.Services
 
         Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber=1, int pageSize=20);
 		Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync(int page=1, int pageSize=20);
-		Task<SupportingDocument> AddSupportingDocumentsAsync(SupportingDocument newSupportingDocuments, CancellationToken cancellationToken = default(CancellationToken));
-
 		//Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId);
 	}
 }

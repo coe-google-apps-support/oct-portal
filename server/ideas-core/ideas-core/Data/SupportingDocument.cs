@@ -12,12 +12,6 @@ namespace CoE.Ideas.Core.Data
 
 		private SupportingDocument() : base() { }
 
-		public int InitiativeId { get; private set; }
-		public void SetInitiativeId(int newInitiativeId)
-		{
-			InitiativeId = newInitiativeId;
-		}
-
 		public string Title { get; private set; }
 		public void SetTitle(string newTitle)
 		{
@@ -37,9 +31,9 @@ namespace CoE.Ideas.Core.Data
 			Type = newType;
 		}
 
-		public static SupportingDocument Create(int initiativeId, string title, string url, SupportingDocumentsType type)
+		public static SupportingDocument Create(string title, string url, SupportingDocumentsType type)
 		{
-			return new SupportingDocument() { InitiativeId = initiativeId, Title = title, URL = url, Type = type};
+			return new SupportingDocument() {Title = title, URL = url, Type = type};
 		}
 	}
 }

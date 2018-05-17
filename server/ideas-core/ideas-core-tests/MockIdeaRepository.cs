@@ -21,11 +21,6 @@ namespace CoE.Ideas.Core.Tests
             return Task.FromResult(initiative);
         }
 
-		public Task<SupportingDocument> AddSupportingDocumentsAsync(SupportingDocument newSupportingDocuments, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			throw new NotImplementedException();
-		}
-
 		public Task<Initiative> GetInitiativeAsync(Guid id)
         {
             return Task.FromResult(initiatives.Single(x => x.Uid == id));
