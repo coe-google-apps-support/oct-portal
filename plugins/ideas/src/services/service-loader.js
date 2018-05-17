@@ -5,6 +5,8 @@
 // Services
 import { IdeasService } from './ideas/IdeasService'
 import { UserService } from './user/UserService'
+import { StubbedIdeasService } from './ideas/StubbedIdeasService'
+import { StubbedUserService } from './user/StubbedUserService'
 let idea
 let user
 
