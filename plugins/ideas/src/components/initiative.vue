@@ -1,5 +1,5 @@
 <template>
-  <md-card :class="{ 'first-card' : isNewIdea }">
+  <md-card>
     <md-card-media-cover>
       <md-card-media md-ratio="16:9">
         <img :src="getImage()" alt="Skyscraper">
@@ -24,9 +24,9 @@
     </div>
     
     <md-divider></md-divider>
-  
+
     <md-card-actions>
-      <md-button class='viewbutton' @click="openUrl" :style="{ color: getColor(initiative) }">View</md-button>
+      <md-button @click="openUrl" :style="{ color: getColor(initiative) }">View</md-button>
     </md-card-actions>
     <md-progress-bar v-if="initiative.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
@@ -37,8 +37,7 @@ import formatDate from '@/utils/format-date-since'
 export default {
   name: 'Initiative',
   props: [
-    'initiative',
-    'isNewIdea'
+    'initiative'
   ],
   filters: {
     truncate (str) {
@@ -57,20 +56,20 @@ export default {
     },
     getImage () {
       const images = [
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card1.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card2.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card3.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card4.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card5.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card6.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card7.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card8.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card9.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card10.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card11.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card12.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card13.jpg`,
-        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card14.jpg`
+        `https://octava.blob.core.windows.net/cdn-store/cards/card1.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card2.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card3.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card4.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card5.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card6.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card7.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card8.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card9.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card10.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card11.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card12.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card13.png`,
+        `https://octava.blob.core.windows.net/cdn-store/cards/card14.png`
       ]
 
       const randIndex = (this.initiative.title.charCodeAt(0) + this.initiative.title.charCodeAt(1) + this.initiative.id) % images.length
@@ -139,38 +138,8 @@ export default {
   display: inline-block;
   vertical-align: top;
   background-color: #fafafa;
-  // animation: pulseanimation 1s linear infinite;
-}
-.md-card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.1);
-}
-.first-card {
-  margin: 12px;
-  display: inline-block;
-  vertical-align: top;
-  animation: pulseanimation 1s linear 3;     // inifinite for testing purposes. Use 3 iterations otherwise.
-}
-@keyframes pulseanimation {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 138, 101, 1);
-  }
-  40% {
-    box-shadow: 0 0 0 20px rgba(255,138,101,0);
-  }
-  80% {
-    box-shadow: 0 0 0 20px rgba(255,138,101,0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(255,138,101,0);
-  }
 }
 
-.viewbutton {
-  border: 0.5px solid rgb(192, 192, 192);
-}
-.viewbutton:hover {
-  border: 3px solid rgb(0, 182, 182);
-}
 .title {
   color: #fefefe;
   text-overflow: ellipsis;
