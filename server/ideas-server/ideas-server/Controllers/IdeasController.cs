@@ -52,7 +52,7 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All, [FromQuery]int page =1, [FromQuery]int pageSize = 20)
+        public async Task<IActionResult> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All, [FromQuery]int page =1, [FromQuery]int pageSize = 1000)
         {
 			if (page < 1)
 			{
