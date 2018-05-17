@@ -19,6 +19,8 @@ RUN chmod +x /usr/local/bin/set-env.sh
 
 ENV OCTAVA_URL http://localhost
 
-ENTRYPOINT ["/usr/local/bin/coe-entrypoint.sh"]
+#ENTRYPOINT ["/usr/local/bin/coe-entrypoint.sh"]
 
-CMD ["-g", "daemon off;"]
+#CMD ["-g", "daemon off;"]
+
+ENTRYPOINT ["/bin/bash"]
