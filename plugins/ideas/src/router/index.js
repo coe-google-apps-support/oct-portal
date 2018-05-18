@@ -16,7 +16,11 @@ export default new Router({
     {
       path: '/view-ideas',
       name: 'view-ideas',
-      component: ViewIdeas
+      component: ViewIdeas,
+      props: (route) => ({
+        page: Number(route.query.page),
+        pageSize: Number(route.query.pageSize)
+      })
     },
     {
       path: '/my-profile',
