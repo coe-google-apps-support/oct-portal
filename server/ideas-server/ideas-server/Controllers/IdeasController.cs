@@ -74,7 +74,7 @@ namespace CoE.Ideas.Server.Controllers
             {
                 if (view == ViewOptions.Mine)
                 {
-                    ideas = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId());
+                    ideas = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId(), page, pageSize);
                 }
                 else
                     ideas = await _repository.GetInitiativesAsync(page, pageSize);
