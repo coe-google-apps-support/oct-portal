@@ -1,16 +1,19 @@
 <template>
   <div>
+    <div align='center'> <h5>Page: 1 2 3 4 ... </h5> </div>
+    <br>
     <transition name="fade">
       <div>
-        <div v-if="currentCards && currentCards.length" class="md-layout md-alignment-top-center">
-          <initiative v-for="idea in currentCards"
+        <div v-if="ideas && ideas.length" class="md-layout md-alignment-top-center">
+          <initiative v-for="idea in ideas"
             :key="idea.id" 
             :initiative="idea"
             :isNewIdea='idea.id === newInitiative && filter === "mine"'
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
-        <div v-if="ideas[currentCards.length + 1] != null">
+        <!-- <div v-if="ideas[ideas.length + 1] != null"> -->
+        <div>  
           <md-button class='loadMore md-raised md-secondary' v-on:click='infiniteHandler'> Load More </md-button></div>
         <infinite-loading @infinite="infiniteHandler">
           <span slot="no-more">
@@ -32,7 +35,19 @@ export default {
   name: 'ViewIdeas',
   props: {
     filter: String,
-    newInitiative: Number
+    newInitiative: Number,
+    page: {
+      default () {
+        return 1
+      },
+      type: Number
+    },
+    pageSize: {
+      default () {
+        return 20
+      },
+      type: Number
+    }
   },
   data: () => ({
     ideas: [],
@@ -42,7 +57,9 @@ export default {
     activeStep: null,
     shownSteps: null,
     firstInit: null,
-    currentCards: []
+    // ideas: [],
+    redir: false,
+    initiativeFunction: null
   }),
   components: {
     Initiative,
@@ -64,32 +81,43 @@ export default {
       }
       return null
     },
+    getNextPage (page, pageSize) {
+      this.initiativeFunction('?page=' + String(page) + '&pageSize=' + String(pageSize)).then((response) => {
+        this.ideas = this.ideas.concat(response.data)
+        for (let i = 0; i < this.ideas.length; i++) {
+          this.ideas[i].isLoading = false
+        }
+      }, (e) => {
+        this.errors.push(e)
+      })
+    },
     infiniteHandler ($state) {
-      const self = this
+      let page = this.page
       setTimeout(() => {
-        const temp = []
-        for (let i = self.currentCards.length; i <= self.currentCards.length + 19; i++) {
-          if (self.ideas[i] != null) {
-            temp.push(self.ideas[i])
+        if (this.redir === true && this.filter !== 'mine') {
+          page++
+          this.getNextPage(page, this.pageSize)
+          this.$router.push({path: '/view-ideas', query: {page: page, pageSize: this.pageSize}})
+        }
+        // if ($state.loaded) {
+        //   $state.loaded()
+        // }
+        let checkdata = null
+        console.log(this.filter)
+        this.initiativeFunction('?page=' + String(page + 1) + '&pageSize=1').then((response) => {
+          checkdata = response.data
+          console.log(checkdata)
+          if (checkdata == null) {
+            if ($state.complete) {
+              $state.complete()
+            }
           }
-        }
-        self.currentCards = self.currentCards.concat(temp)
-        if ($state.loaded) {
-          $state.loaded()
-        }
-        if (self.ideas[self.currentCards.length + 1] == null) {
-          if ($state.complete) {
-            $state.complete()
-          }
-        }
+        })
+        this.redir = true
       }, 1000)
-    }
-  },
-  created () {
-    console.log(this.newInitiative)
-    console.log(this.filter)
-    if (this.newInitiative !== null && this.filter === 'mine') {
-      this.$toasted.show('Initiative successfully submitted!', {
+    },
+    toastMessage (message) {
+      this.$toasted.show(message, {
         theme: 'primary',
         position: 'top-right',
         icon: 'check_circle',
@@ -101,23 +129,27 @@ export default {
         }
       })
     }
-    this.ideas.splice(0, this.ideas.length)
-
-    let initiativeFunction = null
-    if (this.filter === 'mine') {
-      initiativeFunction = this.services.ideas.getMyInitiatives
-    } else {
-      initiativeFunction = this.services.ideas.getIdeas
+  },
+  created () {
+    if (this.filter !== 'mine') {
+      if (isNaN(this.page) || isNaN(this.pageSize)) {
+        this.$router.push({path: '/view-ideas', query: {page: 1, pageSize: 20}})
+      } else {
+        this.$router.push({path: '/view-ideas', query: {page: this.page, pageSize: this.pageSize}})
+      }
     }
 
-    initiativeFunction().then((response) => {
-      this.ideas = response.data
-      for (let i = 0; i < this.ideas.length; i++) {
-        this.ideas[i].isLoading = false
-      }
-    }, (e) => {
-      this.errors.push(e)
-    })
+    if (this.newInitiative !== null && this.filter === 'mine') {
+      this.toastMessage('Initiative successfully submitted!')
+    }
+    this.ideas.splice(0, this.ideas.length)
+
+    if (this.filter === 'mine') {
+      this.initiativeFunction = this.services.ideas.getMyInitiatives
+    } else {
+      this.initiativeFunction = this.services.ideas.getIdeas
+    }
+    this.getNextPage(this.page, this.pageSize)
   }
 }
 </script>
