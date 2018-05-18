@@ -12,8 +12,8 @@
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
-        <!-- <div v-if="ideas[ideas.length + 1] != null"> -->
-        <div>  
+        <div v-if="!(isLast)">
+        <!-- <div>   -->
           <md-button class='loadMore md-raised md-secondary' v-on:click='infiniteHandler'> Load More </md-button></div>
         <infinite-loading @infinite="infiniteHandler">
           <span slot="no-more">
@@ -57,9 +57,9 @@ export default {
     activeStep: null,
     shownSteps: null,
     firstInit: null,
-    // ideas: [],
     redir: false,
-    initiativeFunction: null
+    initiativeFunction: null,
+    isLast: false
   }),
   components: {
     Initiative,
@@ -81,7 +81,24 @@ export default {
       }
       return null
     },
-    getNextPage (page, pageSize) {
+    checkIslast (page) {
+      let checkdata = null
+      let pageformat = null
+      if (this.filter === 'mine') {
+        pageformat = '&page='
+      } else {
+        pageformat = '?page='
+      }
+      this.initiativeFunction(pageformat + String(page + 1) + '&pageSize' + String(this.pageSize)).then((response) => {
+        checkdata = response.data
+        if (checkdata.length === 0) {
+          this.isLast = true
+        } else {
+          this.isLast = false
+        }
+      })
+    },
+    requestAPI (page, pageSize) {
       this.initiativeFunction('?page=' + String(page) + '&pageSize=' + String(pageSize)).then((response) => {
         this.ideas = this.ideas.concat(response.data)
         for (let i = 0; i < this.ideas.length; i++) {
@@ -96,23 +113,18 @@ export default {
       setTimeout(() => {
         if (this.redir === true && this.filter !== 'mine') {
           page++
-          this.getNextPage(page, this.pageSize)
+          this.requestAPI(page, this.pageSize)
           this.$router.push({path: '/view-ideas', query: {page: page, pageSize: this.pageSize}})
         }
-        // if ($state.loaded) {
-        //   $state.loaded()
-        // }
-        let checkdata = null
-        console.log(this.filter)
-        this.initiativeFunction('?page=' + String(page + 1) + '&pageSize=1').then((response) => {
-          checkdata = response.data
-          console.log(checkdata)
-          if (checkdata == null) {
-            if ($state.complete) {
-              $state.complete()
-            }
+        if ($state.loaded) {
+          $state.loaded()
+        }
+        this.checkIslast(page)
+        if (this.isLast) {
+          if ($state.complete) {
+            $state.complete()
           }
-        })
+        }
         this.redir = true
       }, 1000)
     },
@@ -146,10 +158,18 @@ export default {
 
     if (this.filter === 'mine') {
       this.initiativeFunction = this.services.ideas.getMyInitiatives
+      this.initiativeFunction('').then((response) => {
+        this.ideas = this.ideas.concat(response.data)
+        for (let i = 0; i < this.ideas.length; i++) {
+          this.ideas[i].isLoading = false
+        }
+      }, (e) => {
+        this.errors.push(e)
+      })
     } else {
       this.initiativeFunction = this.services.ideas.getIdeas
+      this.requestAPI(this.page, this.pageSize)
     }
-    this.getNextPage(this.page, this.pageSize)
   }
 }
 </script>

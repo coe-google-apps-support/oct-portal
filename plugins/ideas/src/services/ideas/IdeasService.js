@@ -24,8 +24,8 @@ let x = class IdeasService {
    * Returns a Promise that resolves with a list of my initiatives.
    * @returns {Promise} Resolved with an array of my initiatives.
    */
-  static getMyInitiatives () {
-    return HTTP.get('?view=Mine')
+  static getMyInitiatives (size) {
+    return HTTP.get(`?view=Mine${size}`)
   }
 
   /**

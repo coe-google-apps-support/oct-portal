@@ -30,8 +30,6 @@ export default new Router({
         filter: 'mine',
         newInitiative: Number(route.query.newInitiative)
       })
-        // filter: 'mine',
-        // newInitiative: route.newInitiative
     },
     {
       path: '/initiatives/:slug/',
