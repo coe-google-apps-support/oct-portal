@@ -59,7 +59,8 @@ export default {
     firstInit: null,
     redir: false,
     initiativeFunction: null,
-    isLast: false
+    isLast: false,
+    newInitId: null
   }),
   components: {
     Initiative,
@@ -150,16 +151,18 @@ export default {
         this.$router.push({path: '/view-ideas', query: {page: this.page, pageSize: this.pageSize}})
       }
     }
-    if (!isNaN(this.newInitiative) && this.filter === 'mine') {
-      console.log(this.newInitiative)
-      this.toastMessage('Initiative successfully submitted!')
-    }
     this.ideas.splice(0, this.ideas.length)
 
     if (this.filter === 'mine') {
       this.initiativeFunction = this.services.ideas.getMyInitiatives
       this.initiativeFunction('').then((response) => {
         this.ideas = this.ideas.concat(response.data)
+        this.newInitId = this.ideas[0].id
+        if (!isNaN(this.newInitiative)) {
+          console.log(this.newInitId)
+          this.$router.push({path: '/my-profile', query: {newInitiative: this.newInitId}})
+          this.toastMessage('Initiative successfully submitted!')
+        }
         for (let i = 0; i < this.ideas.length; i++) {
           this.ideas[i].isLoading = false
         }
