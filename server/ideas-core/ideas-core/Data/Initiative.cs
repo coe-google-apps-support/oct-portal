@@ -48,7 +48,7 @@ namespace CoE.Ideas.Core.Data
                 Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
             };
 
-
+			initiative.SupportingDocuments = new List<SupportingDocument>();
 			if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
                 initiative.Stakeholders.Add(Stakeholder.Create(businessContactId.Value, StakeholderType.BusinessContact));
 
@@ -60,7 +60,6 @@ namespace CoE.Ideas.Core.Data
 			return initiative;
         }
 		public ICollection<SupportingDocument> SupportingDocuments{ get; private set; }
-
 
 		public Guid Uid { get; private set; }
 

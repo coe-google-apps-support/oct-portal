@@ -57,20 +57,20 @@ export default {
     },
     getImage () {
       const images = [
-        `https://octava.blob.core.windows.net/cdn-store/cards/card1.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card2.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card3.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card4.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card5.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card6.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card7.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card8.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card9.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card10.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card11.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card12.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card13.png`,
-        `https://octava.blob.core.windows.net/cdn-store/cards/card14.png`
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card1.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card2.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card3.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card4.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card5.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card6.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card7.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card8.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card9.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card10.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card11.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card12.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card13.jpg`,
+        `https://octava.blob.core.windows.net/cdn-store/cards-jpeg/card14.jpg`
       ]
 
       const randIndex = (this.initiative.title.charCodeAt(0) + this.initiative.title.charCodeAt(1) + this.initiative.id) % images.length
