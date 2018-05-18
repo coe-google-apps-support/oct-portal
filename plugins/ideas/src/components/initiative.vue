@@ -72,7 +72,6 @@ export default {
         `https://octava.blob.core.windows.net/cdn-store/cards/card13.png`,
         `https://octava.blob.core.windows.net/cdn-store/cards/card14.png`
       ]
-      console.log(this.initiative)
       const randIndex = (this.initiative.title.charCodeAt(0) + this.initiative.title.charCodeAt(1) + this.initiative.id) % images.length
       return images[randIndex]
     },
@@ -104,7 +103,7 @@ export default {
     },
     openCard (idea) {
       // this.$router.push({path: '/my-profile', query: {isNewIdea: true}})
-      this.$router.push({path: '/view-ideas/${idea.id}'})
+      this.$router.push(`/view-ideas/${idea.id}`)
     }
   }
 }

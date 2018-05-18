@@ -15,7 +15,7 @@
         <div v-if="!(isLast)">
         <!-- <div>   -->
           <md-button class='loadMore md-raised md-secondary' v-on:click='infiniteHandler'> Load More </md-button></div>
-        <infinite-loading @infinite="infiniteHandler">
+        <infinite-loading spinner="bubbles" @infinite="infiniteHandler">
           <span slot="no-more">
             There are no more initiatives!
           </span>
@@ -150,8 +150,8 @@ export default {
         this.$router.push({path: '/view-ideas', query: {page: this.page, pageSize: this.pageSize}})
       }
     }
-
-    if (this.newInitiative !== null && this.filter === 'mine') {
+    if (!isNaN(this.newInitiative) && this.filter === 'mine') {
+      console.log(this.newInitiative)
       this.toastMessage('Initiative successfully submitted!')
     }
     this.ideas.splice(0, this.ideas.length)

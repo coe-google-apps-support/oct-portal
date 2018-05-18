@@ -101,7 +101,7 @@ export default {
         this.setDone()
         // If title/description are entered, then go to view-ideas.
         if (!this.form.description.required && !this.form.title.required) {
-          this.$router.push({path: '/my-profile', query: {isNewIdea: true}})
+          this.$router.push({path: '/my-profile', query: {newInitiative: 1}})
         }
       }).catch((err, y) => {
         this.sending = false
