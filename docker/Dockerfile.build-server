@@ -1,0 +1,17 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t coeoctava.azurecr.io/coe-vsts-agent:v1.0.1 -t coeoctava.azurecr.io/coe-vsts-agent:latest -f ./docker/Dockerfile.build-server ./docker/build-server
+#
+# How to run this image interactively using PowerShell:
+# docker run -it coeoctava.azurecr.io/coe-vsts-agent:v1.0.0 pwsh
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker push coeoctava.azurecr.io/coe-vsts-agent:v1.0.1
+# docker push coeoctava.azurecr.io/coe-vsts-agent:latest
+
+FROM alpine/git AS PowerShellModules
+RUN git clone https://github.com/Phil-Factor/PSYaml.git /var/PSYaml
+
+FROM microsoft/vsts-agent:ubuntu-16.04-docker-17.12.0-ce-standard
+COPY --from=PowerShellModules /var/PSYaml/PSYaml /usr/local/share/powershell/Modules/PSYaml
+ADD . /usr/local/share/powershell/Modules/Octava

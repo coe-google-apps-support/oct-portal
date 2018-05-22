@@ -57,32 +57,34 @@ namespace CoE.Ideas.Core
 
             services.AddScoped<IInitiativeStatusEtaRepository, InitiativeStatusEtaRepository>();
 
+
+
+            return services;
+        }
+
 #if DEBUG
+        public static void InitializeInitiativeDatabase(this IServiceProvider serviceProvider)
+        {
             int retryCount = 0;
             while (true)
             {
+                var context = serviceProvider.GetRequiredService<InitiativeContext>();
                 try
                 {
-                    using (var context = new InitiativeContext(
-                        new DbContextOptionsBuilder<InitiativeContext>()
-                        .UseSqlServer(connectionString).Options, null, null))
-                    {
 
-                        context.Database.Migrate();
-                        break;
-                    }
+                    context.Database.Migrate();
+                    break;
                 }
                 catch (Exception)
                 {
-                    if (retryCount++>30)
+                    if (retryCount++ > 30)
                         throw;
                     System.Threading.Thread.Sleep(1000);
                 }
             }
+        }
 #endif
 
-            return services;
-        }
 
         public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
             SynchronousInitiativeMessageReceiver synchronousInitiativeMessageReceiver)
