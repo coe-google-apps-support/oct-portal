@@ -36,7 +36,6 @@ namespace CoE.Ideas.Server.Tests
 
         }
         private static ServiceProvider serviceProvider;
-
         [TestMethod]
         public async Task TestReadInitiatives()
         {
@@ -50,9 +49,6 @@ namespace CoE.Ideas.Server.Tests
             var allIdeas = objectResult.Value as IEnumerable<Models.InitiativeInfo>;
 
             Assert.IsNotNull(allIdeas, "ideasController.GetInitiatives() did not return an object of type IEnumerable<Models.InitiativeInfo>");
-
-            Assert.IsTrue(allIdeas != null && allIdeas.Count() == 3, "Expected to read at 3 initiatives (SetupMockData sets up 3 initiatives)");
-
             var result2 = await ideasController.GetInitiatives(Models.ViewOptions.Mine);
             var objectResult2 = result as Microsoft.AspNetCore.Mvc.ObjectResult;
 
@@ -61,8 +57,7 @@ namespace CoE.Ideas.Server.Tests
             Assert.IsNotNull(myIdeas, "ideasController.GetInitiatives() did not return an object of type IEnumerable<Models.InitiativeInfo>");
 
             Assert.IsTrue(myIdeas != null && myIdeas.Count() == 2, "Expected to get 2 initiatives when reading \"My Initiatives\" (SetupMockData sets up 2 initiatives as current user)");
-
-
+            Assert.IsTrue(allIdeas != null && allIdeas.Count() == 3, "Expected to read at 3 initiatives (SetupMockData sets up 3 initiatives)");
         }
     }
 }

@@ -74,7 +74,7 @@ namespace CoE.Ideas.Server.Controllers
             {
                 if (view == ViewOptions.Mine)
                 {
-                    ideas = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId());
+                    ideas = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId(), page, pageSize);
                 }
                 else
                     ideas = await _repository.GetInitiativesAsync(page, pageSize);
@@ -333,8 +333,6 @@ namespace CoE.Ideas.Server.Controllers
                             resources.Assignee = null;
                         }
 
-                        resources.BusinessCaseUrl = initiative.BusinessCaseUrl;
-                        resources.InvestmentRequestFormUrl = initiative.InvestmentRequestFormUrl;
                         return Ok(resources);
                     });
                 }
@@ -351,46 +349,7 @@ namespace CoE.Ideas.Server.Controllers
             }
         }
 
-        [HttpPut("{id}/businessCase")]
-        public async Task<IActionResult> PutInitiativeBusinessCase([FromRoute] int id, [FromBody]Resources resources)
-        {
-            return await ValidateAndGetInitiative(id, async initiative =>
-            {
-                string businessCaseUrl = resources?.BusinessCaseUrl;
-                if (string.Equals(initiative.BusinessCaseUrl, businessCaseUrl, StringComparison.CurrentCulture))
-                {
-                    // idempotent behaviour
-                    return Ok(initiative);
-                }
-                else
-                {
-                    initiative.SetBusinessCaseUrl(businessCaseUrl);
-                    await _repository.UpdateInitiativeAsync(initiative);
-                    return Ok(initiative);
-                }
-            });
-        }
-
-        [HttpPut("{id}/investmentForm")]
-        public async Task<IActionResult> PutInitiativeInvestmentForm([FromRoute] int id, [FromBody]Resources resources)
-        {
-            return await ValidateAndGetInitiative(id, async initiative =>
-            {
-                string investmentRequestFormUrl = resources?.InvestmentRequestFormUrl;
-                if (string.Equals(initiative.InvestmentRequestFormUrl, investmentRequestFormUrl, StringComparison.CurrentCulture))
-                {
-                    // idempotent behaviour
-                    return Ok(initiative);
-                }
-                else
-                {
-                    initiative.SetInvestmentFormUrl(investmentRequestFormUrl);
-                    await _repository.UpdateInitiativeAsync(initiative);
-                    return Ok(initiative);
-                }
-            });
-        }
-
+       
         private async Task<IActionResult> ValidateAndGetInitiative(int id, Func<Initiative, Task<IActionResult>> callback)
         {
             using (LogContext.PushProperty("InitiativeId", id))
@@ -441,13 +400,26 @@ namespace CoE.Ideas.Server.Controllers
             });
         }
 
-		//[HttpPost("{id}/supportingdocuments")]
-		//public async Task<IActionResult> AddSupportingDocuments(int id, [FromBody]UpdateStatusDescriptionDto updateStatusDescriptionDto)
-		//{
+		[HttpPost("{id}/supportingdocuments")]
+		public async Task<IActionResult> AddSupportingDocuments(int id, [FromBody]SupportingDocumentsDto supportingDocumentsDto)
+		{
+			EnsureArg.IsNotNull(supportingDocumentsDto);
+			if (!ModelState.IsValid)
+			{
+				_logger.Warning("Unable to save supporting documents because model state is not valid: {ModelState}", ModelState);
+				return BadRequest(ModelState);
+			}
 
-			//});
+			return await ValidateAndGetInitiative(id, async initiative =>
+			{
+				SupportingDocument newSupportingDocuments = null;
+				newSupportingDocuments = SupportingDocument.Create(supportingDocumentsDto.Title, supportingDocumentsDto.Url, supportingDocumentsDto.Type);
+				initiative.SupportingDocuments.Add(newSupportingDocuments);
+				await _repository.UpdateInitiativeAsync(initiative);
+				return Ok(newSupportingDocuments);
+			});
 
-	//	}
+		}
 
 			//// GET: ideas/5
 			///// <summary>
