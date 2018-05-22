@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace CoE.Ideas.Server.Models
 {
-	public class SupportingDocumentsDto
-	{
+    public class SupportingDocumentsDto
+    {
 
-		public int InitiativeId { get; set; }
-		public String Title { get; set; }
+        public int InitiativeId { get; set; }
+        public String Title { get; set; }
 
-		public string Url { get; set; }
+        public string Url { get; set; }
 
-		public SupportingDocumentsType Type { get; set; }
-	}
+        public SupportingDocumentsType Type { get; set; }
+    }
 }

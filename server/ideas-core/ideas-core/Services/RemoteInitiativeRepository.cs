@@ -90,8 +90,8 @@ namespace CoE.Ideas.Core.Services
         {
             return await ExecuteAsync(async client =>
             {
-				var ideaString = await client.GetStringAsync($"?page={pageNumber}&pageSize={pageSize}");
-				var contractResolver = new InitiativeContractResolver();
+                var ideaString = await client.GetStringAsync($"?page={pageNumber}&pageSize={pageSize}");
+                var contractResolver = new InitiativeContractResolver();
                 var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
                 return JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings);
             });
@@ -154,7 +154,7 @@ namespace CoE.Ideas.Core.Services
 
 
 
-		internal class InitiativeContractResolver : DefaultContractResolver
+        internal class InitiativeContractResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
             {

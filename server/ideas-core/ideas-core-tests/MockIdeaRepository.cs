@@ -21,7 +21,7 @@ namespace CoE.Ideas.Core.Tests
             return Task.FromResult(initiative);
         }
 
-		public Task<Initiative> GetInitiativeAsync(Guid id)
+        public Task<Initiative> GetInitiativeAsync(Guid id)
         {
             return Task.FromResult(initiatives.Single(x => x.Uid == id));
         }

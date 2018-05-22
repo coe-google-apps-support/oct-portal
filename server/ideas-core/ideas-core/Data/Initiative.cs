@@ -20,21 +20,21 @@ namespace CoE.Ideas.Core.Data
         }
 
         private Initiative() : base()
-		{
-			this.SupportingDocuments = new List<SupportingDocument>();
-			_statusHistories = new HashSet<InitiativeStatusHistory>();
+        {
+            this.SupportingDocuments = new List<SupportingDocument>();
+            _statusHistories = new HashSet<InitiativeStatusHistory>();
 
 
-		} // required for EF
+        } // required for EF
 
-		// Factory method for creation
-		public static Initiative Create(
+        // Factory method for creation
+        public static Initiative Create(
             string title, 
             string description,
             int ownerPersonId,
-			int? businessContactId = null,
+            int? businessContactId = null,
             bool skipEmailNotification = false
-			)
+            )
         {
             Ensure.String.IsNotNullOrWhiteSpace(title, nameof(title));
             Ensure.String.IsNotNullOrWhiteSpace(description, nameof(description));
@@ -44,24 +44,24 @@ namespace CoE.Ideas.Core.Data
             initiative.Title = title;
             initiative.Description = description;
             initiative.Stakeholders = new List<Stakeholder>()
-			{
+            {
                 Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
             };
 
-			initiative.SupportingDocuments = new List<SupportingDocument>();
-			if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
+            initiative.SupportingDocuments = new List<SupportingDocument>();
+            if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
                 initiative.Stakeholders.Add(Stakeholder.Create(businessContactId.Value, StakeholderType.BusinessContact));
 
             initiative.Status = InitiativeStatus.Initiate;
             initiative.StatusHistories = new HashSet<InitiativeStatusHistory>();
-			initiative.CreatedDate = DateTime.UtcNow;  
-			initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId, skipEmailNotification));
+            initiative.CreatedDate = DateTime.UtcNow;  
+            initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId, skipEmailNotification));
 
-			return initiative;
+            return initiative;
         }
-		public ICollection<SupportingDocument> SupportingDocuments{ get; private set; }
+        public ICollection<SupportingDocument> SupportingDocuments{ get; private set; }
 
-		public Guid Uid { get; private set; }
+        public Guid Uid { get; private set; }
 
         /// <summary>
         /// The short title of the idea
@@ -80,20 +80,20 @@ namespace CoE.Ideas.Core.Data
 
 
 
-		// best practice is to have only one-way navigation properties, where possible
-		/// <summary>
-		/// The people that have some stake in the idea, will always include the owner
-		/// </summary>
-		public ICollection<Stakeholder> Stakeholders { get; private set; }
+        // best practice is to have only one-way navigation properties, where possible
+        /// <summary>
+        /// The people that have some stake in the idea, will always include the owner
+        /// </summary>
+        public ICollection<Stakeholder> Stakeholders { get; private set; }
 
 
-		/// <summary>
-		/// The person currently assigned to the initiative, usually a Business Analyst
-		/// </summary>
-		/// <remarks>
-		/// Can be null
-		/// </remarks>
-		public int? AssigneeId { get; private set; }
+        /// <summary>
+        /// The person currently assigned to the initiative, usually a Business Analyst
+        /// </summary>
+        /// <remarks>
+        /// Can be null
+        /// </remarks>
+        public int? AssigneeId { get; private set; }
 
 
         /// <summary>
