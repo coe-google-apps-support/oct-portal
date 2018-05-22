@@ -1,0 +1,129 @@
+<template><!-- template for the modal component -->
+  <transition name="modal">
+    <div class="modal-mask">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h3>New Supporting Document</h3>
+        </div>
+        <div class="modal-body">
+          <label class="form-label">
+            Title
+            <input id="title" class="form-control" v-model='form.title' placeholder='What would you like to name your supporting document?'>
+          </label>
+          <label class="form-label">
+            URL
+            <input id="url" type='url' class="form-control" v-model='form.url' placeholder='Please enter the full url'>
+          </label>
+          <label class="form-label">
+            Type
+            <select class='form-control' v-model="form.type">
+              <option disabled value="">Please select a type</option>
+              <option>Business Cases</option>
+              <option>Technology Investment Form</option>
+              <option>Other</option>
+            </select>
+          </label>
+        </div>
+        <div class="modal-footer text-right">
+          <md-button v-on:click="savePost" class="md-raised modal-default-button">
+            Save
+          </md-button>
+        </div>
+      </div>
+    </div>
+  </transition>
+</template>
+
+<script>
+export default {
+  name: 'SupportingDocs',
+  data: () => ({
+    form: {
+      title: null,
+      url: null,
+      type: null
+    },
+    docs: []
+  }),
+  methods: {
+    savePost () {
+      this.$emit('close')
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+  @import "~vue-material/dist/theme/engine";
+
+  * {
+      position: relative;
+      box-sizing: border-box;
+  }
+
+  .modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity .3s ease;
+  }
+
+  .modal-container {
+    width: 80%;
+    margin: 40px auto 0;
+    padding: 20px 30px;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease;
+  }
+
+  .modal-header h3 {
+    text-align: center;
+    // margin-top: 0;
+    color: #3f64df;
+  }
+
+  .modal-body {
+    margin: 20px 0;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 1em;
+  }
+
+  .form-label > .form-control {
+    margin-top: 0.5em;
+  }
+
+  .form-control {
+    display: block;
+    width: 80%;
+    padding: 0.5em 1em;
+    line-height: 1.5;
+    border: 1px solid #ddd;
+  }
+
+  .modal-enter {
+    opacity: 0;
+  }
+
+  .modal-leave-active {
+    opacity: 0;
+  }
+
+  .modal-enter .modal-container,
+  .modal-leave-active .modal-container {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+</style>

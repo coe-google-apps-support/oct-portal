@@ -24,11 +24,13 @@
             </md-table-row>
           </md-table>
         </div>
-        <md-divider class="oct-divider"></md-divider>
-        <div class="sd-headline"> Supporting Documents              
-          <md-button class="sd-add-button">
+        <!-- <md-divider class="oct-divider"></md-divider> -->
+        <br>
+        <div class="md-headline"> Supporting Documents
+          <SupportingDocs v-if="showModal" @close="showModal = false"></SupportingDocs>
+          <md-button class="sd-add-button" @click="showModal = true">
             <md-icon>add</md-icon>
-            </md-button>
+          </md-button>
         </div>
         <md-divider class="oct-divider"></md-divider>
           <md-table>
@@ -49,6 +51,7 @@
 import Assignee from '@/components/Assignee'
 import Steps from '@/components/stepper/Steps'
 import formatDate from '@/utils/format-date-since'
+import SupportingDocs from '@/components/SupportingDocs'
 
 export default {
   name: 'ViewInitiative',
@@ -64,11 +67,13 @@ export default {
     resources: null,
     activeUser: null,
     canEditSteps: false,
-    supportingdocs: null
+    supportingDocs: null,
+    showModal: false
   }),
   components: {
     Assignee,
-    Steps
+    Steps,
+    SupportingDocs
   },
   created () {
     console.log(this.slug)
@@ -150,9 +155,7 @@ export default {
   }
 
   .sd-add-button {
-    position: absolute;
+    position: relative;
     margin: auto;
-    right: 80%;
-    width: -100%;
   }
 </style>
