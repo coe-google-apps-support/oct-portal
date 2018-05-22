@@ -1,6 +1,7 @@
 Param(
     [string]$configFile
 )
+#This PowerShell script runs on the Docker-Container-CI build agent, 
 # built by Dockerfile.build-server
 
 $BUILD_BUILDID = (Get-ChildItem Env:BUILD_BUILDID).Value
@@ -16,7 +17,7 @@ if (![System.IO.File]::Exists($configFileFullName)) {
 }
 
 #Output of ConvertFrom-Yaml is an OrderedDictionary
-$od = Get-Content $configFile | Out-String | ConvertFrom-Yaml
+$od = Get-Content $configFileFullName | Out-String | ConvertFrom-Yaml
 
 #Set the proper tag on the image
 $imageName = $od.spec.template.spec.containers.image.ToString()
