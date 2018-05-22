@@ -23,12 +23,12 @@ $od = Get-Content $configFileFullName | Out-String | ConvertFrom-Yaml
 $imageName = $od.spec.template.spec.containers.image.ToString()
 $tagIndex = $imageName.indexOf(":")
 if ($tagIndex -gt 0) {
-    $imageName = $imageName.SubString(0, $tagIndex) + "v" + $BUILD_BUILDID
+    $imageName = $imageName.SubString(0, $tagIndex) + ":v" + $BUILD_BUILDID
 } else {
     $imageName = $imageName + ":v" + $BUILD_BUILDID
 }
 
-$od.spec.template.spec.containers.image = $imageName
+$od.spec.template.spec.containers["image"] = $imageName
 
 Write-Host ("$configFile" + ":")
 $od.ToString()
