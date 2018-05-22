@@ -13,7 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{728A4378-7B30-4CD3-85CC-750E107F6139}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core-tests", "ideas-core\ideas-core-tests\ideas-core-tests.csproj", "{74FF44FC-46E1-45F4-8D10-0EC157ADD020}"
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-server", "ideas-server\ideas-server\ideas-server.csproj", "{2404B2CF-7D28-4775-A24F-FD719E6ABA05}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-logger", "ideas-integration-logger\ideas-integration-logger\ideas-integration-logger.csproj", "{A537552E-37B6-4DDE-A0E0-0DC416AA311D}"
