@@ -22,12 +22,9 @@ export default new Router({
       path: '/my-profile',
       name: 'my-profile',
       component: ViewIdeas,
-      props: (route) => ({
-        filter: 'mine',
-        newInitiative: Number(route.query.newInitiative)
-      })
-        // filter: 'mine',
-        // newInitiative: route.newInitiative
+      props: {
+        filter: 'mine'
+      }
     },
     {
       path: '/initiatives/:slug/',

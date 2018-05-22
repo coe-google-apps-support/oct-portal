@@ -10,7 +10,7 @@ services:
       dockerfile: ideas-server/ideas-server/Dockerfile
 
   wordpress-db:
-    image: coeoctava.azurecr.io/wordpress-db:v1.0.1
+    image: coeoctava.azurecr.io/wordpress-db:v1.0.2
     volumes:
       - wp-dbdata:/var/lib/mysql
     restart: always
@@ -45,10 +45,12 @@ services:
       WORDPRESS_DB_PASSWORD: octavadev
 
   initiatives-vue:
-    image: coeoctava.azurecr.io/initiatives-vue:vs-1.0.0
+    image: coeoctava.azurecr.io/initiatives-vue:dev-1.0.0
     ports:
       - "8080:8080"
     restart: always
+    volumes: 
+      - ../plugins/ideas:/app
 
   nginx:
     depends_on:

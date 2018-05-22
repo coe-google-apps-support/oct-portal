@@ -51,23 +51,23 @@ namespace CoE.Ideas.Core.Tests
             throw new NotImplementedException();
             //return Task.FromResult(initiatives.Select(x => new InitiativeInfo() { Id = x.Id, Title = x.Title, Description = x.Description }));
         }
-		//
-		public Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync(int page = 1, int pageSize = 20)
-		{
-			throw new NotImplementedException();
-		}
-		//
-		public Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId)
+
+        public Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync(int page = 1, int pageSize = 20)
         {
             throw new NotImplementedException();
         }
-		//
-		public Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber = 1, int pageSize = 20)
-		{
-			throw new NotImplementedException();
-		}
-		//
-		public Task<Initiative> UpdateInitiativeAsync(Initiative initiative)
+
+        public Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber = 1, int pageSize = 20)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Initiative> UpdateInitiativeAsync(Initiative initiative)
         {
             throw new NotImplementedException();
         }

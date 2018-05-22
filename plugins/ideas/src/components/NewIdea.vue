@@ -25,14 +25,13 @@
                 <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
               </md-field>
             </div>
-            <md-button class="md-raised md-primary"  v-on:click="saveIdea"> Continue </md-button>
-            <md-button class="md-raised" v-on:click="clearForm"> Clear Form </md-button>
+            <md-button class="md-raised md-primary" v-on:click.prevent="saveIdea">Continue</md-button>
           </md-step>
 
-          <!-- <md-step id="second" md-label="Finalize" :md-done.sync="second">
+          <md-step id="second" md-label="Finalize" :md-done.sync="second">
             <div id="whats-next">What's next?</div>
             <StolenFromDivi :url="ideaURL"></StolenFromDivi>
-          </md-step> -->
+          </md-step>
 
         </md-steppers>
         <md-progress-bar md-mode="indeterminate" class="md-accent" v-if="sending" />
@@ -122,8 +121,9 @@ export default {
     },
     saveIdea () {
       this.sending = true
-      // const isNewIdea = true
+
       console.log('saving new idea')
+
       this.services.ideas.createInitiative(
         this.form.title,
         this.form.description
@@ -132,25 +132,9 @@ export default {
         this.sending = false
         var idea = x.data
         if (idea && idea.url && idea.url.length > 0) {
-          this.ideaURL = '#/my-profile'
+          this.ideaURL = idea.url
         }
         this.setDone('first', 'second')
-        // If title/description are entered, then go to view-ideas.
-        if (!this.form.description.required && !this.form.title.required) {
-          this.$toasted.show('Initiative successfully submitted!', {
-            theme: 'primary',
-            position: 'top-right',
-            icon: 'check_circle',
-            action: {
-              text: 'Close',
-              onClick: (e, toastObject) => {
-                toastObject.goAway(0)
-              }
-            }
-          })
-          // document.location.href = this.ideaURL
-          this.$router.push({path: '/my-profile', query: {isNewIdea: true}})
-        }
       }).catch((err, y) => {
         this.sending = false
         console.debug(err)
