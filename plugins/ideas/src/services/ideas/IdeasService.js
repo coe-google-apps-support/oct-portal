@@ -75,6 +75,35 @@ let x = class IdeasService {
   }
 
   /**
+   * Creates a new supporting document for a specified initiative.
+   * @param {string} id The id of the initiative
+   * @param {string} title The title of the supporting document.
+   * @param {string} url The url of the supporting document.
+   * @param {string} type The type of the supporting document.
+   */
+  static createSupportingDoc (id, title, url, type) {
+    return HTTP.post(`${id}/supportingdocuments`, {
+      id,
+      title,
+      url,
+      type
+    })
+  }
+
+  static getSupportingDoc (id) {
+    return HTTP.get(`${id}/supportingdocuments`).then((response) => {
+      if (response.data) {
+        return response.data
+      } else {
+        return response
+      }
+    }, (err) => {
+      console.error(`Failed at route /${id}/supportingdocuments`)
+      console.error(err)
+    })
+  }
+
+  /**
    * Creates a new initiative.
    * @param {string} title The title of the initiative.
    * @param {string} description The description of the initiative.

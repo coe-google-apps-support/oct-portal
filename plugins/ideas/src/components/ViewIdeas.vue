@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div align='center'> <h5>Page: 1 2 3 4 ... </h5> </div>
     <br>
     <transition name="fade">
       <div>
@@ -110,6 +109,7 @@ export default {
       })
     },
     infiniteHandler ($state) {
+      console.log(this.redir)
       let page = this.page
       setTimeout(() => {
         if (this.redir === true && this.filter !== 'mine') {
@@ -159,7 +159,6 @@ export default {
         this.ideas = this.ideas.concat(response.data)
         this.newInitId = this.ideas[0].id
         if (!isNaN(this.newInitiative)) {
-          console.log(this.newInitId)
           this.$router.push({path: '/my-profile', query: {newInitiative: this.newInitId}})
           this.toastMessage('Initiative successfully submitted!')
         }

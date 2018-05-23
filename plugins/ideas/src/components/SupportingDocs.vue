@@ -25,10 +25,14 @@
           </label>
         </div>
         <div class="modal-footer text-right">
-          <md-button v-on:click="savePost" class="md-raised modal-default-button">
+          <md-button v-if='sending == false' v-on:click="$emit('close')" class='md-raised modal-default-button'>
+            Cancel
+          </md-button>
+          <md-button v-on:click="savePost" class="md-raised md-primary modal-default-button">
             Save
           </md-button>
         </div>
+        <md-progress-bar md-mode="indeterminate" class="md-primary" v-if="sending" />
       </div>
     </div>
   </transition>
@@ -43,11 +47,25 @@ export default {
       url: null,
       type: null
     },
-    docs: []
+    sending: false
   }),
   methods: {
     savePost () {
-      this.$emit('close')
+      this.sending = true
+      console.log(this.form.title)
+      this.services.ideas.createSupportingDoc(
+        1, /* ID goes here */
+        this.form.title,
+        this.form.url,
+        this.form.type
+      ).then(x => {
+        this.sending = false
+        this.$emit('close')
+      }).catch((err, y) => {
+        this.sending = false
+        console.debug(err)
+        console.debug(y)
+      })
     }
   }
 }
