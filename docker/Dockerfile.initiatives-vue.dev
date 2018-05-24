@@ -12,6 +12,7 @@ FROM node:9.10 AS initiatives-web
 
 WORKDIR /app
 ADD . .
+VOLUME /app
 RUN npm install
 
 CMD npm rebuild node-sass & npm run dev
