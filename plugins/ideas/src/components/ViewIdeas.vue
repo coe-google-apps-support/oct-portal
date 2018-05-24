@@ -13,12 +13,8 @@
         </div>
         <div v-if="!(isLast)">
         <!-- <div>   -->
-          <md-button class='loadMore md-raised md-secondary' v-on:click='infiniteHandler'> Load More </md-button></div>
-        <infinite-loading spinner="bubbles" @infinite="infiniteHandler">
-          <span slot="no-more">
-            There are no more initiatives!
-          </span>
-        </infinite-loading> 
+          <md-button class='loadMore md-raised md-secondary' v-on:click='infiniteHandler'>Load More</md-button>
+        </div>
       </div>
     </transition>
     
@@ -110,6 +106,7 @@ export default {
     },
     infiniteHandler ($state) {
       console.log(this.redir)
+      console.log(`Loading page ${this.page}.`)
       let page = this.page
       setTimeout(() => {
         if (this.redir === true && this.filter !== 'mine' && !this.isLast) {
@@ -142,6 +139,7 @@ export default {
     }
   },
   created () {
+    console.log('created')
     if (this.filter !== 'mine') {
       if (isNaN(this.page) || isNaN(this.pageSize)) {
         this.$router.push({path: '/view-ideas', query: {page: 1, pageSize: 20}})
