@@ -117,9 +117,9 @@ export default {
           this.requestAPI(page, this.pageSize)
           this.$router.push({path: '/view-ideas', query: {page: page, pageSize: this.pageSize}})
         }
-        if ($state.loaded) {
-          $state.loaded()
-        }
+        // if ($state.loaded) {
+        //   $state.loaded()
+        // }
         this.checkIslast(page)
         if (this.isLast && $state.complete) {
           $state.complete()

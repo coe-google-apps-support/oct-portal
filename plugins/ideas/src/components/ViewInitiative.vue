@@ -43,12 +43,8 @@
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
       </div>
-<<<<<<< HEAD
     </div>
     <br><br><br><br><br><br><br><br><br> 
-=======
-    </div> 
->>>>>>> ad90ec847505a1365e6918b02f7c3385f6eb25ef
   </div>
 </template>
 
