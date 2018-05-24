@@ -20,7 +20,7 @@ namespace CoE.Ideas.Shared.Extensions
         {
             // defaults (for dev environment) - this is not the same as Production!!
             string connectionString = string.IsNullOrWhiteSpace(wordPressDbConnectionString)
-                ? "server=wordpress-db;uid=root;pwd=octavadev;database=OctPortalWordPress"
+                ? "server=wordpress-db;uid=root;pwd=octavadev;database=octportalwordpress"
                 : wordPressDbConnectionString;
 
             services.AddDbContext<WordPressContext>(options =>
@@ -93,7 +93,7 @@ namespace CoE.Ideas.Shared.Extensions
         {
             // defaults (for dev environment) - this is not the same as Production!!
             string connectionString = string.IsNullOrWhiteSpace(permissionDbConnectionString)
-                ? "server=wordpress-db;uid=root;pwd=octavadev;database=OctPortalWordPress"
+                ? "server=wordpress-db;uid=root;pwd=octavadev;database=octportalwordpress"
                 : permissionDbConnectionString;
 
             services.AddDbContext<SecurityContext>(options =>
