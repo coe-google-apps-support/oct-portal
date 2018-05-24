@@ -112,14 +112,14 @@ export default {
       console.log(this.redir)
       let page = this.page
       setTimeout(() => {
-        if (this.redir === true && this.filter !== 'mine') {
+        if (this.redir === true && this.filter !== 'mine' && !this.isLast) {
           page++
           this.requestAPI(page, this.pageSize)
           this.$router.push({path: '/view-ideas', query: {page: page, pageSize: this.pageSize}})
         }
-        // if ($state.loaded) {
-        //   $state.loaded()
-        // }
+        if ($state.loaded) {
+          $state.loaded()
+        }
         this.checkIslast(page)
         if (this.isLast && $state.complete) {
           $state.complete()
