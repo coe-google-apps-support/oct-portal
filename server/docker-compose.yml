@@ -49,6 +49,8 @@ services:
     build:
       context: ../plugins/ideas
       dockerfile: ../../docker/Dockerfile.initiatives-vue.dev
+    volumes: 
+      - ../plugins/ideas:/app
 
   nginx:
     depends_on:
