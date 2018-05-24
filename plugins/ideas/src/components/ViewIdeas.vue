@@ -121,10 +121,8 @@ export default {
           $state.loaded()
         }
         this.checkIslast(page)
-        if (this.isLast) {
-          if ($state.complete) {
-            $state.complete()
-          }
+        if (this.isLast && $state.complete) {
+          $state.complete()
         }
         this.redir = true
       }, 1000)

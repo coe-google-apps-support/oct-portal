@@ -52,7 +52,6 @@ export default {
   methods: {
     savePost () {
       this.sending = true
-      console.log(this.form.title)
       this.services.ideas.createSupportingDoc(
         1, /* ID goes here */
         this.form.title,
