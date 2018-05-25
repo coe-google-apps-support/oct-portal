@@ -16,16 +16,16 @@ let x = class IdeasService {
    * Returns a Promise that resolves with a list of ideas.
    * @returns {Promise} Resolved with an array of ideas.
    */
-  static getIdeas (size) {
-    return HTTP.get(`${size}`)
+  static getIdeas (page, pageSize) {
+    return HTTP.get(`?page=${page}&pageSize=${pageSize}`)
   }
 
   /**
    * Returns a Promise that resolves with a list of my initiatives.
    * @returns {Promise} Resolved with an array of my initiatives.
    */
-  static getMyInitiatives (size) {
-    return HTTP.get(`?view=Mine${size}`)
+  static getMyInitiatives (page, pageSize) {
+    return HTTP.get(`?view=Mine&page=${page}&pageSize=${pageSize}`)
   }
 
   /**

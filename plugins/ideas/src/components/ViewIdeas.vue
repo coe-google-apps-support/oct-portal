@@ -79,13 +79,8 @@ export default {
     },
     checkIslast (page) {
       let checkdata = null
-      let pageformat = null
-      if (this.filter === 'mine') {
-        pageformat = '&page='
-      } else {
-        pageformat = '?page='
-      }
-      this.initiativeFunction(pageformat + String(page + 1) + '&pageSize' + String(this.pageSize)).then((response) => {
+
+      this.initiativeFunction(page + 1, this.pageSize).then((response) => {
         checkdata = response.data
         if (checkdata.length === 0) {
           this.isLast = true
@@ -95,7 +90,7 @@ export default {
       })
     },
     requestAPI (page, pageSize) {
-      this.initiativeFunction('?page=' + String(page) + '&pageSize=' + String(pageSize)).then((response) => {
+      this.initiativeFunction(page, pageSize).then((response) => {
         this.ideas = this.ideas.concat(response.data)
         for (let i = 0; i < this.ideas.length; i++) {
           this.ideas[i].isLoading = false
@@ -151,7 +146,7 @@ export default {
 
     if (this.filter === 'mine') {
       this.initiativeFunction = this.services.ideas.getMyInitiatives
-      this.initiativeFunction('').then((response) => {
+      this.initiativeFunction(this.page, this.pageSize).then((response) => {
         this.ideas = this.ideas.concat(response.data)
         this.newInitId = this.ideas[0].id
         if (!isNaN(this.newInitiative)) {
