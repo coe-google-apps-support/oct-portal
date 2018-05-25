@@ -100,10 +100,6 @@ export default {
 
       const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length
       return colors[randIndex]
-    },
-    openCard (idea) {
-      // this.$router.push({path: '/my-profile', query: {isNewIdea: true}})
-      this.$router.push(`/view-ideas/${idea.id}`)
     }
   }
 }
