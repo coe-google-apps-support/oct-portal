@@ -36,7 +36,7 @@ namespace CoE.Ideas.Server.Tests
 
         }
         private static ServiceProvider serviceProvider;
-        [TestMethod]
+        //[TestMethod]
         //public async Task TestReadInitiatives()
         //{
         //    var ideasController = serviceProvider.GetRequiredService<IdeasController>();
