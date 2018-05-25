@@ -29,7 +29,7 @@ WORKDIR /app
 COPY --from=initiatives-server /usr/src/coe-initiatives/web/ideas-server/ideas-server/bin/$Configuration/netcoreapp2.0/publish  .
 COPY --from=initiatives-web /usr/src/coe-initiatives/plugins/ideas-build/ ./wwwroot
 
-EXPOSE 80
+EXPOSE 5000
 
 # Move our run time scripts into our image
 COPY ./docker/scripts/webapi-entrypoint.sh /usr/local/bin/webapi-entrypoint.sh
