@@ -62,21 +62,6 @@ export default {
     InfiniteLoading
   },
   methods: {
-    setLoading (initiative, state) {
-      let foundInit = this.getInitiativeByID(initiative.id)
-      let index = this.ideas.indexOf(foundInit)
-      let newInit = vue.util.extend({}, this.ideas[index])
-      newInit.isLoading = state
-      this.ideas.splice(index, 1, newInit)
-    },
-    getInitiativeByID (id) {
-      for (let i = 0; i < this.ideas.length; i++) {
-        if (this.ideas[i].id === id) {
-          return this.ideas[i]
-        }
-      }
-      return null
-    },
     checkIslast (page) {
       let checkdata = null
 
@@ -134,6 +119,7 @@ export default {
   created () {
     console.log('created')
     // I couldn't get prop defaults to play nicely so I went with this.
+    // TODO figure out better defaults props/data
     if (this.page) {
       this.dataPage = this.page
     } else {
@@ -144,8 +130,6 @@ export default {
     } else {
       this.dataPageSize = 20
     }
-    console.log(this.dataPageSize)
-    console.log(this.dataPage)
     this.ideas.splice(0, this.ideas.length)
 
     if (this.filter === 'mine') {
