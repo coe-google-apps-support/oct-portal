@@ -30,8 +30,6 @@
 // This could be important if we wanted to allow paging from outside an iframe, for example.
 
 import Initiative from '@/components/initiative'
-import InfiniteLoading from 'vue-infinite-loading'
-import vue from 'vue'
 
 export default {
   name: 'ViewIdeas',
@@ -46,19 +44,12 @@ export default {
     errors: [],
     dataPage: null,
     dataPageSize: null,
-    showDialog: false,
-    shownInitiative: null,
-    activeStep: null,
-    shownSteps: null,
-    firstInit: null,
-    redir: false,
     initiativeFunction: null,
     isLast: false,
     isLoading: true
   }),
   components: {
-    Initiative,
-    InfiniteLoading
+    Initiative
   },
   methods: {
     checkIslast (page) {
@@ -83,8 +74,7 @@ export default {
         this.errors.push(e)
       })
     },
-    infiniteHandler ($state) {
-      console.log(this.redir)
+    infiniteHandler () {
       // PR: Investigate actual debouncing https://medium.com/vuejs-tips/tiny-debounce-for-vue-js-cea7a1513728
       setTimeout(() => {
         if (!this.isLast) {
@@ -96,10 +86,6 @@ export default {
           $state.loaded()
         }
         this.checkIslast(this.dataPage)
-        if (this.isLast && $state.complete) {
-          $state.complete()
-        }
-        this.redir = true
       }, 1000)
     },
     toastMessage (message) {
