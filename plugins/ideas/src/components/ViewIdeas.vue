@@ -2,7 +2,7 @@
   <div>
     <br>
     <transition name="fade">
-      <div>
+      <div class="min-height">
         <div v-if="ideas && ideas.length" class="md-layout md-alignment-top-center">
           <initiative v-for="idea in ideas"
             :key="idea.id" 
@@ -11,7 +11,7 @@
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
-        <div v-if="isLoading" class="min-height md-layout md-alignment-center-center">
+        <div v-if="isLoading" class="md-layout md-alignment-center-center">
           <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
         </div>
         <div v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
@@ -93,9 +93,6 @@ export default {
       this.isLoading = true
       this.initiativeFunction(page, pageSize).then((response) => {
         this.ideas = this.ideas.concat(response.data)
-        for (let i = 0; i < this.ideas.length; i++) {
-          this.ideas[i].isLoading = false
-        }
         this.isLoading = false
       }, (e) => {
         this.errors.push(e)
@@ -153,17 +150,12 @@ export default {
 
     if (this.filter === 'mine') {
       this.initiativeFunction = this.services.ideas.getMyInitiatives
-      this.isLoading = true
       this.requestAPI(this.dataPage, this.dataPageSize).then((response) => {
         this.ideas = this.ideas.concat(response.data)
         this.newInitId = this.ideas[0].id
         if (!isNaN(this.newInitiative)) {
           this.toastMessage('Initiative successfully submitted!')
         }
-        for (let i = 0; i < this.ideas.length; i++) {
-          this.ideas[i].isLoading = false
-        }
-        this.isLoading = false
       }, (e) => {
         this.errors.push(e)
       })
