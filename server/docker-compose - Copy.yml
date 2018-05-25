@@ -10,13 +10,15 @@ services:
       dockerfile: ideas-server/ideas-server/Dockerfile
 
   wordpress-db:
-    image: coeoctava.azurecr.io/wordpress-db:v1.0.5
+    image: coeoctava.azurecr.io/wordpress-db:v1.0.1
+    volumes:
+      - wp-dbdata:/var/lib/mysql
     restart: always
     ports:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: octavadev
-      MYSQL_DATABASE: octportalwordpress
+      MYSQL_DATABASE: OctPortalWordPress
 
 
   initiatives-db:
@@ -38,7 +40,7 @@ services:
     restart: always
     environment:
       WORDPRESS_DB_HOST: wordpress-db:3306
-      WORDPRESS_DB_NAME: octportalwordpress
+      WORDPRESS_DB_NAME: OctPortalWordPress
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: octavadev
 
@@ -47,10 +49,8 @@ services:
     ports:
       - "8080:8080"
     build:
-      context: ../
-      dockerfile: ../../docker/Dockerfile.initiatives-vue.dev
-    volumes: 
-      - ../plugins/ideas:/app
+      context: .
+      dockerfile: ../docker/Dockerfile.initiatives-vue.dev
 
   nginx:
     depends_on:
@@ -74,3 +74,7 @@ services:
     build:
       context: .
       dockerfile: ideas-integration-remedy/ideas-integration-remedy-sblistener/Dockerfile
+
+volumes:
+  wp-dbdata:
+

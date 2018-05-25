@@ -1,5 +1,5 @@
 <template>
-  <md-card>
+  <md-card :class="{ 'first-card' : isNewIdea }">
     <md-card-media-cover>
       <md-card-media md-ratio="16:9">
         <img :src="getImage()" alt="Skyscraper">
@@ -24,9 +24,9 @@
     </div>
     
     <md-divider></md-divider>
-
+  
     <md-card-actions>
-      <md-button @click="openUrl" :style="{ color: getColor(initiative) }">View</md-button>
+      <md-button v-on:click="openUrl" :style="{ color: getColor(initiative) }">View</md-button>
     </md-card-actions>
     <md-progress-bar v-if="initiative.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
@@ -37,7 +37,8 @@ import formatDate from '@/utils/format-date-since'
 export default {
   name: 'Initiative',
   props: [
-    'initiative'
+    'initiative',
+    'isNewIdea'
   ],
   filters: {
     truncate (str) {
@@ -71,7 +72,6 @@ export default {
         `https://octava.blob.core.windows.net/cdn-store/cards/card13.png`,
         `https://octava.blob.core.windows.net/cdn-store/cards/card14.png`
       ]
-
       const randIndex = (this.initiative.title.charCodeAt(0) + this.initiative.title.charCodeAt(1) + this.initiative.id) % images.length
       return images[randIndex]
     },
@@ -100,9 +100,6 @@ export default {
 
       const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length
       return colors[randIndex]
-    },
-    openCard (idea) {
-      this.$router.push(`/ViewIdeas/${idea.id}`)
     }
   }
 }
@@ -138,6 +135,26 @@ export default {
   display: inline-block;
   vertical-align: top;
   background-color: #fafafa;
+}
+.first-card {
+  margin: 12px;
+  display: inline-block;
+  vertical-align: top;
+  animation: pulseanimation 1s linear 3;     // inifinite for testing purposes. Use 3 iterations otherwise.
+}
+@keyframes pulseanimation {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 138, 101, 1);
+  }
+  40% {
+    box-shadow: 0 0 0 20px rgba(255,138,101,0);
+  }
+  80% {
+    box-shadow: 0 0 0 20px rgba(255,138,101,0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255,138,101,0);
+  }
 }
 
 .title {

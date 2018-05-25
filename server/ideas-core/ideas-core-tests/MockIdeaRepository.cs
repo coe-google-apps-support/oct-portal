@@ -1,5 +1,6 @@
 ﻿using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.Services;
+using CoE.Ideas.Shared.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,26 +47,17 @@ namespace CoE.Ideas.Core.Tests
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync()
+        public Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(int page = 1, int pageSize = 20)
         {
             throw new NotImplementedException();
             //return Task.FromResult(initiatives.Select(x => new InitiativeInfo() { Id = x.Id, Title = x.Title, Description = x.Description }));
         }
 
-        public Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync(int page = 1, int pageSize = 20)
+        public Task<PagedResultSet<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber = 1, int pageSize = 20)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber = 1, int pageSize = 20)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task<Initiative> UpdateInitiativeAsync(Initiative initiative)
         {

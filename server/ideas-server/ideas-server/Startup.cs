@@ -125,6 +125,5 @@ namespace CoE.Ideas.Server
                 routes.MapRoute("Spa", "{*url}", defaults: new { controller = "Home", action = "Spa" });
             });
         }
-
     }
 }

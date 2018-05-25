@@ -163,7 +163,6 @@ namespace CoE.Ideas.Shared.Extensions
                     System.Threading.Thread.Sleep(1000);
                 }
             }
-
         }
 #endif
     }

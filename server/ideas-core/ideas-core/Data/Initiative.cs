@@ -17,15 +17,14 @@ namespace CoE.Ideas.Core.Data
         public Initiative(Guid uid) : this()
         {
             Uid = uid;
+            _statusHistories = new HashSet<InitiativeStatusHistory>();
         }
 
-        private Initiative() : base()
+        private Initiative() : base() // required for EF
         {
-            this.SupportingDocuments = new List<SupportingDocument>();
+            SupportingDocuments = new List<SupportingDocument>();
             _statusHistories = new HashSet<InitiativeStatusHistory>();
-
-
-        } // required for EF
+        } 
 
         // Factory method for creation
         public static Initiative Create(
@@ -48,7 +47,6 @@ namespace CoE.Ideas.Core.Data
                 Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
             };
 
-            initiative.SupportingDocuments = new List<SupportingDocument>();
             if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
                 initiative.Stakeholders.Add(Stakeholder.Create(businessContactId.Value, StakeholderType.BusinessContact));
 
@@ -59,6 +57,7 @@ namespace CoE.Ideas.Core.Data
 
             return initiative;
         }
+
         public ICollection<SupportingDocument> SupportingDocuments{ get; private set; }
 
         public Guid Uid { get; private set; }

@@ -16,15 +16,23 @@ export default new Router({
     {
       path: '/view-ideas',
       name: 'view-ideas',
-      component: ViewIdeas
+      component: ViewIdeas,
+      props: (route) => ({
+        page: Number(route.query.page),
+        pageSize: Number(route.query.pageSize),
+        newInitiative: Number(route.query.newInitiative)
+      })
     },
     {
       path: '/my-profile',
       name: 'my-profile',
       component: ViewIdeas,
-      props: {
-        filter: 'mine'
-      }
+      props: (route) => ({
+        filter: 'mine',
+        newInitiative: Number(route.query.newInitiative),
+        page: Number(route.query.page),
+        pageSize: Number(route.query.pageSize)
+      })
     },
     {
       path: '/initiatives/:slug/',
