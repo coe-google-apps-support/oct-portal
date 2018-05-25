@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CoE.Ideas.Core.Data;
+using CoE.Ideas.Shared.Data;
 using CoE.Ideas.Shared.WordPress;
 using EnsureThat;
 using Microsoft.Extensions.Options;
@@ -86,25 +87,59 @@ namespace CoE.Ideas.Core.Services
             });
         }
 
-        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync(int pageNumber, int pageSize)
+        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(int pageNumber, int pageSize)
         {
             return await ExecuteAsync(async client =>
             {
-				var ideaString = await client.GetStringAsync($"?page={pageNumber}&pageSize={pageSize}");
-				var contractResolver = new InitiativeContractResolver();
-                var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
-                return JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings);
+                var response = await client.GetAsync($"?page={pageNumber}&pageSize={pageSize}");
+                if (response.IsSuccessStatusCode)
+                {
+                    string totalCountString = response.Headers.GetValues("X-Total-Count").FirstOrDefault();
+                    int totalCount = 0;
+                    if (!string.IsNullOrWhiteSpace(totalCountString))
+                        int.TryParse(totalCountString, out totalCount);
+
+                    var ideaString = await response.Content.ReadAsStringAsync();
+                    var contractResolver = new InitiativeContractResolver();
+                    var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
+                    var returnValues = JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings).ToList();
+                    return PagedResultSet.Create(returnValues, pageNumber, pageSize, returnValues.Count, totalCount);
+                }
+                else
+                {
+                    var ex = new InvalidOperationException($"Response from remote webservice did not indicate success ({response.StatusCode})");
+                    ex.Data["HttpResponse"] = response;
+                    throw ex;
+                }
+
             });
         }
 
-        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber, int pageSize)
+        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber, int pageSize)
         {
             return await ExecuteAsync(async client =>
             {
-                var ideaString = await client.GetStringAsync("?View=Mine");
-                var contractResolver = new InitiativeContractResolver();
-                var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
-                return JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings);
+                var response = await client.GetAsync($"?View=Mine");
+                if (response.IsSuccessStatusCode)
+                {
+                    var ideaString = await response.Content.ReadAsStringAsync();
+
+                    string totalCountString = response.Headers.GetValues("X-Total-Count").FirstOrDefault();
+                    int totalCount = 0;
+                    if (!string.IsNullOrWhiteSpace(totalCountString))
+                        int.TryParse(totalCountString, out totalCount);
+
+                    var contractResolver = new InitiativeContractResolver();
+                    var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
+                    var returnValues = JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings).ToList();
+                    return PagedResultSet.Create(returnValues, pageNumber, pageSize, returnValues.Count, totalCount);
+                }
+                else
+                {
+                    var ex = new InvalidOperationException($"Response from remote webservice did not indicate success ({response.StatusCode})");
+                    ex.Data["HttpResponse"] = response;
+                    throw ex;
+                }
             });
         }
 
