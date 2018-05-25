@@ -154,7 +154,7 @@ export default {
     if (this.filter === 'mine') {
       this.initiativeFunction = this.services.ideas.getMyInitiatives
       this.isLoading = true
-      this.initiativeFunction(this.dataPage, this.dataPageSize).then((response) => {
+      this.requestAPI(this.dataPage, this.dataPageSize).then((response) => {
         this.ideas = this.ideas.concat(response.data)
         this.newInitId = this.ideas[0].id
         if (!isNaN(this.newInitiative)) {
