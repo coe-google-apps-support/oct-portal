@@ -11,7 +11,7 @@
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
-        <div v-if="!(isLast)">
+        <div v-if="!isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
         <!-- <div>   -->
           <md-button class='loadMore md-raised md-secondary' v-on:click='infiniteHandler'>Load More</md-button>
         </div>
@@ -22,6 +22,11 @@
 </template>
 
 <script>
+
+// TODO: Add a watcher for the components properties
+// https://stackoverflow.com/questions/49041787/child-component-doesnt-get-updated-when-props-changes
+// This could be important if we wanted to allow paging from outside an iframe, for example.
+
 import Initiative from '@/components/initiative'
 import InfiniteLoading from 'vue-infinite-loading'
 import vue from 'vue'
@@ -31,22 +36,14 @@ export default {
   props: {
     filter: String,
     newInitiative: Number,
-    page: {
-      default () {
-        return 1
-      },
-      type: Number
-    },
-    pageSize: {
-      default () {
-        return 20
-      },
-      type: Number
-    }
+    page: Number,
+    pageSize: Number
   },
   data: () => ({
     ideas: [],
     errors: [],
+    dataPage: null,
+    dataPageSize: null,
     showDialog: false,
     shownInitiative: null,
     activeStep: null,
@@ -101,18 +98,17 @@ export default {
     },
     infiniteHandler ($state) {
       console.log(this.redir)
-      console.log(`Loading page ${this.page}.`)
-      let page = this.page
+      // PR: Investigate actual debouncing https://medium.com/vuejs-tips/tiny-debounce-for-vue-js-cea7a1513728
       setTimeout(() => {
-        if (this.redir === true && this.filter !== 'mine' && !this.isLast) {
-          page++
-          this.requestAPI(page, this.pageSize)
-          this.$router.push({path: '/view-ideas', query: {page: page, pageSize: this.pageSize}})
+        if (!this.isLast) {
+          this.dataPage++
+          console.log(`Loading page ${this.dataPage}.`)
+          this.requestAPI(this.dataPage, this.dataPageSize)
         }
         if ($state.loaded) {
           $state.loaded()
         }
-        this.checkIslast(page)
+        this.checkIslast(this.dataPage)
         if (this.isLast && $state.complete) {
           $state.complete()
         }
@@ -135,22 +131,27 @@ export default {
   },
   created () {
     console.log('created')
-    if (this.filter !== 'mine') {
-      if (isNaN(this.page) || isNaN(this.pageSize)) {
-        this.$router.push({path: '/view-ideas', query: {page: 1, pageSize: 20}})
-      } else {
-        this.$router.push({path: '/view-ideas', query: {page: this.page, pageSize: this.pageSize}})
-      }
+    // I couldn't get prop defaults to play nicely so I went with this.
+    if (this.page) {
+      this.dataPage = this.page
+    } else {
+      this.dataPage = 1
     }
+    if (this.pageSize) {
+      this.dataPageSize = this.pageSize
+    } else {
+      this.dataPageSize = 20
+    }
+    console.log(this.dataPageSize)
+    console.log(this.dataPage)
     this.ideas.splice(0, this.ideas.length)
 
     if (this.filter === 'mine') {
       this.initiativeFunction = this.services.ideas.getMyInitiatives
-      this.initiativeFunction(this.page, this.pageSize).then((response) => {
+      this.initiativeFunction(this.dataPage, this.dataPageSize).then((response) => {
         this.ideas = this.ideas.concat(response.data)
         this.newInitId = this.ideas[0].id
         if (!isNaN(this.newInitiative)) {
-          this.$router.push({path: '/my-profile', query: {newInitiative: this.newInitId}})
           this.toastMessage('Initiative successfully submitted!')
         }
         for (let i = 0; i < this.ideas.length; i++) {
@@ -161,7 +162,7 @@ export default {
       })
     } else {
       this.initiativeFunction = this.services.ideas.getIdeas
-      this.requestAPI(this.page, this.pageSize)
+      this.requestAPI(this.dataPage, this.dataPageSize)
     }
   }
 }
