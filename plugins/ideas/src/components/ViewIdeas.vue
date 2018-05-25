@@ -79,11 +79,7 @@ export default {
       setTimeout(() => {
         if (!this.isLast) {
           this.dataPage++
-          console.log(`Loading page ${this.dataPage}.`)
           this.requestAPI(this.dataPage, this.dataPageSize)
-        }
-        if ($state.loaded) {
-          $state.loaded()
         }
         this.checkIslast(this.dataPage)
       }, 1000)
