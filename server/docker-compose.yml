@@ -47,7 +47,7 @@ services:
     ports:
       - "8080:8080"
     build:
-      context: ../plugins/ideas
+      context: ../
       dockerfile: ../../docker/Dockerfile.initiatives-vue.dev
     volumes: 
       - ../plugins/ideas:/app
