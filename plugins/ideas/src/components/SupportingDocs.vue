@@ -41,6 +41,9 @@
 <script>
 export default {
   name: 'SupportingDocs',
+  props: [
+    'id'
+  ],
   data: () => ({
     form: {
       title: null,
@@ -53,7 +56,7 @@ export default {
     savePost () {
       this.sending = true
       this.services.ideas.createSupportingDoc(
-        1, /* ID goes here */
+        this.id,
         this.form.title,
         this.form.url,
         this.form.type

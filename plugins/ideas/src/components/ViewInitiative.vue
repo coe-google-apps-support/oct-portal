@@ -23,6 +23,21 @@
             </md-table-row>
           </md-table>
         </div>
+        <!-- <md-divider class="oct-divider"></md-divider> -->
+        <br>
+        <div class="md-headline"> Supporting Documents
+          <SupportingDocs v-if="showModal" :id="slug" @close="showModal = false"></SupportingDocs>
+          <md-button class="sd-add-button" @click="showModal = true">
+            <md-icon>add</md-icon>
+          </md-button>
+        </div>
+        <md-divider class="oct-divider"></md-divider>
+          <md-table>
+            <md-table-row>
+              <md-table-cell> Business case
+              </md-table-cell>
+            </md-table-row>
+          </md-table>
       </div>
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
