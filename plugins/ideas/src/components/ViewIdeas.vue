@@ -11,8 +11,10 @@
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
-        <div v-if="!isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
-        <!-- <div>   -->
+        <div v-if="isLoading" class="min-height md-layout md-alignment-center-center">
+          <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+        </div>
+        <div v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
           <md-button class='loadMore md-raised md-secondary' v-on:click='infiniteHandler'>Load More</md-button>
         </div>
       </div>
@@ -52,7 +54,8 @@ export default {
     redir: false,
     initiativeFunction: null,
     isLast: false,
-    newInitId: null
+    newInitId: null,
+    isLoading: true
   }),
   components: {
     Initiative,
@@ -87,11 +90,13 @@ export default {
       })
     },
     requestAPI (page, pageSize) {
+      this.isLoading = true
       this.initiativeFunction(page, pageSize).then((response) => {
         this.ideas = this.ideas.concat(response.data)
         for (let i = 0; i < this.ideas.length; i++) {
           this.ideas[i].isLoading = false
         }
+        this.isLoading = false
       }, (e) => {
         this.errors.push(e)
       })
@@ -148,6 +153,7 @@ export default {
 
     if (this.filter === 'mine') {
       this.initiativeFunction = this.services.ideas.getMyInitiatives
+      this.isLoading = true
       this.initiativeFunction(this.dataPage, this.dataPageSize).then((response) => {
         this.ideas = this.ideas.concat(response.data)
         this.newInitId = this.ideas[0].id
@@ -157,6 +163,7 @@ export default {
         for (let i = 0; i < this.ideas.length; i++) {
           this.ideas[i].isLoading = false
         }
+        this.isLoading = false
       }, (e) => {
         this.errors.push(e)
       })
@@ -168,6 +175,9 @@ export default {
 }
 </script>
 <style>
+  .min-height {
+    min-height: 400px;
+  }
   .md-overlay.md-fixed.md-dialog-overlay {
     z-index: 9!important;
   }
