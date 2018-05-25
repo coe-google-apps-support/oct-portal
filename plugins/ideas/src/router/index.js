@@ -19,7 +19,8 @@ export default new Router({
       component: ViewIdeas,
       props: (route) => ({
         page: Number(route.query.page),
-        pageSize: Number(route.query.pageSize)
+        pageSize: Number(route.query.pageSize),
+        newInitiative: Number(route.query.newInitiative)
       })
     },
     {

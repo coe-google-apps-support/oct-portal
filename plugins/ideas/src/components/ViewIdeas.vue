@@ -7,7 +7,7 @@
           <initiative v-for="idea in ideas"
             :key="idea.id" 
             :initiative="idea"
-            :isNewIdea='idea.id === newInitiative && filter === "mine"'
+            :isNewIdea="idea.id === newInitiative"
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
@@ -15,7 +15,7 @@
           <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
         </div>
         <div v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
-          <md-button class='loadMore md-raised md-secondary' v-on:click='infiniteHandler'>Load More</md-button>
+          <md-button class="loadMore md-raised md-secondary" v-on:click="infiniteHandler">Load More</md-button>
         </div>
       </div>
     </transition>
@@ -54,7 +54,6 @@ export default {
     redir: false,
     initiativeFunction: null,
     isLast: false,
-    newInitId: null,
     isLoading: true
   }),
   components: {
@@ -76,9 +75,10 @@ export default {
     },
     requestAPI (page, pageSize) {
       this.isLoading = true
-      this.initiativeFunction(page, pageSize).then((response) => {
+      return this.initiativeFunction(page, pageSize).then((response) => {
         this.ideas = this.ideas.concat(response.data)
         this.isLoading = false
+        return response
       }, (e) => {
         this.errors.push(e)
       })
@@ -134,19 +134,15 @@ export default {
 
     if (this.filter === 'mine') {
       this.initiativeFunction = this.services.ideas.getMyInitiatives
-      this.requestAPI(this.dataPage, this.dataPageSize).then((response) => {
-        this.ideas = this.ideas.concat(response.data)
-        this.newInitId = this.ideas[0].id
-        if (!isNaN(this.newInitiative)) {
-          this.toastMessage('Initiative successfully submitted!')
-        }
-      }, (e) => {
-        this.errors.push(e)
-      })
     } else {
       this.initiativeFunction = this.services.ideas.getIdeas
-      this.requestAPI(this.dataPage, this.dataPageSize)
     }
+
+    this.requestAPI(this.dataPage, this.dataPageSize).then((response) => {
+      if (!isNaN(this.newInitiative)) {
+        this.toastMessage('Initiative successfully submitted!')
+      }
+    })
   }
 }
 </script>
