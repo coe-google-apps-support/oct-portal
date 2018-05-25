@@ -72,6 +72,9 @@ export default {
     }
   },
   methods: {
+    openUrl (url) {
+      window.open(url, '_top')
+    },
     setDone () {
       this.$v.$touch()
     },
@@ -99,10 +102,8 @@ export default {
           this.ideaURL = idea.url
         }
         this.setDone()
-        // If title/description are entered, then go to view-ideas.
-        if (!this.form.description.required && !this.form.title.required) {
-          this.$router.push({path: '/my-profile', query: {newInitiative: 1}})
-        }
+        // TODO Don't hardcode /you
+        this.openUrl(`/you?newInitiative=${idea.id}`)
       }).catch((err, y) => {
         this.sending = false
         console.debug(err)
