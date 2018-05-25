@@ -11,7 +11,6 @@
           <div class="md-caption">{{ initiative.createdDate | formatDate }}</div>
         </div>
         <div class="md-body-1 oct-content-block">{{ initiative.description }}</div>
-        <!-- <md-button class="md-raised md-primary"> Clear Form </md-button> -->
         <div v-if="resources">
           <div class="md-headline">Resources</div>
           <md-table>
@@ -29,7 +28,6 @@
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
       </div>
     </div>
-    <br><br><br><br><br><br><br><br><br> 
   </div>
 </template>
 
