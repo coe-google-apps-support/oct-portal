@@ -18,14 +18,14 @@
     <script>
       var pluginWindow = new pym.Child({ polling: 500 })
       window.addEventListener('navigate', function (e) {
-      if (e.detail) {
+        if (e.detail) {
           if (pluginWindow.parentUrl) {
-              pluginWindow.navigateParentTo(e.detail)
+            pluginWindow.navigateParentTo(e.detail)
           } else {
-              window.location.href = e.detail
+            window.location.href = e.detail
           }
-      }
-    }, false)
+        }
+      }, false)
     </script>
 
   </body>
