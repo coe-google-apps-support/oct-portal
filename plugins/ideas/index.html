@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons">
     <link rel="stylesheet" href="//octava.blob.core.windows.net/cdn-store/css/divi_style.css" />
     <script type="text/javascript" src="https://pym.nprapps.org/pym.v1.min.js"></script>
+    <style>
+      :root {
+        --primary-color: #333;
+        --accent-color: #c0c4a3;
+      }
+    </style>
   </head>
   <body style="min-height:auto; background-color: #fff; padding-bottom: 2px">
     <div id="coe-idea-new"></div>
@@ -26,6 +32,12 @@
           }
         }
       }, false)
+
+      pluginWindow.onMessage('colors', function(message) {
+        let colors = JSON.parse(message)
+        document.documentElement.style.setProperty('--primary-color', colors.primary)
+        document.documentElement.style.setProperty('--accent-color', colors.accent)
+      })
     </script>
 
   </body>
