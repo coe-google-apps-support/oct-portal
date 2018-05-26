@@ -75,9 +75,6 @@ export default {
     openUrl (url) {
       window.open(url, '_top')
     },
-    setDone () {
-      this.$v.$touch()
-    },
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName]
 
@@ -88,6 +85,12 @@ export default {
       }
     },
     saveIdea () {
+      // Validate and verify form prior to submission.
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        return;
+      }
+
       this.sending = true
 
       console.log('saving new idea')
@@ -101,7 +104,7 @@ export default {
         if (idea && idea.url && idea.url.length > 0) {
           this.ideaURL = idea.url
         }
-        this.setDone()
+        
         // TODO Don't hardcode /you
         this.openUrl(`/you?newInitiative=${idea.id}`)
       }).catch((err) => {
