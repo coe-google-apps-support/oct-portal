@@ -123,7 +123,7 @@ export default {
   @import "../colors.scss";
 
   .md-card-header {
-    background-color: $oct-primary;
+    background-color: var(--accent-color);
 
     .md-title {
       color: $oct-offoffwhite;
