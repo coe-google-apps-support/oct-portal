@@ -88,7 +88,7 @@ export default {
       // Validate and verify form prior to submission.
       this.$v.$touch()
       if (this.$v.$invalid) {
-        return;
+        return
       }
 
       this.sending = true
@@ -104,9 +104,11 @@ export default {
         if (idea && idea.url && idea.url.length > 0) {
           this.ideaURL = idea.url
         }
-        
+
         // TODO Don't hardcode /you
-        this.openUrl(`/you?newInitiative=${idea.id}`)
+        if (idea.id) {
+          this.openUrl(`/you?newInitiative=${idea.id}`)
+        }
       }).catch((err) => {
         this.sending = false
         console.error(err)
