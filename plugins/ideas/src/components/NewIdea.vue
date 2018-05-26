@@ -104,10 +104,9 @@ export default {
         this.setDone()
         // TODO Don't hardcode /you
         this.openUrl(`/you?newInitiative=${idea.id}`)
-      }).catch((err, y) => {
+      }).catch((err) => {
         this.sending = false
-        console.debug(err)
-        console.debug(y)
+        console.error(err)
       })
     }
   }
