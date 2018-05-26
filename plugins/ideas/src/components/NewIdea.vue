@@ -5,7 +5,7 @@
         <md-card-header id="custom-header">
           <div class="md-title">Submit an initiative!</div>
         </md-card-header>
-        <div>
+        <div class="form-content">
           <div class="md-flex md-flex-small-100">
             <md-field :class="getValidationClass('title')">
               <label for="idea-title">What is your technology initiative?</label>
@@ -130,6 +130,9 @@ export default {
     margin: 12px;
   }
 
+  .form-content {
+    padding: 16px;
+  }
 </style>
 <style scoped>
 
