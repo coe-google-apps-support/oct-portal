@@ -119,7 +119,7 @@ export default {
   }
 
   .oct-divider {
-    background-color: $oct-primary;
+    background-color: var(--primary-color);
   }
 
   .oct-content-block {

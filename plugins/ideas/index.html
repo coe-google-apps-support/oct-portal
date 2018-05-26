@@ -7,6 +7,25 @@
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons">
     <link rel="stylesheet" href="//octava.blob.core.windows.net/cdn-store/css/divi_style.css" />
     <script type="text/javascript" src="https://pym.nprapps.org/pym.v1.min.js"></script>
+    <style>
+      :root {
+        --primary-color: #005087;
+        --md-theme-default-primary: #005087;
+        --md-theme-default-primary-on-background: #005087;
+        
+        --accent-color: #66b677;
+        --md-theme-default-accent: #66b677;
+        --md-theme-default-accent-on-background: #66b677;
+        --md-theme-default-fieldvariant: #66b677;
+
+        /* Can be left alone */
+        --md-theme-default-text-primary-on-accent: #fefefe;
+        --md-theme-default-background-variant: #fafafa;
+        --md-theme-default-text-primary-on-background-variant: rgba(0, 0, 0, 0.87);
+        --md-theme-default-toolbarvariant: #f5f5f5;
+        --md-theme-default-text-accent-on-background-variant: rgba(0, 0, 0, 0.54);
+      }
+    </style>
   </head>
   <body style="min-height:auto; background-color: #fff; padding-bottom: 2px">
     <div id="coe-idea-new"></div>
@@ -16,16 +35,31 @@
     <!-- built files will be auto injected -->
 
     <script>
-      var pluginWindow = new pym.Child({ polling: 500 });
-        window.addEventListener('navigate', function (e) {
+      var pluginWindow = new pym.Child({ polling: 500 })
+      pluginWindow.sendMessage('VueLoaded')
+
+      window.addEventListener('navigate', function (e) {
         if (e.detail) {
-            if (pluginWindow.parentUrl) {
-                pluginWindow.navigateParentTo(e.detail);
-            } else {
-                window.location.href = e.detail;
-            }
+          if (pluginWindow.parentUrl) {
+            pluginWindow.navigateParentTo(e.detail)
+          } else {
+            window.location.href = e.detail
+          }
         }
-    }, false);
+      }, false)
+
+      pluginWindow.onMessage('colors', function(message) {
+        let colors = JSON.parse(message)
+
+        document.documentElement.style.setProperty('--primary-color', colors.primary)
+        document.documentElement.style.setProperty('--md-theme-default-primary', colors.primary)
+        document.documentElement.style.setProperty('--md-theme-default-primary-on-background', colors.primary)
+
+        document.documentElement.style.setProperty('--accent-color', colors.accent)
+        document.documentElement.style.setProperty('--md-theme-default-accent', colors.accent)
+        document.documentElement.style.setProperty('--md-theme-default-accent-on-background', colors.accent)
+        document.documentElement.style.setProperty('--md-theme-default-fieldvariant', colors.accent)
+      })
     </script>
 
   </body>
