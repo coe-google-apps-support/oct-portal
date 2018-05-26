@@ -9,8 +9,21 @@
     <script type="text/javascript" src="https://pym.nprapps.org/pym.v1.min.js"></script>
     <style>
       :root {
-        --primary-color: #333;
-        --accent-color: #c0c4a3;
+        --primary-color: #333!important;
+        --md-theme-default-primary: #333!important;
+        --md-theme-default-primary-on-background: #333!important;
+        
+        --accent-color: #c0c4a3!important;
+        --md-theme-default-accent: #c0c4a3!important;
+        --md-theme-default-accent-on-background: #c0c4a3!important;
+        --md-theme-default-fieldvariant: #c0c4a3!important;
+
+        /* Can be left alone */
+        --md-theme-default-text-primary-on-accent: #fefefe!important;
+        --md-theme-default-background-variant: #fafafa!important;
+        --md-theme-default-text-primary-on-background-variant: rgba(0, 0, 0, 0.87)!important;
+        --md-theme-default-toolbarvariant: #f5f5f5!important;
+        --md-theme-default-text-accent-on-background-variant: rgba(0, 0, 0, 0.54)!important;
       }
     </style>
   </head>
@@ -35,8 +48,15 @@
 
       pluginWindow.onMessage('colors', function(message) {
         let colors = JSON.parse(message)
+
         document.documentElement.style.setProperty('--primary-color', colors.primary)
+        document.documentElement.style.setProperty('--md-theme-default-primary', colors.primary)
+        document.documentElement.style.setProperty('--md-theme-default-primary-on-background', colors.primary)
+
         document.documentElement.style.setProperty('--accent-color', colors.accent)
+        document.documentElement.style.setProperty('--md-theme-default-accent', colors.accent)
+        document.documentElement.style.setProperty('--md-theme-default-accent-on-background', colors.accent)
+        document.documentElement.style.setProperty('--md-theme-default-fieldvariant', colors.accent)
       })
     </script>
 
