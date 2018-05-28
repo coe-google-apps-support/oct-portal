@@ -26,7 +26,7 @@
         <!-- <md-divider class="oct-divider"></md-divider> -->
         <br>
         <div class="md-headline"> Supporting Documents
-          <SupportingDocs v-if="showModal" :id="slug" @close="showModal = false"></SupportingDocs>
+          <SupportingDocs v-if="showModal" :id="slug" @close="updateSupportingDocs"></SupportingDocs>
           <md-button class="sd-add-button" @click="showModal = true">
             <md-icon>add</md-icon>
           </md-button>
@@ -69,7 +69,7 @@ export default {
     resources: null,
     activeUser: null,
     canEditSteps: false,
-    supportingDocs: null,
+    supportingDocs: [],
     showModal: false,
     fakesupportingdoc: [{
       title: 'Search everything',
@@ -139,7 +139,6 @@ export default {
     updateSupportingDocType () {
       var i
       for (i in this.supportingDocs) {
-        console.log(this.supportingDocs[i].type)
         if (this.supportingDocs[i].type === 1) {
           this.supportingDocs[i].type = 'Business Cases'
         }
@@ -150,6 +149,10 @@ export default {
           this.supportingDocs[i].type = 'Other'
         }
       }
+    },
+    updateSupportingDocs (title, url, type) {
+      this.showModal = false
+      this.supportingDocs.push({title: title, url: url, type: type})
     }
   }
 }

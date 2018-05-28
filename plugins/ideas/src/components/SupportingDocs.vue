@@ -76,8 +76,8 @@ export default {
           this.form.type.replace(/\s/g, '')     // removes spaces to meet backend expectations
         ).then(x => {
           this.sending = false
-          this.$emit('close')
-          location.reload()
+          this.$emit('close', this.form.title, this.form.url, this.form.type)
+          // location.reload()
         }).catch((err, y) => {
           this.sending = false
           console.debug(err)
