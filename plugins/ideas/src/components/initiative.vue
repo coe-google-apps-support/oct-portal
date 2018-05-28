@@ -26,13 +26,14 @@
     <md-divider></md-divider>
   
     <md-card-actions>
-      <md-button v-on:click="openUrl">View</md-button>
+      <divi-button @click.native="openUrl">View</divi-button>
     </md-card-actions>
     <md-progress-bar v-if="initiative.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
 </template>
 <script>
 import formatDate from '@/utils/format-date-since'
+import DiviButton from '@/components/divi/DiviButton'
 
 export default {
   name: 'Initiative',
@@ -40,6 +41,9 @@ export default {
     'initiative',
     'isNewIdea'
   ],
+  components: {
+    DiviButton
+  },
   filters: {
     truncate (str) {
       const MAX_LENGTH = 300

@@ -22,7 +22,7 @@
               <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
             </md-field>
           </div>
-          <md-button class="md-raised md-primary"  v-on:click="saveIdea"> Submit </md-button>
+          <divi-button @click.native="saveIdea">Submit</divi-button>
         </div>
         <md-progress-bar md-mode="indeterminate" class="md-accent" v-if="sending" />
       </md-card>
@@ -32,6 +32,7 @@
 
 <script>
 import StolenFromDivi from '@/components/StolenFromDivi'
+import DiviButton from '@/components/divi/DiviButton'
 import { validationMixin } from 'vuelidate'
 import {
   required,
@@ -43,7 +44,8 @@ export default {
   name: 'NewIdea',
   mixins: [validationMixin],
   components: {
-    StolenFromDivi
+    StolenFromDivi,
+    DiviButton
   },
   data: () => ({
     ideaURL: '',
