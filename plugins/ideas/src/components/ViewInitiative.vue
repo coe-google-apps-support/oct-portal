@@ -114,6 +114,7 @@ export default {
       }
       if (response && response[2]) {
         this.supportingDocs = response[2]
+        this.updateSupportingDocType()
       }
 
       this.isLoading = false
@@ -134,6 +135,21 @@ export default {
         console.error('Failed updating status description.')
         this.errors.push(err)
       })
+    },
+    updateSupportingDocType () {
+      var i
+      for (i in this.supportingDocs) {
+        console.log(this.supportingDocs[i].type)
+        if (this.supportingDocs[i].type === 1) {
+          this.supportingDocs[i].type = 'Business Cases'
+        }
+        if (this.supportingDocs[i].type === 2) {
+          this.supportingDocs[i].type = 'Technology Investment Form'
+        }
+        if (this.supportingDocs[i].type === 3) {
+          this.supportingDocs[i].type = 'Other'
+        }
+      }
     }
   }
 }
