@@ -1,92 +1,74 @@
 <template>
-	<body >
-
-		<button class="app"
-    v-bind:colour="colour">
-    <span>{{message}}</span>
-    </button>
-
-	</body>
+  <a class="et_pb_button et_pb_more_button et_pb_button_one" :href="href">
+    <slot></slot>
+  </a>
 </template>
 
 <script>
 
 export default {
-  name: 'Divi Button',
+  name: 'DiviButton',
   props: {
-    message: {
-      type: String,
-      default: 'Press'
-    },
-    colour: {
-      type: String,
-      default: 'default'
-    }
+    href: String
   }
-
 }
 </script>
 
 <style lang="scss" scoped>
 
-.app {
-	font-size: 20px;
-	font-family: "Open Sans", Arial, sans-serif;
-	font-weight: bold;
-	background-color: transparent;
-	padding: .3em 1em;
-	border: 2px solid; 
-	border-radius: 3px;
-	text-align: center;
-	transition: all 0.2s;
-	cursor: pointer;
-	color: inherit;
-	line-height: 1.7em;
-&[colour="white"] {
-    color: white;
+  /* Undo/block material design CSS */
+  /* TODO Delete this */
+  .et_pb_fullwidth_header .et_pb_fullwidth_header_container .header-content a.et_pb_button {
+    display: inline-block;
+    margin-top: 20px;
   }
-  &[colour="blue"]{
-    color: #005087;
+
+  .et_pb_button {
+    font-weight: bold;
+    font-style: normal;
+    text-transform: none;
+    text-decoration: none;
   }
-}
 
-.app:hover {
-border: 2px solid transparent;
-background-color:rgba(0,0,0,0.07);
-//padding: .3em 1em;
+  .et_pb_more_button {
+    display: inline-block;
+    margin-top: 20px;
+    color: inherit;
+    text-shadow: none;
+    text-decoration: none;
+  }
 
-}
-.app span{
-	cursor: pointer;
-	display: inline-block;
-	position: relative;
-  transition: 0.2s;
-	
-}
-.app span:after {
-  content: '>';
-  position: absolute;
-  opacity: 0;
-	border: none;
-  top: 0;
-  right: 0px;
-  transition: 0.2s;
-}
+  .et_pb_button {
+    position: relative;
+    padding: .3em 1em;
+    border: 2px solid;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.7em!important;
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    transition: all .2s;
+  }
 
-.app:hover span {
-  padding-right: 20px;
-	
-}
+  .et_pb_button:hover, .et_pb_module .et_pb_button:hover {
+    padding: .3em 2em .3em .7em;
+    border: 2px solid transparent;
+  }
 
-.app:hover span:after {
-  opacity: 1;
-  right: -20;
-	
-}
+  .et_pb_button:hover {
+    background-color: rgba(255,255,255,.2);
+  }
 
-#center {
-align-content:center;
-
-}
+  a:hover {
+    cursor: pointer;
+    text-decoration: none;
+  }
 
 </style>
