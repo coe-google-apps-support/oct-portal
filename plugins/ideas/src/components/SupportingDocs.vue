@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body">
           <div v-if='valid == false' class="error-message">
-            One of the fields were left empty!
+            Error: Check to make sure all fields were completed!
           </div> 
           <label class="form-label">
             Title
@@ -77,7 +77,6 @@ export default {
         ).then(x => {
           this.sending = false
           this.$emit('close', this.form.title, this.form.url, this.form.type)
-          // location.reload()
         }).catch((err, y) => {
           this.sending = false
           console.debug(err)
