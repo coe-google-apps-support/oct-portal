@@ -32,10 +32,11 @@
           </md-button>
         </div>
         <md-divider class="oct-divider"></md-divider>
-          <md-table>
-            <md-table-row>
-              <md-table-cell> Business case
-              </md-table-cell>
+          <md-table v-model="fakesupportingdoc">
+            <md-table-row slot="md-table-row" slot-scope="{ item }">
+              <md-table-cell md-label="Title" md-sort-by="title">{{ item.title }}</md-table-cell>
+              <md-table-cell md-label="URL" md-sort-by="url">{{ item.url }}</md-table-cell>
+              <md-table-cell md-label="Type" md-sort-by="type">{{ item.type }}</md-table-cell>
             </md-table-row>
           </md-table>
       </div>
@@ -43,6 +44,8 @@
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
       </div>
     </div>
+    <!-- TODO set minimum iframe height instead of <br> -->
+    <br><br><br><br><br><br><br><br><br>
   </div>
 </template>
 
@@ -67,7 +70,22 @@ export default {
     activeUser: null,
     canEditSteps: false,
     supportingDocs: null,
-    showModal: false
+    showModal: false,
+    fakesupportingdoc: [{
+      title: 'Search everything',
+      url: 'http://google.ca',
+      type: 'Business Cases'
+    },
+    {
+      title: 'Develop stuff',
+      url: 'http://octava.edmonton.ca',
+      type: 'Technology Investment Form'
+    },
+    {
+      title: 'Games forever!',
+      url: 'http://miniclip.com',
+      type: 'Other'
+    }]
   }),
   components: {
     Assignee,
@@ -75,7 +93,6 @@ export default {
     SupportingDocs
   },
   created () {
-    console.log(this.slug)
     this.services.user.getMe().then((user) => {
       this.activeUser = user
       this.canEditSteps = user.permissions.indexOf('editStatusDescription') !== -1
@@ -86,13 +103,17 @@ export default {
 
     this.services.ideas.getInitiative(this.slug).then((initiative) => {
       this.initiative = initiative
-      return Promise.all([this.services.ideas.getResources(initiative.id), this.services.ideas.getInitiativeSteps(initiative.id)])
+      return Promise.all([this.services.ideas.getResources(initiative.id), this.services.ideas.getInitiativeSteps(initiative.id), this.services.ideas.getSupportingDoc(initiative.id)])
     }).then((response) => {
       if (response && response[0]) {
         this.resources = response[0]
+        console.log(response[0])
       }
       if (response && response[1]) {
         this.steps = response[1]
+      }
+      if (response && response[2]) {
+        this.supportingDocs = response[2]
       }
 
       this.isLoading = false
