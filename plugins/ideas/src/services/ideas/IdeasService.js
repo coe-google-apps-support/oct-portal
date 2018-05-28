@@ -83,7 +83,6 @@ let x = class IdeasService {
    */
   static createSupportingDoc (id, title, url, type) {
     return HTTP.post(`${id}/supportingdocuments`, {
-      id,
       title,
       url,
       type

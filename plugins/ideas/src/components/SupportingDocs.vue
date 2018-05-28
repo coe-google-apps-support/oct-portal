@@ -6,17 +6,20 @@
           <h3>New Supporting Document</h3>
         </div>
         <div class="modal-body">
+          <div v-if='valid == false' class="error-message">
+            One of the fields were left empty!
+          </div> 
           <label class="form-label">
             Title
-            <input id="title" class="form-control" v-model='form.title' placeholder='What would you like to name your supporting document?'>
+            <input id="title" class="form-control" required v-model='form.title' placeholder="What would you like to name your supporting document?">
           </label>
           <label class="form-label">
             URL
-            <input id="url" type='url' class="form-control" v-model='form.url' placeholder='Please enter the full url'>
+            <input id="url" type="url" class="form-control" required v-model='form.url' placeholder="Please enter the full url (i.e. http://)">
           </label>
           <label class="form-label">
             Type
-            <select class='form-control' v-model="form.type">
+            <select class='form-control' required v-model="form.type">
               <option disabled value="">Please select a type</option>
               <option>Business Cases</option>
               <option>Technology Investment Form</option>
@@ -25,7 +28,7 @@
           </label>
         </div>
         <div class="modal-footer text-right">
-          <md-button v-if='sending == false' v-on:click="$emit('close')" class='md-raised modal-default-button'>
+          <md-button v-if='sending == false' v-on:click="$emit('close')" class="md-raised modal-default-button">
             Cancel
           </md-button>
           <md-button v-on:click="savePost" class="md-raised md-primary modal-default-button">
@@ -41,30 +44,44 @@
 <script>
 export default {
   name: 'SupportingDocs',
+  props: [
+    'id'
+  ],
   data: () => ({
     form: {
       title: null,
       url: null,
       type: null
     },
-    sending: false
+    sending: false,
+    valid: null
   }),
   methods: {
+    formValidation () {
+      if (this.form.title === null || this.form.url === null || this.form.type === null) {
+        this.valid = false
+      } else {
+        this.valid = true
+      }
+    },
     savePost () {
-      this.sending = true
-      this.services.ideas.createSupportingDoc(
-        1, /* ID goes here */
-        this.form.title,
-        this.form.url,
-        this.form.type
-      ).then(x => {
-        this.sending = false
-        this.$emit('close')
-      }).catch((err, y) => {
-        this.sending = false
-        console.debug(err)
-        console.debug(y)
-      })
+      this.formValidation()
+      if (this.valid === true) {
+        this.sending = true
+        this.services.ideas.createSupportingDoc(
+          this.id,
+          this.form.title,
+          this.form.url,
+          this.form.type.replace(/\s/g, '')     // removes spaces to meet backend expectations
+        ).then(x => {
+          this.sending = false
+          this.$emit('close')
+        }).catch((err, y) => {
+          this.sending = false
+          console.debug(err)
+          console.debug(y)
+        })
+      }
     }
   }
 }
@@ -77,7 +94,6 @@ export default {
       position: relative;
       box-sizing: border-box;
   }
-
   .modal-mask {
     position: fixed;
     z-index: 9998;
@@ -142,5 +158,11 @@ export default {
   .modal-leave-active .modal-container {
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
+  }
+
+  .error-message {
+    text-align: center;
+    color: #f03a3a;
+    font-size: 14px;
   }
 </style>
