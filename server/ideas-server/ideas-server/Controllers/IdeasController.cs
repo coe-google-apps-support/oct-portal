@@ -423,6 +423,42 @@ namespace CoE.Ideas.Server.Controllers
             });
         }
 
+
+        [HttpGet("{id}/supportingdocuments")]
+        public async Task<IActionResult> GetSupportingDocuments([FromRoute] int id)
+        {
+            using (LogContext.PushProperty("InitiativeId", id))
+            {
+                Stopwatch watch = null;
+                if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                {
+                    _logger.Information("Retrieving SupportingDocuments from initiative {InitiativeId}");
+                    watch = new Stopwatch();
+                    watch.Start();
+                }
+
+                try
+                {
+                    return await ValidateAndGetInitiative(id, async initiative =>
+                    {
+                        return Ok(initiative.SupportingDocuments);
+                    });
+                }
+
+                finally
+                {
+                    if (_logger.IsEnabled(Serilog.Events.LogEventLevel.Information))
+                    {
+                        watch.Stop();
+                        _logger.Information("Retrieved supportingdocument for initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+                    }
+
+
+                }
+            }
+        }
+
+
         //// GET: ideas/5
         ///// <summary>
         ///// Retrieves a single Idea based on its Id
