@@ -58,6 +58,7 @@ export default {
   }),
   methods: {
     formValidation () {
+      // TODO url input field validation
       if (this.form.title === null || this.form.url === null || this.form.type === null) {
         this.valid = false
       } else {
@@ -76,6 +77,7 @@ export default {
         ).then(x => {
           this.sending = false
           this.$emit('close')
+          location.reload()
         }).catch((err, y) => {
           this.sending = false
           console.debug(err)
