@@ -27,15 +27,27 @@ namespace CoE.Ideas.Webhooks
         }
         public async Task OnNewInitiative(InitiativeCreatedEventArgs initiativeCreatedEventArgs, CancellationToken cancellationToken)
         {
-            //EnsureArg.IsNotNull(initiativeCreatedEventArgs);
-            string myJson = "{'data[email]': '0000000','data[id]':'000000'}";
+            var initiative = initiativeCreatedEventArgs.Initiative;
+            var owner = initiativeCreatedEventArgs.Owner;
+
             using (var client = new HttpClient())
             {
-                var response = await client.PostAsync(
-                    "https://hooks.zapier.com/hooks/catch/3317083/a99f6h/",
-                     new StringContent(myJson, Encoding.UTF8, "application/json"));
-                _logger.Information("jackson testing webhook");
-            
+                var values = new Dictionary<string, string>
+                {
+                    { "Action", "Create" },
+                    { "ID", initiative.Id.ToString()},
+                    { "Title", initiative.Title},
+                    { "OwnerName", owner.ToString()},
+                    { "OwnerEmail", owner.ToString() },
+                    { "CreatedDate", initiative.CreatedDate.ToString()}
+                };
+
+                var content = new FormUrlEncodedContent(values);
+
+                var response = await client.PostAsync("https://hooks.zapier.com/hooks/catch/3317083/a99f6h/", content);
+
+                var responseString = await response.Content.ReadAsStringAsync();
+
             }
 
         }
