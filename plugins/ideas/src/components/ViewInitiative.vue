@@ -32,7 +32,7 @@
           </md-button>
         </div>
         <md-divider class="oct-divider"></md-divider>
-          <md-table v-model="fakesupportingdoc">
+          <md-table v-model="supportingDocs">
             <md-table-row slot="md-table-row" slot-scope="{ item }">
               <md-table-cell md-label="Title" md-sort-by="title">{{ item.title }}</md-table-cell>
               <md-table-cell md-label="URL" md-sort-by="url">{{ item.url }}</md-table-cell>
