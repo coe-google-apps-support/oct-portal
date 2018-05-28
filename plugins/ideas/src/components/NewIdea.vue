@@ -2,9 +2,6 @@
   <div>
     <form novalidate class="md-layout-row md-gutter">
       <md-card>
-        <md-card-header id="custom-header">
-          <div class="md-title">Submit an initiative!</div>
-        </md-card-header>
         <div class="form-content">
           <div class="md-flex md-flex-small-100">
             <md-field :class="getValidationClass('title')">
@@ -123,14 +120,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
   @import "../colors.scss";
-
-  .md-card-header {
-    background-color: var(--accent-color);
-
-    .md-title {
-      color: $oct-offoffwhite;
-    }
-  }
 
   .md-card {
     margin: 12px;
