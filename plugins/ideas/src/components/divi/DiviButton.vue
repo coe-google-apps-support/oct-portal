@@ -18,11 +18,6 @@ export default {
 
   /* Undo/block material design CSS */
   /* TODO Delete this */
-  .et_pb_fullwidth_header .et_pb_fullwidth_header_container .header-content a.et_pb_button {
-    display: inline-block;
-    margin-top: 20px;
-  }
-
   .et_pb_button {
     font-weight: bold;
     font-style: normal;
@@ -32,7 +27,7 @@ export default {
 
   .et_pb_more_button {
     display: inline-block;
-    margin-top: 20px;
+    margin-top: 0px;
     color: inherit;
     text-shadow: none;
     text-decoration: none;
