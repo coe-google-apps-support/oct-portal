@@ -59,7 +59,7 @@ export default {
         this.id,
         this.form.title,
         this.form.url,
-        this.form.type
+        this.form.type.replace(/\s/g, '')     // removes spaces to meet backend expectations
       ).then(x => {
         this.sending = false
         this.$emit('close')
