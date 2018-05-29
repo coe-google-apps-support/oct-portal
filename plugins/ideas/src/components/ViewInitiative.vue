@@ -1,6 +1,5 @@
 <template>
   <div>
-    <div id="status"> 0 | 0</div>
     <div v-if="isLoading" class="oct-loader">
       <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
     </div>
@@ -12,7 +11,6 @@
           <div class="md-caption">{{ initiative.createdDate | formatDate }}</div>
         </div>
         <div class="md-body-1 oct-content-block">{{ initiative.description }}</div>
-        <md-button class="md-raised md-primary"> Clear Form </md-button>
         <div v-if="resources">
           <div class="md-headline">Resources</div>
           <md-table>
@@ -29,7 +27,7 @@
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
       </div>
-    </div> 
+    </div>
   </div>
 </template>
 
@@ -37,6 +35,7 @@
 import Assignee from '@/components/Assignee'
 import Steps from '@/components/stepper/Steps'
 import formatDate from '@/utils/format-date-since'
+import SupportingDocs from '@/components/SupportingDocs'
 
 export default {
   name: 'ViewInitiative',
@@ -52,13 +51,16 @@ export default {
     resources: null,
     activeUser: null,
     canEditSteps: false,
-    supportingdocs: null
+    supportingDocs: null,
+    showModal: false
   }),
   components: {
     Assignee,
-    Steps
+    Steps,
+    SupportingDocs
   },
   created () {
+    console.log(this.slug)
     this.services.user.getMe().then((user) => {
       this.activeUser = user
       this.canEditSteps = user.permissions.indexOf('editStatusDescription') !== -1
@@ -117,7 +119,7 @@ export default {
   }
 
   .oct-divider {
-    background-color: $oct-primary;
+    background-color: var(--primary-color);
   }
 
   .oct-content-block {
@@ -127,8 +129,17 @@ export default {
   .oct-min-size {
     min-width: 400px;
   }
+  
+  .sd-headline {
+    font-size: 25px;
+  }
 
   tbody .md-table-row td {
     border-top: 0px;
+  }
+
+  .sd-add-button {
+    position: relative;
+    margin: auto;
   }
 </style>

@@ -1,6 +1,6 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t coeoctava.azurecr.io/initiatives-webapi:dev-latest -f docker/Dockerfile.initiatives-server.dev-stretch ./server
+# docker image build -t coeoctava.azurecr.io/initiatives-webapi:dev-latest -f docker/Dockerfile.initiatives-server.dev-stretch .
 #
 # And to push to the CoE Azure Repo (requires credentials):
 # docker tag coeoctava.azurecr.io/initiatives-webapi:dev-latest coeoctava.azurecr.io/initiatives-webapi:dev-stretch
@@ -16,15 +16,15 @@ ARG Configuration=Debug
 # Required inside Docker, otherwise file-change events may not trigger
 ENV DOTNET_USE_POLLING_FILE_WATCHER 1
 
-VOLUME /usr/src/coe/initiatives-server
+VOLUME /app
 
-WORKDIR /usr/src/coe/initiatives-server
-COPY ./shared-kernel ./shared-kernel
-COPY ./ideas-core/ideas-core ./ideas-core/ideas-core
-COPY ./ideas-server/ideas-server ./ideas-server/ideas-server
-WORKDIR /usr/src/coe/initiatives-server/ideas-server/ideas-server
+WORKDIR /app
+COPY ./server/shared-kernel ./shared-kernel
+COPY ./server/ideas-core/ideas-core ./ideas-core/ideas-core
+COPY ./server/ideas-server/ideas-server ./ideas-server/ideas-server
+WORKDIR /app/ideas-server/ideas-server
 
 RUN dotnet restore
 RUN dotnet build
 
-ENTRYPOINT dotnet run urls=http://0.0.0.0:5000
+ENTRYPOINT dotnet run urls=http://0.0.0.0:80
