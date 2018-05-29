@@ -136,7 +136,9 @@ export default {
     },
     updateSupportingDocs (title, url, type) {
       this.showModal = false
-      this.supportingDocs.push({title: title, url: url, type: type})
+      if (title || url || type) {
+        this.supportingDocs.push({title: title, url: url, type: type})
+      }
     }
   }
 }
