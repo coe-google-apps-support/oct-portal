@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: wordpress
-        image: coeoctava.azurecr.io/wordpress:v1.0.0
+        image: coeoctava.azurecr.io/wordpress:v1.0.2
         ports:
         - containerPort: 80
         volumeMounts:

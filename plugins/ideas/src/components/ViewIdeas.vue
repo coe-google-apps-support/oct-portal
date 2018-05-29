@@ -8,7 +8,7 @@
             :key="idea.id" 
             :initiative="idea"
             :isNewIdea="idea.id === newInitiative"
-            class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
+            class="md-layout-item md-size-20 md-medium-size-30 md-small-size-45 md-xsmall-size-100">
           </initiative>
         </div>
         <div v-if="isLoading" class="md-layout md-alignment-center-center">

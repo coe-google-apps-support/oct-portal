@@ -2,10 +2,7 @@
   <div>
     <form novalidate class="md-layout-row md-gutter">
       <md-card>
-        <md-card-header id="custom-header">
-          <div class="md-title">Submit an initiative!</div>
-        </md-card-header>
-        <div>
+        <div class="form-content">
           <div class="md-flex md-flex-small-100">
             <md-field :class="getValidationClass('title')">
               <label for="idea-title">What is your technology initiative?</label>
@@ -22,7 +19,7 @@
               <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
             </md-field>
           </div>
-          <md-button class="md-raised md-primary"  v-on:click="saveIdea"> Submit </md-button>
+          <divi-button @click.native="saveIdea">Submit</divi-button>
         </div>
         <md-progress-bar md-mode="indeterminate" class="md-accent" v-if="sending" />
       </md-card>
@@ -32,6 +29,7 @@
 
 <script>
 import StolenFromDivi from '@/components/StolenFromDivi'
+import DiviButton from '@/components/divi/DiviButton'
 import { validationMixin } from 'vuelidate'
 import {
   required,
@@ -43,7 +41,8 @@ export default {
   name: 'NewIdea',
   mixins: [validationMixin],
   components: {
-    StolenFromDivi
+    StolenFromDivi,
+    DiviButton
   },
   data: () => ({
     ideaURL: '',
@@ -75,9 +74,6 @@ export default {
     openUrl (url) {
       window.open(url, '_top')
     },
-    setDone () {
-      this.$v.$touch()
-    },
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName]
 
@@ -88,6 +84,12 @@ export default {
       }
     },
     saveIdea () {
+      // Validate and verify form prior to submission.
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        return
+      }
+
       this.sending = true
 
       console.log('saving new idea')
@@ -101,13 +103,14 @@ export default {
         if (idea && idea.url && idea.url.length > 0) {
           this.ideaURL = idea.url
         }
-        this.setDone()
+
         // TODO Don't hardcode /you
-        this.openUrl(`/you?newInitiative=${idea.id}`)
-      }).catch((err, y) => {
+        if (idea.id) {
+          this.openUrl(`/you?newInitiative=${idea.id}`)
+        }
+      }).catch((err) => {
         this.sending = false
-        console.debug(err)
-        console.debug(y)
+        console.error(err)
       })
     }
   }
@@ -118,18 +121,13 @@ export default {
 <style lang="scss" scoped>
   @import "../colors.scss";
 
-  .md-card-header {
-    background-color: $oct-primary;
-
-    .md-title {
-      color: $oct-offoffwhite;
-    }
-  }
-
   .md-card {
     margin: 12px;
   }
 
+  .form-content {
+    padding: 16px;
+  }
 </style>
 <style scoped>
 

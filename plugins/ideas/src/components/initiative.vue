@@ -3,7 +3,7 @@
     <md-card-media-cover>
       <md-card-media md-ratio="16:9">
         <img :src="getImage()" alt="Skyscraper">
-        <div class="oct-cover" :style="{ backgroundColor: getColor(initiative) }"></div>
+        <div class="oct-cover"></div>
       </md-card-media>
 
       <md-card-area>
@@ -26,13 +26,14 @@
     <md-divider></md-divider>
   
     <md-card-actions>
-      <md-button v-on:click="openUrl" :style="{ color: getColor(initiative) }">View</md-button>
+      <divi-button @click.native="openUrl">View</divi-button>
     </md-card-actions>
     <md-progress-bar v-if="initiative.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
 </template>
 <script>
 import formatDate from '@/utils/format-date-since'
+import DiviButton from '@/components/divi/DiviButton'
 
 export default {
   name: 'Initiative',
@@ -40,6 +41,9 @@ export default {
     'initiative',
     'isNewIdea'
   ],
+  components: {
+    DiviButton
+  },
   filters: {
     truncate (str) {
       const MAX_LENGTH = 300
@@ -74,32 +78,6 @@ export default {
       ]
       const randIndex = (this.initiative.title.charCodeAt(0) + this.initiative.title.charCodeAt(1) + this.initiative.id) % images.length
       return images[randIndex]
-    },
-    getColor (idea) {
-      // const colors = [
-      //   '#e57373',
-      //   '#F06292',
-      //   '#BA68C8',
-      //   '#9575CD',
-      //   '#7986CB',
-      //   '#64B5F6',
-      //   '#4FC3F7',
-      //   '#4DD0E1',
-      //   '#4DB6AC',
-      //   '#81C784',
-      //   '#AED581',
-      //   '#DCE775',
-      //   '#FFF176',
-      //   '#FFD54F',
-      //   '#FFB74D',
-      //   '#FF8A65'
-      // ]
-      const colors = [
-        '#4DB6AC'
-      ]
-
-      const randIndex = (idea.title.charCodeAt(0) + idea.title.charCodeAt(1) + idea.id) % colors.length
-      return colors[randIndex]
     }
   }
 }
@@ -128,6 +106,7 @@ export default {
   left: 0;
   transform: translateY(-50%);
   z-index: 1;
+  background-color: var(--primary-color);
 }
 
 .md-card {
@@ -144,16 +123,17 @@ export default {
 }
 @keyframes pulseanimation {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 138, 101, 1);
+    // TODO figure out how to use global values
+    box-shadow: 0 0 0 0 rgba(102, 182, 119, 1);
   }
   40% {
-    box-shadow: 0 0 0 20px rgba(255,138,101,0);
+    box-shadow: 0 0 0 20px rgba(102, 182, 119, 0);
   }
   80% {
-    box-shadow: 0 0 0 20px rgba(255,138,101,0);
+    box-shadow: 0 0 0 20px rgba(102, 182, 119, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(255,138,101,0);
+    box-shadow: 0 0 0 0 rgba(102, 182, 119, 0);
   }
 }
 
