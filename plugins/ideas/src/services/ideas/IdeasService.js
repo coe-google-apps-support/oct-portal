@@ -88,7 +88,12 @@ let x = class IdeasService {
       type
     })
   }
-
+  
+  /**
+   * Returns a Promise that resolves with the supporting document(s).
+   * @param {string} id The id of the initiative.
+   * @returns {Promise} Resolved with the supporting document(s).
+   */
   static getSupportingDoc (id) {
     return HTTP.get(`${id}/supportingdocuments`).then((response) => {
       if (response.data) {
