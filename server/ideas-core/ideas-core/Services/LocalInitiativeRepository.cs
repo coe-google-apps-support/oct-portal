@@ -57,19 +57,28 @@ namespace CoE.Ideas.Core.Services
 				.SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        private static IQueryable<InitiativeInfo> CreateInitiativeInfoQuery(IQueryable<Initiative> query, int pageNumber, int pageSize)
+        private static IQueryable<InitiativeInfo> CreateInitiativeInfoQuery(IQueryable<Initiative> query, 
+            string filter, int pageNumber, int pageSize)
         {
-            return query
-                .Include(x => x.StatusHistories)
+            IQueryable<Initiative> returnValue = query
+                .Include(x => x.StatusHistories);
+            
+            if (!string.IsNullOrWhiteSpace(filter))
+            {
+                returnValue = returnValue
+                    .Where(x => x.Title.Contains(filter) || x.Description.Contains(filter));
+            }
+
+            return returnValue
 				.Skip((pageNumber - 1)*pageSize)
 				.Take(pageSize)
 				.OrderByDescending(x => x.CreatedDate)
 				.Select(x => InitiativeInfo.Create(x));
         }
 
-        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(int pageNumber, int pageSize)
+        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(string filter, int pageNumber, int pageSize)
         {
-            var initiatives = await CreateInitiativeInfoQuery(_initiativeContext.Initiatives, pageNumber, pageSize)
+            var initiatives = await CreateInitiativeInfoQuery(_initiativeContext.Initiatives, filter, pageNumber, pageSize)
                 .ToListAsync();
 
             var initiativeCount = await _initiativeContext.Initiatives.CountAsync();
@@ -78,12 +87,13 @@ namespace CoE.Ideas.Core.Services
         }
 
 
-        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber, int pageSize)
+        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, 
+            string filter, int pageNumber, int pageSize)
         {
             var query = _initiativeContext.Initiatives
                     .Where(x => x.Stakeholders.Any(y => y.PersonId == personId));
 
-            var initiatives = await(CreateInitiativeInfoQuery(query, pageNumber, pageSize))
+            var initiatives = await(CreateInitiativeInfoQuery(query, filter, pageNumber, pageSize))
                 .ToListAsync();
 
             var initiativeCount = await query.CountAsync();
