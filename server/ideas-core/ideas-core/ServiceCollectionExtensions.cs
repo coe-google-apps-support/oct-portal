@@ -29,7 +29,7 @@ namespace CoE.Ideas.Core
         public static IServiceCollection AddLocalInitiativeConfiguration(this IServiceCollection services,
             string dbConnectionString = null,
             string applicationUrl = null)
-        { 
+        {
             // default value is one is not supplied - Note this is not what Production/UAT uses, but just a convenience for local dev
             string connectionString = string.IsNullOrWhiteSpace(dbConnectionString)
                 ? "server=initiatives-db;database=CoeIdeas;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;" : dbConnectionString;
@@ -57,8 +57,6 @@ namespace CoE.Ideas.Core
 
             services.AddScoped<IInitiativeStatusEtaRepository, InitiativeStatusEtaRepository>();
 
-
-
             return services;
         }
 
@@ -84,7 +82,6 @@ namespace CoE.Ideas.Core
             }
         }
 #endif
-
 
         public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
             SynchronousInitiativeMessageReceiver synchronousInitiativeMessageReceiver)

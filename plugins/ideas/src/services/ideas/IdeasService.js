@@ -16,16 +16,16 @@ let x = class IdeasService {
    * Returns a Promise that resolves with a list of ideas.
    * @returns {Promise} Resolved with an array of ideas.
    */
-  static getIdeas () {
-    return HTTP.get('')
+  static getIdeas (page, pageSize) {
+    return HTTP.get(`?page=${page}&pageSize=${pageSize}`)
   }
 
   /**
    * Returns a Promise that resolves with a list of my initiatives.
    * @returns {Promise} Resolved with an array of my initiatives.
    */
-  static getMyInitiatives () {
-    return HTTP.get('?view=mine')
+  static getMyInitiatives (page, pageSize) {
+    return HTTP.get(`?view=Mine&page=${page}&pageSize=${pageSize}`)
   }
 
   /**
@@ -70,6 +70,35 @@ let x = class IdeasService {
       }
     }, (err) => {
       console.error(`Failed at route /${id}/steps.`)
+      console.error(err)
+    })
+  }
+
+  /**
+   * Creates a new supporting document for a specified initiative.
+   * @param {string} id The id of the initiative
+   * @param {string} title The title of the supporting document.
+   * @param {string} url The url of the supporting document.
+   * @param {string} type The type of the supporting document.
+   */
+  static createSupportingDoc (id, title, url, type) {
+    return HTTP.post(`${id}/supportingdocuments`, {
+      id,
+      title,
+      url,
+      type
+    })
+  }
+
+  static getSupportingDoc (id) {
+    return HTTP.get(`${id}/supportingdocuments`).then((response) => {
+      if (response.data) {
+        return response.data
+      } else {
+        return response
+      }
+    }, (err) => {
+      console.error(`Failed at route /${id}/supportingdocuments`)
       console.error(err)
     })
   }

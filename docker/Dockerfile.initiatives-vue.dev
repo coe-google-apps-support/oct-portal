@@ -13,6 +13,5 @@ FROM node:9.10 AS initiatives-web
 WORKDIR /app
 ADD ./plugins/ideas .
 RUN npm install
-RUN npm rebuild node-sass
 
-CMD npm run dev
+CMD npm rebuild node-sass & npm run dev

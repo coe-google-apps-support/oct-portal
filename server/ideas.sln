@@ -35,8 +35,6 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-apex", "..\ideas-integration-apex\ideas-integration-apex.csproj", "{092B5795-0CC8-45B6-87BA-9070CA8240DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core-tests", "ideas-core\ideas-core-tests\ideas-core-tests.csproj", "{EFF1054A-3B04-45A3-A1BA-BBBFC1CAF48B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,7 +109,6 @@ Global
 		{F21A2326-EB12-472E-A432-37F1DC4C97C7} = {6F2D1860-80DC-4074-8F8C-90F435EEF0D1}
 		{4943EFBE-8895-417D-A1FD-6D8534F2DC1C} = {6F2D1860-80DC-4074-8F8C-90F435EEF0D1}
 		{092B5795-0CC8-45B6-87BA-9070CA8240DA} = {6F2D1860-80DC-4074-8F8C-90F435EEF0D1}
-		{EFF1054A-3B04-45A3-A1BA-BBBFC1CAF48B} = {EC1833AF-B6B0-4918-B832-47CF8291ED50}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5356DFEE-8877-4B02-A9CE-74DCCDCA75E5}
