@@ -39,12 +39,19 @@
 
 <script>
 import DiviButton from '@/components/divi/DiviButton'
+import { validationMixin } from 'vuelidate'
+import {
+  required,
+  minLength,
+  maxLength
+} from 'vuelidate/lib/validators'
 
 export default {
   name: 'SupportingDocs',
   components: {
     DiviButton
   },
+  mixins: [validationMixin],
   props: [
     'id'
   ],
@@ -57,6 +64,22 @@ export default {
     sending: false,
     valid: null
   }),
+  validations: {
+    form: {
+      title: {
+        required,
+        minLength: minLength(3),
+        maxLength: maxLength(50)
+      },
+      url: {
+        required,
+        minLength: minLength(3)
+      },
+      type: {
+        required
+      }
+    }
+  },
   methods: {
     formValidation () {
       // TODO url input field validation
