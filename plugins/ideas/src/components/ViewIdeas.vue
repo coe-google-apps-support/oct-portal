@@ -8,7 +8,7 @@
             :key="idea.id" 
             :initiative="idea"
             :isNewIdea="idea.id === newInitiative"
-            class="md-layout-item md-size-20 md-medium-size-30 md-small-size-45 md-xsmall-size-100">
+            class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
         <div v-if="isLoading" class="md-layout md-alignment-center-center">
@@ -52,21 +52,19 @@ export default {
     Initiative
   },
   methods: {
-    checkIslast (page) {
-      let checkdata = null
-
-      this.initiativeFunction(page + 1, this.pageSize).then((response) => {
-        checkdata = response.data
-        if (checkdata.length === 0) {
-          this.isLast = true
-        } else {
-          this.isLast = false
-        }
-      })
+    checkIsLast (response) {
+      var x
+      x = response.headers['x-is-last-page']
+      if (x === 'False') {
+        this.isLast = false
+      } else if (x === 'True') {
+        this.isLast = true
+      }
     },
     requestAPI (page, pageSize) {
       this.isLoading = true
       return this.initiativeFunction(page, pageSize).then((response) => {
+        this.checkIsLast(response)
         this.ideas = this.ideas.concat(response.data)
         this.isLoading = false
         return response
@@ -81,7 +79,7 @@ export default {
           this.dataPage++
           this.requestAPI(this.dataPage, this.dataPageSize)
         }
-        this.checkIslast(this.dataPage)
+        // this.checkIslast(this.dataPage)
       }, 1000)
     },
     toastMessage (message) {
