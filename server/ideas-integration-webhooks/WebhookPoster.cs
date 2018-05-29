@@ -1,8 +1,10 @@
 ﻿using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Shared.Security;
 using EnsureThat;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,6 +32,9 @@ namespace CoE.Ideas.Webhooks
             var initiative = initiativeCreatedEventArgs.Initiative;
             var owner = initiativeCreatedEventArgs.Owner;
 
+            TimeZoneInfo albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton");
+            var createDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(initiative.CreatedDate.DateTime, albertaTimeZone);
+
             using (var client = new HttpClient())
             {
                 var values = new Dictionary<string, string>
@@ -37,9 +42,10 @@ namespace CoE.Ideas.Webhooks
                     { "Action", "Create" },
                     { "ID", initiative.Id.ToString()},
                     { "Title", initiative.Title},
-                    { "OwnerName", owner.ToString()},
-                    { "OwnerEmail", owner.ToString() },
-                    { "CreatedDate", initiative.CreatedDate.ToString()}
+                    { "OwnerName", owner.GetDisplayName()},
+                    { "OwnerEmail", owner.GetEmail() },
+                    { "CreatedDate", createDateAlberta.ToString()},
+                    { "Description", initiative.Description}
                 };
 
                 var content = new FormUrlEncodedContent(values);
