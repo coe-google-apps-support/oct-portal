@@ -54,6 +54,7 @@ import Assignee from '@/components/Assignee'
 import Steps from '@/components/stepper/Steps'
 import formatDate from '@/utils/format-date-since'
 import SupportingDocs from '@/components/SupportingDocs'
+import DiviButton from '@/components/divi/DiviButton'
 
 export default {
   name: 'ViewInitiative',
@@ -90,7 +91,8 @@ export default {
   components: {
     Assignee,
     Steps,
-    SupportingDocs
+    SupportingDocs,
+    DiviButton
   },
   created () {
     this.services.user.getMe().then((user) => {

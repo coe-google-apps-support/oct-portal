@@ -3,7 +3,7 @@
     <div class="modal-mask">
       <div class="modal-container">
         <div class="modal-header">
-          <h3>New Supporting Document</h3>
+          <h3>New Supporting Document</h3> 
         </div>
         <div class="modal-body">
           <div v-if="valid == false" class="error-message">
@@ -28,12 +28,8 @@
           </label>
         </div>
         <div class="modal-footer text-right">
-          <md-button v-if="sending == false" v-on:click="$emit('close')" class="md-raised modal-default-button">
-            Cancel
-          </md-button>
-          <md-button v-on:click="savePost" class="md-raised md-primary modal-default-button">
-            Save
-          </md-button>
+          <divi-button v-if="sending == false" @click.native="$emit('close')">Cancel</divi-button>
+          <divi-button @click.native="savePost">Save</divi-button>
         </div>
         <md-progress-bar md-mode="indeterminate" class="md-primary" v-if="sending" />
       </div>
@@ -42,8 +38,13 @@
 </template>
 
 <script>
+import DiviButton from '@/components/divi/DiviButton'
+
 export default {
   name: 'SupportingDocs',
+  components: {
+    DiviButton
+  },
   props: [
     'id'
   ],
