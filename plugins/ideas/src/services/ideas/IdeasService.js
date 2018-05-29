@@ -14,18 +14,24 @@ import { HTTP } from '../../HttpCommon'
 let x = class IdeasService {
   /**
    * Returns a Promise that resolves with a list of ideas.
+   * @param {Number} page The 1-indexed page number.
+   * @param {Number} pageSize The number of results to return.
+   * @param {String} contains A search string to apply.
    * @returns {Promise} Resolved with an array of ideas.
    */
-  static getIdeas (page, pageSize) {
-    return HTTP.get(`?page=${page}&pageSize=${pageSize}`)
+  static getIdeas (page, pageSize, contains) {
+    return HTTP.get(`?page=${page}&pageSize=${pageSize}&contains=${contains}`)
   }
 
   /**
    * Returns a Promise that resolves with a list of my initiatives.
+   * @param {Number} page The 1-indexed page number.
+   * @param {Number} pageSize The number of results to return.
+   * @param {String} contains A search string to apply.
    * @returns {Promise} Resolved with an array of my initiatives.
    */
-  static getMyInitiatives (page, pageSize) {
-    return HTTP.get(`?view=Mine&page=${page}&pageSize=${pageSize}`)
+  static getMyInitiatives (page, pageSize, contains) {
+    return HTTP.get(`?view=Mine&page=${page}&pageSize=${pageSize}&contains=${contains}`)
   }
 
   /**
