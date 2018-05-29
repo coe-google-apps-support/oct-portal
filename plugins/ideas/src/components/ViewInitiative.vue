@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="min-height">
     <div v-if="isLoading" class="oct-loader">
       <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
     </div>
@@ -45,7 +45,7 @@
       </div>
     </div>
     <!-- TODO set minimum iframe height instead of <br> -->
-    <br><br><br><br><br><br><br><br><br>
+    <!-- <br><br><br><br><br><br><br><br><br> -->
   </div>
 </template>
 
@@ -71,22 +71,7 @@ export default {
     activeUser: null,
     canEditSteps: false,
     supportingDocs: [],
-    showModal: false,
-    fakesupportingdoc: [{
-      title: 'Search everything',
-      url: 'http://google.ca',
-      type: 'Business Cases'
-    },
-    {
-      title: 'Develop stuff',
-      url: 'http://octava.edmonton.ca',
-      type: 'Technology Investment Form'
-    },
-    {
-      title: 'Games forever!',
-      url: 'http://miniclip.com',
-      type: 'Other'
-    }]
+    showModal: false
   }),
   components: {
     Assignee,
@@ -117,6 +102,7 @@ export default {
       if (response && response[2]) {
         this.supportingDocs = response[2]
         this.updateSupportingDocType()
+        console.log(this.supportingDocs)
       }
 
       this.isLoading = false
@@ -139,14 +125,12 @@ export default {
       })
     },
     updateSupportingDocType () {
-      var i
+      let i
       for (i in this.supportingDocs) {
-        if (this.supportingDocs[i].type === 1) {
+        if (this.supportingDocs[i].type === 'BusinessCases') {
           this.supportingDocs[i].type = 'Business Cases'
-        } else if (this.supportingDocs[i].type === 2) {
+        } else if (this.supportingDocs[i].type === 'TechnologyInvestmentForm') {
           this.supportingDocs[i].type = 'Technology Investment Form'
-        } else if (this.supportingDocs[i].type === 3) {
-          this.supportingDocs[i].type = 'Other'
         }
       }
     },
@@ -169,6 +153,10 @@ export default {
     transform: translate(-50%, -50%);
   }
   
+  .min-height {
+    min-height: 700px;
+  }
+
   .oct-steps {
     margin: 14px;
   }
