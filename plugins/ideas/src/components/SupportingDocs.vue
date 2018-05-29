@@ -11,15 +11,15 @@
           </div> 
           <label class="form-label">
             Title
-            <input id="title" class="form-control" required v-model="form.title" placeholder="What would you like to name your supporting document?">
+            <input id="title" class="form-control" v-model="form.title" placeholder="What would you like to name your supporting document?">
           </label>
           <label class="form-label">
             URL
-            <input id="url" type="url" class="form-control" required v-model="form.url" placeholder="Please enter the full url (i.e. http://)">
+            <input id="url" type="url" class="form-control" v-model="form.url" placeholder="Please enter the full url (i.e. http://)">
           </label>
           <label class="form-label">
             Type
-            <select class="form-control" required v-model="form.type">
+            <select class="form-control" v-model="form.type">
               <option disabled value="">Please select a type</option>
               <option>Business Cases</option>
               <option>Technology Investment Form</option>
@@ -77,10 +77,9 @@ export default {
         ).then(x => {
           this.sending = false
           this.$emit('close', this.form.title, this.form.url, this.form.type)
-        }).catch((err, y) => {
+        }).catch((err) => {
           this.sending = false
           console.debug(err)
-          console.debug(y)
         })
       }
     }
