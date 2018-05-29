@@ -388,7 +388,7 @@ let x = class StubbedIdeasService {
    */
   static getIdeas (page, pageSize, contains) {
     let ideas = { data: [] }
-    
+
     // TODO Use array.splice to make this cool.
     for (let i = (page - 1) * pageSize; i < page * pageSize && i < fakeIdeas.data.length; i++) {
       if (contains && (fakeIdeas.data[i].title + fakeIdeas.data[i].description).indexOf(contains) !== -1) {
