@@ -141,11 +141,9 @@ export default {
       for (i in this.supportingDocs) {
         if (this.supportingDocs[i].type === 1) {
           this.supportingDocs[i].type = 'Business Cases'
-        }
-        else if (this.supportingDocs[i].type === 2) {
+        } else if (this.supportingDocs[i].type === 2) {
           this.supportingDocs[i].type = 'Technology Investment Form'
-        }
-        else if (this.supportingDocs[i].type === 3) {
+        } else if (this.supportingDocs[i].type === 3) {
           this.supportingDocs[i].type = 'Other'
         }
       }
