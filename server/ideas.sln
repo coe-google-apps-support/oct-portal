@@ -35,8 +35,6 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-apex", "..\ideas-integration-apex\ideas-integration-apex.csproj", "{092B5795-0CC8-45B6-87BA-9070CA8240DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core-tests", "ideas-core\ideas-core-tests\ideas-core-tests.csproj", "{EFF1054A-3B04-45A3-A1BA-BBBFC1CAF48B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ideas-integration-webhooks", "ideas-integration-webhooks\ideas-integration-webhooks.csproj", "{F0C8FBDA-6A7F-491E-850C-33744A50C2D4}"
 EndProject
 Global

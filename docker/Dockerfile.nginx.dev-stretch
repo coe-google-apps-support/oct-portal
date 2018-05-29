@@ -1,6 +1,6 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t coeoctava.azurecr.io/nginx:dev-latest -t coeoctava.azurecr.io/nginx:dev-latest -f docker/Dockerfile.nginx.dev-stretch ./docker/nginx
+# docker image build -t coeoctava.azurecr.io/nginx:dev-latest -t coeoctava.azurecr.io/nginx:dev-latest -f docker/Dockerfile.nginx.dev-stretch ./
 #
 # And to push to the CoE Azure Repo (requires credentials):
 # docker push coeoctava.azurecr.io/nginx:dev-stretch
@@ -8,6 +8,15 @@
 
 FROM nginx:1.13
 
-LABEL authors = "Dan Chenier (daniel.chenier@edmonton.ca)"
+COPY ./docker/nginx/octava.conf /etc/nginx/conf.d/default.conf
+COPY ./docker/nginx/coe-entrypoint.sh /usr/local/bin/coe-entrypoint.sh
+COPY ./docker/nginx/set-env.sh /usr/local/bin/set-env.sh
 
-COPY octava.conf /etc/nginx/conf.d/default.conf
+RUN chmod +x /usr/local/bin/coe-entrypoint.sh
+RUN chmod +x /usr/local/bin/set-env.sh
+
+ENV OCTAVA_URL http://localhost
+
+ENTRYPOINT ["/usr/local/bin/coe-entrypoint.sh"]
+
+CMD ["-g", "daemon off;"]
