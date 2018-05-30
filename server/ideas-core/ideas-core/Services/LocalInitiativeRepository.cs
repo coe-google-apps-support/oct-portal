@@ -47,6 +47,7 @@ namespace CoE.Ideas.Core.Services
         {
             return _initiativeContext.Initiatives
                 .Include(x => x.StatusHistories)
+                .Include(x => x.SupportingDocuments)
                 .SingleOrDefaultAsync(x => x.Uid == id);
         }
 
@@ -54,7 +55,8 @@ namespace CoE.Ideas.Core.Services
         {
             return _initiativeContext.Initiatives
 				.Include(x => x.StatusHistories)
-				.SingleOrDefaultAsync(x => x.Id == id);
+                .Include(x => x.SupportingDocuments)
+                .SingleOrDefaultAsync(x => x.Id == id);
         }
 
         private static IQueryable<InitiativeInfo> CreateInitiativeInfoQuery(IQueryable<Initiative> query, int pageNumber, int pageSize)
@@ -97,7 +99,7 @@ namespace CoE.Ideas.Core.Services
             await _initiativeContext.SaveChangesAsync();
             return initiative;
         }
-
+     
         public Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
         {
             return _initiativeContext.Initiatives

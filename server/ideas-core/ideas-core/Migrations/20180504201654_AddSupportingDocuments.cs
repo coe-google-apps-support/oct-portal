@@ -9,6 +9,9 @@ namespace CoE.Ideas.Core.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+
+
+
             migrationBuilder.CreateTable(
                 name: "SupportingDocuments",
                 columns: table => new
@@ -35,6 +38,9 @@ namespace CoE.Ideas.Core.Migrations
                 name: "IX_SupportingDocuments_InitiativeId",
                 table: "SupportingDocuments",
                 column: "InitiativeId");
+            
+
+
 
             migrationBuilder.Sql(@"
 INSERT INTO SupportingDocuments(InitiativeId, Type, URL) SELECT Id, Type = 1, BusinessCaseUrl FROM Initiatives WHERE BusinessCaseUrl IS NOT NULL;
