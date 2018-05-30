@@ -29,16 +29,10 @@ namespace CoE.Ideas.Core.Migrations
 
                     b.Property<int?>("AssigneeId");
 
-                    b.Property<string>("BusinessCaseUrl")
-                        .HasMaxLength(2048);
-
                     b.Property<DateTimeOffset>("CreatedDate");
 
                     b.Property<string>("Description")
                         .IsRequired();
-
-                    b.Property<string>("InvestmentRequestFormUrl")
-                        .HasMaxLength(2048);
 
                     b.Property<int>("Status");
 
@@ -136,6 +130,26 @@ namespace CoE.Ideas.Core.Migrations
                     b.ToTable("StringTemplates");
                 });
 
+            modelBuilder.Entity("CoE.Ideas.Core.Data.SupportingDocument", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("InitiativeId");
+
+                    b.Property<string>("Title");
+
+                    b.Property<int>("Type");
+
+                    b.Property<string>("URL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InitiativeId");
+
+                    b.ToTable("SupportingDocuments");
+                });
+
             modelBuilder.Entity("CoE.Ideas.Core.Data.InitiativeStatusHistory", b =>
                 {
                     b.HasOne("CoE.Ideas.Core.Data.Initiative")
@@ -147,6 +161,13 @@ namespace CoE.Ideas.Core.Migrations
                 {
                     b.HasOne("CoE.Ideas.Core.Data.Initiative")
                         .WithMany("Stakeholders")
+                        .HasForeignKey("InitiativeId");
+                });
+
+            modelBuilder.Entity("CoE.Ideas.Core.Data.SupportingDocument", b =>
+                {
+                    b.HasOne("CoE.Ideas.Core.Data.Initiative")
+                        .WithMany("SupportingDocuments")
                         .HasForeignKey("InitiativeId");
                 });
 #pragma warning restore 612, 618

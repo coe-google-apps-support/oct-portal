@@ -14,13 +14,17 @@ namespace CoE.Ideas.Core.Data
     // Initiative is a Domain Driven Design aggregate root 
     public class Initiative : AggregateRoot<int>
     {
-        public Initiative(Guid uid) : base()
+        public Initiative(Guid uid) : this()
         {
             Uid = uid;
             _statusHistories = new HashSet<InitiativeStatusHistory>();
         }
 
-        private Initiative() : base() { } // required for EF
+        private Initiative() : base() // required for EF
+        {
+            SupportingDocuments = new List<SupportingDocument>();
+            _statusHistories = new HashSet<InitiativeStatusHistory>();
+        } 
 
         // Factory method for creation
         public static Initiative Create(
@@ -28,7 +32,8 @@ namespace CoE.Ideas.Core.Data
             string description,
             int ownerPersonId,
             int? businessContactId = null,
-            bool skipEmailNotification = false)
+            bool skipEmailNotification = false
+            )
         {
             Ensure.String.IsNotNullOrWhiteSpace(title, nameof(title));
             Ensure.String.IsNotNullOrWhiteSpace(description, nameof(description));
@@ -41,17 +46,19 @@ namespace CoE.Ideas.Core.Data
             {
                 Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
             };
+
             if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
                 initiative.Stakeholders.Add(Stakeholder.Create(businessContactId.Value, StakeholderType.BusinessContact));
 
             initiative.Status = InitiativeStatus.Initiate;
             initiative.StatusHistories = new HashSet<InitiativeStatusHistory>();
-			initiative.CreatedDate = DateTime.UtcNow;  
-			initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId, skipEmailNotification));
+            initiative.CreatedDate = DateTime.UtcNow;  
+            initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId, skipEmailNotification));
 
             return initiative;
         }
 
+        public ICollection<SupportingDocument> SupportingDocuments{ get; private set; }
 
         public Guid Uid { get; private set; }
 
@@ -71,11 +78,13 @@ namespace CoE.Ideas.Core.Data
         public DateTimeOffset CreatedDate { get; private set; }
 
 
+
         // best practice is to have only one-way navigation properties, where possible
         /// <summary>
         /// The people that have some stake in the idea, will always include the owner
         /// </summary>
         public ICollection<Stakeholder> Stakeholders { get; private set; }
+
 
         /// <summary>
         /// The person currently assigned to the initiative, usually a Business Analyst
@@ -116,32 +125,6 @@ namespace CoE.Ideas.Core.Data
                         _statusHistories = theValue;
                 }
             }
-        }
-
-        /// <summary>
-        /// Business case for the initiative
-        /// </summary>
-        [Display(Name = "Business Case URL", Description = "The location of the businses case for the initiative")]
-        [MaxLength(2048)]
-        public string BusinessCaseUrl { get; private set; }
-
-        public void SetBusinessCaseUrl(string newBusinsesCaseUrl)
-        {
-            BusinessCaseUrl = newBusinsesCaseUrl;
-            //AddDomainEvent(new BusinessCaseUrlChangedDomainEvent(Uid, newBusinsesCaseUrl));
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Display(Name = "Investment Request Form Url", Description = "The link the to associated Investment Request Form")]
-        [MaxLength(2048)]
-        public string InvestmentRequestFormUrl { get; private set; }
-
-        public void SetInvestmentFormUrl(string newInvestmentRequestFormUrl)
-        {
-            InvestmentRequestFormUrl = newInvestmentRequestFormUrl;
-            //AddDomainEvent(new BusinessCaseUrlChangedDomainEvent(Uid, newBusinsesCaseUrl));
         }
 
         public void SetWorkOrderId(string newWorkOrderId)

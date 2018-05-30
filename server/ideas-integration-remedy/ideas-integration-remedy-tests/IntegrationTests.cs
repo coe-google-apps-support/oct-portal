@@ -51,18 +51,18 @@ namespace CoE.Ideas.Remedy.Tests
         //    //await remedyService.PostNewIdeaAsync(newIdea, "COE\\fakeuser");
         //}
 
-        [TestMethod]
-        [TestCategory("Integration")]
-        public async Task TestReadRemedyWorkOrders()
-        {
-            var remedyChecker = serviceProvider.GetRequiredService<Watcher.IRemedyChecker>();
+        //[TestMethod]
+        //[TestCategory("Integration")]
+        //public async Task TestReadRemedyWorkOrders()
+        //{
+        //    var remedyChecker = serviceProvider.GetRequiredService<Watcher.IRemedyChecker>();
 
-            var items = await remedyChecker.PollAsync(DateTime.MinValue);
+        //    var items = await remedyChecker.PollAsync(DateTime.MinValue);
 
-            Assert.IsTrue(items.ProcessErrors.Count == 0, $"{ items.ProcessErrors.Count } Errors encountered while polling remedy. First error was: { items.ProcessErrors.FirstOrDefault()?.ErrorMessage }");
-            Assert.IsTrue(items.RecordsProcesed.Count > 0, "Expected at least one record processed");
+        //    Assert.IsTrue(items.ProcessErrors.Count == 0, $"{ items.ProcessErrors.Count } Errors encountered while polling remedy. First error was: { items.ProcessErrors.FirstOrDefault()?.ErrorMessage }");
+        //    Assert.IsTrue(items.RecordsProcesed.Count > 0, "Expected at least one record processed");
 
 
-        }
+        //}
     }
 }
