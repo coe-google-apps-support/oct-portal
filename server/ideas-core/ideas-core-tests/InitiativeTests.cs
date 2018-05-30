@@ -1,17 +1,19 @@
+using CoE.Ideas.Core.Data;
+using CoE.Ideas.Core.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using FluentAssertions;
 
 namespace CoE.Ideas.Core.Tests
 {
-    [TestClass]
     public class InitiativeTests
     {
-        [ClassInitialize]
-        public static void ClassInit(TestContext context)
+        [SetUp]
+        public void Setup()
         {
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -24,22 +26,24 @@ namespace CoE.Ideas.Core.Tests
                 .ConfigureBasicServices()
                 .ConfigureIdeaServicesInMemory()
                 .BuildServiceProvider();
+
         }
 
         private static ServiceProvider serviceProvider;
 
 
-        //[TestMethod]
-        //public async Task CreateInitiative()
-        //{
-        //    var initiativeRepository = serviceProvider.GetRequiredService<IIdeaRepository>();
-        //    var newInitiative = await initiativeRepository.AddIdeaAsync(new Idea()
-        //    {
-        //        Title = "Test Idea",
-        //        Description = "Test creating initiatives"
-        //    });
-        //    Assert.IsTrue(newInitiative.Id > 0, "Could not create initiative");
-        //}
+        [Test]
+        public async Task CreateInitiative()
+        {
+            var initiativeRepository = serviceProvider.GetRequiredService<IInitiativeRepository>();
+            var newInitiative = await initiativeRepository.AddInitiativeAsync(Initiative.Create(
+                 title: "Test Idea",
+                 description: "Test creating initiatives",
+                 ownerPersonId: 1
+             ));
 
+            newInitiative.Should().NotBeNull();
+            newInitiative.Title.Should().Be("Test Idea");
+        }
     }
 }
