@@ -31,6 +31,7 @@ namespace CoE.Ideas.Core.Data
             string title, 
             string description,
             int ownerPersonId,
+    
             int? businessContactId = null,
             bool skipEmailNotification = false
             )
@@ -47,10 +48,9 @@ namespace CoE.Ideas.Core.Data
                 Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
             };
 
+
             if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
                 initiative.Stakeholders.Add(Stakeholder.Create(businessContactId.Value, StakeholderType.BusinessContact));
-
-            initiative.Status = InitiativeStatus.Initiate;
             initiative.StatusHistories = new HashSet<InitiativeStatusHistory>();
             initiative.CreatedDate = DateTime.UtcNow;  
             initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId, skipEmailNotification));

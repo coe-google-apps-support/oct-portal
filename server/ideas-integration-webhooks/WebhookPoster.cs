@@ -50,7 +50,7 @@ namespace CoE.Ideas.Webhooks
 
                 var content = new FormUrlEncodedContent(values);
 
-                var response = await client.PostAsync("https://hooks.zapier.com/hooks/catch/3317083/a99f6h/", content);
+                var response = await client.PostAsync("https://hooks.zapier.com/hooks/catch/3360483/afz7k1/", content);
 
                 var responseString = await response.Content.ReadAsStringAsync();
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoE.Ideas.Core.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace CoE.Ideas.Server.Models
 
         [Required]
         public string Description { get; set; }
+
     }
 }
