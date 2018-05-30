@@ -88,7 +88,6 @@ let x = class IdeasService {
       type
     })
   }
-  
   /**
    * Returns a Promise that resolves with the supporting document(s).
    * @param {string} id The id of the initiative.
