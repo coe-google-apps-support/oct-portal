@@ -1,4 +1,4 @@
-<template><!-- template for the modal component -->
+<template>
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-container">
@@ -21,8 +21,8 @@
           <md-field class="form-control" :class="getValidationClass('type')">
             <label for="supdoc-type">What type of supporting document are you adding?</label>
             <md-select name="type" id="supdoc-type" v-model="form.type">
-              <md-option value="Business Cases">Business Cases</md-option>
-              <md-option value="Technology Investment Form">Technology Investment Form</md-option>
+              <md-option value="BusinessCases">Business Cases</md-option>
+              <md-option value="TechnologyInvestmentForm">Technology Investment Form</md-option>
               <md-option value="Other">Other</md-option>
             </md-select>
             <span class="md-error" v-if="!$v.form.type.required">Type is required</span>
@@ -63,12 +63,7 @@ export default {
       type: null
     },
     sending: false,
-    valid: null,
-    typeOptions: [
-      'Business Cases',
-      'Technology Investment Form',
-      'Other'
-    ]
+    valid: null
   }),
   validations: {
     form: {
@@ -87,14 +82,6 @@ export default {
     }
   },
   methods: {
-    formValidation () {
-      // TODO url input field validation
-      if (this.form.title === null || this.form.url === null || this.form.type === null) {
-        this.valid = false
-      } else {
-        this.valid = true
-      }
-    },
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName]
 
@@ -105,18 +92,16 @@ export default {
       }
     },
     savePost () {
-      console.log('test')
       this.$v.$touch()
       if (this.$v.$invalid) {
         return
       }
-
       this.sending = true
       this.services.ideas.createSupportingDoc(
         this.id,
         this.form.title,
         this.form.url,
-        this.form.type.replace(/\s/g, '')     // removes spaces to meet backend expectations
+        this.form.type
       ).then(x => {
         this.sending = false
         this.$emit('close', this.form.title, this.form.url, this.form.type)

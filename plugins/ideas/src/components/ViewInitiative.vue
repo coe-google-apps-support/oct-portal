@@ -36,7 +36,7 @@
             <md-table-row slot="md-table-row" slot-scope="{ item }">
               <md-table-cell md-label="Title" md-sort-by="title">{{ item.title }}</md-table-cell>
               <md-table-cell md-label="URL" md-sort-by="url">{{ item.url }}</md-table-cell>
-              <md-table-cell md-label="Type" md-sort-by="type">{{ item.type }}</md-table-cell>
+              <md-table-cell md-label="Type" md-sort-by="type">{{ item.type | displayDocType }}</md-table-cell>
             </md-table-row>
           </md-table>
       </div>
@@ -101,15 +101,26 @@ export default {
       }
       if (response && response[2]) {
         this.supportingDocs = response[2]
-        this.updateSupportingDocType()
-        console.log(this.supportingDocs)
       }
 
       this.isLoading = false
     })
   },
   filters: {
-    formatDate
+    formatDate,
+    displayDocType: function (value) {
+      const docTypes = {
+        'BusinessCases': 'Business Cases',
+        'TechnologyInvestmentForm': 'Technology Investment Form',
+        'Other': 'Other'
+      }
+
+      if (!docTypes[value]) {
+        return 'Unknown'
+      }
+
+      return docTypes[value]
+    }
   },
   methods: {
     updateDescription (stepIndex) {
@@ -124,20 +135,10 @@ export default {
         this.errors.push(err)
       })
     },
-    updateSupportingDocType () {
-      let i
-      for (i in this.supportingDocs) {
-        if (this.supportingDocs[i].type === 'BusinessCases') {
-          this.supportingDocs[i].type = 'Business Cases'
-        } else if (this.supportingDocs[i].type === 'TechnologyInvestmentForm') {
-          this.supportingDocs[i].type = 'Technology Investment Form'
-        }
-      }
-    },
     updateSupportingDocs (title, url, type) {
       this.showModal = false
       if (title || url || type) {
-        this.supportingDocs.push({title: title, url: url, type: type})
+        this.supportingDocs.push({title, url, type})
       }
     }
   }
