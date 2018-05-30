@@ -20,7 +20,13 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with an array of ideas.
    */
   static getIdeas (page, pageSize, contains) {
-    return HTTP.get(`?page=${page}&pageSize=${pageSize}&contains=${contains}`)
+    return HTTP.get('', {
+      params: {
+        page,
+        pageSize,
+        contains
+      }
+    })
   }
 
   /**
@@ -31,7 +37,14 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with an array of my initiatives.
    */
   static getMyInitiatives (page, pageSize, contains) {
-    return HTTP.get(`?view=Mine&page=${page}&pageSize=${pageSize}&contains=${contains}`)
+    return HTTP.get('', {
+      params: {
+        view: 'Mine',
+        page,
+        pageSize,
+        contains
+      }
+    })
   }
 
   /**
