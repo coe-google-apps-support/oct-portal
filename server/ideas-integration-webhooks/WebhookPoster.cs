@@ -61,7 +61,32 @@ namespace CoE.Ideas.Webhooks
 
         public async Task OnStatusDescriptionChanged(InitiativeStatusDescriptionChangedEventArgs initiativeStatusDescriptionChangedEventArgs, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var initiative = initiativeStatusDescriptionChangedEventArgs.Initiative;
+            var owner = initiativeStatusDescriptionChangedEventArgs.Owner;
+
+            TimeZoneInfo albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton");
+            var createDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(initiative.CreatedDate.DateTime, albertaTimeZone);
+
+            using (var client = new HttpClient())
+            {
+                var values = new Dictionary<string, string>
+                {
+                    { "Action", "Status Description Changed" },
+                    { "ID", initiative.Id.ToString()},
+                    { "Title", initiative.Title},
+                    { "OwnerName", owner.GetDisplayName()},
+                    { "OwnerEmail", owner.GetEmail() },
+                    { "CreatedDate", createDateAlberta.ToString()},
+                    { "Description", initiative.Description}
+                };
+
+                var content = new FormUrlEncodedContent(values);
+
+                var response = await client.PostAsync("https://hooks.zapier.com/hooks/catch/3360483/afvmki/", content);
+
+                var responseString = await response.Content.ReadAsStringAsync();
+
+            }
         }
 
         //private readonly IActiveDirectoryUserService _activeDirectoryUserService;
