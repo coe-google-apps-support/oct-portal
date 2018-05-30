@@ -6,26 +6,27 @@
           <h3>New Supporting Document</h3> 
         </div>
         <div class="modal-body">
-          <div v-if="valid == false" class="error-message">
-            Error: Check to make sure all fields were completed!
-          </div> 
-          <label class="form-label">
-            Title
-            <input id="title" class="form-control" v-model="form.title" placeholder="What would you like to name your supporting document?">
-          </label>
-          <label class="form-label">
-            URL
-            <input id="url" type="url" class="form-control" v-model="form.url" placeholder="Please enter the full url (i.e. http://)">
-          </label>
-          <label class="form-label">
-            Type
-            <select class="form-control" v-model="form.type">
-              <option disabled value="">Please select a type</option>
-              <option>Business Cases</option>
-              <option>Technology Investment Form</option>
-              <option>Other</option>
-            </select>
-          </label>
+          <md-field class="form-control" :class="getValidationClass('title')">
+            <label for="supdoc-title">What is the title of your supporting document?</label>
+            <md-input name="title" id="supdoc-title" v-model="form.title" />
+            <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
+            <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
+          </md-field>
+          <md-field class="form-control" :class="getValidationClass('url')">
+            <label for="supdoc-url">Supporting documents or links - Please enter the URL</label>
+            <md-input name="url" id="supdoc-url" v-model="form.url" />
+            <span class="md-error" v-if="!$v.form.url.required">URL is required</span>
+            <span class="md-error" v-else-if="!$v.form.url.minlength">Invalid URL</span>
+          </md-field>
+          <md-field class="form-control" :class="getValidationClass('type')">
+            <label for="supdoc-type">What type of supporting document are you adding?</label>
+            <md-select name="type" id="supdoc-type" v-model="form.type">
+              <md-option value="Business Cases">Business Cases</md-option>
+              <md-option value="Technology Investment Form">Technology Investment Form</md-option>
+              <md-option value="Other">Other</md-option>
+            </md-select>
+            <span class="md-error" v-if="!$v.form.type.required">Type is required</span>
+          </md-field>
         </div>
         <div class="modal-footer text-right">
           <divi-button v-if="sending == false" @click.native="$emit('close')">Cancel</divi-button>
@@ -62,7 +63,12 @@ export default {
       type: null
     },
     sending: false,
-    valid: null
+    valid: null,
+    typeOptions: [
+      'Business Cases',
+      'Technology Investment Form',
+      'Other'
+    ]
   }),
   validations: {
     form: {
@@ -89,23 +95,35 @@ export default {
         this.valid = true
       }
     },
-    savePost () {
-      this.formValidation()
-      if (this.valid === true) {
-        this.sending = true
-        this.services.ideas.createSupportingDoc(
-          this.id,
-          this.form.title,
-          this.form.url,
-          this.form.type.replace(/\s/g, '')     // removes spaces to meet backend expectations
-        ).then(x => {
-          this.sending = false
-          this.$emit('close', this.form.title, this.form.url, this.form.type)
-        }).catch((err) => {
-          this.sending = false
-          console.debug(err)
-        })
+    getValidationClass (fieldName) {
+      const field = this.$v.form[fieldName]
+
+      if (field) {
+        return {
+          'md-invalid': field.$invalid && field.$dirty
+        }
       }
+    },
+    savePost () {
+      console.log('test')
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        return
+      }
+
+      this.sending = true
+      this.services.ideas.createSupportingDoc(
+        this.id,
+        this.form.title,
+        this.form.url,
+        this.form.type.replace(/\s/g, '')     // removes spaces to meet backend expectations
+      ).then(x => {
+        this.sending = false
+        this.$emit('close', this.form.title, this.form.url, this.form.type)
+      }).catch((err) => {
+        this.sending = false
+        console.debug(err)
+      })
     }
   }
 }
@@ -118,9 +136,14 @@ export default {
       position: relative;
       box-sizing: border-box;
   }
+
+  .md-menu-content {
+    z-index: 200;
+  }
+
   .modal-mask {
     position: fixed;
-    z-index: 9998;
+    z-index: 5;
     top: 0;
     left: 0;
     width: 100%;
@@ -155,7 +178,7 @@ export default {
 
   .form-label {
     display: block;
-    margin-bottom: 1em;
+    margin-bottom: -0.5em;
   }
 
   .form-label > .form-control {
@@ -163,11 +186,8 @@ export default {
   }
 
   .form-control {
-    display: block;
+    position: relative;
     width: 80%;
-    padding: 0.5em 1em;
-    line-height: 1.5;
-    border: 1px solid #ddd;
   }
 
   .modal-enter {
