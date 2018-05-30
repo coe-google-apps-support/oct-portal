@@ -24,7 +24,7 @@ services:
   wordpress:
     depends_on: 
       - wordpress-db
-    image: coeoctava.azurecr.io/wordpress:latest
+    image: coeoctava.azurecr.io/wordpress:v1.0.5
     ports:
       - "8000:80"
       - "9000:9000"
