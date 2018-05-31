@@ -31,6 +31,7 @@ namespace CoE.Ideas.Core.Data
             string title, 
             string description,
             int ownerPersonId,
+    
             int? businessContactId = null,
             bool skipEmailNotification = false
             )
@@ -47,10 +48,9 @@ namespace CoE.Ideas.Core.Data
                 Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
             };
 
+
             if (businessContactId.HasValue && businessContactId.Value != ownerPersonId)
                 initiative.Stakeholders.Add(Stakeholder.Create(businessContactId.Value, StakeholderType.BusinessContact));
-
-            initiative.Status = InitiativeStatus.Initiate;
             initiative.StatusHistories = new HashSet<InitiativeStatusHistory>();
             initiative.CreatedDate = DateTime.UtcNow;  
             initiative.AddDomainEvent(new InitiativeCreatedDomainEvent(initiative.Uid, ownerPersonId, skipEmailNotification));
@@ -66,6 +66,7 @@ namespace CoE.Ideas.Core.Data
         /// The short title of the idea
         /// </summary>
         [Required]
+        [MinLength(3)]
         [MaxLength(255)]
         public string Title { get; private set; }
 
@@ -73,6 +74,7 @@ namespace CoE.Ideas.Core.Data
         /// The long description of the idea, can be HTML formatted
         /// </summary>
         [Required]
+        [MinLength(3)]
         public string Description { get; private set; }
 
         public DateTimeOffset CreatedDate { get; private set; }

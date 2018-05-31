@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoE.Ideas.Core.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace CoE.Ideas.Server.Models
         public string Description { get; set; }
 
         public SupportingDocumentsDto[] SupportingDocumentsDtos { get; set; }
+
 
     }
 }
