@@ -55,9 +55,7 @@ namespace CoE.Ideas.Webhooks
                 var responseString = await response.Content.ReadAsStringAsync();
 
             }
-
         }
-
 
         public async Task OnStatusDescriptionChanged(InitiativeStatusDescriptionChangedEventArgs initiativeStatusDescriptionChangedEventArgs, CancellationToken cancellationToken)
         {
