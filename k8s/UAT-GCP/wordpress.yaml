@@ -32,9 +32,21 @@ spec:
         - name: secret-volume
           mountPath: "/etc/secrets"
           readOnly: true
+      - name: octavadb-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+            "-instances=octavia-189116:us-west1:octavadbuat=tcp:3306",
+            "-credential_file=/secrets/cloudsql/credentials.json"]
+        volumeMounts:
+          - name: octavadb-service-account	
+            mountPath: /secrets/cloudsql
+            readOnly: true                
       imagePullSecrets:
       - name: acs-access
       volumes:
       - name: secret-volume
         secret:
           secretName: wordpress-config
+      - name: octavadb-service-account
+        secret:
+          secretName: octavadb-service-account              
