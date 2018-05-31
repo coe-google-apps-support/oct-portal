@@ -1,0 +1,38 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: remedy-sb-listener
+  labels:
+    app: remedy-sb-listener
+    technology: dotnetcore
+    tier: backend
+    product: octava
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: remedy-sb-listener
+      technology: dotnetcore
+      tier: backend
+      product: octava
+  template:
+    metadata:
+      labels:
+        app: remedy-sb-listener
+        technology: dotnetcore
+        tier: backend
+        product: octava
+    spec:
+      containers:
+      - name: remedy-sb-listener
+        image: coeoctava.azurecr.io/initiatives-remedy-sblistener:v1.0.4
+        volumeMounts:
+        - name: secret-volume
+          mountPath: "/etc/secrets"
+          readOnly: true
+      imagePullSecrets:
+      - name: acs-access
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: remedysblistener-config
