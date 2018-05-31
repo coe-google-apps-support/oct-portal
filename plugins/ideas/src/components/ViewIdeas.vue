@@ -11,6 +11,13 @@
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-45 md-xsmall-size-100">
           </initiative>
         </div>
+        <div v-if="ideas.length === 0 && isLoading == false">
+          <img src="https://octava.blob.core.windows.net/cdn-store/empty-state-coe.png" class="center">
+          <md-empty-state
+            md-label="There's nothing here!"
+            md-description="Oops! We couldn't find anything.">
+          </md-empty-state>
+        </div>
         <div v-if="isLoading" class="md-layout md-alignment-center-center">
           <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
         </div>
@@ -140,5 +147,14 @@ export default {
     width: 20%;
     right: -40%;
   }
+
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    /* width: 50%; */
+    width: 500px;
+    height: auto;
+}
 
 </style>
