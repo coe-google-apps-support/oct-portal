@@ -110,14 +110,16 @@ let x = class IdeasService {
    * Creates a new initiative.
    * @param {string} title The title of the initiative.
    * @param {string} description The description of the initiative.
+   * @param {string} supportingdocuments A list of supporting documents of the initiative.
    * @param {string} businessSponsorEmail The email of the business sponsor.
    * @param {boolean} hasBudget Whether there is budget for this or not.
    * @param {Date} expectedTargetDate When should this be delivered?
    */
-  static createInitiative (title, description, businessSponsorEmail, hasBudget, expectedTargetDate) {
+  static createInitiative (title, description, SupportingDocumentsDtos, businessSponsorEmail, hasBudget, expectedTargetDate) {
     return HTTP.post('', {
       title,
       description,
+      SupportingDocumentsDtos,
       businessSponsorEmail,
       hasBudget,
       expectedTargetDate
