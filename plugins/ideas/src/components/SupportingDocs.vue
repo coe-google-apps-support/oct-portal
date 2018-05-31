@@ -1,36 +1,36 @@
-<template><!-- template for the modal component -->
+<template>
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-container">
         <div class="modal-header">
-          <h3>New Supporting Document</h3>
+          <h3>New Supporting Document</h3> 
         </div>
         <div class="modal-body">
-          <label class="form-label">
-            Title
-            <input id="title" class="form-control" v-model='form.title' placeholder='What would you like to name your supporting document?'>
-          </label>
-          <label class="form-label">
-            URL
-            <input id="url" type='url' class="form-control" v-model='form.url' placeholder='Please enter the full url'>
-          </label>
-          <label class="form-label">
-            Type
-            <select class='form-control' v-model="form.type">
-              <option disabled value="">Please select a type</option>
-              <option>Business Cases</option>
-              <option>Technology Investment Form</option>
-              <option>Other</option>
-            </select>
-          </label>
+          <md-field class="form-control" :class="getValidationClass('title')">
+            <label for="supdoc-title">What is the title of your supporting document?</label>
+            <md-input name="title" id="supdoc-title" v-model="form.title" />
+            <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
+            <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
+          </md-field>
+          <md-field class="form-control" :class="getValidationClass('url')">
+            <label for="supdoc-url">Supporting documents or links - Please enter the URL</label>
+            <md-input name="url" id="supdoc-url" v-model="form.url" />
+            <span class="md-error" v-if="!$v.form.url.required">URL is required</span>
+            <span class="md-error" v-else-if="!$v.form.url.minlength">Invalid URL</span>
+          </md-field>
+          <md-field class="form-control" :class="getValidationClass('type')">
+            <label for="supdoc-type">What type of supporting document are you adding?</label>
+            <md-select name="type" id="supdoc-type" v-model="form.type">
+              <md-option value="BusinessCases">Business Cases</md-option>
+              <md-option value="TechnologyInvestmentForm">Technology Investment Form</md-option>
+              <md-option value="Other">Other</md-option>
+            </md-select>
+            <span class="md-error" v-if="!$v.form.type.required">Type is required</span>
+          </md-field>
         </div>
         <div class="modal-footer text-right">
-          <md-button v-if='sending == false' v-on:click="$emit('close')" class='md-raised modal-default-button'>
-            Cancel
-          </md-button>
-          <md-button v-on:click="savePost" class="md-raised md-primary modal-default-button">
-            Save
-          </md-button>
+          <divi-button v-if="sending == false" @click.native="$emit('close')">Cancel</divi-button>
+          <divi-button @click.native="savePost">Save</divi-button>
         </div>
         <md-progress-bar md-mode="indeterminate" class="md-primary" v-if="sending" />
       </div>
@@ -39,31 +39,75 @@
 </template>
 
 <script>
+import DiviButton from '@/components/divi/DiviButton'
+import { validationMixin } from 'vuelidate'
+import {
+  required,
+  minLength,
+  maxLength
+} from 'vuelidate/lib/validators'
+
 export default {
   name: 'SupportingDocs',
+  components: {
+    DiviButton
+  },
+  mixins: [validationMixin],
+  props: [
+    'id'
+  ],
   data: () => ({
     form: {
       title: null,
       url: null,
       type: null
     },
-    sending: false
+    sending: false,
+    valid: null
   }),
+  validations: {
+    form: {
+      title: {
+        required,
+        minLength: minLength(3),
+        maxLength: maxLength(50)
+      },
+      url: {
+        required,
+        minLength: minLength(3)
+      },
+      type: {
+        required
+      }
+    }
+  },
   methods: {
+    getValidationClass (fieldName) {
+      const field = this.$v.form[fieldName]
+
+      if (field) {
+        return {
+          'md-invalid': field.$invalid && field.$dirty
+        }
+      }
+    },
     savePost () {
+      this.$v.$touch()
+      if (this.$v.$invalid) {
+        return
+      }
       this.sending = true
       this.services.ideas.createSupportingDoc(
-        1, /* ID goes here */
+        this.id,
         this.form.title,
         this.form.url,
         this.form.type
       ).then(x => {
         this.sending = false
-        this.$emit('close')
-      }).catch((err, y) => {
+        this.$emit('close', this.form.title, this.form.url, this.form.type)
+      }).catch((err) => {
         this.sending = false
         console.debug(err)
-        console.debug(y)
       })
     }
   }
@@ -78,9 +122,13 @@ export default {
       box-sizing: border-box;
   }
 
+  .md-menu-content {
+    z-index: 200;
+  }
+
   .modal-mask {
     position: fixed;
-    z-index: 9998;
+    z-index: 5;
     top: 0;
     left: 0;
     width: 100%;
@@ -115,7 +163,7 @@ export default {
 
   .form-label {
     display: block;
-    margin-bottom: 1em;
+    margin-bottom: -0.5em;
   }
 
   .form-label > .form-control {
@@ -123,11 +171,8 @@ export default {
   }
 
   .form-control {
-    display: block;
+    position: relative;
     width: 80%;
-    padding: 0.5em 1em;
-    line-height: 1.5;
-    border: 1px solid #ddd;
   }
 
   .modal-enter {
@@ -142,5 +187,11 @@ export default {
   .modal-leave-active .modal-container {
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
+  }
+
+  .error-message {
+    text-align: center;
+    color: #f03a3a;
+    font-size: 14px;
   }
 </style>
