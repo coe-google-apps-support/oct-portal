@@ -90,7 +90,7 @@ namespace CoE.Ideas.Shared.WordPress
                         var result = cmd.ExecuteScalar();
                         watch.Stop();
                         returnValue["version"] = result;
-                        returnValue["pingMilliseconds"] = watch.ElapsedMilliseconds;
+                        returnValue["pingMilliseconds"] = watch.Elapsed.TotalMilliseconds;
                     }
                 }
                 catch (Exception) { /* eat the exception */ }

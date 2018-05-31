@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoE.Ideas.Core.Data;
 using CoE.Ideas.Shared;
+using CoE.Ideas.Shared.Data;
 using CoE.Ideas.Shared.Security;
 using EnsureThat;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +47,7 @@ namespace CoE.Ideas.Core.Services
         {
             return _initiativeContext.Initiatives
                 .Include(x => x.StatusHistories)
+                .Include(x => x.SupportingDocuments)
                 .SingleOrDefaultAsync(x => x.Uid == id);
         }
 
@@ -53,7 +55,8 @@ namespace CoE.Ideas.Core.Services
         {
             return _initiativeContext.Initiatives
 				.Include(x => x.StatusHistories)
-				.SingleOrDefaultAsync(x => x.Id == id);
+                .Include(x => x.SupportingDocuments)
+                .SingleOrDefaultAsync(x => x.Id == id);
         }
 
         private static IQueryable<InitiativeInfo> CreateInitiativeInfoQuery(IQueryable<Initiative> query, int pageNumber, int pageSize)
@@ -66,23 +69,28 @@ namespace CoE.Ideas.Core.Services
 				.Select(x => InitiativeInfo.Create(x));
         }
 
-        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync(int pageNumber, int pageSize)
+        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(int pageNumber, int pageSize)
         {
-            //TODO: restrict to a reasonable amount of initiatives
             var initiatives = await CreateInitiativeInfoQuery(_initiativeContext.Initiatives, pageNumber, pageSize)
                 .ToListAsync();
-			return initiatives;
+
+            var initiativeCount = await _initiativeContext.Initiatives.CountAsync();
+
+			return PagedResultSet.Create(initiatives, pageNumber, pageSize, initiatives.Count(), initiativeCount);
         }
 
-        public async Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber, int pageSize)
+
+        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber, int pageSize)
         {
-            //TODO: restrict to a reasonable amount of initiatives
-            var initiatives = await(CreateInitiativeInfoQuery(
-                _initiativeContext.Initiatives
-                    .Where(x => x.Stakeholders.Any(y => y.PersonId == personId)), pageNumber, pageSize))
+            var query = _initiativeContext.Initiatives
+                    .Where(x => x.Stakeholders.Any(y => y.PersonId == personId));
+
+            var initiatives = await(CreateInitiativeInfoQuery(query, pageNumber, pageSize))
                 .ToListAsync();
 
-            return initiatives;
+            var initiativeCount = await query.CountAsync();
+
+            return PagedResultSet.Create(initiatives, pageNumber, pageSize, initiatives.Count(), initiativeCount);
         }
 
         public async Task<Initiative> UpdateInitiativeAsync(Initiative initiative)
@@ -91,7 +99,7 @@ namespace CoE.Ideas.Core.Services
             await _initiativeContext.SaveChangesAsync();
             return initiative;
         }
-
+     
         public Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
         {
             return _initiativeContext.Initiatives
@@ -127,7 +135,7 @@ namespace CoE.Ideas.Core.Services
                         var result = cmd.ExecuteScalar();
                         watch.Stop();
                         returnValue["version"] = result;
-                        returnValue["pingMilliseconds"] = watch.ElapsedMilliseconds;
+                        returnValue["pingMilliseconds"] = watch.Elapsed.TotalMilliseconds;
 
                         cmd.CommandText = "SELECT TOP (1) [MigrationId] FROM[CoeIdeas].[dbo].[__EFMigrationsHistory] ORDER BY MigrationId DESC";
                         returnValue["CurrentMigration"] = cmd.ExecuteScalar();
@@ -147,5 +155,5 @@ namespace CoE.Ideas.Core.Services
         {
             return _initiativeContext.Initiatives.FirstOrDefaultAsync(x => x.ApexId == apexId);
         }
-	}
+    }
 }

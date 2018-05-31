@@ -20,7 +20,7 @@ namespace CoE.Ideas.Shared.Extensions
         {
             // defaults (for dev environment) - this is not the same as Production!!
             string connectionString = string.IsNullOrWhiteSpace(wordPressDbConnectionString)
-                ? "server=wordpress-db;uid=root;pwd=octavadev;database=OctPortalWordPress"
+                ? "server=wordpress-db;uid=root;pwd=octavadev;database=octportalwordpress"
                 : wordPressDbConnectionString;
 
             services.AddDbContext<WordPressContext>(options =>
@@ -93,7 +93,7 @@ namespace CoE.Ideas.Shared.Extensions
         {
             // defaults (for dev environment) - this is not the same as Production!!
             string connectionString = string.IsNullOrWhiteSpace(permissionDbConnectionString)
-                ? "server=wordpress-db;uid=root;pwd=octavadev;database=OctPortalWordPress"
+                ? "server=wordpress-db;uid=root;pwd=octavadev;database=octportalwordpress"
                 : permissionDbConnectionString;
 
             services.AddDbContext<SecurityContext>(options =>
@@ -141,20 +141,20 @@ namespace CoE.Ideas.Shared.Extensions
             services.AddDbContext<ServiceBusEmulatorContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IServiceBusEmulator, ServiceBusEmulator>();
 
+            return services;
+        }
 
 #if DEBUG
+        public static void InitiativeServiceBusEmlatorDatabase(this IServiceProvider serviceProvider)
+        {
             int retryCount = 0;
             while (true)
             {
+                var context = serviceProvider.GetRequiredService<ServiceBusEmulatorContext>();
                 try
                 {
-                    using (var context = new ServiceBusEmulatorContext(
-                        new DbContextOptionsBuilder<ServiceBusEmulatorContext>()
-                        .UseSqlServer(connectionString).Options))
-                    {
-                        context.Database.Migrate();
-                        break;
-                    }
+                    context.Database.Migrate();
+                    break;
                 }
                 catch (Exception)
                 {
@@ -163,9 +163,7 @@ namespace CoE.Ideas.Shared.Extensions
                     System.Threading.Thread.Sleep(1000);
                 }
             }
-#endif
-
-            return services;
         }
+#endif
     }
 }

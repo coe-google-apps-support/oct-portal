@@ -1,6 +1,6 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t coeoctava.azurecr.io/initiatives-vue:vs-1.0.0 -f docker/Dockerfile.initiatives-vue.dev ./plugins/ideas
+# docker image build -t coeoctava.azurecr.io/initiatives-vue:vs-1.0.0 -f docker/Dockerfile.initiatives-vue.dev .
 #
 # How to run this image (Change the source file path of the volume to your Vue directory):
 # docker run -p 8080:8080 -v C:\Users\jared\Documents\GitHub\oct-portal\plugins\ideas:/app coeoctava.azurecr.io/initiatives-vue:dev-latest
@@ -11,7 +11,7 @@
 FROM node:9.10 AS initiatives-web
 
 WORKDIR /app
-ADD . .
+ADD ./plugins/ideas .
 RUN npm install
 
 CMD npm rebuild node-sass & npm run dev

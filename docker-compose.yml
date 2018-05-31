@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
   wordpress-db:
-    image: coeoctava.azurecr.io/wordpress-db:v1.0.1
+    image: coeoctava.azurecr.io/wordpress-db:v1.0.5
     volumes:
       - wp-dbdata:/var/lib/mysql
     restart: always
@@ -10,7 +10,7 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: octavadev
-      MYSQL_DATABASE: OctPortalWordPress
+      MYSQL_DATABASE: octportalwordpress
 
   initiatives-db:
     image: coeoctava.azurecr.io/initiatives-db:latest
@@ -31,7 +31,7 @@ services:
     restart: always
     environment:
       WORDPRESS_DB_HOST: wordpress-db:3306
-      WORDPRESS_DB_NAME: OctPortalWordPress
+      WORDPRESS_DB_NAME: octportalwordpress
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: octavadev
 
@@ -90,7 +90,7 @@ services:
       - wordpress
       - ideas-server
       - initiatives-vue
-    image: coeoctava.azurecr.io/nginx:dev-latest
+    image: coeoctava.azurecr.io/nginx:v1.0.0
     restart: always
     ports:
       - "80:80"

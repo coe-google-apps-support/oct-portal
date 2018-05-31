@@ -16,7 +16,12 @@ export default new Router({
     {
       path: '/view-ideas',
       name: 'view-ideas',
-      component: ViewIdeas
+      component: ViewIdeas,
+      props: (route) => ({
+        page: Number(route.query.page),
+        pageSize: Number(route.query.pageSize),
+        newInitiative: Number(route.query.newInitiative)
+      })
     },
     {
       path: '/my-profile',
@@ -24,10 +29,10 @@ export default new Router({
       component: ViewIdeas,
       props: (route) => ({
         filter: 'mine',
-        newInitiative: Number(route.query.newInitiative)
+        newInitiative: Number(route.query.newInitiative),
+        page: Number(route.query.page),
+        pageSize: Number(route.query.pageSize)
       })
-        // filter: 'mine',
-        // newInitiative: route.newInitiative
     },
     {
       path: '/initiatives/:slug/',

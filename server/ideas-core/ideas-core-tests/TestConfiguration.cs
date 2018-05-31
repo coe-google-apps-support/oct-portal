@@ -1,10 +1,15 @@
-﻿using AutoMapper;
-using CoE.Ideas.Core.Data;
-using CoE.Ideas.Core.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
+using System.Text;
+using CoE.Ideas.Core.Data;
+using Microsoft.EntityFrameworkCore;
+using CoE.Ideas.Core.Services;
+using AutoMapper;
+using Serilog;
+using CoE.Ideas.Core.Events;
+using MediatR;
 
 namespace CoE.Ideas.Core.Tests
 {
@@ -37,6 +42,15 @@ namespace CoE.Ideas.Core.Tests
         public TestConfiguration ConfigureBasicServices()
         {
             _services.AddOptions();
+            _services.AddMediatR();
+
+            // configure application specific logging
+            _services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithProperty("Application", "ideas-core-xtests")
+                .Enrich.WithProperty("Module", "Server")
+                .ReadFrom.Configuration(_configuration)
+                .CreateLogger());
 
             return this;
         }
@@ -46,12 +60,14 @@ namespace CoE.Ideas.Core.Tests
             _services.AddDbContext<InitiativeContext>(x => x.UseInMemoryDatabase("ideas"));
             _services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
 
+            _services.AddSingleton<DomainEvents>();
+
             //_services.AddSingleton<IWordPressClient, MockWordPressClient>();
             //_services.AddSingleton<ITopicSender<IdeaMessage>, NullTopicSender<IdeaMessage>>();
 
             //_services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
 
-            _services.AddAutoMapper();
+            //_services.AddAutoMapper();
             return this;
         }
 

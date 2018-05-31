@@ -1,4 +1,5 @@
 ﻿using CoE.Ideas.Core.Data;
+using CoE.Ideas.Shared.Data;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -16,8 +17,8 @@ namespace CoE.Ideas.Core.Services
         Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId);
         Task<Initiative> GetInitiativeByApexId(int apexId);
 
-        Task<IEnumerable<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber=1, int pageSize=20);
-		Task<IEnumerable<InitiativeInfo>> GetInitiativesAsync(int page=1, int pageSize=20);
+        Task<PagedResultSet<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber=1, int pageSize=20);
+        Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(int page = 1, int pageSize = 20);
 
 		//Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId);
 	}
