@@ -60,7 +60,7 @@ namespace CoE.Ideas.Core.Services
         }
 
         private static IQueryable<InitiativeInfo> CreateInitiativeInfoQuery(IQueryable<Initiative> query, 
-            string filter, int pageNumber, int pageSize)
+            string filter)
         {
             IQueryable<Initiative> returnValue = query
                 .Include(x => x.StatusHistories);
@@ -72,20 +72,15 @@ namespace CoE.Ideas.Core.Services
             }
 
             return returnValue
-				.Skip((pageNumber - 1)*pageSize)
-				.Take(pageSize)
 				.OrderByDescending(x => x.CreatedDate)
 				.Select(x => InitiativeInfo.Create(x));
         }
 
+
         public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(string filter, int pageNumber, int pageSize)
         {
-            var initiatives = await CreateInitiativeInfoQuery(_initiativeContext.Initiatives, filter, pageNumber, pageSize)
-                .ToListAsync();
-
-            var initiativeCount = await _initiativeContext.Initiatives.CountAsync();
-
-			return PagedResultSet.Create(initiatives, pageNumber, pageSize, initiatives.Count(), initiativeCount);
+            var initiatives = CreateInitiativeInfoQuery(_initiativeContext.Initiatives, filter);
+			return await PagedResultSet.Create(initiatives, pageNumber, pageSize);
         }
 
 
@@ -95,12 +90,9 @@ namespace CoE.Ideas.Core.Services
             var query = _initiativeContext.Initiatives
                     .Where(x => x.Stakeholders.Any(y => y.PersonId == personId));
 
-            var initiatives = await(CreateInitiativeInfoQuery(query, filter, pageNumber, pageSize))
-                .ToListAsync();
+            var initiatives = CreateInitiativeInfoQuery(query, filter);
 
-            var initiativeCount = await query.CountAsync();
-
-            return PagedResultSet.Create(initiatives, pageNumber, pageSize, initiatives.Count(), initiativeCount);
+            return await PagedResultSet.Create(initiatives, pageNumber, pageSize);
         }
 
         public async Task<Initiative> UpdateInitiativeAsync(Initiative initiative)

@@ -123,7 +123,7 @@ namespace CoE.Ideas.Core.Services
                     var contractResolver = new InitiativeContractResolver();
                     var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
                     var returnValues = JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings).ToList();
-                    return PagedResultSet.Create(returnValues, pageNumber, pageSize, returnValues.Count, totalCount);
+                    return PagedResultSet.Create(returnValues, pageNumber, pageSize, totalCount);
                 }
                 else
                 {
@@ -152,7 +152,7 @@ namespace CoE.Ideas.Core.Services
                     var contractResolver = new InitiativeContractResolver();
                     var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
                     var returnValues = JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings).ToList();
-                    return PagedResultSet.Create(returnValues, pageNumber, pageSize, returnValues.Count, totalCount);
+                    return PagedResultSet.Create(returnValues, pageNumber, pageSize, totalCount);
                 }
                 else
                 {
