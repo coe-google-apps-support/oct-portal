@@ -185,9 +185,7 @@ export default {
   }
 
   .sd-add-button {
-    position: fixed;
-    margin: auto;
-    left: 62%;
+    float: right;
   }
 
   .center {
