@@ -1,4 +1,5 @@
 ﻿using CoE.Ideas.Core.ServiceBus;
+using CoE.Ideas.Shared.Extensions;
 using CoE.Ideas.Shared.Security;
 using EnsureThat;
 using System;
@@ -34,6 +35,8 @@ namespace CoE.Ideas.Webhooks
 
             TimeZoneInfo albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton");
             var createDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(initiative.CreatedDate.DateTime, albertaTimeZone);
+            var nowDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, albertaTimeZone);
+            var expectedCompletionDateString = createDateAlberta.ToStringRelativeToNow(nowDateAlberta);
 
             using (var client = new HttpClient())
             {
@@ -45,7 +48,8 @@ namespace CoE.Ideas.Webhooks
                     { "OwnerName", owner.GetDisplayName()},
                     { "OwnerEmail", owner.GetEmail() },
                     { "CreatedDate", createDateAlberta.ToString()},
-                    { "Description", initiative.Description}
+                    { "Description", initiative.Description},
+                    { "Expected", expectedCompletionDateString}
                 };
 
                 var content = new FormUrlEncodedContent(values);
