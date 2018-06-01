@@ -37,11 +37,13 @@ spec:
             "-credential_file=/secrets/cloudsql/credentials.json"]
         volumeMounts:
           - name: octavadb-service-account	
-            mountPath: /secrets/cloudsql          
+            mountPath: /secrets/cloudsql             
+      imagePullSecrets:
+      - name: acs-access
       volumes:
       - name: secret-volume
         secret:
           secretName: remedysblistener-config
       - name: octavadb-service-account
         secret:
-          secretName: octavadb-service-account            
+          secretName: octavadb-service-account                 

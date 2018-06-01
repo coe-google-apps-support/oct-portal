@@ -28,10 +28,29 @@ spec:
         - containerPort: 9000
         env:
         - name: WORDPRESS_DB_HOST
-          value: "wordpress-db.development:3307"
+          value: "127.0.0.1"
         - name: WORDPRESS_DB_NAME
-          value: "OctPortalWordPress"
+          value: "octportalwordpress"
         - name: WORDPRESS_DB_USER
-          value: "root"
+          valueFrom:
+            secretKeyRef:
+              name: octavadb-credentials
+              key: username
         - name: WORDPRESS_DB_PASSWORD
-          value: "octavadev"
+          valueFrom:
+            secretKeyRef:
+              name: octavadb-credentials
+              key: password
+      - name: octavadb-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+            "-instances=octavia-189116:us-west1:octavadbuat=tcp:3306",
+            "-credential_file=/secrets/cloudsql/credentials.json"]
+        volumeMounts:
+          - name: octavadb-service-account	
+            mountPath: /secrets/cloudsql
+            readOnly: true
+      volumes:
+        - name: octavadb-service-account
+          secret:
+            secretName: octavadb-service-account

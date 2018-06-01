@@ -20,7 +20,8 @@ export default new Router({
       props: (route) => ({
         page: Number(route.query.page),
         pageSize: Number(route.query.pageSize),
-        newInitiative: Number(route.query.newInitiative)
+        newInitiative: Number(route.query.newInitiative),
+        contains: route.query.contains
       })
     },
     {
@@ -31,7 +32,8 @@ export default new Router({
         filter: 'mine',
         newInitiative: Number(route.query.newInitiative),
         page: Number(route.query.page),
-        pageSize: Number(route.query.pageSize)
+        pageSize: Number(route.query.pageSize),
+        contains: route.query.contains
       })
     },
     {
