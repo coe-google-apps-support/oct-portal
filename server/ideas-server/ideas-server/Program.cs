@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CoE.Ideas.Core;
+using CoE.Ideas.Core.Data;
 using CoE.Ideas.Shared.Extensions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -88,6 +89,17 @@ namespace CoE.Ideas.Server
                     {
                         var logger = services.GetRequiredService<ILogger<Program>>();
                         logger.LogError(ex, "An error occurred while seeding the ServiceBusEmulator database.");
+                    }
+
+                    try
+                    {
+                        services.InitializePermissionsDatabase(
+                            (permissionName: Permissions.EditStatusDescription.ToString(), roleName: "Octava Business Analyst"));
+                    }
+                    catch (Exception ex)
+                    {
+                        var logger = services.GetRequiredService<ILogger<Program>>();
+                        logger.LogError(ex, "An error occurred while seeding the Permissions database.");
                     }
                 }
             }

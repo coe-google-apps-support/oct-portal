@@ -22,8 +22,6 @@ namespace CoE.Ideas.Shared.Migrations.Security
                 {
                     table.PrimaryKey("PK_PermissionRoles", x => x.Id);
                 });
-
-            migrationBuilder.Sql("INSERT INTO [dbo].[PermissionRoles]([Permssion],[Role]) VALUES ('UpdateStatusDescription','Octava Business Analyst')");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

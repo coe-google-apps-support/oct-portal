@@ -53,8 +53,6 @@ namespace CoE.Ideas.Core
 
             services.AddScoped<IStringTemplateService, StringTemplateService>();
 
-            services.AddPermissionSecurity(connectionString);
-
             services.AddScoped<IInitiativeStatusEtaRepository, InitiativeStatusEtaRepository>();
 
             return services;

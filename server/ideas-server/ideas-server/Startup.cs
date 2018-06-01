@@ -49,6 +49,8 @@ namespace CoE.Ideas.Server
                 Configuration.GetConnectionString("IdeaDatabase"), 
                 Configuration["WordPress:Url"]);
 
+            services.AddPermissionSecurity(Configuration.GetConnectionString("WordPressDatabase"));
+
             System.Diagnostics.Trace.WriteLine("Does this get hit?");
 
             services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"));
