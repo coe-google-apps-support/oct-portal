@@ -1,0 +1,53 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: wordpress
+  namespace: production
+  labels:
+    app: wordpress
+    technology: wordpress
+    tier: frontend
+    product: octava
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+      technology: wordpress
+      tier: frontend
+      product: octava
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        technology: wordpress
+        tier: frontend
+        product: octava
+    spec:
+      containers:
+      - name: wordpress
+        image: coeoctava.azurecr.io/wordpress:v1.0.3
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: secret-volume
+          mountPath: "/etc/secrets"
+          readOnly: true
+      - name: octavadb-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+            "-instances=octavia-189116:us-west1:octavadb=tcp:3306",
+            "-credential_file=/secrets/cloudsql/credentials.json"]
+        volumeMounts:
+          - name: octavadb-service-account	
+            mountPath: /secrets/cloudsql
+            readOnly: true                
+      imagePullSecrets:
+      - name: acs-access
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: wordpress-config
+      - name: octavadb-service-account
+        secret:
+          secretName: octavadb-service-account              
