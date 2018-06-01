@@ -16,7 +16,7 @@ namespace CoE.Ideas.Server.Models
         [Required]
         public string Description { get; set; }
 
-        public SupportingDocumentsDto[] supportingDocumentsDto { get; set; }
+        public SupportingDocumentsDto[] supportingDocuments{ get; set; }
 
 
     }
