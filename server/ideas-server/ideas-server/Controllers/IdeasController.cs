@@ -14,6 +14,7 @@ using CoE.Ideas.Core.Services;
 using EnsureThat;
 using Microsoft.Extensions.Options;
 using CoE.Ideas.Shared.Data;
+using System.Net.Http;
 
 namespace CoE.Ideas.Server.Controllers
 {
@@ -419,11 +420,18 @@ namespace CoE.Ideas.Server.Controllers
 
             return await ValidateAndGetInitiative(id, async initiative =>
             {
-                SupportingDocument newSupportingDocuments = null;
-                newSupportingDocuments = SupportingDocument.Create(supportingDocumentsDto.Title, supportingDocumentsDto.Url, supportingDocumentsDto.Type);
-                initiative.SupportingDocuments.Add(newSupportingDocuments);
-                await _repository.UpdateInitiativeAsync(initiative);
-                return Ok(newSupportingDocuments);
+                if (User.IsAdmin() || IsCurrentUserAStakeholder(initiative))
+                {
+                    SupportingDocument newSupportingDocuments = null;
+                    newSupportingDocuments = SupportingDocument.Create(supportingDocumentsDto.Title, supportingDocumentsDto.Url, supportingDocumentsDto.Type);
+                    initiative.SupportingDocuments.Add(newSupportingDocuments);
+                    await _repository.UpdateInitiativeAsync(initiative);
+                    return Ok(newSupportingDocuments);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             });
         }
 
@@ -443,9 +451,12 @@ namespace CoE.Ideas.Server.Controllers
 
                 try
                 {
-                    return await ValidateAndGetInitiative(id, async initiative =>
+                    return await ValidateAndGetInitiative(id, initiative =>
                     {
-                        return Ok(initiative.SupportingDocuments);
+                        if (User.IsAdmin() || IsCurrentUserAStakeholder(initiative))
+                            Response.Headers.Add("Can-Edit", true.ToString());
+
+                        return Task.FromResult((IActionResult)Ok(initiative.SupportingDocuments));
                     });
                 }
 
@@ -460,6 +471,15 @@ namespace CoE.Ideas.Server.Controllers
 
                 }
             }
+        }
+
+        private bool IsCurrentUserAStakeholder(Initiative initiative)
+        {
+            EnsureArg.IsNotNull(initiative);
+            if (initiative.Stakeholders == null)
+                return false;
+            int myId = User.GetPersonId();
+            return (initiative.Stakeholders.Any(x => x.PersonId == myId));
         }
 
 

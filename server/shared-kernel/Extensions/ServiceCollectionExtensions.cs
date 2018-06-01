@@ -2,6 +2,7 @@
 using CoE.Ideas.Shared.Security;
 using CoE.Ideas.Shared.ServiceBus;
 using CoE.Ideas.Shared.WordPress;
+using CoE.Ideas.Shared.Extensions;
 using EnsureThat;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace CoE.Ideas.Shared.Extensions
 {
@@ -89,15 +91,15 @@ namespace CoE.Ideas.Shared.Extensions
         }
 
         public static IServiceCollection AddPermissionSecurity(this IServiceCollection services,
-            string permissionDbConnectionString)
+            string permissionDbConnectionString = null)
         {
             // defaults (for dev environment) - this is not the same as Production!!
             string connectionString = string.IsNullOrWhiteSpace(permissionDbConnectionString)
-                ? "server=wordpress-db;uid=root;pwd=octavadev;database=octportalwordpress"
+                ? "server=wordpress-db;uid=root;pwd=octavadev;database=octavapermissons"
                 : permissionDbConnectionString;
 
             services.AddDbContext<SecurityContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseMySql(connectionString));
 
             return services;
         }
@@ -163,6 +165,41 @@ namespace CoE.Ideas.Shared.Extensions
                     System.Threading.Thread.Sleep(1000);
                 }
             }
+        }
+
+        public static void InitializePermissionsDatabase(this IServiceProvider serviceProvider,
+            params (string permissionName, string roleName)[] entities)
+        {
+            int retryCount = 0;
+            SecurityContext context = null;
+            while (true)
+            {
+                context = serviceProvider.GetRequiredService<SecurityContext>();
+                try
+                {
+                    context.Database.Migrate();
+                    break;
+                }
+                catch (Exception)
+                {
+                    if (retryCount++ > 30)
+                        throw;
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+
+            // if here we can safely add the seed data
+            if (entities != null && entities.Any())
+            {
+                context.Permissions.AddOrUpdate(x => new { x.Permssion, x.Role },
+                    entities.Select(x => new PermissionRole()
+                    {
+                        Permssion = x.permissionName,
+                        Role = x.roleName
+                    }).ToArray());
+                context.SaveChanges();
+            }
+
         }
 #endif
     }
