@@ -4,6 +4,7 @@ using CoE.Ideas.Shared.Security;
 using EnsureThat;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
@@ -35,8 +36,7 @@ namespace CoE.Ideas.Webhooks
 
             TimeZoneInfo albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton");
             var createDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(initiative.CreatedDate.DateTime, albertaTimeZone);
-            var nowDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, albertaTimeZone);
-            var expectedCompletionDateString = createDateAlberta.ToStringRelativeToNow(nowDateAlberta);
+            var createWebhookUrl = "https://hooks.zapier.com/hooks/catch/3360483/afz7k1/";
 
             using (var client = new HttpClient())
             {
@@ -48,13 +48,12 @@ namespace CoE.Ideas.Webhooks
                     { "OwnerName", owner.GetDisplayName()},
                     { "OwnerEmail", owner.GetEmail() },
                     { "CreatedDate", createDateAlberta.ToString()},
-                    { "Description", initiative.Description},
-                    { "Expected", expectedCompletionDateString}
+                    { "Description", initiative.Description}
                 };
 
                 var content = new FormUrlEncodedContent(values);
 
-                var response = await client.PostAsync("https://hooks.zapier.com/hooks/catch/3360483/afz7k1/", content);
+                var response = await client.PostAsync(createWebhookUrl, content);
 
                 var responseString = await response.Content.ReadAsStringAsync();
 
@@ -68,6 +67,7 @@ namespace CoE.Ideas.Webhooks
 
             TimeZoneInfo albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton");
             var createDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(initiative.CreatedDate.DateTime, albertaTimeZone);
+            var changeWebhookUrl = "https://hooks.zapier.com/hooks/catch/3360483/afz7k1/";
 
             using (var client = new HttpClient())
             {
@@ -84,7 +84,7 @@ namespace CoE.Ideas.Webhooks
 
                 var content = new FormUrlEncodedContent(values);
 
-                var response = await client.PostAsync("https://hooks.zapier.com/hooks/catch/3360483/afvmki/", content);
+                var response = await client.PostAsync(changeWebhookUrl, content);
 
                 var responseString = await response.Content.ReadAsStringAsync();
 
