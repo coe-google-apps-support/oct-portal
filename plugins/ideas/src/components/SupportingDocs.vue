@@ -54,7 +54,8 @@ export default {
   },
   mixins: [validationMixin],
   props: [
-    'id'
+    'id',
+    'newInit'
   ],
   data: () => ({
     form: {
@@ -97,18 +98,23 @@ export default {
         return
       }
       this.sending = true
-      this.services.ideas.createSupportingDoc(
-        this.id,
-        this.form.title,
-        this.form.url,
-        this.form.type
-      ).then(x => {
-        this.sending = false
+      if (!this.newInit) {
+        this.services.ideas.createSupportingDoc(
+          this.id,
+          this.form.title,
+          this.form.url,
+          this.form.type
+        ).then(x => {
+          this.sending = false
+          this.$emit('close', this.form.title, this.form.url, this.form.type)
+        }).catch((err) => {
+          this.sending = false
+          console.debug(err)
+        })
+      } else if (this.newInit === true) {
+        this.sending = true
         this.$emit('close', this.form.title, this.form.url, this.form.type)
-      }).catch((err) => {
-        this.sending = false
-        console.debug(err)
-      })
+      }
     }
   }
 }

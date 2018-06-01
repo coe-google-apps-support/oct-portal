@@ -13,6 +13,7 @@ namespace CoE.Ideas.Core.Data
         /// The short title of the idea
         /// </summary>
         [Required]
+        [MinLength(3)]
         [MaxLength(255)]
         public string Title { get; private set; }
 
@@ -20,6 +21,7 @@ namespace CoE.Ideas.Core.Data
         /// The long description of the idea, can be HTML formatted
         /// </summary>
         [Required]
+        [MinLength(3)]
         public string Description { get; private set; }
 
         [Required]
