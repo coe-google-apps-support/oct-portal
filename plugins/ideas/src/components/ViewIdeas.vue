@@ -8,14 +8,21 @@
             :key="idea.id" 
             :initiative="idea"
             :isNewIdea="idea.id === newInitiative"
-            class="md-layout-item md-size-20 md-medium-size-30 md-small-size-45 md-xsmall-size-100">
+            class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
+        </div>
+        <div v-if="ideas.length === 0 && isLoading == false">
+          <img src="https://octava.blob.core.windows.net/cdn-store/empty-state-coe.png" class="center">
+          <md-empty-state
+            md-label="There's nothing here!"
+            md-description="Oops! We couldn't find anything.">
+          </md-empty-state>
         </div>
         <div v-if="isLoading" class="md-layout md-alignment-center-center">
           <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
         </div>
-        <div v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
-          <md-button class="loadMore md-raised md-secondary" v-on:click="infiniteHandler">Load More</md-button>
+        <div class="center-children" v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
+          <divi-button class="md-accent" @click.native="infiniteHandler">Load more</divi-button>
         </div>
       </div>
     </transition>
@@ -30,11 +37,13 @@
 // This could be important if we wanted to allow paging from outside an iframe, for example.
 
 import Initiative from '@/components/initiative'
+import DiviButton from '@/components/divi/DiviButton'
 
 export default {
   name: 'ViewIdeas',
   props: {
     filter: String,
+    contains: String,
     newInitiative: Number,
     page: Number,
     pageSize: Number
@@ -49,24 +58,22 @@ export default {
     isLoading: true
   }),
   components: {
-    Initiative
+    Initiative,
+    DiviButton
   },
   methods: {
-    checkIslast (page) {
-      let checkdata = null
-
-      this.initiativeFunction(page + 1, this.pageSize).then((response) => {
-        checkdata = response.data
-        if (checkdata.length === 0) {
-          this.isLast = true
-        } else {
-          this.isLast = false
-        }
-      })
+    checkIsLast (response) {
+      var x = response.headers['x-is-last-page']
+      if (x === 'False') {
+        this.isLast = false
+      } else if (x === 'True') {
+        this.isLast = true
+      }
     },
     requestAPI (page, pageSize) {
       this.isLoading = true
       return this.initiativeFunction(page, pageSize).then((response) => {
+        this.checkIsLast(response)
         this.ideas = this.ideas.concat(response.data)
         this.isLoading = false
         return response
@@ -79,9 +86,8 @@ export default {
       setTimeout(() => {
         if (!this.isLast) {
           this.dataPage++
-          this.requestAPI(this.dataPage, this.dataPageSize)
+          this.requestAPI(this.dataPage, this.dataPageSize, this.contains)
         }
-        this.checkIslast(this.dataPage)
       }, 1000)
     },
     toastMessage (message) {
@@ -132,13 +138,21 @@ export default {
   .min-height {
     min-height: 400px;
   }
+
   .md-overlay.md-fixed.md-dialog-overlay {
     z-index: 9!important;
   }
-  .loadMore {
-    position: relative;
-    width: 20%;
-    right: -40%;
+
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+    height: auto;
   }
 
+  .center-children {
+    display: flex;
+    justify-content: center;
+  }
 </style>
