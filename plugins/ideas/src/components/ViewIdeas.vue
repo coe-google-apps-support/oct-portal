@@ -155,6 +155,6 @@ export default {
     /* width: 50%; */
     width: 500px;
     height: auto;
-}
+  }
 
 </style>
