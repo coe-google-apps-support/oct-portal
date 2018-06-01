@@ -72,3 +72,8 @@ services:
     build:
       context: .
       dockerfile: ideas-integration-remedy/ideas-integration-remedy-sblistener/Dockerfile
+
+volumes:
+  wp-dbdata:
+
+
