@@ -115,7 +115,7 @@ let x = class IdeasService {
    * @param {boolean} hasBudget Whether there is budget for this or not.
    * @param {Date} expectedTargetDate When should this be delivered?
    */
-  static createInitiative (title, description, SupportingDocumentsDtos, businessSponsorEmail, hasBudget, expectedTargetDate) {
+  static createInitiative (title, description, supportingDocumentsDtos, businessSponsorEmail, hasBudget, expectedTargetDate) {
     return HTTP.post('', {
       title,
       description,
