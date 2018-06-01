@@ -87,11 +87,31 @@ namespace CoE.Ideas.Core.Services
             });
         }
 
-        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(int pageNumber, int pageSize)
+        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(string filter, int pageNumber, int pageSize)
         {
             return await ExecuteAsync(async client =>
             {
-                var response = await client.GetAsync($"?page={pageNumber}&pageSize={pageSize}");
+                var queryBuilder = new StringBuilder();
+                if (!string.IsNullOrWhiteSpace(filter))
+                {
+                    queryBuilder.Append(queryBuilder.Length == 0 ? "?" : "&");
+                    queryBuilder.Append("contains=");
+                    queryBuilder.Append(filter);
+                }
+                if (pageNumber > 0)
+                {
+                    queryBuilder.Append(queryBuilder.Length == 0 ? "?" : "&");
+                    queryBuilder.Append("page=");
+                    queryBuilder.Append(pageNumber);
+                }
+                if (pageSize > 0)
+                {
+                    queryBuilder.Append(queryBuilder.Length == 0 ? "?" : "&");
+                    queryBuilder.Append("pageSize=");
+                    queryBuilder.Append(pageSize);
+                }
+
+                var response = await client.GetAsync(queryBuilder.ToString());
                 if (response.IsSuccessStatusCode)
                 {
                     string totalCountString = response.Headers.GetValues("X-Total-Count").FirstOrDefault();
@@ -103,7 +123,7 @@ namespace CoE.Ideas.Core.Services
                     var contractResolver = new InitiativeContractResolver();
                     var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
                     var returnValues = JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings).ToList();
-                    return PagedResultSet.Create(returnValues, pageNumber, pageSize, returnValues.Count, totalCount);
+                    return PagedResultSet.Create(returnValues, pageNumber, pageSize, totalCount);
                 }
                 else
                 {
@@ -115,7 +135,7 @@ namespace CoE.Ideas.Core.Services
             });
         }
 
-        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber, int pageSize)
+        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, string filter, int pageNumber, int pageSize)
         {
             return await ExecuteAsync(async client =>
             {
@@ -132,7 +152,7 @@ namespace CoE.Ideas.Core.Services
                     var contractResolver = new InitiativeContractResolver();
                     var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
                     var returnValues = JsonConvert.DeserializeObject<IEnumerable<InitiativeInfo>>(ideaString, settings).ToList();
-                    return PagedResultSet.Create(returnValues, pageNumber, pageSize, returnValues.Count, totalCount);
+                    return PagedResultSet.Create(returnValues, pageNumber, pageSize, totalCount);
                 }
                 else
                 {

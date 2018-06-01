@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: initiatives-db
+  labels:
+    app: initiatives-db
+    technology: mssql
+    product: octava
+    tier: backend
+spec:
+  type: ExternalName
+  externalName: octavadbuat2.database.windows.net

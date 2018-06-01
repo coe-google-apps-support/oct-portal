@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoE.Ideas.Shared.Data
 {
@@ -23,16 +27,34 @@ namespace CoE.Ideas.Shared.Data
 
     public static class PagedResultSet
     {
-        public static PagedResultSet<T> Create<T>(IEnumerable<T> results, int pageNumber, int pageSize, int resultCount, int totalNumber)
+        public static async Task<PagedResultSet<T>> Create<T>(IQueryable<T> results, int pageNumber, int pageSize,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
-            var returnValue = new PagedResultSet<T>();
-            returnValue.PageNumber = pageNumber;
-            returnValue.PageSize = pageSize;
-            returnValue.ResultCount = resultCount;
-            returnValue.TotalCount = totalNumber;
+            var returnValue = new PagedResultSet<T>()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+            returnValue.TotalCount = await results.CountAsync(cancellationToken);
+            var resultsArray = await results.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToArrayAsync(cancellationToken);
+            returnValue.Results = resultsArray;
+            returnValue.ResultCount = resultsArray.Length;
+           return returnValue;
+        }
+
+        public static PagedResultSet<T> Create<T>(IEnumerable<T> results, int pageNumber, int pageSize, int totalCount)
+        {
+            var returnValue = new PagedResultSet<T>()
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+            returnValue.TotalCount = totalCount;
             returnValue.Results = results;
+            returnValue.ResultCount = results.Count();
             return returnValue;
         }
+
     }
 
 

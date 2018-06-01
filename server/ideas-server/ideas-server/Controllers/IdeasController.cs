@@ -53,7 +53,10 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All, [FromQuery]int page = 1, [FromQuery]int pageSize = 1000)
+        public async Task<IActionResult> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All, 
+            [FromQuery]string contains = null,
+            [FromQuery]int page = 1, 
+            [FromQuery]int pageSize = 1000)
         {
             _logger.Information("Retrieving Initiatives");
 
@@ -76,10 +79,11 @@ namespace CoE.Ideas.Server.Controllers
             {
                 if (view == ViewOptions.Mine)
                 {
-                    ideasInfo = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId(), page, pageSize);
+                    ideasInfo = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId(), 
+                        filter: contains, pageNumber: page, pageSize: pageSize);
                 }
                 else
-                    ideasInfo = await _repository.GetInitiativesAsync(page, pageSize);
+                    ideasInfo = await _repository.GetInitiativesAsync(filter: contains, page: page, pageSize: pageSize);
                 watch.Stop();
                 _logger.Information("Retrieved {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", ideasInfo.ResultCount, watch.ElapsedMilliseconds);
                 Request.HttpContext.Response.Headers.Add("X-Total-Count", ideasInfo.TotalCount.ToString());
