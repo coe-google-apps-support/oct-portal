@@ -24,27 +24,29 @@
           </md-table>
         </div>
         <br>
-        <div class="md-headline"> Supporting Documents
-          <SupportingDocs v-if="showModal" :id="slug" @close="updateSupportingDocs"></SupportingDocs>
-          <md-button class="md-fab md-accent sd-add-button" @click="showModal = true">
-            <md-icon>add</md-icon>
-          </md-button>
-        </div>
-        <md-divider class="oct-divider"></md-divider>
-          <md-table v-model="supportingDocs">
-            <md-table-row slot="md-table-row" slot-scope="{ item }">
-              <md-table-cell md-label="Title" md-sort-by="title">{{ item.title }}</md-table-cell>
-              <md-table-cell md-label="URL" md-sort-by="url">{{ item.url }}</md-table-cell>
-              <md-table-cell md-label="Type" md-sort-by="type">{{ item.type | displayDocType }}</md-table-cell>
-            </md-table-row>
-          </md-table>
-          <div v-if="supportingDocs.length === 0 && isLoading == false">
-            <md-empty-state
-              md-icon="location_city"
-              md-label="You have no supporting documents!"
-              md-description="Click the + button to get started.">
-            </md-empty-state>
+        <button v-on:click="accordion" class="accordion">Supporting Documents</button>
+        <div class="panel">
+          <div>
+            <SupportingDocs v-if="showModal" :id="slug" @close="updateSupportingDocs"></SupportingDocs>
           </div>
+            <md-table v-model="supportingDocs">
+              <md-table-row slot="md-table-row" slot-scope="{ item }">
+                <md-table-cell md-label="Title" md-sort-by="title">{{ item.title }}</md-table-cell>
+                <md-table-cell md-label="URL" md-sort-by="url">{{ item.url }}</md-table-cell>
+                <md-table-cell md-label="Type" md-sort-by="type">{{ item.type | displayDocType }}</md-table-cell>
+              </md-table-row>
+            </md-table>
+            <div v-if="supportingDocs.length === 0 && isLoading == false">
+              <md-empty-state
+                md-icon="location_city"
+                md-label="You have no supporting documents!"
+                md-description="Click the + button to get started.">
+              </md-empty-state>
+            </div>
+            <md-button class="md-fab md-accent sd-add-button" @click="showModal = true">
+              <md-icon>add</md-icon>
+            </md-button>
+        </div>
       </div>
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
@@ -140,6 +142,16 @@ export default {
       if (title || url || type) {
         this.supportingDocs.push({title, url, type})
       }
+    },
+    accordion () {
+      var acc = document.getElementsByClassName('accordion')[0]
+      acc.classList.toggle('active')
+      var panel = acc.nextElementSibling
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + 'px'
+      }
     }
   }
 }
@@ -194,5 +206,42 @@ export default {
     margin-right: auto;
     width: 280px;
     height: auto;
+  }
+
+  .accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+  }
+
+  .active, .accordion:hover {
+    background-color: #ccc;
+  }
+
+  .accordion:after {
+    content: '\002B';
+    color: #777;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+  }
+
+  .active:after {
+    content: "\2212";
+  }
+
+  .panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
   }
 </style>
