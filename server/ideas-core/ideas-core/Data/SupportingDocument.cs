@@ -1,5 +1,8 @@
 ﻿
 using CoE.Ideas.Shared.Data;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,6 +24,7 @@ namespace CoE.Ideas.Core.Data
             URL = newURL;
         }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public SupportingDocumentsType Type { get; private set; }
 
         public static SupportingDocument Create(string title, string url, SupportingDocumentsType type)
