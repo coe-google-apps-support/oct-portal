@@ -42,31 +42,7 @@ namespace CoE.Ideas.Core.Migrations
 
 
 
-            migrationBuilder.Sql(@"
-
-			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(1, 1, 'www.testBusinessCaseUrl.com', '2018-05-10 22:24:19.5789984 +00:00', 'test description1', 'www.googleInvestmentRequestFormUrl.com', 2, 'test title1', '27E22CB9-4C6E-4CF3-8D3F-318BAB0C393A', '1')
-
-			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(2, 2, 'www.testBusinessCaseUrl.com', '2018-05-10 22:24:19.5789984 +00:00', 'test description2', 'www.googleInvestmentRequestFormUrl.com', 2, 'test title2', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '2')
-
-			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(3, 3, 'www.testBusinessCaseUrl.com', '2018-05-10 22:24:19.5789984 +00:00', 'test description3', Null, 2, 'test title2', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '3')
-
-			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(4, 4, 'www.testBusinessCaseUrl.com', '2018-05-10 22:24:19.5789984 +00:00', 'test description4', 'www.googleInvestmentRequestFormUrl.com', 2, 'test title4', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '4')
-
-			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(5, 5, Null, '2018-05-10 22:24:19.5789984 +00:00', 'test description5', 'www.googleInvestmentRequestFormUrl.com', 2, 'test title5', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '5')
-
-			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(6, 6, 'www.testBusinessCaseUrl.com', '2018-05-10 22:24:19.5789984 +00:00', 'test description6', 'www.googleInvestmentRequestFormUrl.com', 2, 'test title6', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '6')
-
-
-			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(5, 5, Null, '2018-05-10 22:24:19.5789984 +00:00', 'test description7', Null, 2, 'test title7', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '7')
-
-			INSERT INTO Initiatives(ApexId, AssigneeId, [BusinessCaseUrl], [CreatedDate], [Description], [InvestmentRequestFormUrl], Status, [Title], [Uid], [WorkOrderId]) VALUES(5, 5, Null, '2018-05-10 22:24:19.5789984 +00:00', 'test description8', Null, 2, 'test title8', '27E22CB9-4C6E-4CF3-8D3F-398BAB0C393A', '8')
-
-
-			INSERT INTO SupportingDocuments(InitiativeId, Type, URL) SELECT Id, Type = 1, BusinessCaseUrl FROM Initiatives WHERE BusinessCaseUrl IS NOT NULL;
-
-			INSERT INTO SupportingDocuments(InitiativeId, Type, URL) SELECT Id, Type = 2, InvestmentRequestFormUrl FROM Initiatives WHERE InvestmentRequestFormUrl IS NOT NULL; "
-            );
-
+            
 
             migrationBuilder.Sql(@"
 INSERT INTO SupportingDocuments(InitiativeId, Type, URL) SELECT Id, Type = 1, BusinessCaseUrl FROM Initiatives WHERE BusinessCaseUrl IS NOT NULL;
