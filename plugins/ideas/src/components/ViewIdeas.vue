@@ -21,8 +21,8 @@
         <div v-if="isLoading" class="md-layout md-alignment-center-center">
           <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
         </div>
-        <div v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
-          <md-button class="loadMore md-raised md-secondary" v-on:click="infiniteHandler">Load More</md-button>
+        <div class="center-children" v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
+          <divi-button class="md-accent" @click.native="infiniteHandler">Load more</divi-button>
         </div>
       </div>
     </transition>
@@ -37,6 +37,7 @@
 // This could be important if we wanted to allow paging from outside an iframe, for example.
 
 import Initiative from '@/components/initiative'
+import DiviButton from '@/components/divi/DiviButton'
 
 export default {
   name: 'ViewIdeas',
@@ -57,12 +58,12 @@ export default {
     isLoading: true
   }),
   components: {
-    Initiative
+    Initiative,
+    DiviButton
   },
   methods: {
     checkIsLast (response) {
-      var x
-      x = response.headers['x-is-last-page']
+      var x = response.headers['x-is-last-page']
       if (x === 'False') {
         this.isLast = false
       } else if (x === 'True') {
@@ -138,13 +139,9 @@ export default {
   .min-height {
     min-height: 400px;
   }
+
   .md-overlay.md-fixed.md-dialog-overlay {
     z-index: 9!important;
-  }
-  .loadMore {
-    position: relative;
-    width: 20%;
-    right: -40%;
   }
 
   .center {
@@ -155,4 +152,8 @@ export default {
     height: auto;
   }
 
+  .center-children {
+    display: flex;
+    justify-content: center;
+  }
 </style>
