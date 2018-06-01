@@ -27,7 +27,7 @@
         <br>
         <div class="md-headline"> Supporting Documents
           <SupportingDocs v-if="showModal" :id="slug" @close="updateSupportingDocs"></SupportingDocs>
-          <md-button class="sd-add-button" @click="showModal = true">
+          <md-button class="md-fab md-accent sd-add-button" @click="showModal = true">
             <md-icon>add</md-icon>
           </md-button>
         </div>
@@ -39,6 +39,14 @@
               <md-table-cell md-label="Type" md-sort-by="type">{{ item.type | displayDocType }}</md-table-cell>
             </md-table-row>
           </md-table>
+          <div v-if="supportingDocs.length === 0 && isLoading == false">
+            <!-- <img src="https://octava.blob.core.windows.net/cdn-store/empty-state-coe.png" class="center"> -->
+            <md-empty-state
+              md-icon="hot_tub"
+              md-label="You have no supporting documents!"
+              md-description="Click the + button to get started.">
+            </md-empty-state>
+          </div>
       </div>
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
@@ -185,7 +193,17 @@ export default {
   }
 
   .sd-add-button {
-    position: relative;
+    position: fixed;
     margin: auto;
+    // bottom: -19px;
+    left: 62%;
+  }
+
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 280px;
+    height: auto;
   }
 </style>
