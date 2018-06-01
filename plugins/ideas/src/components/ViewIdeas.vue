@@ -42,6 +42,7 @@ export default {
   name: 'ViewIdeas',
   props: {
     filter: String,
+    contains: String,
     newInitiative: Number,
     page: Number,
     pageSize: Number
@@ -62,7 +63,7 @@ export default {
     checkIslast (page) {
       let checkdata = null
 
-      this.initiativeFunction(page + 1, this.pageSize).then((response) => {
+      this.initiativeFunction(page + 1, this.pageSize, this.contains).then((response) => {
         checkdata = response.data
         if (checkdata.length === 0) {
           this.isLast = true
@@ -73,7 +74,8 @@ export default {
     },
     requestAPI (page, pageSize) {
       this.isLoading = true
-      return this.initiativeFunction(page, pageSize).then((response) => {
+      return this.initiativeFunction(page, pageSize, this.contains).then((response) => {
+        console.log(response)
         this.ideas = this.ideas.concat(response.data)
         this.isLoading = false
         return response
@@ -86,7 +88,7 @@ export default {
       setTimeout(() => {
         if (!this.isLast) {
           this.dataPage++
-          this.requestAPI(this.dataPage, this.dataPageSize)
+          this.requestAPI(this.dataPage, this.dataPageSize, this.contains)
         }
         this.checkIslast(this.dataPage)
       }, 1000)
