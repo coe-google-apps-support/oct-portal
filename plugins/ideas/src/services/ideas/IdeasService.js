@@ -119,7 +119,7 @@ let x = class IdeasService {
     return HTTP.post('', {
       title,
       description,
-      SupportingDocumentsDtos,
+      supportingDocumentsDtos,
       businessSponsorEmail,
       hasBudget,
       expectedTargetDate
