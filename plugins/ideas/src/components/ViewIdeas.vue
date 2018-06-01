@@ -88,7 +88,6 @@ export default {
           this.dataPage++
           this.requestAPI(this.dataPage, this.dataPageSize, this.contains)
         }
-        // this.checkIslast(this.dataPage)
       }, 1000)
     },
     toastMessage (message) {
