@@ -23,7 +23,6 @@
             </md-table-row>
           </md-table>
         </div>
-        <!-- <md-divider class="oct-divider"></md-divider> -->
         <br>
         <div class="md-headline"> Supporting Documents
           <SupportingDocs v-if="showModal" :id="slug" @close="updateSupportingDocs"></SupportingDocs>
@@ -40,7 +39,6 @@
             </md-table-row>
           </md-table>
           <div v-if="supportingDocs.length === 0 && isLoading == false">
-            <!-- <img src="https://octava.blob.core.windows.net/cdn-store/empty-state-coe.png" class="center"> -->
             <md-empty-state
               md-icon="location_city"
               md-label="You have no supporting documents!"
@@ -52,8 +50,6 @@
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
       </div>
     </div>
-    <!-- TODO set minimum iframe height instead of <br> -->
-    <!-- <br><br><br><br><br><br><br><br><br> -->
   </div>
 </template>
 
@@ -132,14 +128,10 @@ export default {
   },
   methods: {
     updateDescription (stepIndex) {
-      console.log('update description')
       let newDescription = this.steps[stepIndex].description
       let stepId = this.steps[stepIndex].stepId
-      console.log(`Okay for real now, setting to "${newDescription}"`)
       this.services.ideas.updateStatusDescription(this.initiative.id, stepId, newDescription).then(() => {
-        console.log('Status description update successful.')
       }, (err) => {
-        console.error('Failed updating status description.')
         this.errors.push(err)
       })
     },
