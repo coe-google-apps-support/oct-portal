@@ -181,7 +181,7 @@ namespace CoE.Ideas.Server.Controllers
                 int personId = User.GetPersonId();
 
 				newInitiative = Initiative.Create(initiativeData.Title, initiativeData.Description, personId, skipEmailNotification: skipEmailNotification);
-                foreach (var supportingDocumentsDto in initiativeData.SupportingDocumentsDtos)
+                foreach (var supportingDocumentsDto in initiativeData.supportingDocuments)
                 {
                     var newSupportingDocuments = SupportingDocument.Create(supportingDocumentsDto.Title, supportingDocumentsDto.Url, supportingDocumentsDto.Type);
                     newInitiative.SupportingDocuments.Add(newSupportingDocuments);
