@@ -42,7 +42,7 @@
           <div v-if="supportingDocs.length === 0 && isLoading == false">
             <!-- <img src="https://octava.blob.core.windows.net/cdn-store/empty-state-coe.png" class="center"> -->
             <md-empty-state
-              md-icon="hot_tub"
+              md-icon="location_city"
               md-label="You have no supporting documents!"
               md-description="Click the + button to get started.">
             </md-empty-state>
@@ -195,7 +195,6 @@ export default {
   .sd-add-button {
     position: fixed;
     margin: auto;
-    // bottom: -19px;
     left: 62%;
   }
 
