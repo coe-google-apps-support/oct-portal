@@ -17,8 +17,10 @@ namespace CoE.Ideas.Core.Services
         Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId);
         Task<Initiative> GetInitiativeByApexId(int apexId);
 
-        Task<PagedResultSet<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, int pageNumber=1, int pageSize=20);
-        Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(int page = 1, int pageSize = 20);
+        Task<PagedResultSet<InitiativeInfo>> GetInitiativesByStakeholderPersonIdAsync(int personId, 
+            string filter = null, int pageNumber=1, int pageSize=20);
+        Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(string filter = null, 
+            int page = 1, int pageSize = 20);
 
 		//Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId);
 	}
