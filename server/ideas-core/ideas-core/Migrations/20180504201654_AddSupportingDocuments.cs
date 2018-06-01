@@ -42,6 +42,8 @@ namespace CoE.Ideas.Core.Migrations
 
 
 
+            
+
             migrationBuilder.Sql(@"
 INSERT INTO SupportingDocuments(InitiativeId, Type, URL) SELECT Id, Type = 1, BusinessCaseUrl FROM Initiatives WHERE BusinessCaseUrl IS NOT NULL;
 INSERT INTO SupportingDocuments(InitiativeId, Type, URL) SELECT Id, Type = 2, InvestmentRequestFormUrl FROM Initiatives WHERE InvestmentRequestFormUrl IS NOT NULL; "
