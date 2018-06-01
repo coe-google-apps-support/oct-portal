@@ -10,7 +10,22 @@ const fakeIdeas = {
     stakeholders: [{
       'userName': 'gregory.onuczko@edmonton.ca'
     }],
-    businessCaseUrl: 'https://www.google.ca/'
+    businessCaseUrl: 'https://www.google.ca/',
+    supportingDoc: [{
+      title: 'Search everything',
+      url: 'http://google.ca',
+      type: 'Business Cases'
+    },
+    {
+      title: 'Develop stuff',
+      url: 'http://octava.edmonton.ca',
+      type: 'Technology Investment Form'
+    },
+    {
+      title: 'Games forever!',
+      url: 'http://miniclip.com',
+      type: 'Other'
+    }]
   },
   {
     id: 2,
@@ -20,6 +35,21 @@ const fakeIdeas = {
     createdDate: 'Dec 28 2017 10:40:16 GMT-0700 (Mountain Standard Time)',
     stakeholders: [{
       'userName': 'jared.rewerts@edmonton.ca'
+    }],
+    supportingDoc: [{
+      title: 'Google is cool',
+      url: 'http://google.ca',
+      type: 'Business Cases'
+    },
+    {
+      title: 'Open city technology',
+      url: 'http://octava.edmonton.ca',
+      type: 'Technology Investment Form'
+    },
+    {
+      title: 'On the Run was great',
+      url: 'http://miniclip.com',
+      type: 'Other'
     }]
   },
   {
@@ -31,7 +61,17 @@ const fakeIdeas = {
     stakeholders: [{
       'userName': 'daniel.chenier@edmonton.ca'
     }],
-    businessCaseUrl: 'https://www.google.ca/'
+    businessCaseUrl: 'https://www.google.ca/',
+    supportingDoc: [{
+      title: 'Google is cool',
+      url: 'http://google.ca',
+      type: 'Business Cases'
+    },
+    {
+      title: 'Open city technology',
+      url: 'http://octava.edmonton.ca',
+      type: 'Technology Investment Form'
+    }]
   },
   {
     id: 4,
@@ -381,21 +421,38 @@ const QUERY_TIMEOUT = 1000
 let x = class StubbedIdeasService {
   /**
    * Returns a Promise that resolves with a list of ideas.
+   * @param {Number} page The 1-indexed page number.
+   * @param {Number} pageSize The number of results to return.
+   * @param {String} contains A search string to apply.
    * @returns {Promise} Resolved with an array of ideas.
    */
-  static getIdeas () {
+  static getIdeas (page, pageSize, contains) {
+    let ideas = { data: [] }
+
+    // TODO Use array.splice to make this cool.
+    for (let i = (page - 1) * pageSize; i < page * pageSize && i < fakeIdeas.data.length; i++) {
+      if (contains && (fakeIdeas.data[i].title + fakeIdeas.data[i].description).indexOf(contains) !== -1) {
+        ideas.data.push(fakeIdeas.data[i])
+      } else if (!contains) {
+        ideas.data.push(fakeIdeas.data[i])
+      }
+    }
+
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        resolve(fakeIdeas)
+        resolve(ideas)
       }, QUERY_TIMEOUT)
     })
   }
 
   /**
-   * Returns a Promise that resolves with a list of my initiatives.
-   * @returns {Promise} Resolved with an array of my initiatives.
+   * Returns a Promise that resolves with a list of ideas.
+   * @param {Number} page The 1-indexed page number.
+   * @param {Number} pageSize The number of results to return.
+   * @param {String} contains A search string to apply.
+   * @returns {Promise} Resolved with an array of ideas.
    */
-  static getMyInitiatives () {
+  static getMyInitiatives (page, pageSize, contains) {
     let myInitiatives = { data: null }
     myInitiatives.data = [fakeIdeas.data[0], fakeIdeas.data[1], fakeIdeas.data[2]]
 
@@ -424,6 +481,17 @@ let x = class StubbedIdeasService {
         } else {
           reject(new Error(`No initiative with id ${id}.`))
         }
+      }, QUERY_TIMEOUT)
+    })
+  }
+  
+  static getSupportingDoc (id) {
+    let supportingDocs = { data: null }
+    supportingDocs.data = [fakeIdeas.data[0].supportingDoc, fakeIdeas.data[1].supportingDoc, fakeIdeas.data[2].supportingDoc]
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(supportingDocs)
       }, QUERY_TIMEOUT)
     })
   }

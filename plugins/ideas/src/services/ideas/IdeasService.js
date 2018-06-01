@@ -14,18 +14,37 @@ import { HTTP } from '../../HttpCommon'
 let x = class IdeasService {
   /**
    * Returns a Promise that resolves with a list of ideas.
+   * @param {Number} page The 1-indexed page number.
+   * @param {Number} pageSize The number of results to return.
+   * @param {String} contains A search string to apply.
    * @returns {Promise} Resolved with an array of ideas.
    */
-  static getIdeas (page, pageSize) {
-    return HTTP.get(`?page=${page}&pageSize=${pageSize}`)
+  static getIdeas (page, pageSize, contains) {
+    return HTTP.get('', {
+      params: {
+        page,
+        pageSize,
+        contains
+      }
+    })
   }
 
   /**
    * Returns a Promise that resolves with a list of my initiatives.
+   * @param {Number} page The 1-indexed page number.
+   * @param {Number} pageSize The number of results to return.
+   * @param {String} contains A search string to apply.
    * @returns {Promise} Resolved with an array of my initiatives.
    */
-  static getMyInitiatives (page, pageSize) {
-    return HTTP.get(`?view=Mine&page=${page}&pageSize=${pageSize}`)
+  static getMyInitiatives (page, pageSize, contains) {
+    return HTTP.get('', {
+      params: {
+        view: 'Mine',
+        page,
+        pageSize,
+        contains
+      }
+    })
   }
 
   /**
@@ -83,13 +102,16 @@ let x = class IdeasService {
    */
   static createSupportingDoc (id, title, url, type) {
     return HTTP.post(`${id}/supportingdocuments`, {
-      id,
       title,
       url,
       type
     })
   }
-
+  /**
+   * Returns a Promise that resolves with the supporting document(s).
+   * @param {string} id The id of the initiative.
+   * @returns {Promise} Resolved with the supporting document(s).
+   */
   static getSupportingDoc (id) {
     return HTTP.get(`${id}/supportingdocuments`).then((response) => {
       if (response.data) {

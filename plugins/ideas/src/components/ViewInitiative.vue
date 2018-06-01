@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="min-height">
     <div v-if="isLoading" class="oct-loader">
       <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
     </div>
@@ -23,6 +23,28 @@
             </md-table-row>
           </md-table>
         </div>
+        <br>
+        <div class="md-headline"> Supporting Documents
+          <SupportingDocs v-if="showModal" :id="slug" @close="updateSupportingDocs"></SupportingDocs>
+          <md-button class="md-fab md-accent sd-add-button" @click="showModal = true">
+            <md-icon>add</md-icon>
+          </md-button>
+        </div>
+        <md-divider class="oct-divider"></md-divider>
+          <md-table v-model="supportingDocs">
+            <md-table-row slot="md-table-row" slot-scope="{ item }">
+              <md-table-cell md-label="Title" md-sort-by="title">{{ item.title }}</md-table-cell>
+              <md-table-cell md-label="URL" md-sort-by="url">{{ item.url }}</md-table-cell>
+              <md-table-cell md-label="Type" md-sort-by="type">{{ item.type | displayDocType }}</md-table-cell>
+            </md-table-row>
+          </md-table>
+          <div v-if="supportingDocs.length === 0 && isLoading == false">
+            <md-empty-state
+              md-icon="location_city"
+              md-label="You have no supporting documents!"
+              md-description="Click the + button to get started.">
+            </md-empty-state>
+          </div>
       </div>
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
@@ -36,6 +58,7 @@ import Assignee from '@/components/Assignee'
 import Steps from '@/components/stepper/Steps'
 import formatDate from '@/utils/format-date-since'
 import SupportingDocs from '@/components/SupportingDocs'
+import DiviButton from '@/components/divi/DiviButton'
 
 export default {
   name: 'ViewInitiative',
@@ -51,16 +74,16 @@ export default {
     resources: null,
     activeUser: null,
     canEditSteps: false,
-    supportingDocs: null,
+    supportingDocs: [],
     showModal: false
   }),
   components: {
     Assignee,
     Steps,
-    SupportingDocs
+    SupportingDocs,
+    DiviButton
   },
   created () {
-    console.log(this.slug)
     this.services.user.getMe().then((user) => {
       this.activeUser = user
       this.canEditSteps = user.permissions.indexOf('editStatusDescription') !== -1
@@ -71,33 +94,52 @@ export default {
 
     this.services.ideas.getInitiative(this.slug).then((initiative) => {
       this.initiative = initiative
-      return Promise.all([this.services.ideas.getResources(initiative.id), this.services.ideas.getInitiativeSteps(initiative.id)])
+      return Promise.all([this.services.ideas.getResources(initiative.id), this.services.ideas.getInitiativeSteps(initiative.id), this.services.ideas.getSupportingDoc(initiative.id)])
     }).then((response) => {
       if (response && response[0]) {
         this.resources = response[0]
+        console.log(response[0])
       }
       if (response && response[1]) {
         this.steps = response[1]
+      }
+      if (response && response[2]) {
+        this.supportingDocs = response[2]
       }
 
       this.isLoading = false
     })
   },
   filters: {
-    formatDate
+    formatDate,
+    displayDocType: function (value) {
+      const docTypes = {
+        'BusinessCases': 'Business Cases',
+        'TechnologyInvestmentForm': 'Technology Investment Form',
+        'Other': 'Other'
+      }
+
+      if (!docTypes[value]) {
+        return 'Unknown'
+      }
+
+      return docTypes[value]
+    }
   },
   methods: {
     updateDescription (stepIndex) {
-      console.log('update description')
       let newDescription = this.steps[stepIndex].description
       let stepId = this.steps[stepIndex].stepId
-      console.log(`Okay for real now, setting to "${newDescription}"`)
       this.services.ideas.updateStatusDescription(this.initiative.id, stepId, newDescription).then(() => {
-        console.log('Status description update successful.')
       }, (err) => {
-        console.error('Failed updating status description.')
         this.errors.push(err)
       })
+    },
+    updateSupportingDocs (title, url, type) {
+      this.showModal = false
+      if (title || url || type) {
+        this.supportingDocs.push({title, url, type})
+      }
     }
   }
 }
@@ -114,6 +156,10 @@ export default {
     transform: translate(-50%, -50%);
   }
   
+  .min-height {
+    min-height: 700px;
+  }
+
   .oct-steps {
     margin: 14px;
   }
@@ -139,7 +185,14 @@ export default {
   }
 
   .sd-add-button {
-    position: relative;
-    margin: auto;
+    float: right;
+  }
+
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 280px;
+    height: auto;
   }
 </style>
