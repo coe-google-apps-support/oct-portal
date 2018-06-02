@@ -1,41 +1,62 @@
 <template>
-  <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-container">
-        <div class="modal-header">
-          <h3>New Supporting Document</h3> 
-        </div>
-        <div class="modal-body">
-          <md-field class="form-control" :class="getValidationClass('title')">
-            <label for="supdoc-title">What is the title of your supporting document?</label>
-            <md-input name="title" id="supdoc-title" v-model="form.title" />
-            <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
-            <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
-          </md-field>
-          <md-field class="form-control" :class="getValidationClass('url')">
-            <label for="supdoc-url">Supporting documents or links - Please enter the URL</label>
-            <md-input name="url" id="supdoc-url" v-model="form.url" />
-            <span class="md-error" v-if="!$v.form.url.required">URL is required</span>
-            <span class="md-error" v-else-if="!$v.form.url.minlength">Invalid URL</span>
-          </md-field>
-          <md-field class="form-control" :class="getValidationClass('type')">
-            <label for="supdoc-type">What type of supporting document are you adding?</label>
-            <md-select name="type" id="supdoc-type" v-model="form.type">
-              <md-option value="BusinessCases">Business Cases</md-option>
-              <md-option value="TechnologyInvestmentForm">Technology Investment Form</md-option>
-              <md-option value="Other">Other</md-option>
-            </md-select>
-            <span class="md-error" v-if="!$v.form.type.required">Type is required</span>
-          </md-field>
-        </div>
-        <div class="modal-footer text-right">
-          <divi-button v-if="sending == false" @click.native="$emit('close')">Cancel</divi-button>
-          <divi-button @click.native="savePost">Save</divi-button>
-        </div>
-        <md-progress-bar md-mode="indeterminate" class="md-primary" v-if="sending" />
+  <div>
+    <button v-on:click="accordion" class="accordion">Supporting Documents</button>
+    <div class="panel">
+      <md-table>
+        <md-table-row v-for="(doc, index) in documents" v-bind:key="`document-${index}`">
+          <md-table-cell md-label="Title" md-sort-by="title">{{ doc.title }}</md-table-cell>
+          <md-table-cell md-label="URL" md-sort-by="url">{{ doc.url }}</md-table-cell>
+          <md-table-cell md-label="Type" md-sort-by="type">{{ doc.type | displayDocType }}</md-table-cell>
+        </md-table-row>
+      </md-table>
+      <div v-if="documents.length === 0">
+        <md-empty-state
+          md-icon="location_city"
+          md-label="You have no supporting documents!"
+          md-description="Click the + button to get started.">
+        </md-empty-state>
       </div>
+      <md-button class="md-fab md-accent sd-add-button" @click="showModal = true">
+        <md-icon>add</md-icon>
+      </md-button>
     </div>
-  </transition>
+    <transition v-if="showModal" name="modal">
+      <div class="modal-mask">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h3>New Supporting Document</h3> 
+          </div>
+          <div class="modal-body">
+            <md-field class="form-control" :class="getValidationClass('title')">
+              <label for="supdoc-title">What is the title of your supporting document?</label>
+              <md-input name="title" id="supdoc-title" v-model="form.title" />
+              <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
+              <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
+            </md-field>
+            <md-field class="form-control" :class="getValidationClass('url')">
+              <label for="supdoc-url">Supporting documents or links - Please enter the URL</label>
+              <md-input name="url" id="supdoc-url" v-model="form.url" />
+              <span class="md-error" v-if="!$v.form.url.required">URL is required</span>
+              <span class="md-error" v-else-if="!$v.form.url.minlength">Invalid URL</span>
+            </md-field>
+            <md-field class="form-control" :class="getValidationClass('type')">
+              <label for="supdoc-type">What type of supporting document are you adding?</label>
+              <md-select name="type" id="supdoc-type" v-model="form.type">
+                <md-option value="BusinessCases">Business Cases</md-option>
+                <md-option value="TechnologyInvestmentForm">Technology Investment Form</md-option>
+                <md-option value="Other">Other</md-option>
+              </md-select>
+              <span class="md-error" v-if="!$v.form.type.required">Type is required</span>
+            </md-field>
+          </div>
+          <div class="modal-footer text-right">
+            <divi-button @click.native="showModal = false">Cancel</divi-button>
+            <divi-button @click.native="saveDocument">Save</divi-button>
+          </div>
+        </div>
+      </div>
+    </transition>
+  </div>
 </template>
 
 <script>
@@ -55,16 +76,32 @@ export default {
   mixins: [validationMixin],
   props: [
     'id',
-    'newInit'
+    'newInit',
+    'documents'
   ],
+  filters: {
+    displayDocType: function (value) {
+      const docTypes = {
+        'BusinessCases': 'Business Cases',
+        'TechnologyInvestmentForm': 'Technology Investment Form',
+        'Other': 'Other'
+      }
+
+      if (!docTypes[value]) {
+        return 'Unknown'
+      }
+
+      return docTypes[value]
+    }
+  },
   data: () => ({
     form: {
       title: null,
       url: null,
       type: null
     },
-    sending: false,
-    valid: null
+    valid: null,
+    showModal: false
   }),
   validations: {
     form: {
@@ -92,28 +129,26 @@ export default {
         }
       }
     },
-    savePost () {
+    saveDocument () {
       this.$v.$touch()
       if (this.$v.$invalid) {
         return
       }
-      this.sending = true
-      if (!this.newInit) {
-        this.services.ideas.createSupportingDoc(
-          this.id,
-          this.form.title,
-          this.form.url,
-          this.form.type
-        ).then(x => {
-          this.sending = false
-          this.$emit('close', this.form.title, this.form.url, this.form.type)
-        }).catch((err) => {
-          this.sending = false
-          console.debug(err)
-        })
-      } else if (this.newInit === true) {
-        this.sending = true
-        this.$emit('close', this.form.title, this.form.url, this.form.type)
+
+      this.showModal = false
+      this.$emit('close', this.form.title, this.form.url, this.form.type)
+      this.form.title = null
+      this.form.url = null
+      this.form.type = null
+    },
+    accordion () {
+      var acc = document.getElementsByClassName('accordion')[0]
+      acc.classList.toggle('active')
+      var panel = acc.nextElementSibling
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + 'px'
       }
     }
   }
@@ -199,5 +234,53 @@ export default {
     text-align: center;
     color: #f03a3a;
     font-size: 14px;
+  }
+
+  /* Documents */
+  tbody .md-table-row td {
+    border-top: 0px;
+  }
+
+  .sd-add-button {
+    float: right;
+    margin: 16px;
+  }
+
+  /* Accordion */
+  .accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+  }
+
+  .active, .accordion:hover {
+    background-color: #ccc;
+  }
+
+  .accordion:after {
+    content: '\002B';
+    color: #777;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+  }
+
+  .active:after {
+    content: "\2212";
+  }
+
+  .panel {
+    padding: 0 18px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
   }
 </style>
