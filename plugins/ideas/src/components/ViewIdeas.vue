@@ -70,9 +70,9 @@ export default {
         this.isLast = true
       }
     },
-    requestAPI (page, pageSize) {
+    requestAPI (page, pageSize, contains) {
       this.isLoading = true
-      return this.initiativeFunction(page, pageSize).then((response) => {
+      return this.initiativeFunction(page, pageSize, contains).then((response) => {
         this.checkIsLast(response)
         this.ideas = this.ideas.concat(response.data)
         this.isLoading = false
@@ -126,7 +126,7 @@ export default {
       this.initiativeFunction = this.services.ideas.getIdeas
     }
 
-    this.requestAPI(this.dataPage, this.dataPageSize).then((response) => {
+    this.requestAPI(this.dataPage, this.dataPageSize, this.contains).then((response) => {
       if (!isNaN(this.newInitiative)) {
         this.toastMessage('Initiative successfully submitted!')
       }

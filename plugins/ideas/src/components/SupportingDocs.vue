@@ -1,41 +1,71 @@
 <template>
-  <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-container">
-        <div class="modal-header">
-          <h3>New Supporting Document</h3> 
-        </div>
-        <div class="modal-body">
-          <md-field class="form-control" :class="getValidationClass('title')">
-            <label for="supdoc-title">What is the title of your supporting document?</label>
-            <md-input name="title" id="supdoc-title" v-model="form.title" />
-            <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
-            <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
-          </md-field>
-          <md-field class="form-control" :class="getValidationClass('url')">
-            <label for="supdoc-url">Supporting documents or links - Please enter the URL</label>
-            <md-input name="url" id="supdoc-url" v-model="form.url" />
-            <span class="md-error" v-if="!$v.form.url.required">URL is required</span>
-            <span class="md-error" v-else-if="!$v.form.url.minlength">Invalid URL</span>
-          </md-field>
-          <md-field class="form-control" :class="getValidationClass('type')">
-            <label for="supdoc-type">What type of supporting document are you adding?</label>
-            <md-select name="type" id="supdoc-type" v-model="form.type">
-              <md-option value="BusinessCases">Business Cases</md-option>
-              <md-option value="TechnologyInvestmentForm">Technology Investment Form</md-option>
-              <md-option value="Other">Other</md-option>
-            </md-select>
-            <span class="md-error" v-if="!$v.form.type.required">Type is required</span>
-          </md-field>
-        </div>
-        <div class="modal-footer text-right">
-          <divi-button v-if="sending == false" @click.native="$emit('close')">Cancel</divi-button>
-          <divi-button @click.native="savePost">Save</divi-button>
-        </div>
-        <md-progress-bar md-mode="indeterminate" class="md-primary" v-if="sending" />
+  <div>
+    <div class="full-control">
+      <div class="list">
+        <md-list md-expand-single>
+          <md-list-item md-expand="true">
+            <md-icon>description</md-icon>
+            <span class="md-list-item-text">Supporting Documents</span>
+            <div class="display-docs" slot="md-expand">
+              <md-table class="fill-width">
+                <md-table-row v-for="(doc, index) in documents" v-bind:key="`document-${index}`">
+                  <md-table-cell md-label="Title" md-sort-by="title">{{ doc.title }}</md-table-cell>
+                  <md-table-cell md-label="URL" md-sort-by="url">{{ doc.url }}</md-table-cell>
+                  <md-table-cell md-label="Type" md-sort-by="type">{{ doc.type | displayDocType }}</md-table-cell>
+                </md-table-row>
+              </md-table>
+              <div v-if="documents.length === 0" class="fill-width">
+                <md-empty-state
+                  md-icon="location_city"
+                  md-label="You have no supporting documents!"
+                  md-description="Click the + button to get started.">
+                </md-empty-state>
+              </div>
+              <md-button class="md-fab md-accent" @click="showModal = true">
+                <md-icon>add</md-icon>
+              </md-button>
+            </div>
+          </md-list-item>
+        </md-list>
       </div>
     </div>
-  </transition>
+    <transition v-if="showModal" name="modal">
+      <div class="modal-mask">
+        <div class="modal-container">
+          <div class="modal-header">
+            <h3>New Supporting Document</h3> 
+          </div>
+          <div class="modal-body">
+            <md-field class="form-control" :class="getValidationClass('title')">
+              <label for="supdoc-title">What is the title of your supporting document?</label>
+              <md-input name="title" id="supdoc-title" v-model="form.title" />
+              <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
+              <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
+            </md-field>
+            <md-field class="form-control" :class="getValidationClass('url')">
+              <label for="supdoc-url">Supporting documents or links - Please enter the URL</label>
+              <md-input name="url" id="supdoc-url" v-model="form.url" />
+              <span class="md-error" v-if="!$v.form.url.required">URL is required</span>
+              <span class="md-error" v-else-if="!$v.form.url.minlength">Invalid URL</span>
+            </md-field>
+            <md-field class="form-control" :class="getValidationClass('type')">
+              <label for="supdoc-type">What type of supporting document are you adding?</label>
+              <md-select name="type" id="supdoc-type" v-model="form.type">
+                <md-option value="BusinessCases">Business Cases</md-option>
+                <md-option value="TechnologyInvestmentForm">Technology Investment Form</md-option>
+                <md-option value="Other">Other</md-option>
+              </md-select>
+              <span class="md-error" v-if="!$v.form.type.required">Type is required</span>
+            </md-field>
+          </div>
+          <div class="modal-footer text-right">
+            <divi-button @click.native="showModal = false">Cancel</divi-button>
+            <divi-button @click.native="saveDocument">Save</divi-button>
+          </div>
+        </div>
+      </div>
+    </transition>
+  </div>
 </template>
 
 <script>
@@ -54,17 +84,31 @@ export default {
   },
   mixins: [validationMixin],
   props: [
-    'id',
-    'newInit'
+    'documents'
   ],
+  filters: {
+    displayDocType: function (value) {
+      const docTypes = {
+        'BusinessCases': 'Business Cases',
+        'TechnologyInvestmentForm': 'Technology Investment Form',
+        'Other': 'Other'
+      }
+
+      if (!docTypes[value]) {
+        return 'Unknown'
+      }
+
+      return docTypes[value]
+    }
+  },
   data: () => ({
     form: {
       title: null,
       url: null,
       type: null
     },
-    sending: false,
-    valid: null
+    valid: null,
+    showModal: false
   }),
   validations: {
     form: {
@@ -92,41 +136,24 @@ export default {
         }
       }
     },
-    savePost () {
+    saveDocument () {
       this.$v.$touch()
       if (this.$v.$invalid) {
         return
       }
-      this.sending = true
-      if (!this.newInit) {
-        this.services.ideas.createSupportingDoc(
-          this.id,
-          this.form.title,
-          this.form.url,
-          this.form.type
-        ).then(x => {
-          this.sending = false
-          this.$emit('close', this.form.title, this.form.url, this.form.type)
-        }).catch((err) => {
-          this.sending = false
-          console.debug(err)
-        })
-      } else if (this.newInit === true) {
-        this.sending = true
-        this.$emit('close', this.form.title, this.form.url, this.form.type)
-      }
+
+      this.showModal = false
+      this.$emit('close', this.form.title, this.form.url, this.form.type)
+      this.form.title = null
+      this.form.url = null
+      this.form.type = null
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import "~vue-material/dist/theme/engine";
-
-  * {
-      position: relative;
-      box-sizing: border-box;
-  }
 
   .md-menu-content {
     z-index: 200;
@@ -155,8 +182,7 @@ export default {
 
   .modal-header h3 {
     text-align: center;
-    // margin-top: 0;
-    color: #3f64df;
+    color: var(--primary-color);
   }
 
   .modal-body {
@@ -199,5 +225,28 @@ export default {
     text-align: center;
     color: #f03a3a;
     font-size: 14px;
+  }
+
+  /* Accordion overrides */
+  /* TODO remove !important rules */
+  // Override md-list
+  #app-ideas .full-control .md-list-item-expand {
+    cursor: auto;
+    user-select: inherit;
+  }
+
+  #app-ideas .full-control .md-ripple {
+    cursor: pointer;
+  }
+
+  .display-docs {
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .fill-width {
+    width: 100%;
   }
 </style>

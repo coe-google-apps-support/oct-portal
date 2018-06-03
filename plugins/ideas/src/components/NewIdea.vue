@@ -20,20 +20,7 @@
             </md-field>
           </div>
           <div class="min-height">
-            <md-button @click="showModal = true">
-              <label> Add a supporting document</label>
-              <md-icon>
-                add
-              </md-icon>
-            </md-button>
-            <md-table v-model="supportingDocs">
-              <md-table-row slot="md-table-row" slot-scope="{ item }">
-                <md-table-cell md-label="Title" md-sort-by="title">{{ item.title }}</md-table-cell>
-                <md-table-cell md-label="URL" md-sort-by="url">{{ item.url }}</md-table-cell>
-                <md-table-cell md-label="Type" md-sort-by="type">{{ item.type | displayDocType }}</md-table-cell>
-              </md-table-row>
-            </md-table>
-            <SupportingDocs v-if="showModal" :newInit="newInit = true" @close="getSupportingDocs"></SupportingDocs>
+            <SupportingDocs :documents="supportingDocs" @close="getSupportingDocs"></SupportingDocs>
           </div>
           <divi-button @click.native="saveIdea">Submit</divi-button>
         </div>
@@ -44,7 +31,6 @@
 </template>
 
 <script>
-import StolenFromDivi from '@/components/StolenFromDivi'
 import DiviButton from '@/components/divi/DiviButton'
 import { validationMixin } from 'vuelidate'
 import SupportingDocs from '@/components/SupportingDocs'
@@ -58,14 +44,12 @@ export default {
   name: 'NewIdea',
   mixins: [validationMixin],
   components: {
-    StolenFromDivi,
     DiviButton,
     SupportingDocs
   },
   data: () => ({
     ideaURL: '',
     sending: false,
-    showModal: false,
     supportingDocs: [],
     form: {
       title: null,
@@ -119,7 +103,6 @@ export default {
       }
     },
     getSupportingDocs (title, url, type) {
-      this.showModal = false
       if (title || url || type) {
         this.supportingDocs.push({title, url, type})
       }

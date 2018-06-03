@@ -24,27 +24,7 @@
           </md-table>
         </div>
         <br>
-        <div class="md-headline"> Supporting Documents
-          <SupportingDocs v-if="showModal" :id="slug" @close="updateSupportingDocs"></SupportingDocs>
-          <md-button class="md-fab md-accent sd-add-button" @click="showModal = true">
-            <md-icon>add</md-icon>
-          </md-button>
-        </div>
-        <md-divider class="oct-divider"></md-divider>
-          <md-table v-model="supportingDocs">
-            <md-table-row slot="md-table-row" slot-scope="{ item }">
-              <md-table-cell md-label="Title" md-sort-by="title">{{ item.title }}</md-table-cell>
-              <md-table-cell md-label="URL" md-sort-by="url">{{ item.url }}</md-table-cell>
-              <md-table-cell md-label="Type" md-sort-by="type">{{ item.type | displayDocType }}</md-table-cell>
-            </md-table-row>
-          </md-table>
-          <div v-if="supportingDocs.length === 0 && isLoading == false">
-            <md-empty-state
-              md-icon="location_city"
-              md-label="You have no supporting documents!"
-              md-description="Click the + button to get started.">
-            </md-empty-state>
-          </div>
+        <SupportingDocs :documents="supportingDocs" @close="updateSupportingDocs"></SupportingDocs>
       </div>
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
@@ -74,8 +54,7 @@ export default {
     resources: null,
     activeUser: null,
     canEditSteps: false,
-    supportingDocs: [],
-    showModal: false
+    supportingDocs: []
   }),
   components: {
     Assignee,
@@ -111,20 +90,7 @@ export default {
     })
   },
   filters: {
-    formatDate,
-    displayDocType: function (value) {
-      const docTypes = {
-        'BusinessCases': 'Business Cases',
-        'TechnologyInvestmentForm': 'Technology Investment Form',
-        'Other': 'Other'
-      }
-
-      if (!docTypes[value]) {
-        return 'Unknown'
-      }
-
-      return docTypes[value]
-    }
+    formatDate
   },
   methods: {
     updateDescription (stepIndex) {
@@ -136,10 +102,10 @@ export default {
       })
     },
     updateSupportingDocs (title, url, type) {
-      this.showModal = false
-      if (title || url || type) {
-        this.supportingDocs.push({title, url, type})
-      }
+      this.supportingDocs.push({title, url, type})
+      this.services.ideas.createSupportingDoc(this.initiative.id, title, url, type).catch((err) => {
+        this.errors.push(err)
+      })
     }
   }
 }
@@ -178,14 +144,6 @@ export default {
   
   .sd-headline {
     font-size: 25px;
-  }
-
-  tbody .md-table-row td {
-    border-top: 0px;
-  }
-
-  .sd-add-button {
-    float: right;
   }
 
   .center {
