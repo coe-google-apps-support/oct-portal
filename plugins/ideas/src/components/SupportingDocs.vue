@@ -184,7 +184,7 @@ export default {
 
   .modal-header h3 {
     text-align: center;
-    color: #3f64df;
+    color: var(--primary-color);
   }
 
   .modal-body {
