@@ -84,8 +84,6 @@ export default {
   },
   mixins: [validationMixin],
   props: [
-    'id',
-    'newInit',
     'documents'
   ],
   filters: {
