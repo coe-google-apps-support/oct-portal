@@ -1,24 +1,33 @@
 <template>
   <div>
-    <button v-on:click="accordion" class="accordion">Supporting Documents</button>
-    <div class="panel">
-      <md-table>
-        <md-table-row v-for="(doc, index) in documents" v-bind:key="`document-${index}`">
-          <md-table-cell md-label="Title" md-sort-by="title">{{ doc.title }}</md-table-cell>
-          <md-table-cell md-label="URL" md-sort-by="url">{{ doc.url }}</md-table-cell>
-          <md-table-cell md-label="Type" md-sort-by="type">{{ doc.type | displayDocType }}</md-table-cell>
-        </md-table-row>
-      </md-table>
-      <div v-if="documents.length === 0">
-        <md-empty-state
-          md-icon="location_city"
-          md-label="You have no supporting documents!"
-          md-description="Click the + button to get started.">
-        </md-empty-state>
+    <div class="full-control">
+      <div class="list">
+        <md-list md-expand-single>
+          <md-list-item md-expand="true">
+            <md-icon>description</md-icon>
+            <span class="md-list-item-text">Supporting Documents</span>
+            <div class="display-docs" slot="md-expand">
+              <md-table class="fill-width">
+                <md-table-row v-for="(doc, index) in documents" v-bind:key="`document-${index}`">
+                  <md-table-cell md-label="Title" md-sort-by="title">{{ doc.title }}</md-table-cell>
+                  <md-table-cell md-label="URL" md-sort-by="url">{{ doc.url }}</md-table-cell>
+                  <md-table-cell md-label="Type" md-sort-by="type">{{ doc.type | displayDocType }}</md-table-cell>
+                </md-table-row>
+              </md-table>
+              <div v-if="documents.length === 0" class="fill-width">
+                <md-empty-state
+                  md-icon="location_city"
+                  md-label="You have no supporting documents!"
+                  md-description="Click the + button to get started.">
+                </md-empty-state>
+              </div>
+              <md-button class="md-fab md-accent" @click="showModal = true">
+                <md-icon>add</md-icon>
+              </md-button>
+            </div>
+          </md-list-item>
+        </md-list>
       </div>
-      <md-button class="md-fab md-accent sd-add-button" @click="showModal = true">
-        <md-icon>add</md-icon>
-      </md-button>
     </div>
     <transition v-if="showModal" name="modal">
       <div class="modal-mask">
@@ -140,28 +149,13 @@ export default {
       this.form.title = null
       this.form.url = null
       this.form.type = null
-    },
-    accordion () {
-      var acc = document.getElementsByClassName('accordion')[0]
-      acc.classList.toggle('active')
-      var panel = acc.nextElementSibling
-      if (panel.style.maxHeight) {
-        panel.style.maxHeight = null
-      } else {
-        panel.style.maxHeight = panel.scrollHeight + 'px'
-      }
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import "~vue-material/dist/theme/engine";
-
-  * {
-      position: relative;
-      box-sizing: border-box;
-  }
 
   .md-menu-content {
     z-index: 200;
@@ -190,7 +184,6 @@ export default {
 
   .modal-header h3 {
     text-align: center;
-    // margin-top: 0;
     color: #3f64df;
   }
 
@@ -236,51 +229,26 @@ export default {
     font-size: 14px;
   }
 
-  /* Documents */
-  tbody .md-table-row td {
-    border-top: 0px;
+  /* Accordion overrides */
+  /* TODO remove !important rules */
+  // Override md-list
+  #app-ideas .full-control .md-list-item-expand {
+    cursor: auto;
+    user-select: inherit;
   }
 
-  .sd-add-button {
-    float: right;
-    margin: 16px;
-  }
-
-  /* Accordion */
-  .accordion {
-    background-color: #eee;
-    color: #444;
+  #app-ideas .full-control .md-ripple {
     cursor: pointer;
-    padding: 18px;
+  }
+
+  .display-docs {
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .fill-width {
     width: 100%;
-    border: none;
-    text-align: left;
-    outline: none;
-    font-size: 15px;
-    transition: 0.4s;
-  }
-
-  .active, .accordion:hover {
-    background-color: #ccc;
-  }
-
-  .accordion:after {
-    content: '\002B';
-    color: #777;
-    font-weight: bold;
-    float: right;
-    margin-left: 5px;
-  }
-
-  .active:after {
-    content: "\2212";
-  }
-
-  .panel {
-    padding: 0 18px;
-    background-color: white;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.2s ease-out;
   }
 </style>
