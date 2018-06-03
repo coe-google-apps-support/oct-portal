@@ -44,7 +44,6 @@
 </template>
 
 <script>
-import StolenFromDivi from '@/components/StolenFromDivi'
 import DiviButton from '@/components/divi/DiviButton'
 import { validationMixin } from 'vuelidate'
 import SupportingDocs from '@/components/SupportingDocs'
@@ -58,7 +57,6 @@ export default {
   name: 'NewIdea',
   mixins: [validationMixin],
   components: {
-    StolenFromDivi,
     DiviButton,
     SupportingDocs
   },
