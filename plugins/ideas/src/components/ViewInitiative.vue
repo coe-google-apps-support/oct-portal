@@ -24,7 +24,7 @@
           </md-table>
         </div>
         <br>
-        <SupportingDocs :id="slug" :documents="supportingDocs" @close="updateSupportingDocs"></SupportingDocs>
+        <SupportingDocs :documents="supportingDocs" @close="updateSupportingDocs"></SupportingDocs>
       </div>
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
@@ -102,9 +102,10 @@ export default {
       })
     },
     updateSupportingDocs (title, url, type) {
-      if (title || url || type) {
-        this.supportingDocs.push({title, url, type})
-      }
+      this.supportingDocs.push({title, url, type})
+      this.services.ideas.createSupportingDoc(this.initiative.id, title, url, type).catch((err) => {
+        this.errors.push(err)
+      })
     }
   }
 }
