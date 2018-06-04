@@ -82,10 +82,10 @@ let x = class IdeasService {
    */
   static getInitiativeSteps (id) {
     return HTTP.get(`/${id}/steps`).then((response) => {
-      if (response.data) {
+      if (response) {
         return response.data
       } else {
-        return response
+        return response.data
       }
     }, (err) => {
       console.error(`Failed at route /${id}/steps.`)
@@ -114,8 +114,8 @@ let x = class IdeasService {
    */
   static getSupportingDoc (id) {
     return HTTP.get(`${id}/supportingdocuments`).then((response) => {
-      if (response.data) {
-        return response.data
+      if (response) {
+        return response
       } else {
         return response
       }
@@ -169,9 +169,9 @@ let x = class IdeasService {
    * @return {Promise} A Promise that resolves with the resources.
    */
   static getResources (id) {
-    return HTTP.get(`${id}/resources`).then((resources) => {
-      console.log(resources)
-      return resources.data
+    return HTTP.get(`${id}/resources`).then((response) => {
+      console.log(response)
+      return response
     }, (issue) => {
       if (issue.response && issue.response.status === 404) {
         console.log('no resources')
