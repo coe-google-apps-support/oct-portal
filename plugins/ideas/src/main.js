@@ -6,12 +6,10 @@ import router from './router'
 import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import ServiceLoader from './services/service-loader.js'
-import Toasted from 'vue-toasted'
 
 Vue.config.productionTip = false
 Vue.use(VueMaterial)
 Vue.use(ServiceLoader)
-Vue.use(Toasted)
 
 /* eslint-disable no-new */
 new Vue({

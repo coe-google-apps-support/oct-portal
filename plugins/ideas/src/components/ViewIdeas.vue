@@ -24,6 +24,10 @@
         <div class="center-children" v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
           <divi-button class="md-accent" @click.native="infiniteHandler">Load more</divi-button>
         </div>
+        <md-snackbar v-if="newInitiative" md-position="center" :md-duration="Infinity" :md-active.sync="showSnackbar" md-persistent>
+          <span>Initiative successfully submitted!</span>
+          <md-button class="md-primary" @click="showSnackbar = false">Close</md-button>
+        </md-snackbar>
       </div>
     </transition>
     
@@ -55,7 +59,8 @@ export default {
     dataPageSize: null,
     initiativeFunction: null,
     isLast: false,
-    isLoading: true
+    isLoading: true,
+    showSnackbar: false
   }),
   components: {
     Initiative,
@@ -89,19 +94,6 @@ export default {
           this.requestAPI(this.dataPage, this.dataPageSize, this.contains)
         }
       }, 1000)
-    },
-    toastMessage (message) {
-      this.$toasted.show(message, {
-        theme: 'primary',
-        position: 'top-right',
-        icon: 'check_circle',
-        action: {
-          text: 'Close',
-          onClick: (e, toastObject) => {
-            toastObject.goAway(0)
-          }
-        }
-      })
     }
   },
   created () {
@@ -126,9 +118,11 @@ export default {
       this.initiativeFunction = this.services.ideas.getIdeas
     }
 
+    // this.requestAPI(this.dataPage, this.dataPageSize, this.contains)
     this.requestAPI(this.dataPage, this.dataPageSize, this.contains).then((response) => {
+      console.log('test: ' + this.newInitiative)
       if (!isNaN(this.newInitiative)) {
-        this.toastMessage('Initiative successfully submitted!')
+        this.showSnackbar = true
       }
     })
   }
