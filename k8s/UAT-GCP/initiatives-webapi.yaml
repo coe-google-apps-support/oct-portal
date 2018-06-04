@@ -2,6 +2,7 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: initiatives-webapi
+  namespace: uat
   labels:
     app: initiatives-webapi
     technology: dotnetcore
@@ -25,7 +26,7 @@ spec:
     spec:
       containers:
       - name: initiatives-webapi
-        image: coeoctava.azurecr.io/initiatives-webapi:v1.0.9
+        image: coeoctava.azurecr.io/initiatives-webapi:v1.0.10
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
