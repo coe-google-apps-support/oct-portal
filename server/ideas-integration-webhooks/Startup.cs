@@ -52,8 +52,9 @@ namespace CoE.Ideas.Webhooks
                 Configuration["ServiceBus:TopicName"],
                 Configuration["ServiceBus:Subscription"]);
 
+            services.Configure<WebhookUrlServiceOptions>("Webhooks", Configuration);
             services.AddSingleton<WebhookPoster>();
-
+            services.AddSingleton<IWebhookUrlService, WebhookUrlService>();
             return services;
         }
     }

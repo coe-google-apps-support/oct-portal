@@ -1,4 +1,5 @@
-﻿using CoE.Ideas.Core.ServiceBus;
+﻿using CoE.Ideas.Core.Data;
+using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Shared.Extensions;
 using CoE.Ideas.Shared.Security;
 using EnsureThat;
@@ -19,12 +20,14 @@ namespace CoE.Ideas.Webhooks
            //IActiveDirectoryUserService activeDirectoryUserService,
            IInitiativeMessageSender initiativeMessageSender,
            IInitiativeMessageReceiver initiativeMessageReceiver,
+           IWebhookUrlService webhookUrlService,
            Serilog.ILogger logger)
         {
 
             _initiativeMessageSender = initiativeMessageSender ?? throw new ArgumentNullException("initiativeMessageSender");
             _initiativeMessageReceiver = initiativeMessageReceiver ?? throw new ArgumentNullException("initiativeMessageReceiver");
             _logger = logger ?? throw new ArgumentNullException("logger");
+            _webhookUrlService = webhookUrlService ?? throw new ArgumentNullException("webhook");
 
             _initiativeMessageReceiver.ReceiveMessages(initiativeCreatedHandler: OnNewInitiative,
                 statusDescriptionChangedHandler: OnStatusDescriptionChanged);
@@ -36,27 +39,29 @@ namespace CoE.Ideas.Webhooks
 
             TimeZoneInfo albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton");
             var createDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(initiative.CreatedDate.DateTime, albertaTimeZone);
-            var createWebhookUrl = "https://hooks.zapier.com/hooks/catch/3360483/afz7k1/";
-
-            using (var client = new HttpClient())
+           
+            foreach (var eventUrl in _webhookUrlService.GetWebhookUrls(WebhookEvents.Created))
             {
-                var values = new Dictionary<string, string>
+                using (var client = new HttpClient())
                 {
-                    { "Action", "Create" },
-                    { "ID", initiative.Id.ToString()},
-                    { "Title", initiative.Title},
-                    { "OwnerName", owner.GetDisplayName()},
-                    { "OwnerEmail", owner.GetEmail() },
-                    { "CreatedDate", createDateAlberta.ToString()},
-                    { "Description", initiative.Description}
-                };
+                    var values = new Dictionary<string, string>
+                    {
+                        { "Action", "Create" },
+                        { "ID", initiative.Id.ToString()},
+                        { "Title", initiative.Title},
+                        { "OwnerName", owner.GetDisplayName()},
+                        { "OwnerEmail", owner.GetEmail() },
+                        { "CreatedDate", createDateAlberta.ToString()},
+                        { "Description", initiative.Description}
+                    };
 
-                var content = new FormUrlEncodedContent(values);
+                    var content = new FormUrlEncodedContent(values);
 
-                var response = await client.PostAsync(createWebhookUrl, content);
+                    var response = await client.PostAsync(eventUrl, content);
 
-                var responseString = await response.Content.ReadAsStringAsync();
+                    var responseString = await response.Content.ReadAsStringAsync();
 
+                }
             }
         }
 
@@ -65,35 +70,45 @@ namespace CoE.Ideas.Webhooks
             var initiative = initiativeStatusDescriptionChangedEventArgs.Initiative;
             var owner = initiativeStatusDescriptionChangedEventArgs.Owner;
 
+            InitiativeStatusHistory lastStep = initiative.StatusHistories?.OrderByDescending(x => x.StatusEntryDateUtc).FirstOrDefault();
             TimeZoneInfo albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton");
-            var createDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(initiative.CreatedDate.DateTime, albertaTimeZone);
-            var changeWebhookUrl = "https://hooks.zapier.com/hooks/catch/3360483/afz7k1/";
+            DateTime createDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(initiative.CreatedDate.DateTime, albertaTimeZone);
+            var expectedExitDateAlberta = lastStep == null? DateTime.MinValue: TimeZoneInfo.ConvertTimeFromUtc(lastStep.ExpectedExitDateUtc.Value, albertaTimeZone);
+            var nowDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, albertaTimeZone);
+            string expectedCompletionDateString = expectedExitDateAlberta.ToStringRelativeToNow(nowDateAlberta);
+            
 
-            using (var client = new HttpClient())
+            foreach (var eventUrl in _webhookUrlService.GetWebhookUrls(WebhookEvents.StatusChanged))
             {
-                var values = new Dictionary<string, string>
+                using (var client = new HttpClient())
                 {
-                    { "Action", "Status Description Changed" },
-                    { "ID", initiative.Id.ToString()},
-                    { "Title", initiative.Title},
-                    { "OwnerName", owner.GetDisplayName()},
-                    { "OwnerEmail", owner.GetEmail() },
-                    { "CreatedDate", createDateAlberta.ToString()},
-                    { "Description", initiative.Description}
-                };
+                    var values = new Dictionary<string, string>
+                    {
+                        { "Action", "StatusChange" },
+                        { "ID", initiative.Id.ToString()},
+                        { "Title", initiative.Title},
+                        { "OwnerName", owner.GetDisplayName()},
+                        { "OwnerEmail", owner.GetEmail() },
+                        { "CreatedDate", createDateAlberta.ToString()},
+                        { "Description", initiative.Description},
+                        { "ExpectedTime", expectedCompletionDateString},
+                        { "Status", initiative.Status.ToString()}
+                    };
 
-                var content = new FormUrlEncodedContent(values);
+                    var content = new FormUrlEncodedContent(values);
 
-                var response = await client.PostAsync(changeWebhookUrl, content);
+                    var response = await client.PostAsync(eventUrl, content);
 
-                var responseString = await response.Content.ReadAsStringAsync();
+                    var responseString = await response.Content.ReadAsStringAsync();
 
+                }
             }
         }
 
         //private readonly IActiveDirectoryUserService _activeDirectoryUserService;
         private readonly IInitiativeMessageSender _initiativeMessageSender;
         private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
+        private readonly IWebhookUrlService _webhookUrlService;
         private readonly Serilog.ILogger _logger;
 
 
