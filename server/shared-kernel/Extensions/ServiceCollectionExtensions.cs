@@ -137,10 +137,10 @@ namespace CoE.Ideas.Shared.Extensions
             string serviceBusConnectionString = null)
         {
             string connectionString = string.IsNullOrWhiteSpace(serviceBusConnectionString)
-                ? "server=wordpress-db;uid=root;pwd=octavadev;database=servicebusemulator"
+                ? "server=initiatives-db;database=ServiceBusEmulator;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;"
                 : serviceBusConnectionString;
 
-            services.AddDbContext<ServiceBusEmulatorContext>(options => options.UseMySql(connectionString));
+            services.AddDbContext<ServiceBusEmulatorContext>(options => options.UseSqlServer(connectionString));
             services.AddScoped<IServiceBusEmulator, ServiceBusEmulator>();
 
             return services;

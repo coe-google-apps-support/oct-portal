@@ -5,9 +5,19 @@ services:
     image: ideasserver
     depends_on: 
       - wordpress-db
+      - initiatives-db
     build:
       context: .
       dockerfile: ideas-server/ideas-server/Dockerfile
+
+  initiatives-db:
+    image: coeoctava.azurecr.io/initiatives-db:v1.0.2
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: OctavaDev100!
+      MSSQL_PID: Developer
 
   wordpress-db:
     image: coeoctava.azurecr.io/wordpress-db:v1.0.5
@@ -54,7 +64,6 @@ services:
   ideas-integration-remedy:
     depends_on: 
       - ideas-server
-      - wordpress-db
     image: ideasintegrationremedy
     build:
       context: .
@@ -63,7 +72,6 @@ services:
   ideas-integration-remedy-sblistener:
     depends_on: 
       - ideas-server
-      - wordpress-db
     image: ideasintegrationremedysblistener
     build:
       context: .
