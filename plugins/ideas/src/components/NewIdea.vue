@@ -20,7 +20,7 @@
             </md-field>
           </div>
           <div class="min-height">
-            <SupportingDocs :documents="supportingDocs" @close="getSupportingDocs"></SupportingDocs>
+            <SupportingDocs :documents="supportingDocs" :header="true" @close="getSupportingDocs"></SupportingDocs>
           </div>
           <divi-button @click.native="saveIdea">Submit</divi-button>
         </div>

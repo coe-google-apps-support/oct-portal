@@ -24,7 +24,7 @@
           </md-table>
         </div>
         <br>
-        <SupportingDocs :documents="supportingDocs" @close="updateSupportingDocs"></SupportingDocs>
+        <SupportingDocs :documents="supportingDocs" :header="sdHeaders" @close="updateSupportingDocs"></SupportingDocs>
       </div>
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
@@ -54,7 +54,8 @@ export default {
     resources: null,
     activeUser: null,
     canEditSteps: false,
-    supportingDocs: []
+    supportingDocs: [],
+    sdHeaders: null
   }),
   components: {
     Assignee,
@@ -77,13 +78,14 @@ export default {
     }).then((response) => {
       if (response && response[0]) {
         this.resources = response[0]
-        console.log(response[0])
       }
       if (response && response[1]) {
         this.steps = response[1]
       }
-      if (response && response[2]) {
-        this.supportingDocs = response[2]
+      if (response && response[2].data) {
+        this.supportingDocs = response[2].data
+        console.log('sd: ' + this.supportingDocs)
+        this.sdHeaders = response[2].headers
       }
 
       this.isLoading = false

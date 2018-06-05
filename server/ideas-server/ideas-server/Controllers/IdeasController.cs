@@ -460,6 +460,8 @@ namespace CoE.Ideas.Server.Controllers
                     {
                         if (User.IsAdmin() || IsCurrentUserAStakeholder(initiative))
                             Response.Headers.Add("Can-Edit", true.ToString());
+                        else
+                            Response.Headers.Add("Can-Edit", false.ToString());
 
                         return Task.FromResult((IActionResult)Ok(initiative.SupportingDocuments));
                     });

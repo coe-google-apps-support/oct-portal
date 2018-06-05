@@ -90,7 +90,7 @@ namespace CoE.Ideas.Server
                 //    .AllowAnyHeader();
                 builder.AllowAnyOrigin()
                     .WithMethods("OPTIONS", "GET", "PUT", "POST", "DELETE")
-                    .WithExposedHeaders("X-Is-Last-Page", "X-Total-Count")
+                    .WithExposedHeaders("X-Is-Last-Page", "X-Total-Count", "Can-Edit")
                     .AllowAnyHeader();
 
             });
