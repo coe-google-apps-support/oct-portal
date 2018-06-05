@@ -23,7 +23,6 @@
     "vue-infinite-loading": "^2.3.1",
     "vue-material": "1.0.0-beta-7",
     "vue-router": "^3.0.1",
-    "vue-toasted": "^1.1.24",
     "vuelidate": "^0.6.1"
   },
   "devDependencies": {
