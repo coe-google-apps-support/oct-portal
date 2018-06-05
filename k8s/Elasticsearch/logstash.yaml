@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: logstash-application
+  namespace: uat
+spec:
+  template:
+    metadata:
+      labels:
+        app: logstash-application
+    spec:
+      containers:
+      - image: coeoctava.azurecr.io/logstash:v1.0.0
+        name: logstash-application
+        ports:
+        - name: logstash
+          containerPort: 5044
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /usr/share/logstash/config/logstash.yml
+          subPath: logstash.yml
+          readOnly: true
+        - name: pipeline
+          mountPath: /usr/share/logstash/pipeline
+          readOnly: true
+        args:
+        - -f
+        - /usr/share/logstash/pipeline/logstash.conf
+        resources:
+          limits:
+            memory: 1Gi
+            cpu: "200m"
+          requests:
+            memory: 2Gi
+            cpu: "200m"
+      volumes:
+      - name: pipeline
+        secret:
+          secretName: logstash-pipeline
+      - name: config
+        configMap:
+          name: logstash-application
+          items:
+          - key: logstash.yml
+            path: logstash.yml
