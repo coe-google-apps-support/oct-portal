@@ -107,6 +107,43 @@ namespace CoE.Ideas.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Finds similar initiatives to the one provided.
+        /// </summary>
+        /// <param name="initiativeData">The document you'd like to find more like.</param>
+        /// <param name="limit">The number of documents to TRY to find at most.</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> GetLikeThis([FromBody] AddInitiativeDto initiativeData, [FromQuery] int limit = 3)
+        {
+            EnsureArg.IsNotNull(initiativeData);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.Warning("Unable to find similar initiatives because model state is not valid: {ModelState}", ModelState);
+                return BadRequest(ModelState);
+            }
+
+            EnsureArg.IsNotNull(initiativeData.Title);
+            EnsureArg.IsNotNull(initiativeData.Description);
+
+            _logger.Information("Finding more like this.");
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            PagedResultSet<Core.Data.InitiativeInfo> ideasInfo;
+            try
+            {
+                // TODO pull initiatives from repository.
+                return BadRequest(null);
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err, "Error reading initiatives: {ErrorMessage}", err.Message);
+                throw;
+            }
+        }
+
         // GET: ideas/5
         /// <summary>
         /// Retrieves a single Idea based on its Id

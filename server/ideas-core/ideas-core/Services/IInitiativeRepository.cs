@@ -21,7 +21,8 @@ namespace CoE.Ideas.Core.Services
             string filter = null, int pageNumber=1, int pageSize=20);
         Task<PagedResultSet<InitiativeInfo>> GetInitiativesAsync(string filter = null, 
             int page = 1, int pageSize = 20);
+        Task<PagedResultSet<InitiativeInfo>> GetInitiativesLikeThisAsync(Initiative initiative, int pageNumber = 1, int pageSize = 3);
 
-		//Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId);
-	}
+        //Task<IEnumerable<InitiativeStep>> GetInitiativeStepsAsync(int initiativeId);
+    }
 }

@@ -95,6 +95,11 @@ namespace CoE.Ideas.Core.Services
             return await PagedResultSet.Create(initiatives, pageNumber, pageSize);
         }
 
+        public async Task<PagedResultSet<InitiativeInfo>> GetInitiativesLikeThisAsync(Initiative initiative, int pageNumber = 1, int pageSize = 3)
+        {
+            return null;
+        }
+
         public async Task<Initiative> UpdateInitiativeAsync(Initiative initiative)
         {
             _initiativeContext.Entry(initiative).State = EntityState.Modified;
