@@ -2,7 +2,6 @@
 using CoE.Ideas.Core.Data;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.Services;
-using CoE.Ideas.Core.Tests;
 using CoE.Ideas.Server.Controllers;
 using CoE.Ideas.Shared.Security;
 using Microsoft.Extensions.Configuration;
@@ -75,7 +74,7 @@ namespace CoE.Ideas.Server.Tests
         public TestConfiguration ConfigureIdeaServices()
         {
             //_services.AddScoped<IWordPressClient, MockWordPressClient>();
-            _services.AddScoped<IInitiativeRepository, MockIdeaRepository>();
+            //_services.AddScoped<IInitiativeRepository, MockIdeaRepository>();
 
             //_services.AddMvc();
 

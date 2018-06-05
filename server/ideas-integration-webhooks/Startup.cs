@@ -35,13 +35,7 @@ namespace CoE.Ideas.Webhooks
             services.AddLogging();
 
             // configure application specific logging
-            services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .Enrich.WithProperty("Application", "Initiatives")
-                .Enrich.WithProperty("Module", "Logging")
-                .ReadFrom.Configuration(Configuration)
-                .CreateLogger());
-
+            services.ConfigureLogging(Configuration, "Webhooks");
 
             services.AddRemoteInitiativeConfiguration(Configuration["IdeasApi"]);
 

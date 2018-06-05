@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System;
 using System.Linq;
 
@@ -189,5 +190,31 @@ namespace CoE.Ideas.Core
             return services;
         }
 
+
+        public static IServiceCollection ConfigureLogging(this IServiceCollection services,
+            Microsoft.Extensions.Configuration.IConfiguration configuration,
+            string module)
+        {
+
+            services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithProperty("Application", "Initiatives")
+                .Enrich.WithProperty("Module", module)
+                .ReadFrom.Configuration(configuration)
+                //.WriteTo.MSSqlServer(connectionString: "server=initiatives-db;database=CoeIdeas;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;",
+                //    tableName: "Log",
+                //    autoCreateSqlTable: true
+                //    , columnOptions: new Serilog.Sinks.MSSqlServer.ColumnOptions()
+                //    {
+                //        AdditionalDataColumns = new System.Data.DataColumn[]
+                //        {
+                //            new System.Data.DataColumn("Module", typeof(string))
+                //        }
+                //    }
+                //)
+                .CreateLogger());
+
+            return services;
+        }
     }
 }
