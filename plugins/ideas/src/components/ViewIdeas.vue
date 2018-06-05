@@ -26,7 +26,7 @@
         </div>
         <md-snackbar v-if="newInitiative" md-position="center" :md-duration="Infinity" :md-active.sync="showSnackbar" md-persistent>
           <span>Initiative successfully submitted!</span>
-          <md-button class="md-primary" @click="showSnackbar = false">Close</md-button>
+          <md-button class="md-accent" @click="showSnackbar = false">Close</md-button>
         </md-snackbar>
       </div>
     </transition>
@@ -120,7 +120,6 @@ export default {
 
     // this.requestAPI(this.dataPage, this.dataPageSize, this.contains)
     this.requestAPI(this.dataPage, this.dataPageSize, this.contains).then((response) => {
-      console.log('test: ' + this.newInitiative)
       if (!isNaN(this.newInitiative)) {
         this.showSnackbar = true
       }
