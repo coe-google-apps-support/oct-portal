@@ -95,7 +95,7 @@ namespace CoE.Ideas.Shared.Extensions
         {
             // defaults (for dev environment) - this is not the same as Production!!
             string connectionString = string.IsNullOrWhiteSpace(permissionDbConnectionString)
-                ? "server=wordpress-db;uid=root;pwd=octavadev;database=octavapermissons"
+                ? "server=wordpress-db;uid=root;pwd=octavadev;database=initiatives"
                 : permissionDbConnectionString;
 
             services.AddDbContext<SecurityContext>(options =>
@@ -137,10 +137,10 @@ namespace CoE.Ideas.Shared.Extensions
             string serviceBusConnectionString = null)
         {
             string connectionString = string.IsNullOrWhiteSpace(serviceBusConnectionString)
-                ? "server=initiatives-db;database=ServiceBusEmulator;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;"
+                ? "server=wordpress-db;uid=root;pwd=octavadev;database=servicebusemulator"
                 : serviceBusConnectionString;
 
-            services.AddDbContext<ServiceBusEmulatorContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<ServiceBusEmulatorContext>(options => options.UseMySql(connectionString));
             services.AddScoped<IServiceBusEmulator, ServiceBusEmulator>();
 
             return services;
@@ -170,23 +170,7 @@ namespace CoE.Ideas.Shared.Extensions
         public static void InitializePermissionsDatabase(this IServiceProvider serviceProvider,
             params (string permissionName, string roleName)[] entities)
         {
-            int retryCount = 0;
-            SecurityContext context = null;
-            while (true)
-            {
-                context = serviceProvider.GetRequiredService<SecurityContext>();
-                try
-                {
-                    context.Database.Migrate();
-                    break;
-                }
-                catch (Exception)
-                {
-                    if (retryCount++ > 30)
-                        throw;
-                    System.Threading.Thread.Sleep(1000);
-                }
-            }
+            SecurityContext context = serviceProvider.GetRequiredService<SecurityContext>();
 
             // if here we can safely add the seed data
             if (entities != null && entities.Any())

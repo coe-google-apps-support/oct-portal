@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-notificat
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C05B4661-416B-4FAD-98C4-8164938F9B73}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-apex", "..\ideas-integration-apex\ideas-integration-apex.csproj", "{092B5795-0CC8-45B6-87BA-9070CA8240DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-apex", "ideas-integration-apex\ideas-integration-apex.csproj", "{092B5795-0CC8-45B6-87BA-9070CA8240DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

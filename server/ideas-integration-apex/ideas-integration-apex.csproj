@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -13,9 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\server\ideas-core\ideas-core\ideas-core.csproj" />
-    <ProjectReference Include="..\server\ideas-server\ideas-server\ideas-server.csproj" />
-    <ProjectReference Include="..\server\shared-kernel\shared-kernel.csproj" />
+    <ProjectReference Include="..\ideas-core\ideas-core\ideas-core.csproj" />
+    <ProjectReference Include="..\ideas-server\ideas-server\ideas-server.csproj" />
+    <ProjectReference Include="..\shared-kernel\shared-kernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
