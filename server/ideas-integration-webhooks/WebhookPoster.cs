@@ -46,7 +46,6 @@ namespace CoE.Ideas.Webhooks
                 {
                     var values = new Dictionary<string, string>
                     {
-                        { "Action", "Create" },
                         { "ID", initiative.Id.ToString()},
                         { "Title", initiative.Title},
                         { "OwnerName", owner.GetDisplayName()},
@@ -57,7 +56,7 @@ namespace CoE.Ideas.Webhooks
 
                     var content = new FormUrlEncodedContent(values);
 
-                    var response = await client.PostAsync("https://hooks.zapier.com/hooks/catch/3360483/afz7k1/", content);
+                    var response = await client.PostAsync(eventUrl, content);
 
                     var responseString = await response.Content.ReadAsStringAsync();
 
@@ -84,7 +83,6 @@ namespace CoE.Ideas.Webhooks
                 {
                     var values = new Dictionary<string, string>
                     {
-                        { "Action", "StatusChange" },
                         { "ID", initiative.Id.ToString()},
                         { "Title", initiative.Title},
                         { "OwnerName", owner.GetDisplayName()},
