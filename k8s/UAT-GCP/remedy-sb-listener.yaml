@@ -2,6 +2,7 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: remedy-sb-listener
+  namespace: uat
   labels:
     app: remedy-sb-listener
     technology: dotnetcore
