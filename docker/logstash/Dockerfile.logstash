@@ -1,0 +1,13 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t coeoctava.azurecr.io/logstash:v1.0.0 -f docker/logstash/Dockerfile.logstash .
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker push coeoctava.azurecr.io/logstash:v1.0.0
+
+FROM docker.elastic.co/logstash/logstash:6.2.4
+# remove the default pipeline as per https://www.elastic.co/guide/en/logstash/6.2/docker-config.html
+RUN rm -f /usr/share/logstash/pipeline/logstash.conf
+RUN logstash-plugin install logstash-input-jdbc
+ADD docker/logstash/mysql-connector-java-8.0.11.jar /usr/share/logstash/mysql-connector-java-8.0.11.jar
+CMD /usr/share/logstash/bin/logstash
