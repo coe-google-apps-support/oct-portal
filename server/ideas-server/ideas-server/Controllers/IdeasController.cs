@@ -458,7 +458,7 @@ namespace CoE.Ideas.Server.Controllers
                 {
                     return await ValidateAndGetInitiative(id, initiative =>
                     {
-                        if (IsCurrentUserAStakeholder(initiative))
+                        if (User.IsAdmin() || IsCurrentUserAStakeholder(initiative))
                             Response.Headers.Add("Can-Edit", true.ToString());
                         else
                             Response.Headers.Add("Can-Edit", false.ToString());
