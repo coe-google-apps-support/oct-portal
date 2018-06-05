@@ -9,6 +9,9 @@ spec:
       labels:
         app: logstash-application
     spec:
+      terminationGracePeriodSeconds: 300
+      imagePullSecrets:
+      - name: acs-access
       containers:
       - image: coeoctava.azurecr.io/logstash:v1.0.0
         name: logstash-application
@@ -26,14 +29,23 @@ spec:
           readOnly: true
         args:
         - -f
-        - /usr/share/logstash/pipeline/logstash.conf
+        - /usr/share/logstash/pipeline/logstash-pipeline.conf
         resources:
-          limits:
+          requests:
             memory: 1Gi
             cpu: "200m"
-          requests:
+          limits:
             memory: 2Gi
             cpu: "200m"
+      - name: proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+            "-instances=octavia-189116:us-west1:loggit-db=tcp:3306",
+            "-credential_file=/secrets/cloudsql/credentials.json"]
+        volumeMounts:
+          - name: proxy-service-account	
+            mountPath: /secrets/cloudsql
+            readOnly: true
       volumes:
       - name: pipeline
         secret:
@@ -44,3 +56,6 @@ spec:
           items:
           - key: logstash.yml
             path: logstash.yml
+      - name: proxy-service-account
+        secret:
+          secretName: octavadb-service-account  

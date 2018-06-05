@@ -1,16 +1,12 @@
-apiVersion: v1
 kind: Service
+apiVersion: v1
 metadata:
-  name: logstash-application
+  name: logstash-service
   namespace: uat
-  labels:
-    app: logstash-application
 spec:
-  type: LoadBalancer
   selector:
     app: logstash-application
   ports:
-  - name: logstash
+  - protocol: TCP
     port: 5044
-    targetPort: 5044
-    protocol: TCP
+  type: NodePort
