@@ -84,7 +84,6 @@ export default {
       }
       if (response && response[2].data) {
         this.supportingDocs = response[2].data
-        console.log('sd: ' + this.supportingDocs)
         this.sdHeaders = response[2].headers
       }
 

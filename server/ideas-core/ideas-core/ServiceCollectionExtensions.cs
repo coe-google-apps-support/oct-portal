@@ -29,17 +29,32 @@ namespace CoE.Ideas.Core
         /// <returns>The passed in services, for chaining</returns>
         public static IServiceCollection AddLocalInitiativeConfiguration(this IServiceCollection services,
             string dbConnectionString = null,
-            string applicationUrl = null)
+            string applicationUrl = null,
+            ServiceLifetime optionsLifeTime = ServiceLifetime.Scoped)
         {
             // default value is one is not supplied - Note this is not what Production/UAT uses, but just a convenience for local dev
             string connectionString = string.IsNullOrWhiteSpace(dbConnectionString)
                 ? "server=wordpress-db;uid=root;pwd=octavadev;database=initiatives" : dbConnectionString;
 
             services.AddDbContext<InitiativeContext>(options =>
-                options.UseMySql(connectionString));
+                options.UseMySql(connectionString),
+                optionsLifetime: optionsLifeTime);
 
-            services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
-            services.AddScoped<IHealthCheckable, LocalInitiativeRepository>();
+            switch (optionsLifeTime)
+            {
+                case ServiceLifetime.Scoped:
+                    services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
+                    services.AddScoped<IHealthCheckable, LocalInitiativeRepository>();
+                    break;
+                case ServiceLifetime.Singleton:
+                    services.AddSingleton<IInitiativeRepository, LocalInitiativeRepository>();
+                    services.AddSingleton<IHealthCheckable, LocalInitiativeRepository>();
+                    break;
+                default:
+                    services.AddTransient<IInitiativeRepository, LocalInitiativeRepository>();
+                    services.AddTransient<IHealthCheckable, LocalInitiativeRepository>();
+                    break;
+            }
 
             string applicationUrlFormatted = string.IsNullOrWhiteSpace(applicationUrl)
                 ? "http://localhost" : applicationUrl;
