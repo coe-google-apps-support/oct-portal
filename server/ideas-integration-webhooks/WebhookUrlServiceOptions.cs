@@ -6,8 +6,8 @@ namespace CoE.Ideas.Webhooks
 {
     public class WebhookUrlServiceOptions
     {
-        public string CreatedUrl { get; set;}
-        public string StatusChangedUrl { get; set; }
+        public string[] CreatedUrl { get; set;}
+        public string[] StatusChangedUrl { get; set; }
 
     }
 }

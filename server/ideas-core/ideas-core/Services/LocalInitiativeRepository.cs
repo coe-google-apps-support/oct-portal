@@ -43,22 +43,28 @@ namespace CoE.Ideas.Core.Services
             return initiative;
         }
 
-        public Task<Initiative> GetInitiativeAsync(Guid id)
+        public async Task<Initiative> GetInitiativeAsync(Guid id)
         {
-            return _initiativeContext.Initiatives
+            var returnValue = await _initiativeContext.Initiatives
                 .Include(x => x.StatusHistories)
                 .Include(x => x.Stakeholders)
                 .Include(x => x.SupportingDocuments)
                 .SingleOrDefaultAsync(x => x.Uid == id);
+            // inefficient but safe:
+            await _initiativeContext.Entry(returnValue).ReloadAsync();
+            return returnValue;
         }
 
-        public Task<Initiative> GetInitiativeAsync(int id)
+        public async Task<Initiative> GetInitiativeAsync(int id)
         {
-            return _initiativeContext.Initiatives
+            var returnValue = await _initiativeContext.Initiatives
 				.Include(x => x.StatusHistories)
                 .Include(x => x.Stakeholders)
                 .Include(x => x.SupportingDocuments)
                 .SingleOrDefaultAsync(x => x.Id == id);
+            // inefficient but safe:
+            await _initiativeContext.Entry(returnValue).ReloadAsync();
+            return returnValue;
         }
 
         private static IQueryable<InitiativeInfo> CreateInitiativeInfoQuery(IQueryable<Initiative> query, 

@@ -16,8 +16,8 @@ namespace CoE.Ideas.Webhooks
         {
             switch (eventType)
             {
-                case WebhookEvents.Created: return new string[] { _options.CreatedUrl };
-                case WebhookEvents.StatusChanged: return new string[] { _options.StatusChangedUrl };
+                case WebhookEvents.Created: return _options.CreatedUrl;
+                case WebhookEvents.StatusChanged: return _options.StatusChangedUrl;
                 default: throw new InvalidOperationException("Unkown webhook event");
             }
            

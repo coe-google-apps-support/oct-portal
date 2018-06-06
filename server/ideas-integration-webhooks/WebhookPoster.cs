@@ -134,7 +134,7 @@ namespace CoE.Ideas.Webhooks
 
             string expectedCompletionDateString = expectedExitDateAlberta == DateTime.MinValue
                 ? string.Empty
-                : expectedExitDateAlberta.ToStringRelativeToNow(nowDateAlberta);
+                : "by " + expectedExitDateAlberta.ToStringRelativeToNow(nowDateAlberta);
 
             await FireWebHooksAsync(initiative, 
                 WebhookEvents.StatusChanged,
