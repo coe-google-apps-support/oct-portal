@@ -1,8 +1,8 @@
 <template>
-  <md-card :class="{ 'first-card' : isNewIdea }">
+  <md-card class="card hvr-float" :class="{ 'first-card' : isNewIdea }">
     <md-card-media-cover>
       <md-card-media md-ratio="16:9">
-        <img :src="getImage()" alt="Skyscraper">
+        <img class="cardImage" :src="getImage()" alt="Skyscraper">
         <div class="oct-cover"></div>
       </md-card-media>
 
@@ -21,8 +21,7 @@
         <div class ="description-text">{{ initiative.description }}</div>
       </div>
       <div class="date-text md-subhead">{{ initiative.createdDate | formatDate }}</div>
-    </div>
-    
+    </div>  
     <md-divider></md-divider>
   
     <md-card-actions>
@@ -96,17 +95,24 @@ export default {
   height: 3.6em;
 }
 
+.cardImage {
+  filter: blur(5px);
+}
+.card:hover .cardImage {
+  filter: blur(2px);
+}
+
 .oct-cover {
   position: absolute;
   width: 100%;
   height: 100%;
-  opacity: 0.8;
+  opacity: 0.3;
   top: 50%;
   right: 0;
   left: 0;
   transform: translateY(-50%);
   z-index: 1;
-  background-color: var(--primary-color);
+  background-color: #444444;
 }
 
 .md-card {
@@ -164,6 +170,24 @@ export default {
 
 .date-text {
   text-align: right;
+}
+
+.hvr-float {
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
+  -webkit-transition-timing-function: ease-out;
+  transition-timing-function: ease-out;
+}
+.hvr-float:hover, .hvr-float:focus, .hvr-float:active {
+  -webkit-transform: translateY(-8px);
+  transform: translateY(-8px);
 }
 
 </style>
