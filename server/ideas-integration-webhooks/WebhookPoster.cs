@@ -122,8 +122,11 @@ namespace CoE.Ideas.Webhooks
             EnsureArg.IsNotNull(initiativeStatusDescriptionChangedEventArgs);
             EnsureArg.IsNotNull(initiativeStatusDescriptionChangedEventArgs.Initiative);
 
+
             var initiative = initiativeStatusDescriptionChangedEventArgs.Initiative;
-            InitiativeStatusHistory lastStep = initiative.StatusHistories?.OrderByDescending(x => x.StatusEntryDateUtc).FirstOrDefault();
+            _logger.Information("Initiative {InitiativeId} has had its status changed to {Status}, firing webhooks...", initiative.Id, initiative.Status.ToString());
+
+                InitiativeStatusHistory lastStep = initiative.StatusHistories?.OrderByDescending(x => x.StatusEntryDateUtc).FirstOrDefault();
             DateTime expectedExitDateAlberta = lastStep == null || !lastStep.ExpectedExitDateUtc.HasValue
                 ? DateTime.MinValue : TimeZoneInfo.ConvertTimeFromUtc(lastStep.ExpectedExitDateUtc.Value, AlbertaTimeZone);
             var nowDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, AlbertaTimeZone);
@@ -137,9 +140,8 @@ namespace CoE.Ideas.Webhooks
                 WebhookEvents.StatusChanged,
                 data: values =>
                 {
-                    values["Status"] = initiativeStatusDescriptionChangedEventArgs.Initiative.Status.ToString();
+                    values["Status"] = initiative.Status.ToString();
                     values["ExpectedTime"] = expectedCompletionDateString;
-               
                 },
                 cancellationToken: cancellationToken);
         }

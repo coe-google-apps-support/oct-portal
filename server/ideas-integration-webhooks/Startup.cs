@@ -32,16 +32,22 @@ namespace CoE.Ideas.Webhooks
                 .AddConsole(Configuration)
                 .AddDebug()
                 .AddSerilog());
+
             services.AddLogging();
 
             // configure application specific logging
+#if DEBUG
+            services.ConfigureLogging(Configuration, "Webhooks", useSqlServer: true);
+#else
             services.ConfigureLogging(Configuration, "Webhooks");
+#endif
 
             services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"));
 
             services.AddLocalInitiativeConfiguration(
                 Configuration.GetConnectionString("IdeaDatabase"),
-                Configuration["WordPress:Url"]);
+                Configuration["WordPress:Url"], 
+                optionsLifeTime: ServiceLifetime.Transient);
 
             services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
             services.AddPeopleService();

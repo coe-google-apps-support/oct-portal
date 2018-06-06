@@ -10,18 +10,21 @@ namespace CoE.Ideas.Core.ServiceBus
     {
         public LocalInitiativeMessageReceiver(IMessageReceiver messageReceiver,
                 Serilog.ILogger logger,
-                IInitiativeRepository initiativeRepository) : base(messageReceiver, logger)
+                IServiceProvider serviceProvider
+                ) : base(messageReceiver, logger)
         {
-            EnsureArg.IsNotNull(initiativeRepository);
-            _initiativeRepository = initiativeRepository;
+            EnsureArg.IsNotNull(serviceProvider);
+            _serviceProvider = serviceProvider;
         }
 
-        private readonly IInitiativeRepository _initiativeRepository;
+        private readonly IServiceProvider _serviceProvider;
 
         protected override IInitiativeRepository GetInitiativeRepository(ClaimsPrincipal owner)
         {
-            // local repository doesn't care about wheter
-            return _initiativeRepository;
+            // we use to just get the repository once, but in case it's defined as transient we'll 
+            // as the service provider every time
+            // note that "owner" is irrelevant for a local initiative repository
+            return (IInitiativeRepository)_serviceProvider.GetService(typeof(IInitiativeRepository));
         }
     }
 }

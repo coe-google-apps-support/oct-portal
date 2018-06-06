@@ -40,8 +40,21 @@ namespace CoE.Ideas.Core
                 options.UseSqlServer(connectionString),
                 optionsLifetime: optionsLifeTime);
 
-            services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
-            services.AddScoped<IHealthCheckable, LocalInitiativeRepository>();
+            switch (optionsLifeTime)
+            {
+                case ServiceLifetime.Scoped:
+                    services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
+                    services.AddScoped<IHealthCheckable, LocalInitiativeRepository>();
+                    break;
+                case ServiceLifetime.Singleton:
+                    services.AddSingleton<IInitiativeRepository, LocalInitiativeRepository>();
+                    services.AddSingleton<IHealthCheckable, LocalInitiativeRepository>();
+                    break;
+                default:
+                    services.AddTransient<IInitiativeRepository, LocalInitiativeRepository>();
+                    services.AddTransient<IHealthCheckable, LocalInitiativeRepository>();
+                    break;
+            }
 
             string applicationUrlFormatted = string.IsNullOrWhiteSpace(applicationUrl)
                 ? "http://localhost" : applicationUrl;

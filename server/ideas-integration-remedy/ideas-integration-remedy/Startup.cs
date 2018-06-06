@@ -48,7 +48,11 @@ namespace CoE.Ideas.Remedy
             services.AddLogging();
 
             // configure application specific logging
+#if DEBUG
+            services.ConfigureLogging(Configuration, "Remedy WO Creator", useSqlServer: true);
+#else
             services.ConfigureLogging(Configuration, "Remedy WO Creator");
+#endif
 
             services.AddRemoteInitiativeConfiguration(Configuration["IdeasApi"],
                 Configuration["WordPress:Url"]);
