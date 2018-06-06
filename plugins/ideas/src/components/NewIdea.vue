@@ -1,11 +1,9 @@
 <template>
   <div>
     <md-card>
-      <md-card-header class="card-title">
-        <md-card-header-text class="md-title">
-          Tell us your idea!
-        </md-card-header-text>
-      </md-card-header>
+      <md-toolbar class="md-primary">
+        <h3 class="text-padding md-title">Tell us your idea!</h3>
+      </md-toolbar>
       <form novalidate class="md-layout-row md-gutter">
         <div class="form-content">
           <div class="md-flex md-flex-small-100">
@@ -153,10 +151,6 @@ export default {
   .md-card {
     margin: 12px;
   }
-  
-  .card-title {
-    color: var(--primary-color);
-  }
 
   .min-height {
     min-height: 100px;
@@ -164,6 +158,10 @@ export default {
 
   .form-content {
     padding: 16px;
+  }
+
+  .text-padding {
+    padding: 10px;
   }
 </style>
 <style scoped>
