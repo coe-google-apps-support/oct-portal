@@ -44,6 +44,8 @@ namespace CoE.Ideas.Server
                 Configuration.GetConnectionString("IdeaDatabase"), 
                 Configuration["WordPress:Url"]);
 
+            services.AddPermissionSecurity(Configuration.GetConnectionString("WordPressDatabase"));
+
             System.Diagnostics.Trace.WriteLine("Does this get hit?");
 
             services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"));
@@ -83,6 +85,7 @@ namespace CoE.Ideas.Server
                 //    .AllowAnyHeader();
                 builder.AllowAnyOrigin()
                     .WithMethods("OPTIONS", "GET", "PUT", "POST", "DELETE")
+                    .WithExposedHeaders("X-Is-Last-Page", "X-Total-Count", "Can-Edit")
                     .AllowAnyHeader();
 
             });

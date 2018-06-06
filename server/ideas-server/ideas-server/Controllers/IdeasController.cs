@@ -14,6 +14,7 @@ using CoE.Ideas.Core.Services;
 using EnsureThat;
 using Microsoft.Extensions.Options;
 using CoE.Ideas.Shared.Data;
+using System.Net.Http;
 
 namespace CoE.Ideas.Server.Controllers
 {
@@ -53,7 +54,10 @@ namespace CoE.Ideas.Server.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All, [FromQuery]int page = 1, [FromQuery]int pageSize = 1000)
+        public async Task<IActionResult> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All, 
+            [FromQuery]string contains = null,
+            [FromQuery]int page = 1, 
+            [FromQuery]int pageSize = 1000)
         {
             _logger.Information("Retrieving Initiatives");
 
@@ -76,10 +80,11 @@ namespace CoE.Ideas.Server.Controllers
             {
                 if (view == ViewOptions.Mine)
                 {
-                    ideasInfo = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId(), page, pageSize);
+                    ideasInfo = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId(), 
+                        filter: contains, pageNumber: page, pageSize: pageSize);
                 }
                 else
-                    ideasInfo = await _repository.GetInitiativesAsync(page, pageSize);
+                    ideasInfo = await _repository.GetInitiativesAsync(filter: contains, page: page, pageSize: pageSize);
                 watch.Stop();
                 _logger.Information("Retrieved {InitiativesCount} Initiatives in {ElapsedMilliseconds}ms", ideasInfo.ResultCount, watch.ElapsedMilliseconds);
                 Request.HttpContext.Response.Headers.Add("X-Total-Count", ideasInfo.TotalCount.ToString());
@@ -181,6 +186,11 @@ namespace CoE.Ideas.Server.Controllers
                 int personId = User.GetPersonId();
 
 				newInitiative = Initiative.Create(initiativeData.Title, initiativeData.Description, personId, skipEmailNotification: skipEmailNotification);
+                foreach (var supportingDocument in initiativeData.SupportingDocuments)
+                {
+                    var newSupportingDocuments = SupportingDocument.Create(supportingDocument.Title, supportingDocument.Url, supportingDocument.Type);
+                    newInitiative.SupportingDocuments.Add(newSupportingDocuments);
+                }
                 newInitiative = await _repository.AddInitiativeAsync(newInitiative);
 
                 watch.Stop();
@@ -415,11 +425,18 @@ namespace CoE.Ideas.Server.Controllers
 
             return await ValidateAndGetInitiative(id, async initiative =>
             {
-                SupportingDocument newSupportingDocuments = null;
-                newSupportingDocuments = SupportingDocument.Create(supportingDocumentsDto.Title, supportingDocumentsDto.Url, supportingDocumentsDto.Type);
-                initiative.SupportingDocuments.Add(newSupportingDocuments);
-                await _repository.UpdateInitiativeAsync(initiative);
-                return Ok(newSupportingDocuments);
+                if (User.IsAdmin() || IsCurrentUserAStakeholder(initiative))
+                {
+                    SupportingDocument newSupportingDocuments = null;
+                    newSupportingDocuments = SupportingDocument.Create(supportingDocumentsDto.Title, supportingDocumentsDto.Url, supportingDocumentsDto.Type);
+                    initiative.SupportingDocuments.Add(newSupportingDocuments);
+                    await _repository.UpdateInitiativeAsync(initiative);
+                    return Ok(newSupportingDocuments);
+                }
+                else
+                {
+                    return Unauthorized();
+                }
             });
         }
 
@@ -441,6 +458,11 @@ namespace CoE.Ideas.Server.Controllers
                 {
                     return await ValidateAndGetInitiative(id, initiative =>
                     {
+                        if (User.IsAdmin() || IsCurrentUserAStakeholder(initiative))
+                            Response.Headers.Add("Can-Edit", true.ToString());
+                        else
+                            Response.Headers.Add("Can-Edit", false.ToString());
+
                         return Task.FromResult((IActionResult)Ok(initiative.SupportingDocuments));
                     });
                 }
@@ -456,6 +478,15 @@ namespace CoE.Ideas.Server.Controllers
 
                 }
             }
+        }
+
+        private bool IsCurrentUserAStakeholder(Initiative initiative)
+        {
+            EnsureArg.IsNotNull(initiative);
+            if (initiative.Stakeholders == null)
+                return false;
+            int myId = User.GetPersonId();
+            return (initiative.Stakeholders.Any(x => x.PersonId == myId));
         }
 
 

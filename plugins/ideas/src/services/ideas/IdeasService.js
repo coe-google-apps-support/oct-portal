@@ -14,18 +14,37 @@ import { HTTP } from '../../HttpCommon'
 let x = class IdeasService {
   /**
    * Returns a Promise that resolves with a list of ideas.
+   * @param {Number} page The 1-indexed page number.
+   * @param {Number} pageSize The number of results to return.
+   * @param {String} contains A search string to apply.
    * @returns {Promise} Resolved with an array of ideas.
    */
-  static getIdeas (page, pageSize) {
-    return HTTP.get(`?page=${page}&pageSize=${pageSize}`)
+  static getIdeas (page, pageSize, contains) {
+    return HTTP.get('', {
+      params: {
+        page,
+        pageSize,
+        contains
+      }
+    })
   }
 
   /**
    * Returns a Promise that resolves with a list of my initiatives.
+   * @param {Number} page The 1-indexed page number.
+   * @param {Number} pageSize The number of results to return.
+   * @param {String} contains A search string to apply.
    * @returns {Promise} Resolved with an array of my initiatives.
    */
-  static getMyInitiatives (page, pageSize) {
-    return HTTP.get(`?view=Mine&page=${page}&pageSize=${pageSize}`)
+  static getMyInitiatives (page, pageSize, contains) {
+    return HTTP.get('', {
+      params: {
+        view: 'Mine',
+        page,
+        pageSize,
+        contains
+      }
+    })
   }
 
   /**
@@ -94,13 +113,7 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with the supporting document(s).
    */
   static getSupportingDoc (id) {
-    return HTTP.get(`${id}/supportingdocuments`).then((response) => {
-      if (response.data) {
-        return response.data
-      } else {
-        return response
-      }
-    }, (err) => {
+    return HTTP.get(`${id}/supportingdocuments`).catch((err) => {
       console.error(`Failed at route /${id}/supportingdocuments`)
       console.error(err)
     })
@@ -110,14 +123,16 @@ let x = class IdeasService {
    * Creates a new initiative.
    * @param {string} title The title of the initiative.
    * @param {string} description The description of the initiative.
+   * @param {string} supportingDocuments A list of supporting documents of the initiative.
    * @param {string} businessSponsorEmail The email of the business sponsor.
    * @param {boolean} hasBudget Whether there is budget for this or not.
    * @param {Date} expectedTargetDate When should this be delivered?
    */
-  static createInitiative (title, description, businessSponsorEmail, hasBudget, expectedTargetDate) {
+  static createInitiative (title, description, supportingDocuments, businessSponsorEmail, hasBudget, expectedTargetDate) {
     return HTTP.post('', {
       title,
       description,
+      supportingDocuments,
       businessSponsorEmail,
       hasBudget,
       expectedTargetDate
@@ -148,9 +163,9 @@ let x = class IdeasService {
    * @return {Promise} A Promise that resolves with the resources.
    */
   static getResources (id) {
-    return HTTP.get(`${id}/resources`).then((resources) => {
-      console.log(resources)
-      return resources.data
+    return HTTP.get(`${id}/resources`).then((response) => {
+      console.log(response)
+      return response.data
     }, (issue) => {
       if (issue.response && issue.response.status === 404) {
         console.log('no resources')

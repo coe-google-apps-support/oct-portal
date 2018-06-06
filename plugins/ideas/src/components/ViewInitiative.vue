@@ -23,29 +23,13 @@
             </md-table-row>
           </md-table>
         </div>
-        <!-- <md-divider class="oct-divider"></md-divider> -->
         <br>
-        <div class="md-headline"> Supporting Documents
-          <SupportingDocs v-if="showModal" :id="slug" @close="updateSupportingDocs"></SupportingDocs>
-          <md-button class="sd-add-button" @click="showModal = true">
-            <md-icon>add</md-icon>
-          </md-button>
-        </div>
-        <md-divider class="oct-divider"></md-divider>
-          <md-table v-model="supportingDocs">
-            <md-table-row slot="md-table-row" slot-scope="{ item }">
-              <md-table-cell md-label="Title" md-sort-by="title">{{ item.title }}</md-table-cell>
-              <md-table-cell md-label="URL" md-sort-by="url">{{ item.url }}</md-table-cell>
-              <md-table-cell md-label="Type" md-sort-by="type">{{ item.type | displayDocType }}</md-table-cell>
-            </md-table-row>
-          </md-table>
+        <SupportingDocs :documents="supportingDocs" :header="sdHeaders" @close="updateSupportingDocs"></SupportingDocs>
       </div>
       <div v-if="steps != null" class="md-layout-item md-size-30 md-small-size-90 oct-steps">
         <Steps :steps="steps" :isEditable="canEditSteps" v-on:description-updated="updateDescription"></Steps>
       </div>
     </div>
-    <!-- TODO set minimum iframe height instead of <br> -->
-    <!-- <br><br><br><br><br><br><br><br><br> -->
   </div>
 </template>
 
@@ -71,7 +55,7 @@ export default {
     activeUser: null,
     canEditSteps: false,
     supportingDocs: [],
-    showModal: false
+    sdHeaders: null
   }),
   components: {
     Assignee,
@@ -94,52 +78,36 @@ export default {
     }).then((response) => {
       if (response && response[0]) {
         this.resources = response[0]
-        console.log(response[0])
       }
       if (response && response[1]) {
         this.steps = response[1]
       }
-      if (response && response[2]) {
-        this.supportingDocs = response[2]
+      if (response && response[2].data) {
+        this.supportingDocs = response[2].data
+        console.log('sd: ' + this.supportingDocs)
+        this.sdHeaders = response[2].headers
       }
 
       this.isLoading = false
     })
   },
   filters: {
-    formatDate,
-    displayDocType: function (value) {
-      const docTypes = {
-        'BusinessCases': 'Business Cases',
-        'TechnologyInvestmentForm': 'Technology Investment Form',
-        'Other': 'Other'
-      }
-
-      if (!docTypes[value]) {
-        return 'Unknown'
-      }
-
-      return docTypes[value]
-    }
+    formatDate
   },
   methods: {
     updateDescription (stepIndex) {
-      console.log('update description')
       let newDescription = this.steps[stepIndex].description
       let stepId = this.steps[stepIndex].stepId
-      console.log(`Okay for real now, setting to "${newDescription}"`)
       this.services.ideas.updateStatusDescription(this.initiative.id, stepId, newDescription).then(() => {
-        console.log('Status description update successful.')
       }, (err) => {
-        console.error('Failed updating status description.')
         this.errors.push(err)
       })
     },
     updateSupportingDocs (title, url, type) {
-      this.showModal = false
-      if (title || url || type) {
-        this.supportingDocs.push({title, url, type})
-      }
+      this.supportingDocs.push({title, url, type})
+      this.services.ideas.createSupportingDoc(this.initiative.id, title, url, type).catch((err) => {
+        this.errors.push(err)
+      })
     }
   }
 }
@@ -180,12 +148,11 @@ export default {
     font-size: 25px;
   }
 
-  tbody .md-table-row td {
-    border-top: 0px;
-  }
-
-  .sd-add-button {
-    position: relative;
-    margin: auto;
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 280px;
+    height: auto;
   }
 </style>

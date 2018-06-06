@@ -19,6 +19,9 @@
               <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
             </md-field>
           </div>
+          <div class="min-height">
+            <SupportingDocs :documents="supportingDocs" :header="true" @close="getSupportingDocs"></SupportingDocs>
+          </div>
           <divi-button @click.native="saveIdea">Submit</divi-button>
         </div>
         <md-progress-bar md-mode="indeterminate" class="md-accent" v-if="sending" />
@@ -28,9 +31,9 @@
 </template>
 
 <script>
-import StolenFromDivi from '@/components/StolenFromDivi'
 import DiviButton from '@/components/divi/DiviButton'
 import { validationMixin } from 'vuelidate'
+import SupportingDocs from '@/components/SupportingDocs'
 import {
   required,
   minLength,
@@ -41,12 +44,13 @@ export default {
   name: 'NewIdea',
   mixins: [validationMixin],
   components: {
-    StolenFromDivi,
-    DiviButton
+    DiviButton,
+    SupportingDocs
   },
   data: () => ({
     ideaURL: '',
     sending: false,
+    supportingDocs: [],
     form: {
       title: null,
       description: null,
@@ -70,6 +74,21 @@ export default {
       }
     }
   },
+  filters: {
+    displayDocType: function (value) {
+      const docTypes = {
+        'BusinessCases': 'Business Cases',
+        'TechnologyInvestmentForm': 'Technology Investment Form',
+        'Other': 'Other'
+      }
+
+      if (!docTypes[value]) {
+        return 'Unknown'
+      }
+
+      return docTypes[value]
+    }
+  },
   methods: {
     openUrl (url) {
       window.open(url, '_top')
@@ -81,6 +100,11 @@ export default {
         return {
           'md-invalid': field.$invalid && field.$dirty
         }
+      }
+    },
+    getSupportingDocs (title, url, type) {
+      if (title || url || type) {
+        this.supportingDocs.push({title, url, type})
       }
     },
     saveIdea () {
@@ -95,7 +119,8 @@ export default {
       console.log('saving new idea')
       this.services.ideas.createInitiative(
         this.form.title,
-        this.form.description
+        this.form.description,
+        this.supportingDocs
       ).then(x => {
         console.log('new idea saved!')
         this.sending = false
@@ -103,7 +128,6 @@ export default {
         if (idea && idea.url && idea.url.length > 0) {
           this.ideaURL = idea.url
         }
-
         // TODO Don't hardcode /you
         if (idea.id) {
           this.openUrl(`/you?newInitiative=${idea.id}`)
@@ -123,6 +147,10 @@ export default {
 
   .md-card {
     margin: 12px;
+  }
+
+  .min-height {
+    min-height: 100px;
   }
 
   .form-content {

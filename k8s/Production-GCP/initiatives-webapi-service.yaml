@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: initiatives-webapi
+  namespace: production
+  labels:
+    app: initiatives-webapi
+    technology: dotnetcore
+    tier: frontend
+    product: octava
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+  selector:
+    app: initiatives-webapi
+    technology: dotnetcore
+    tier: frontend
+    product: octava
