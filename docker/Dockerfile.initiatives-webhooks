@@ -1,0 +1,23 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t coeoctava.azurecr.io/initiatives-webhooks:latest -f docker/Dockerfile.initiatives-webhooks .
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker tag coeoctava.azurecr.io/initiatives-webhooks:latest coeoctava.azurecr.io/initiatives-webhooks:stretch
+# docker push coeoctava.azurecr.io/initiatives-webhooks:stretch
+# docker push coeoctava.azurecr.io/initiatives-webhooks:latest
+
+FROM microsoft/dotnet:2.0-sdk-stretch AS builder
+#ARG Configuration=Debug
+WORKDIR /usr/src/coe-initiatives-webhooks
+COPY ./server .
+WORKDIR /usr/src/coe-initiatives-webhooks/ideas-integration-webhooks
+RUN dotnet publish
+
+FROM microsoft/dotnet:2.0-runtime-stretch
+ARG Configuration=Debug
+WORKDIR /app
+COPY --from=builder /usr/src/coe-initiatives-webhooks/ideas-integration-webhooks/bin/$Configuration/netcoreapp2.0/publish  .
+
+ENTRYPOINT ["dotnet"]
+CMD ["ideas-integration-webhooks.dll"]
