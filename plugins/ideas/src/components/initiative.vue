@@ -88,7 +88,7 @@ export default {
 
 .description-text {
   position: relative;
-  @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: white);
+  @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: #fafafa);
 }
 
 .description-container {
