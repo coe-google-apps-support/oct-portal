@@ -34,10 +34,10 @@ namespace CoE.Ideas.Core
         {
             // default value is one is not supplied - Note this is not what Production/UAT uses, but just a convenience for local dev
             string connectionString = string.IsNullOrWhiteSpace(dbConnectionString)
-                ? "server=initiatives-db;database=CoeIdeas;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;" : dbConnectionString;
+                ? "server=wordpress-db;uid=root;pwd=octavadev;database=initiatives" : dbConnectionString;
 
             services.AddDbContext<InitiativeContext>(options =>
-                options.UseSqlServer(connectionString),
+                options.UseMySql(connectionString),
                 optionsLifetime: optionsLifeTime);
 
             switch (optionsLifeTime)

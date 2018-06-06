@@ -94,7 +94,7 @@ namespace CoE.Ideas.Core.Data
         InitiativeContext IDesignTimeDbContextFactory<InitiativeContext>.CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<InitiativeContext>();
-            builder.UseSqlServer("server=.;database=CoeIdeas;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;");
+            builder.UseMySql("server=127.0.0.1;uid=root;pwd=octavadev;database=initiatives");
 
             return new InitiativeContext(builder.Options, null, null);
         }

@@ -6,24 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20180315203805_Initial.cs" />
-    <Compile Remove="Migrations\20180315203850_Auditing.cs" />
-    <Compile Remove="Migrations\20180315203940_StatusHistoryStringTemplates.cs" />
-    <Compile Remove="Migrations\20180323172326_AddedStatusEtas.cs" />
-    <Compile Remove="Migrations\20180323203736_AddedStatusEtas.cs" />
-    <Compile Remove="Migrations\20180419152741_OverridableStatusDescriptions.cs" />
-    <Compile Remove="Migrations\20180426212005_AddApexId.cs" />
-    <Compile Remove="Migrations\20180427151619_MakeApexIdNullable.cs" />
-    <Compile Remove="Migrations\20180504143321_Jackson.cs" />
-    <Compile Remove="Migrations\20180504143702_Jackson.cs" />
-    <Compile Remove="Migrations\20180504144147_Jackson.cs" />
-    <Compile Remove="Migrations\20180504144230_Jackson.cs" />
-    <Compile Remove="Migrations\20180504190424_Jackson.cs" />
-    <Compile Remove="Migrations\20180504195523_Jackson.cs" />
-    <Compile Remove="Migrations\20180504201504_AddSupportingDocuments.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="3.2.0" />
     <PackageReference Include="Ensure.That" Version="7.2.1" />
