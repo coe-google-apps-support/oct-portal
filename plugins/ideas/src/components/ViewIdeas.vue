@@ -145,6 +145,7 @@ export default {
   }
 
   .center-children {
+    padding: 30px;
     display: flex;
     justify-content: center;
   }
