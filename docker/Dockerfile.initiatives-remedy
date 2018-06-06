@@ -1,6 +1,6 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t coeoctava.azurecr.io/initiatives-remedy:latest -f docker/Dockerfile.initiatives-remedy.stretch ./server
+# docker image build -t coeoctava.azurecr.io/initiatives-remedy:latest -f docker/Dockerfile.initiatives-remedy .
 #
 # And to push to the CoE Azure Repo (requires credentials):
 # docker tag coeoctava.azurecr.io/initiatives-remedy:latest coeoctava.azurecr.io/initiatives-remedy:stretch
@@ -10,15 +10,13 @@
 FROM microsoft/dotnet:2.0-sdk-stretch AS builder
 #ARG Configuration=Debug
 WORKDIR /usr/src/coe-initiatives-remedy
-COPY . .
+COPY ./server .
 WORKDIR /usr/src/coe-initiatives-remedy/ideas-integration-remedy/ideas-integration-remedy
 RUN dotnet publish
-WORKDIR /usr/src/coe-initiatives-remedy/ideas-integration-remedy/ideas-integration-remedy/bin/$Configuration/netcoreapp2.0
-
 
 FROM microsoft/dotnet:2.0-runtime-stretch
 ARG Configuration=Debug
-WORKDIR /var/coe/initiatives-integration-remedy
+WORKDIR /app
 COPY --from=builder /usr/src/coe-initiatives-remedy/ideas-integration-remedy/ideas-integration-remedy/bin/$Configuration/netcoreapp2.0/publish  .
 
 ENTRYPOINT ["dotnet"]
