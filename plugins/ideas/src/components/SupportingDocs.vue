@@ -14,14 +14,20 @@
                   <md-table-cell md-label="Type" md-sort-by="type">{{ doc.type | displayDocType }}</md-table-cell>
                 </md-table-row>
               </md-table>
-              <div v-if="documents.length === 0" class="fill-width">
+              <div v-if="documents.length === 0 && editPermissions === false" class="fill-width">
                 <md-empty-state
                   md-icon="location_city"
-                  md-label="You have no supporting documents!"
+                  md-label="There are no supporting documents!">
+                </md-empty-state>
+              </div>
+              <div v-if="documents.length === 0 && editPermissions === true" class="fill-width">
+                <md-empty-state
+                  md-icon="location_city"
+                  md-label="There are no supporting documents!"
                   md-description="Click the + button to get started.">
                 </md-empty-state>
               </div>
-              <md-button class="md-fab md-accent" @click="showModal = true">
+              <md-button v-if="editPermissions === true" class="md-fab md-accent" @click="showModal = true">
                 <md-icon>add</md-icon>
               </md-button>
             </div>
@@ -84,7 +90,8 @@ export default {
   },
   mixins: [validationMixin],
   props: [
-    'documents'
+    'documents',
+    'header'
   ],
   filters: {
     displayDocType: function (value) {
@@ -108,7 +115,8 @@ export default {
       type: null
     },
     valid: null,
-    showModal: false
+    showModal: false,
+    editPermissions: false
   }),
   validations: {
     form: {
@@ -127,6 +135,19 @@ export default {
     }
   },
   methods: {
+    checkPermissions (header) {
+      if (header['can-edit']) {
+        var x = header['can-edit']
+        if (x === 'False') {
+          this.editPermissions = false
+        } else if (x === 'True') {
+          this.editPermissions = true
+        }
+      }
+      if (header === true) {
+        this.editPermissions = true
+      }
+    },
     getValidationClass (fieldName) {
       const field = this.$v.form[fieldName]
 
@@ -148,6 +169,9 @@ export default {
       this.form.url = null
       this.form.type = null
     }
+  },
+  created () {
+    this.checkPermissions(this.header)
   }
 }
 </script>

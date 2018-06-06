@@ -20,8 +20,7 @@ namespace CoE.Ideas.Core.ServiceBus
 
         protected override IInitiativeRepository GetInitiativeRepository(ClaimsPrincipal owner)
         {
-            var remoteInitiativeRepository = _serviceProvider.GetService(typeof(RemoteInitiativeRepository)) as RemoteInitiativeRepository;
-            if (remoteInitiativeRepository == null)
+            if (!(_serviceProvider.GetService(typeof(RemoteInitiativeRepository)) is RemoteInitiativeRepository remoteInitiativeRepository))
                 throw new InvalidOperationException("Unable to find RemoteInitiativeRepository in ServiceProvider");
             remoteInitiativeRepository.SetUser(owner);
             return remoteInitiativeRepository;

@@ -113,13 +113,7 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with the supporting document(s).
    */
   static getSupportingDoc (id) {
-    return HTTP.get(`${id}/supportingdocuments`).then((response) => {
-      if (response.data) {
-        return response.data
-      } else {
-        return response
-      }
-    }, (err) => {
+    return HTTP.get(`${id}/supportingdocuments`).catch((err) => {
       console.error(`Failed at route /${id}/supportingdocuments`)
       console.error(err)
     })
@@ -169,9 +163,9 @@ let x = class IdeasService {
    * @return {Promise} A Promise that resolves with the resources.
    */
   static getResources (id) {
-    return HTTP.get(`${id}/resources`).then((resources) => {
-      console.log(resources)
-      return resources.data
+    return HTTP.get(`${id}/resources`).then((response) => {
+      console.log(response)
+      return response.data
     }, (issue) => {
       if (issue.response && issue.response.status === 404) {
         console.log('no resources')

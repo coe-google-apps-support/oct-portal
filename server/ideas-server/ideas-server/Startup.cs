@@ -38,12 +38,7 @@ namespace CoE.Ideas.Server
         public void ConfigureServices(IServiceCollection services)
         {
             // configure application specific logging
-            services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .Enrich.WithProperty("Application", "Initiatives")
-                .Enrich.WithProperty("Module", "Server")
-                .ReadFrom.Configuration(Configuration)
-                .CreateLogger());
+            services.ConfigureLogging(Configuration, "Server", useSqlServer: HostingEnvironment.IsDevelopment());
 
             services.AddLocalInitiativeConfiguration(
                 Configuration.GetConnectionString("IdeaDatabase"), 
@@ -90,7 +85,7 @@ namespace CoE.Ideas.Server
                 //    .AllowAnyHeader();
                 builder.AllowAnyOrigin()
                     .WithMethods("OPTIONS", "GET", "PUT", "POST", "DELETE")
-                    .WithExposedHeaders("X-Is-Last-Page", "X-Total-Count")
+                    .WithExposedHeaders("X-Is-Last-Page", "X-Total-Count", "Can-Edit")
                     .AllowAnyHeader();
 
             });

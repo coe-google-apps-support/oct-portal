@@ -50,13 +50,7 @@ namespace CoE.Ideas.Integration.Apex
             services.AddLogging();
 
             // configure application specific logging
-            services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .Enrich.WithProperty("Application", "Initiatives")
-                .Enrich.WithProperty("Module", "Apex Listener")
-                .ReadFrom.Configuration(Configuration)
-                .CreateLogger());
-
+            services.ConfigureLogging(Configuration, "Apex Listener");
 
             // Add Idea Repository
             services.AddLocalInitiativeConfiguration(

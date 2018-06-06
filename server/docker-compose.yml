@@ -77,7 +77,20 @@ services:
       context: .
       dockerfile: ideas-integration-remedy/ideas-integration-remedy-sblistener/Dockerfile
 
+  ideas-integration-webhooks:
+    image: ideasintegrationwebhooks
+    build:
+      context: .
+      dockerfile: ideas-integration-webhooks/Dockerfile
+
+  ideas-integration-remedy-watcher:
+    image: ${DOCKER_REGISTRY}ideasintegrationremedywatcher
+    build:
+      context: .
+      dockerfile: ideas-integration-remedy/ideas-integration-remedy-watcher/Dockerfile
+
 volumes:
   wp-dbdata:
+
 
 
