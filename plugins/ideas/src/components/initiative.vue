@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     openUrl () {
-      window.open(this.initiative.url, '_blank')
+      window.open(this.initiative.url, '_top')
     },
     getImage () {
       const images = [
