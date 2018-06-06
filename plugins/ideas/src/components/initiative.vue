@@ -99,7 +99,7 @@ export default {
   filter: blur(5px);
 }
 .card:hover .cardImage {
-  filter: blur(2px);
+  filter: blur(1.5px);
 }
 
 .oct-cover {
