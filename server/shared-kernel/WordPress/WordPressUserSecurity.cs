@@ -466,10 +466,12 @@ namespace CoE.Ideas.Shared.WordPress
                     var pwd = parts[1]; //.ToSecureString();
                     if (pwd != null && pwd.Equals(_options.AdminServicePrincipalPassword))
                     {
-                        var claims = new List<Claim>();
-                        claims.Add(new Claim(ClaimTypes.Spn, parts[0]));
-                        claims.Add(new Claim(CLAIM_AUTH_SERVICE_PRINCIPAL_PASSWORD, parts[1]));
-                        claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "SPN"));
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Spn, parts[0]),
+                            new Claim(CLAIM_AUTH_SERVICE_PRINCIPAL_PASSWORD, parts[1]),
+                            new Claim(ClaimTypes.AuthenticationMethod, "SPN")
+                        };
 
                         return new ClaimsPrincipal(new ClaimsIdentity(claims, "Octava"));
                     }
@@ -486,10 +488,12 @@ namespace CoE.Ideas.Shared.WordPress
                 string.IsNullOrWhiteSpace(_options.AdminServicePrincipalPassword))
                 return Task.FromResult<ClaimsPrincipal>(null);
 
-            var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Spn, _options.AdminServicePrincipalName));
-            claims.Add(new Claim(CLAIM_AUTH_SERVICE_PRINCIPAL_PASSWORD, _options.AdminServicePrincipalPassword));
-            claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "SPN"));
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Spn, _options.AdminServicePrincipalName),
+                new Claim(CLAIM_AUTH_SERVICE_PRINCIPAL_PASSWORD, _options.AdminServicePrincipalPassword),
+                new Claim(ClaimTypes.AuthenticationMethod, "SPN")
+            };
 
             return Task.FromResult(new ClaimsPrincipal(new ClaimsIdentity(claims, "Octava")));
         }

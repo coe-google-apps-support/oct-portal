@@ -51,7 +51,7 @@ namespace CoE.Ideas.Remedy.SbListener
             services.AddLogging();
 
             // configure application specific logging
-            services.ConfigureLogging(Configuration, "Remedy Servsice Bus Listener");
+            services.ConfigureLogging(Configuration, "Remedy Service Bus Listener");
 
             // Add Idea Repository
             services.AddLocalInitiativeConfiguration(

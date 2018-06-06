@@ -9,6 +9,5 @@ namespace CoE.Ideas.Core.ServiceBus
     public class InitiativeStatusChangedEventArgs
     {
         public Initiative Initiative { get; set; }
-        public ClaimsPrincipal Owner { get; set; }
     }
 }

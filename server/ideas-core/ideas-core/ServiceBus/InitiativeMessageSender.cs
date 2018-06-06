@@ -175,7 +175,6 @@ namespace CoE.Ideas.Core.ServiceBus
 
             var userProperties = new Dictionary<string, object>();
             SetInitiative(args.Initiative, userProperties);
-            SetOwner(args.Owner, userProperties);
             return _messageSender.SendMessageAsync(STATUS_CHANGED, userProperties);
         }
 

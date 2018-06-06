@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,21 +18,17 @@ namespace CoE.Ideas.Core.EventHandlers
     {
         public CaptureInitiativeStatusChangedDomainEventHandler(Serilog.ILogger logger,
             IInitiativeRepository initiativeRepository,
-            IHttpContextAccessor httpContextAccessor,
             IInitiativeMessageSender initiativeMessageSender)
         {
             EnsureArg.IsNotNull(initiativeRepository);
-            EnsureArg.IsNotNull(httpContextAccessor);
             EnsureArg.IsNotNull(initiativeMessageSender);
 
             _logger = logger;
             _initiativeRepository = initiativeRepository;
-            _httpContextAccessor = httpContextAccessor;
             _initiativeMessageSender = initiativeMessageSender;
         }
         private readonly Serilog.ILogger _logger;
         private readonly IInitiativeRepository _initiativeRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IInitiativeMessageSender _initiativeMessageSender;
 
         public async Task Handle(InitiativeStatusChangedDomainEvent notification, CancellationToken cancellationToken)
@@ -48,10 +45,9 @@ namespace CoE.Ideas.Core.EventHandlers
             else
                 _logger.Information("Posting NewInitiativeCreated event to service bus for Initiative {InitiativeId}", initiative.Id);
 
-            await _initiativeMessageSender.SendInitiativeStatusDescriptionChangedAsync(new InitiativeStatusDescriptionChangedEventArgs()
+            await _initiativeMessageSender.SendInitiativeStatusChangedAsync(new InitiativeStatusChangedEventArgs()
             {
-                Initiative = initiative,
-                Owner = _httpContextAccessor.HttpContext.User
+                Initiative = initiative
             });
         }
     }

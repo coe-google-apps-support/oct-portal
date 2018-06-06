@@ -105,6 +105,12 @@ namespace CoE.Ideas.Core.ServiceBus
                         else
                             await _messageReceiver.CompleteAsync(msg.LockToken);
                         break;
+                    case InitiativeMessageSender.STATUS_CHANGED:
+                        if (statusChangedHandler != null)
+                            await ReceiveInitiativeStatusChanged(msg, token, statusChangedHandler);
+                        else
+                            await _messageReceiver.CompleteAsync(msg.LockToken);
+                        break;
                     case InitiativeMessageSender.STATUS_DESCRIPTION_CHANGED:
                         if (statusDescriptionChangedHandler != null)
                             await ReceiveInitiativeStatusDescriptionChanged(msg, token, statusDescriptionChangedHandler);
@@ -119,6 +125,39 @@ namespace CoE.Ideas.Core.ServiceBus
                 }
             }, messageHandlerOptions);
         }
+
+        protected virtual async Task ReceiveInitiativeStatusChanged(Message msg, CancellationToken token, Func<InitiativeStatusChangedEventArgs, CancellationToken, Task> handler)
+        {
+            if (msg == null)
+                throw new ArgumentNullException("msg");
+            if (handler == null)
+                throw new ArgumentNullException("handler");
+
+            if (await EnsureMessageLabel(msg, InitiativeMessageSender.STATUS_CHANGED))
+            {
+                _logger.Information("Received StatusChanged message. Getting initiative");
+
+                var idea = await GetMessageInitiative(msg);
+                if (idea.WasMessageDeadLettered)
+                    return;
+
+                try
+                {
+                    await handler(new InitiativeStatusChangedEventArgs()
+                    {
+                        Initiative = idea.Item
+                    }, token);
+                    await _messageReceiver.CompleteAsync(msg.LockToken);
+                }
+                catch (Exception err)
+                {
+                    _logger.Error(err, "InitiativeStatusChanged handler threw the following error, abandoning message for future processing: {ErrorMessage}",  err.Message);
+                    await _messageReceiver.AbandonAsync(msg.LockToken);
+                }
+
+            }
+        }
+
 
         protected virtual async Task ReceiveInitiativeStatusDescriptionChanged(Message msg, CancellationToken token, Func<InitiativeStatusDescriptionChangedEventArgs, CancellationToken, Task> handler)
         {
@@ -149,7 +188,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 }
                 catch (Exception err)
                 {
-                    System.Diagnostics.Trace.TraceWarning($"InitiativeStatusDescriptionChanged handler threw the following error, abandoning message for future processing: { err.Message }");
+                    _logger.Error(err, "InitiativeStatusDescriptionChanged handler threw the following error, abandoning message for future processing: {ErrorMessage}", err.Message);
                     await _messageReceiver.AbandonAsync(msg.LockToken);
                 }
 
@@ -191,7 +230,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 }
                 catch (Exception err)
                 {
-                    System.Diagnostics.Trace.TraceWarning($"InitiativeCreated handler threw the following error, abandoning message for future processing: { err.Message }");
+                    _logger.Error(err, "InitiativeCreated handler threw the following error, abandoning message for future processing: {ErrorMessage}", err.Message);
                     await _messageReceiver.AbandonAsync(msg.LockToken);
                 }
             }
@@ -233,7 +272,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 }
                 catch (Exception err)
                 {
-                    System.Diagnostics.Trace.TraceWarning($"InitiativeWorkItemCreated handler threw the following error, abandoning message for future processing: { err.Message }");
+                    _logger.Error(err, "InitiativeWorkItemCreated handler threw the following error, abandoning message for future processing: {ErrorMessage}", err.Message);
                     await _messageReceiver.AbandonAsync(msg.LockToken);
                 }
             }
@@ -279,7 +318,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 }
                 catch (Exception err)
                 {
-                    System.Diagnostics.Trace.TraceWarning($"WorkOrderUpdated handler threw the following error, abandoning message for future processing: { err.Message }");
+                    _logger.Error(err, "WorkOrderUpdated handler threw the following error, abandoning message for future processing: {ErrorMessage}", err.Message);
                     await _messageReceiver.AbandonAsync(msg.LockToken);
                 }
             }
@@ -316,7 +355,7 @@ namespace CoE.Ideas.Core.ServiceBus
                 }
                 catch (Exception err)
                 {
-                    System.Diagnostics.Trace.TraceWarning($"InitiativeLogged handler threw the following error, abandoning message for future processing: { err.Message }");
+                    _logger.Error(err, "InitiativeLogged handler threw the following error, abandoning message for future processing: {ErrorMessage}", err.Message);
                     await _messageReceiver.AbandonAsync(msg.LockToken);
                 }
             }
@@ -335,7 +374,7 @@ namespace CoE.Ideas.Core.ServiceBus
         }
 
 
-        protected virtual async Task<GetItemResult<Initiative>> GetMessageInitiative(Message message, ClaimsPrincipal owner)
+        protected virtual async Task<GetItemResult<Initiative>> GetMessageInitiative(Message message, ClaimsPrincipal owner = null)
         {
             if (message == null)
                 throw new ArgumentNullException("msg");

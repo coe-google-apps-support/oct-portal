@@ -38,7 +38,7 @@ namespace CoE.Ideas.Server
         public void ConfigureServices(IServiceCollection services)
         {
             // configure application specific logging
-            services.ConfigureLogging(Configuration, "Server");
+            services.ConfigureLogging(Configuration, "Server", useSqlServer: HostingEnvironment.IsDevelopment());
 
             services.AddLocalInitiativeConfiguration(
                 Configuration.GetConnectionString("IdeaDatabase"), 
