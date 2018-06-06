@@ -37,7 +37,11 @@ namespace CoE.Ideas.Webhooks
             // configure application specific logging
             services.ConfigureLogging(Configuration, "Webhooks");
 
-            services.AddRemoteInitiativeConfiguration(Configuration["IdeasApi"]);
+            services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"));
+
+            services.AddLocalInitiativeConfiguration(
+                Configuration.GetConnectionString("IdeaDatabase"),
+                Configuration["WordPress:Url"]);
 
             services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
             services.AddPeopleService();

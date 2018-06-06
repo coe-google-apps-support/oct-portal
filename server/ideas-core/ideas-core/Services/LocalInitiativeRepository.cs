@@ -47,6 +47,7 @@ namespace CoE.Ideas.Core.Services
         {
             return _initiativeContext.Initiatives
                 .Include(x => x.StatusHistories)
+                .Include(x => x.Stakeholders)
                 .Include(x => x.SupportingDocuments)
                 .SingleOrDefaultAsync(x => x.Uid == id);
         }
@@ -55,6 +56,7 @@ namespace CoE.Ideas.Core.Services
         {
             return _initiativeContext.Initiatives
 				.Include(x => x.StatusHistories)
+                .Include(x => x.Stakeholders)
                 .Include(x => x.SupportingDocuments)
                 .SingleOrDefaultAsync(x => x.Id == id);
         }

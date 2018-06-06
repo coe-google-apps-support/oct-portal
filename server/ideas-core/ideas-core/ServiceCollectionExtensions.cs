@@ -29,14 +29,16 @@ namespace CoE.Ideas.Core
         /// <returns>The passed in services, for chaining</returns>
         public static IServiceCollection AddLocalInitiativeConfiguration(this IServiceCollection services,
             string dbConnectionString = null,
-            string applicationUrl = null)
+            string applicationUrl = null,
+            ServiceLifetime optionsLifeTime = ServiceLifetime.Scoped)
         {
             // default value is one is not supplied - Note this is not what Production/UAT uses, but just a convenience for local dev
             string connectionString = string.IsNullOrWhiteSpace(dbConnectionString)
                 ? "server=initiatives-db;database=CoeIdeas;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;" : dbConnectionString;
 
             services.AddDbContext<InitiativeContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseSqlServer(connectionString),
+                optionsLifetime: optionsLifeTime);
 
             services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
             services.AddScoped<IHealthCheckable, LocalInitiativeRepository>();

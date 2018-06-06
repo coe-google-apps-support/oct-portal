@@ -2,6 +2,7 @@
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Shared.Extensions;
 using CoE.Ideas.Shared.Security;
+using CoE.Ideas.Shared.WordPress;
 using EnsureThat;
 using Serilog.Context;
 using System;
@@ -20,11 +21,13 @@ namespace CoE.Ideas.Webhooks
         public WebhookPoster(
            IInitiativeMessageReceiver initiativeMessageReceiver,
            IWebhookUrlService webhookUrlService,
+           IWordPressRepository wordPressRepository,
            Serilog.ILogger logger)
         {
             _initiativeMessageReceiver = initiativeMessageReceiver ?? throw new ArgumentNullException("initiativeMessageReceiver");
             _logger = logger ?? throw new ArgumentNullException("logger");
-            _webhookUrlService = webhookUrlService ?? throw new ArgumentNullException("webhook");
+            _webhookUrlService = webhookUrlService ?? throw new ArgumentNullException("webhookUrlService");
+            _wordPressRepository = wordPressRepository ?? throw new ArgumentNullException("wordPressRepository");
 
             _initiativeMessageReceiver.ReceiveMessages(initiativeCreatedHandler: OnNewInitiative, 
                 statusChangedHandler: OnStatusChanged);
@@ -41,14 +44,16 @@ namespace CoE.Ideas.Webhooks
 
                 if (!hooks.Any())
                     return;
-
+                var owner = await GetInitiativeOwner(initiative);
                 var createDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(initiative.CreatedDate.DateTime, AlbertaTimeZone);
                 var values = new Dictionary<string, string>
                 {
                     { "ID", initiative.Id.ToString()},
                     { "Title", initiative.Title},
                     { "CreatedDate", createDateAlberta.ToString()},
-                    { "Description", initiative.Description}
+                    { "Description", initiative.Description},
+                    { "OwnerName", owner?.Name},
+                    { "OwnerEmail", owner?.Email}
                 };
 
                 data?.Invoke(values);
@@ -95,12 +100,21 @@ namespace CoE.Ideas.Webhooks
 
             await FireWebHooksAsync(initiativeCreatedEventArgs.Initiative, 
                 WebhookEvents.Created, 
-                data: values =>
-                {
-                    values["OwnerName"] = owner.GetDisplayName();
-                    values["OwnerEmail"] = owner.GetEmail();
-                },
+ 
                 cancellationToken: cancellationToken);
+        }
+
+        private async Task <WordPressUser> GetInitiativeOwner(Initiative initiative)
+        {
+            try
+            {
+                return await _wordPressRepository.GetUserAsync(initiative.Stakeholders.Single(x => x.Type == StakeholderType.Requestor).PersonId);
+            }
+            catch(Exception err)
+            {
+                _logger.Error(err, "Unable to get the owner of initiative {InitiativeId}", initiative.Id);
+                return null;
+            }
         }
 
         public async Task OnStatusChanged(InitiativeStatusChangedEventArgs initiativeStatusDescriptionChangedEventArgs, CancellationToken cancellationToken)
@@ -113,9 +127,11 @@ namespace CoE.Ideas.Webhooks
             DateTime expectedExitDateAlberta = lastStep == null || !lastStep.ExpectedExitDateUtc.HasValue
                 ? DateTime.MinValue : TimeZoneInfo.ConvertTimeFromUtc(lastStep.ExpectedExitDateUtc.Value, AlbertaTimeZone);
             var nowDateAlberta = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, AlbertaTimeZone);
+
+
             string expectedCompletionDateString = expectedExitDateAlberta == DateTime.MinValue
-                ? expectedExitDateAlberta.ToStringRelativeToNow(nowDateAlberta)
-                : string.Empty;
+                ? string.Empty
+                : expectedExitDateAlberta.ToStringRelativeToNow(nowDateAlberta);
 
             await FireWebHooksAsync(initiative, 
                 WebhookEvents.StatusChanged,
@@ -123,11 +139,13 @@ namespace CoE.Ideas.Webhooks
                 {
                     values["Status"] = initiativeStatusDescriptionChangedEventArgs.Initiative.Status.ToString();
                     values["ExpectedTime"] = expectedCompletionDateString;
+               
                 },
                 cancellationToken: cancellationToken);
         }
 
         private readonly IInitiativeMessageReceiver _initiativeMessageReceiver;
+        private readonly IWordPressRepository _wordPressRepository;
         private readonly IWebhookUrlService _webhookUrlService;
         private readonly Serilog.ILogger _logger;
     }
