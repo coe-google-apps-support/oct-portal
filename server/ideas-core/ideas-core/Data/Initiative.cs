@@ -40,12 +40,14 @@ namespace CoE.Ideas.Core.Data
             Ensure.String.IsNotNullOrWhiteSpace(description, nameof(description));
             Ensure.Comparable.IsGt(ownerPersonId, 0, nameof(ownerPersonId));
 
-            var initiative = new Initiative(Guid.NewGuid());
-            initiative.Title = title;
-            initiative.Description = description;
-            initiative.Stakeholders = new List<Stakeholder>()
+            var initiative = new Initiative(Guid.NewGuid())
             {
-                Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
+                Title = title,
+                Description = description,
+                Stakeholders = new List<Stakeholder>()
+                {
+                    Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
+                }
             };
 
 
@@ -120,8 +122,7 @@ namespace CoE.Ideas.Core.Data
                     _statusHistories = new HashSet<InitiativeStatusHistory>();
                 else
                 {
-                    var theValue = value as ICollection<InitiativeStatusHistory>;
-                    if (theValue == null)
+                    if (!(value is ICollection<InitiativeStatusHistory> theValue))
                         _statusHistories = value.ToList();
                     else
                         _statusHistories = theValue;
@@ -184,7 +185,7 @@ namespace CoE.Ideas.Core.Data
                     existingStatus.SetPersonId(AssigneeId);
             }
 
-            AddDomainEvent(new InitiativeStatusChangedDomainEvent(this, oldStatus));
+            AddDomainEvent(new InitiativeStatusChangedDomainEvent(this.Uid, oldStatus));
         }
 
         public void UpdateCurrentStatusDescription(string newDescription)

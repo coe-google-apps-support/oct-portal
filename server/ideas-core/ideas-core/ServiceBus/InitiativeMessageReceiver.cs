@@ -31,13 +31,11 @@ namespace CoE.Ideas.Core.ServiceBus
 
         protected abstract IInitiativeRepository GetInitiativeRepository(ClaimsPrincipal owner);
 
-
-        private IDictionary<string, ICollection<Func<Message, CancellationToken, Task>>> MessageMap = new Dictionary<string, ICollection<Func<Message, CancellationToken, Task>>>();
-
         public void ReceiveMessages(Func<InitiativeCreatedEventArgs, CancellationToken, Task> initiativeCreatedHandler = null,
             Func<WorkOrderCreatedEventArgs, CancellationToken, Task> workOrderCreatedHandler = null, 
             Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> workOrderUpdatedHandler = null,
             Func<InitiativeLoggedEventArgs, CancellationToken, Task> initiativeLoggedHandler = null,
+            Func<InitiativeStatusChangedEventArgs, CancellationToken, Task> statusChangedHandler = null,
             Func<InitiativeStatusDescriptionChangedEventArgs, CancellationToken, Task> statusDescriptionChangedHandler = null,
             Microsoft.Azure.ServiceBus.MessageHandlerOptions options = null)
         {

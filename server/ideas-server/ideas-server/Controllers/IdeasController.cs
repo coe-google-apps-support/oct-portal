@@ -439,9 +439,9 @@ namespace CoE.Ideas.Server.Controllers
 
                 try
                 {
-                    return await ValidateAndGetInitiative(id, async initiative =>
+                    return await ValidateAndGetInitiative(id, initiative =>
                     {
-                        return Ok(initiative.SupportingDocuments);
+                        return Task.FromResult((IActionResult)Ok(initiative.SupportingDocuments));
                     });
                 }
 

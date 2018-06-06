@@ -13,6 +13,8 @@ namespace CoE.Ideas.Core.ServiceBus
         Task SendWorkOrderUpdatedAsync(WorkOrderUpdatedEventArgs args);
 
         Task SendInitiativeLoggedAsync(InitiativeLoggedEventArgs args);
+        Task SendInitiativeStatusChangedAsync(InitiativeStatusChangedEventArgs initiativeCreatedEventArgs);
+
         Task SendInitiativeStatusDescriptionChangedAsync(InitiativeStatusDescriptionChangedEventArgs initiativeCreatedEventArgs);
     }
 }

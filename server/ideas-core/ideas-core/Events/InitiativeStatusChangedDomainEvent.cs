@@ -8,12 +8,12 @@ namespace CoE.Ideas.Core.Events
 {
     public class InitiativeStatusChangedDomainEvent : INotification
     {
-        public Initiative Initiative { get; private set; }
+        public Guid InitiativeId { get; private set; }
         public InitiativeStatus PreviousStatus { get; private set; }
 
-        internal InitiativeStatusChangedDomainEvent(Initiative initiative, InitiativeStatus previousInitiativeStatus)
+        internal InitiativeStatusChangedDomainEvent(Guid initiativeId, InitiativeStatus previousInitiativeStatus)
         {
-            Initiative = initiative;
+            InitiativeId = initiativeId;
             PreviousStatus = previousInitiativeStatus;
         }
 
