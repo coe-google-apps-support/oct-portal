@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
-namespace CoE.Ideas.Shared.Migrations.Security
+namespace CoE.Ideas.Core.Migrations
 {
     public partial class Permissions : Migration
     {
@@ -14,7 +14,7 @@ namespace CoE.Ideas.Shared.Migrations.Security
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Permssion = table.Column<string>(nullable: true),
                     Role = table.Column<string>(nullable: true)
                 },

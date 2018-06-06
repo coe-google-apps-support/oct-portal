@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CoE.Ideas.Core.Migrations
 {
-    public partial class InitialConsolidated : Migration
+    public partial class Consolidated : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,13 +14,11 @@ namespace CoE.Ideas.Core.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ApexId = table.Column<int>(nullable: true),
                     AssigneeId = table.Column<int>(nullable: true),
-                    BusinessCaseUrl = table.Column<string>(maxLength: 2048, nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(nullable: false),
                     Description = table.Column<string>(nullable: false),
-                    InvestmentRequestFormUrl = table.Column<string>(maxLength: 2048, nullable: true),
                     Status = table.Column<int>(nullable: false),
                     Title = table.Column<string>(maxLength: 255, nullable: false),
                     Uid = table.Column<Guid>(nullable: false),
@@ -36,7 +34,7 @@ namespace CoE.Ideas.Core.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     EtaType = table.Column<int>(nullable: false),
                     Status = table.Column<int>(nullable: false),
                     Time = table.Column<int>(nullable: false)
@@ -51,7 +49,7 @@ namespace CoE.Ideas.Core.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Category = table.Column<int>(nullable: false),
                     Key = table.Column<string>(maxLength: 64, nullable: true),
                     Text = table.Column<string>(maxLength: 2048, nullable: true)
@@ -66,7 +64,7 @@ namespace CoE.Ideas.Core.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ExpectedExitDateUtc = table.Column<DateTime>(nullable: true),
                     InitiativeId = table.Column<int>(nullable: true),
                     PersonId = table.Column<int>(nullable: true),
@@ -90,7 +88,7 @@ namespace CoE.Ideas.Core.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     InitiativeId = table.Column<int>(nullable: true),
                     PersonId = table.Column<int>(nullable: false),
                     Type = table.Column<int>(nullable: false)
@@ -106,12 +104,33 @@ namespace CoE.Ideas.Core.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "SupportingDocuments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    InitiativeId = table.Column<int>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    Type = table.Column<int>(nullable: false),
+                    URL = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SupportingDocuments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SupportingDocuments_Initiatives_InitiativeId",
+                        column: x => x.InitiativeId,
+                        principalTable: "Initiatives",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Initiatives_WorkOrderId",
                 table: "Initiatives",
                 column: "WorkOrderId",
-                unique: true,
-                filter: "[WorkOrderId] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_InitiativeStatusHistories_InitiativeId",
@@ -122,12 +141,15 @@ namespace CoE.Ideas.Core.Migrations
                 name: "IX_Stakeholder_InitiativeId",
                 table: "Stakeholder",
                 column: "InitiativeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SupportingDocuments_InitiativeId",
+                table: "SupportingDocuments",
+                column: "InitiativeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
-
             migrationBuilder.DropTable(
                 name: "InitiativeStatusHistories");
 
@@ -139,6 +161,9 @@ namespace CoE.Ideas.Core.Migrations
 
             migrationBuilder.DropTable(
                 name: "StringTemplates");
+
+            migrationBuilder.DropTable(
+                name: "SupportingDocuments");
 
             migrationBuilder.DropTable(
                 name: "Initiatives");

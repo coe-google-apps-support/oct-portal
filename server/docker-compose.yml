@@ -4,20 +4,11 @@ services:
   ideas-server:
     image: ideasserver
     depends_on: 
+      - wordpress-db
       - initiatives-db
     build:
       context: .
       dockerfile: ideas-server/ideas-server/Dockerfile
-
-  wordpress-db:
-    image: coeoctava.azurecr.io/wordpress-db:v1.0.5
-    restart: always
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: octavadev
-      MYSQL_DATABASE: octportalwordpress
-
 
   initiatives-db:
     image: coeoctava.azurecr.io/initiatives-db:v1.0.2
@@ -27,6 +18,15 @@ services:
       ACCEPT_EULA: Y
       SA_PASSWORD: OctavaDev100!
       MSSQL_PID: Developer
+
+  wordpress-db:
+    image: coeoctava.azurecr.io/wordpress-db:v1.0.5
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: octavadev
+      MYSQL_DATABASE: octportalwordpress
 
   wordpress:
     depends_on: 
@@ -62,18 +62,35 @@ services:
 
 
   ideas-integration-remedy:
+    depends_on: 
+      - ideas-server
     image: ideasintegrationremedy
     build:
       context: .
       dockerfile: ideas-integration-remedy/ideas-integration-remedy/Dockerfile
 
   ideas-integration-remedy-sblistener:
+    depends_on: 
+      - ideas-server
     image: ideasintegrationremedysblistener
     build:
       context: .
       dockerfile: ideas-integration-remedy/ideas-integration-remedy-sblistener/Dockerfile
 
+  ideas-integration-webhooks:
+    image: ideasintegrationwebhooks
+    build:
+      context: .
+      dockerfile: ideas-integration-webhooks/Dockerfile
+
+  ideas-integration-remedy-watcher:
+    image: ${DOCKER_REGISTRY}ideasintegrationremedywatcher
+    build:
+      context: .
+      dockerfile: ideas-integration-remedy/ideas-integration-remedy-watcher/Dockerfile
+
 volumes:
   wp-dbdata:
+
 
 

@@ -71,15 +71,6 @@ namespace CoE.Ideas.Server
 
                 if (environment.IsDevelopment())
                 {
-                    try
-                    {
-                        services.InitializeInitiativeDatabase();
-                    }
-                    catch (Exception ex)
-                    {
-                        var logger = services.GetRequiredService<ILogger<Program>>();
-                        logger.LogError(ex, "An error occurred while seeding the Initiatives database.");
-                    }
 
                     try
                     {
@@ -89,6 +80,16 @@ namespace CoE.Ideas.Server
                     {
                         var logger = services.GetRequiredService<ILogger<Program>>();
                         logger.LogError(ex, "An error occurred while seeding the ServiceBusEmulator database.");
+                    }
+
+                    try
+                    {
+                        services.InitializeInitiativeDatabase();
+                    }
+                    catch (Exception ex)
+                    {
+                        var logger = services.GetRequiredService<ILogger<Program>>();
+                        logger.LogError(ex, "An error occurred while seeding the Initiatives database.");
                     }
 
                     try

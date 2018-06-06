@@ -9,6 +9,7 @@ using MediatR;
 using Microsoft.Azure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System;
 using System.Linq;
 
@@ -32,10 +33,10 @@ namespace CoE.Ideas.Core
         {
             // default value is one is not supplied - Note this is not what Production/UAT uses, but just a convenience for local dev
             string connectionString = string.IsNullOrWhiteSpace(dbConnectionString)
-                ? "server=initiatives-db;database=CoeIdeas;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;" : dbConnectionString;
+                ? "server=wordpress-db;uid=root;pwd=octavadev;database=initiatives" : dbConnectionString;
 
             services.AddDbContext<InitiativeContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseMySql(connectionString));
 
             services.AddScoped<IInitiativeRepository, LocalInitiativeRepository>();
             services.AddScoped<IHealthCheckable, LocalInitiativeRepository>();
@@ -187,5 +188,41 @@ namespace CoE.Ideas.Core
             return services;
         }
 
+
+        public static IServiceCollection ConfigureLogging(this IServiceCollection services,
+            Microsoft.Extensions.Configuration.IConfiguration configuration,
+            string module,
+            bool useSqlServer = false)
+        {
+
+            services.AddSingleton<Serilog.ILogger>(x =>
+            {
+                var loggerConfig = new LoggerConfiguration()
+                    .Enrich.FromLogContext()
+                    .Enrich.WithProperty("Application", "Initiatives")
+                    .Enrich.WithProperty("Module", module)
+                    .ReadFrom.Configuration(configuration);
+                if (useSqlServer)
+                {
+                    loggerConfig = loggerConfig
+                        .WriteTo.MSSqlServer(connectionString: "server=initiatives-db;database=CoeIdeas;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;",
+                            tableName: "Log",
+                            autoCreateSqlTable: true
+                            , columnOptions: new Serilog.Sinks.MSSqlServer.ColumnOptions()
+                            {
+                                AdditionalDataColumns = new System.Data.DataColumn[]
+                                {
+                                    new System.Data.DataColumn("Module", typeof(string)),
+                                    new System.Data.DataColumn("InitiativeId", typeof(int))
+                                }
+                            }
+                        );
+                }
+                return loggerConfig
+                    .CreateLogger();
+            });
+
+            return services;
+        }
     }
 }

@@ -11,15 +11,15 @@ using System;
 namespace CoE.Ideas.Core.Migrations
 {
     [DbContext(typeof(InitiativeContext))]
-    [Migration("20180504201654_AddSupportingDocuments")]
-    partial class AddSupportingDocuments
+    [Migration("20180605141504_SeedData")]
+    partial class SeedData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
 
             modelBuilder.Entity("CoE.Ideas.Core.Data.Initiative", b =>
                 {
@@ -30,16 +30,10 @@ namespace CoE.Ideas.Core.Migrations
 
                     b.Property<int?>("AssigneeId");
 
-                    b.Property<string>("BusinessCaseUrl")
-                        .HasMaxLength(2048);
-
                     b.Property<DateTimeOffset>("CreatedDate");
 
                     b.Property<string>("Description")
                         .IsRequired();
-
-                    b.Property<string>("InvestmentRequestFormUrl")
-                        .HasMaxLength(2048);
 
                     b.Property<int>("Status");
 
@@ -55,8 +49,7 @@ namespace CoE.Ideas.Core.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("WorkOrderId")
-                        .IsUnique()
-                        .HasFilter("[WorkOrderId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Initiatives");
                 });

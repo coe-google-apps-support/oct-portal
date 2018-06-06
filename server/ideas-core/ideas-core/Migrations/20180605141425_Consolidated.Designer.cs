@@ -11,15 +11,15 @@ using System;
 namespace CoE.Ideas.Core.Migrations
 {
     [DbContext(typeof(InitiativeContext))]
-    [Migration("20180427190539_InitialConsolidated")]
-    partial class InitialConsolidated
+    [Migration("20180605141425_Consolidated")]
+    partial class Consolidated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
 
             modelBuilder.Entity("CoE.Ideas.Core.Data.Initiative", b =>
                 {
@@ -30,16 +30,10 @@ namespace CoE.Ideas.Core.Migrations
 
                     b.Property<int?>("AssigneeId");
 
-                    b.Property<string>("BusinessCaseUrl")
-                        .HasMaxLength(2048);
-
                     b.Property<DateTimeOffset>("CreatedDate");
 
                     b.Property<string>("Description")
                         .IsRequired();
-
-                    b.Property<string>("InvestmentRequestFormUrl")
-                        .HasMaxLength(2048);
 
                     b.Property<int>("Status");
 
@@ -55,8 +49,7 @@ namespace CoE.Ideas.Core.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("WorkOrderId")
-                        .IsUnique()
-                        .HasFilter("[WorkOrderId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Initiatives");
                 });
@@ -137,6 +130,26 @@ namespace CoE.Ideas.Core.Migrations
                     b.ToTable("StringTemplates");
                 });
 
+            modelBuilder.Entity("CoE.Ideas.Core.Data.SupportingDocument", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("InitiativeId");
+
+                    b.Property<string>("Title");
+
+                    b.Property<int>("Type");
+
+                    b.Property<string>("URL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InitiativeId");
+
+                    b.ToTable("SupportingDocuments");
+                });
+
             modelBuilder.Entity("CoE.Ideas.Core.Data.InitiativeStatusHistory", b =>
                 {
                     b.HasOne("CoE.Ideas.Core.Data.Initiative")
@@ -148,6 +161,13 @@ namespace CoE.Ideas.Core.Migrations
                 {
                     b.HasOne("CoE.Ideas.Core.Data.Initiative")
                         .WithMany("Stakeholders")
+                        .HasForeignKey("InitiativeId");
+                });
+
+            modelBuilder.Entity("CoE.Ideas.Core.Data.SupportingDocument", b =>
+                {
+                    b.HasOne("CoE.Ideas.Core.Data.Initiative")
+                        .WithMany("SupportingDocuments")
                         .HasForeignKey("InitiativeId");
                 });
 #pragma warning restore 612, 618
