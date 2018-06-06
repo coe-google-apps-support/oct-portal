@@ -1,30 +1,37 @@
 <template>
   <div>
-    <form novalidate class="md-layout-row md-gutter">
-      <div class="form-content">
-        <div class="md-flex md-flex-small-100">
-          <md-field :class="getValidationClass('title')">
-            <label for="idea-title">What is your technology initiative?</label>
-            <md-input name="title" id="idea-title" v-model="form.title" />
-            <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
-            <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
-          </md-field>
+    <md-card>
+      <md-card-header class="card-title">
+        <md-card-header-text class="md-title">
+          Tell us your idea!
+        </md-card-header-text>
+      </md-card-header>
+      <form novalidate class="md-layout-row md-gutter">
+        <div class="form-content">
+          <div class="md-flex md-flex-small-100">
+            <md-field :class="getValidationClass('title')">
+              <label for="idea-title">What's your technology initiative?</label>
+              <md-input name="title" id="idea-title" v-model="form.title" />
+              <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
+              <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
+            </md-field>
+          </div>
+          <div class="md-flex md-flex-small-100">
+            <md-field :class="getValidationClass('description')">
+              <label for="idea-desc">What's the purpose for this request?</label>
+              <md-textarea name="description" id="idea-desc" v-model="form.description" />
+              <span class="md-error" v-if="!$v.form.description.required">Description is required</span>
+              <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
+            </md-field>
+          </div>
+          <div class="min-height">
+            <SupportingDocs :documents="supportingDocs" :header="true" @close="getSupportingDocs"></SupportingDocs>
+          </div>
+          <divi-button @click.native="saveIdea">Submit</divi-button>
         </div>
-        <div class="md-flex md-flex-small-100">
-          <md-field :class="getValidationClass('description')">
-            <label for="idea-desc">What is the purpose for this request?</label>
-            <md-textarea name="description" id="idea-desc" v-model="form.description" />
-            <span class="md-error" v-if="!$v.form.description.required">Description is required</span>
-            <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
-          </md-field>
-        </div>
-        <div class="min-height">
-          <SupportingDocs :documents="supportingDocs" :header="true" @close="getSupportingDocs"></SupportingDocs>
-        </div>
-        <divi-button @click.native="saveIdea">Submit</divi-button>
-      </div>
-      <md-progress-bar md-mode="indeterminate" class="md-accent" v-if="sending" />
-    </form>
+        <md-progress-bar md-mode="indeterminate" class="md-accent" v-if="sending" />
+      </form>
+    </md-card>
   </div>    
 </template>
 
@@ -145,6 +152,10 @@ export default {
 
   .md-card {
     margin: 12px;
+  }
+  
+  .card-title {
+    color: var(--primary-color);
   }
 
   .min-height {
