@@ -51,16 +51,17 @@ namespace CoE.Ideas.Remedy.SbListener
             services.AddLogging();
 
             // configure application specific logging
-            services.AddSingleton<Serilog.ILogger>(x => new LoggerConfiguration()
-                .Enrich.FromLogContext()
-                .Enrich.WithProperty("Application", "Initiatives")
-                .Enrich.WithProperty("Module", "Remedy Service Bus Listener")
-                .ReadFrom.Configuration(Configuration)
-                .CreateLogger());
+#if DEBUG
+            services.ConfigureLogging(Configuration, "Remedy Service Bus Listener", useSqlServer: true);
+#else
+            services.ConfigureLogging(Configuration, "Remedy Service Bus Listener");
+#endif
+
 
             // Add Idea Repository
             services.AddLocalInitiativeConfiguration(
-                Configuration.GetConnectionString("IdeaDatabase"));
+                Configuration.GetConnectionString("IdeaDatabase"),
+                optionsLifeTime: ServiceLifetime.Transient);
 
 
             services.AddWordPressServices(Configuration.GetConnectionString("WordPressDatabase"));

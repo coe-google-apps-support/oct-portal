@@ -51,6 +51,15 @@ namespace CoE.Ideas.Core.ServiceBus
             return Task.WhenAll(tasks);
         }
 
+        public Task SendInitiativeStatusChangedAsync(InitiativeStatusChangedEventArgs args)
+        {
+            var tasks = new List<Task>();
+            var cancellationToken = new System.Threading.CancellationToken();
+            foreach (var h in _messageReceiver.InitiativeStatusChangedHandlers)
+                tasks.Add(h(args, cancellationToken));
+            return Task.WhenAll(tasks);
+        }
+
         public Task SendInitiativeStatusDescriptionChangedAsync(InitiativeStatusDescriptionChangedEventArgs args)
         {
             var tasks = new List<Task>();

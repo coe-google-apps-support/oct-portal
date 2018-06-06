@@ -78,8 +78,10 @@ namespace CoE.Ideas.Shared.ServiceBus
                         var messageProperties = _context.MessageProperties
                             .GroupBy(msgProp => msgProp.MessageId);
 
+                        TimeSpan lag = TimeSpan.FromSeconds(10);
+
                         var items = _context.Messages
-                            .Where(m => m.CreatedDateUtc > pollDate && m.CreatedDateUtc <= nextDate)
+                            .Where(m => m.CreatedDateUtc > pollDate.Subtract(lag) && m.CreatedDateUtc <= nextDate.Subtract(lag))
                             .Join(messageProperties, msg => msg.Id, msgProps => msgProps.Key, (msg, msgProps) => new { Message = msg, Properties = msgProps })
                             .OrderBy(m => m.Message.CreatedDateUtc)
                             .ToList();

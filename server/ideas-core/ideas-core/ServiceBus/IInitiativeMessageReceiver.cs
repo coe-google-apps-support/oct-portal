@@ -11,6 +11,7 @@ namespace CoE.Ideas.Core.ServiceBus
             Func<WorkOrderCreatedEventArgs, CancellationToken, Task> workOrderCreatedHandler = null,
             Func<WorkOrderUpdatedEventArgs, CancellationToken, Task> workOrderUpdatedHandler = null,
             Func<InitiativeLoggedEventArgs, CancellationToken, Task> initiativeLoggedHandler = null,
+            Func<InitiativeStatusChangedEventArgs, CancellationToken, Task> statusChangedHandler = null,
             Func<InitiativeStatusDescriptionChangedEventArgs, CancellationToken, Task> statusDescriptionChangedHandler = null,
             MessageHandlerOptions options = null);
     }
