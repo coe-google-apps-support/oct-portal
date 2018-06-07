@@ -1,11 +1,14 @@
 <template>
   <div>
-    <form novalidate class="md-layout-row md-gutter">
-      <md-card>
+    <md-card>
+      <md-toolbar class="md-primary">
+        <h3 class="text-padding md-title">Tell us your idea!</h3>
+      </md-toolbar>
+      <form novalidate class="md-layout-row md-gutter">
         <div class="form-content">
           <div class="md-flex md-flex-small-100">
             <md-field :class="getValidationClass('title')">
-              <label for="idea-title">What is your technology initiative?</label>
+              <label for="idea-title">What's your technology initiative?</label>
               <md-input name="title" id="idea-title" v-model="form.title" />
               <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
               <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
@@ -13,7 +16,7 @@
           </div>
           <div class="md-flex md-flex-small-100">
             <md-field :class="getValidationClass('description')">
-              <label for="idea-desc">What is the purpose for this request?</label>
+              <label for="idea-desc">What's the purpose for this request?</label>
               <md-textarea name="description" id="idea-desc" v-model="form.description" />
               <span class="md-error" v-if="!$v.form.description.required">Description is required</span>
               <span class="md-error" v-else-if="!$v.form.description.minlength">Invalid description</span>
@@ -25,8 +28,8 @@
           <divi-button @click.native="saveIdea">Submit</divi-button>
         </div>
         <md-progress-bar md-mode="indeterminate" class="md-accent" v-if="sending" />
-      </md-card>
-    </form>
+      </form>
+    </md-card>
   </div>    
 </template>
 
@@ -155,6 +158,10 @@ export default {
 
   .form-content {
     padding: 16px;
+  }
+
+  .text-padding {
+    padding: 10px;
   }
 </style>
 <style scoped>
