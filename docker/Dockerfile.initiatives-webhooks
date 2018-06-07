@@ -19,4 +19,8 @@ ARG Configuration=Release
 WORKDIR /app
 COPY --from=builder /usr/src/coe-initiatives-webhooks/ideas-integration-webhooks/bin/$Configuration/netcoreapp2.0/publish  .
 
+# Move our run time scripts into our image
+COPY ./docker/scripts/webhooks-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/webhooks-entrypoint.sh
+
 CMD /bin/bash /usr/local/bin/webhooks-entrypoint.sh
