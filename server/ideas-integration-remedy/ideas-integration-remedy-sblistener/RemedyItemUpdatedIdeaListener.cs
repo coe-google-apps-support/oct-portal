@@ -136,7 +136,10 @@ namespace CoE.Ideas.Remedy.SbListener
                 return true;
             }
             else
+            {
+                _logger.Information("Not updating status because it has not changed from: {Status}", initiative.Status);
                 return false;
+            }
         }
 
 
