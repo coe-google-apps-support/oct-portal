@@ -8,7 +8,7 @@
 # docker push coeoctava.azurecr.io/initiatives-remedy-sblistener:latest
 
 FROM microsoft/dotnet:2.0-sdk-stretch AS builder
-#ARG Configuration=Debug
+ARG Configuration=Release
 WORKDIR /usr/src/coe-initiatives-remedy-sblistener
 COPY ./server .
 WORKDIR /usr/src/coe-initiatives-remedy-sblistener/ideas-integration-remedy/ideas-integration-remedy-sblistener

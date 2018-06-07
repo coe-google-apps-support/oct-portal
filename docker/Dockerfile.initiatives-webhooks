@@ -8,7 +8,7 @@
 # docker push coeoctava.azurecr.io/initiatives-webhooks:latest
 
 FROM microsoft/dotnet:2.0-sdk-stretch AS builder
-#ARG Configuration=Release
+ARG Configuration=Release
 WORKDIR /usr/src/coe-initiatives-webhooks
 COPY ./server .
 WORKDIR /usr/src/coe-initiatives-webhooks/ideas-integration-webhooks
