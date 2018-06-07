@@ -19,5 +19,4 @@ ARG Configuration=Release
 WORKDIR /app
 COPY --from=builder /usr/src/coe-initiatives-webhooks/ideas-integration-webhooks/bin/$Configuration/netcoreapp2.0/publish  .
 
-ENTRYPOINT ["dotnet"]
-CMD ["ideas-integration-webhooks.dll"]
+CMD /bin/bash /usr/local/bin/webhooks-entrypoint.sh
