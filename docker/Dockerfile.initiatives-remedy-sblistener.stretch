@@ -17,7 +17,7 @@ WORKDIR /usr/src/coe-initiatives-remedy-sblistener/ideas-integration-remedy/idea
 
 
 FROM microsoft/dotnet:2.0-runtime-stretch
-ARG Configuration=Debug
+ARG Configuration=Release
 WORKDIR /app
 COPY --from=builder /usr/src/coe-initiatives-remedy-sblistener/ideas-integration-remedy/ideas-integration-remedy-sblistener/bin/$Configuration/netcoreapp2.0/publish  .
 

@@ -8,14 +8,14 @@
 # docker push coeoctava.azurecr.io/initiatives-webhooks:latest
 
 FROM microsoft/dotnet:2.0-sdk-stretch AS builder
-#ARG Configuration=Debug
+#ARG Configuration=Release
 WORKDIR /usr/src/coe-initiatives-webhooks
 COPY ./server .
 WORKDIR /usr/src/coe-initiatives-webhooks/ideas-integration-webhooks
 RUN dotnet publish
 
 FROM microsoft/dotnet:2.0-runtime-stretch
-ARG Configuration=Debug
+ARG Configuration=Release
 WORKDIR /app
 COPY --from=builder /usr/src/coe-initiatives-webhooks/ideas-integration-webhooks/bin/$Configuration/netcoreapp2.0/publish  .
 
