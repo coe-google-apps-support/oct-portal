@@ -5,4 +5,4 @@ else
   echo "No appsettings.json config specified."
 fi
 
-dotnet ideas-integration-webhooks.dll"
+dotnet ideas-integration-webhooks.dll
