@@ -89,6 +89,14 @@ services:
       context: .
       dockerfile: ideas-integration-remedy/ideas-integration-remedy-watcher/Dockerfile
 
+  webhook: 
+    image: webhooks
+    ports:
+      - "9001:9001"
+    restart: always
+    volumes:
+      - C:\Users\CoopDev\Desktop\webhook-emailer\webhook_emailer:/app
+
 volumes:
   wp-dbdata:
 
