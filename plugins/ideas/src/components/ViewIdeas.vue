@@ -11,11 +11,19 @@
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
           </initiative>
         </div>
-        <div v-if="ideas.length === 0 && isLoading == false">
+        <div v-if="ideas.length === 0 && isLoading == false && !filter">
           <img src="https://octava.blob.core.windows.net/cdn-store/empty-state-coe.png" class="center">
           <md-empty-state
-            md-label="There's nothing here!"
+            md-label="No initiatives found!"
             md-description="Oops! We couldn't find anything.">
+          </md-empty-state>
+        </div>
+        <div v-if="ideas.length === 0 && isLoading == false && filter === 'mine'">
+          <img src="https://octava.blob.core.windows.net/cdn-store/empty-state-coe.png" class="center">
+          <md-empty-state
+            md-label="You have not made any initiatives!"
+            md-description="Oops! We couldn't find anything.">
+            <md-button class="md-primary md-raised">Create first initiative</md-button>
           </md-empty-state>
         </div>
         <div v-if="isLoading" class="md-layout md-alignment-center-center">
