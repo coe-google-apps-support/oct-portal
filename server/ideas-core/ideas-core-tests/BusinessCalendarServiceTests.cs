@@ -31,6 +31,7 @@ namespace CoE.Ideas.Core.Tests
         private static ServiceProvider serviceProvider;
 
         [Test]
+        [Category("Integration")]
         public async Task BusinessCalendarServiceWithinSameDay()
         {
             var svc = serviceProvider.GetRequiredService<IBusinessCalendarService>();
@@ -41,6 +42,7 @@ namespace CoE.Ideas.Core.Tests
         }
 
         [Test]
+        [Category("Integration")]
         public async Task BusinessCalendarServiceToNextDay()
         {
             var svc = serviceProvider.GetRequiredService<IBusinessCalendarService>();
@@ -51,6 +53,7 @@ namespace CoE.Ideas.Core.Tests
         }
 
         [Test]
+        [Category("Integration")]
         public async Task BusinessCalendarServiceOverLongWeekend()
         {
             var svc = serviceProvider.GetRequiredService<IBusinessCalendarService>();
@@ -61,6 +64,7 @@ namespace CoE.Ideas.Core.Tests
         }
 
         [Test]
+        [Category("Integration")]
         public async Task BusinessCalendarServiceStartingBeforeWorkHours()
         {
             var svc = serviceProvider.GetRequiredService<IBusinessCalendarService>();
@@ -71,6 +75,7 @@ namespace CoE.Ideas.Core.Tests
         }
 
         [Test]
+        [Category("Integration")]
         public async Task BusinessCalendarServiceDaysNextWeekday()
         {
             var svc = serviceProvider.GetRequiredService<IBusinessCalendarService>();
@@ -80,6 +85,7 @@ namespace CoE.Ideas.Core.Tests
         }
 
         [Test]
+        [Category("Integration")]
         public async Task BusinessCalendarServiceDaysOverWeekend()
         {
             var svc = serviceProvider.GetRequiredService<IBusinessCalendarService>();
@@ -89,6 +95,7 @@ namespace CoE.Ideas.Core.Tests
         }
 
         [Test]
+        [Category("Integration")]
         public async Task BusinessCalendarServiceDaysBeforeWorkHours()
         {
             var svc = serviceProvider.GetRequiredService<IBusinessCalendarService>();
@@ -98,6 +105,7 @@ namespace CoE.Ideas.Core.Tests
         }
 
         [Test]
+        [Category("Integration")]
         public async Task BusinessCalendarServiceOver1Month()
         {
             var svc = serviceProvider.GetRequiredService<IBusinessCalendarService>();
