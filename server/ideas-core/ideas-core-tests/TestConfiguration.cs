@@ -10,6 +10,7 @@ using AutoMapper;
 using Serilog;
 using CoE.Ideas.Core.Events;
 using MediatR;
+using CoE.Ideas.Shared.Security;
 
 namespace CoE.Ideas.Core.Tests
 {
@@ -51,6 +52,8 @@ namespace CoE.Ideas.Core.Tests
                 .Enrich.WithProperty("Module", "Server")
                 .ReadFrom.Configuration(_configuration)
                 .CreateLogger());
+
+            _services.AddSingleton<ICurrentUserAccessor, MockCurrentUserAccessor>();
 
             return this;
         }

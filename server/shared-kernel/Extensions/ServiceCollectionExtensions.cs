@@ -87,6 +87,8 @@ namespace CoE.Ideas.Shared.Extensions
 #endif
             });
 
+            services.AddScoped<ICurrentUserAccessor, HttpContextCurrentUserAccessor>();
+
             return services;
         }
 
