@@ -23,7 +23,7 @@
           <md-empty-state
             md-label="You have not made any initiatives!"
             md-description="Oops! We couldn't find anything.">
-            <md-button class="md-primary md-raised">Create first initiative</md-button>
+            <md-button v-on:click="openURL('/new-idea') " class="md-primary md-raised">Create first initiative</md-button>
           </md-empty-state>
         </div>
         <div v-if="isLoading" class="md-layout md-alignment-center-center">
@@ -75,6 +75,9 @@ export default {
     DiviButton
   },
   methods: {
+    openURL (url) {
+      window.open(url, '_top')
+    },
     checkIsLast (response) {
       var x = response.headers['x-is-last-page']
       if (x === 'False') {
