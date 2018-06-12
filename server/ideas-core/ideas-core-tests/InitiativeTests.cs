@@ -7,6 +7,8 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
+using CoE.Ideas.Core.ServiceBus;
+using System.Collections.Generic;
 
 namespace CoE.Ideas.Core.Tests
 {
@@ -25,6 +27,7 @@ namespace CoE.Ideas.Core.Tests
             serviceProvider = new TestConfiguration(config)
                 .ConfigureBasicServices()
                 .ConfigureIdeaServicesInMemory()
+                .AddInitiativeMessaging()
                 .BuildServiceProvider();
 
         }
@@ -35,6 +38,10 @@ namespace CoE.Ideas.Core.Tests
         [Test]
         public async Task CreateInitiative()
         {
+            var newInitiativeMessages = new List<InitiativeCreatedEventArgs>();
+            serviceProvider.GetRequiredService<SynchronousInitiativeMessageReceiver>()
+                .CreatedHandlers.Add((e, token) => { newInitiativeMessages.Add(e); return Task.CompletedTask; });
+
             var initiativeRepository = serviceProvider.GetRequiredService<IInitiativeRepository>();
             var newInitiative = await initiativeRepository.AddInitiativeAsync(Initiative.Create(
                  title: "Test Idea",
@@ -44,6 +51,8 @@ namespace CoE.Ideas.Core.Tests
 
             newInitiative.Should().NotBeNull();
             newInitiative.Title.Should().Be("Test Idea");
+
+            newInitiativeMessages.Should().ContainSingle();
         }
     }
 }

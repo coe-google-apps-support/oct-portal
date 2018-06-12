@@ -12,6 +12,7 @@ using CoE.Ideas.Core.Events;
 using MediatR;
 using CoE.Ideas.Shared.Security;
 using DateTimeExtensions.WorkingDays;
+using CoE.Ideas.Core.ServiceBus;
 
 namespace CoE.Ideas.Core.Tests
 {
@@ -74,6 +75,14 @@ namespace CoE.Ideas.Core.Tests
             //_services.AddSingleton<IIdeaServiceBusSender, IdeaServiceBusSender>();
 
             //_services.AddAutoMapper();
+            return this;
+        }
+
+        internal TestConfiguration AddInitiativeMessaging()
+        {
+            _services.AddSingleton<SynchronousInitiativeMessageReceiver>();
+            _services.AddSingleton<IInitiativeMessageReceiver>(x => x.GetRequiredService<SynchronousInitiativeMessageReceiver>());
+            _services.AddSingleton<IInitiativeMessageSender, SynchronousInitiativeMessageSender>();
             return this;
         }
 
