@@ -53,6 +53,7 @@ namespace CoE.Ideas.Core.Tests
                 .Enrich.WithProperty("Application", "ideas-core-xtests")
                 .Enrich.WithProperty("Module", "Server")
                 .ReadFrom.Configuration(_configuration)
+                .WriteTo.Console()
                 .CreateLogger());
 
             _services.AddSingleton<ICurrentUserAccessor, MockCurrentUserAccessor>();
