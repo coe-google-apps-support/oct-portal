@@ -104,11 +104,13 @@ export default {
         if (pArr[0] === 'parentUrl') {
           var arr = pArr[1]
           // Lots of string manipulation to extract the params
-          arr = arr.replace(/%3A/g, ':')
-          arr = arr.replace(/%2F/g, '/')
-          arr = arr.replace(/%3D/g, '=')
-          arr = arr.replace(/%3F/g, '?')
-          arr = arr.replace(/%26/g, '&')
+          arr = decodeURIComponent(arr)
+          console.log(arr)
+          // arr = arr.replace(/%3A/g, ':')
+          // arr = arr.replace(/%2F/g, '/')
+          // arr = arr.replace(/%3D/g, '=')
+          // arr = arr.replace(/%3F/g, '?')
+          // arr = arr.replace(/%26/g, '&')
           arr = arr.split('?')
           if (arr.length > 1) {
             arr = arr[1].split('&')
