@@ -11,6 +11,7 @@ using Serilog;
 using CoE.Ideas.Core.Events;
 using MediatR;
 using CoE.Ideas.Shared.Security;
+using DateTimeExtensions.WorkingDays;
 
 namespace CoE.Ideas.Core.Tests
 {
@@ -43,6 +44,7 @@ namespace CoE.Ideas.Core.Tests
         public TestConfiguration ConfigureBasicServices()
         {
             _services.AddOptions();
+            _services.AddMemoryCache();
             _services.AddMediatR();
 
             // configure application specific logging
@@ -76,10 +78,10 @@ namespace CoE.Ideas.Core.Tests
 
         internal TestConfiguration ConfigureBusinessCalendarService(string payrollCalenderServiceUrl = null)
         {
-            string calendarServiceUrl = string.IsNullOrWhiteSpace(payrollCalenderServiceUrl)
-                ? "http://webapps1.edmonton.ca/CoE.PayrollCalendar.WebApi/api/PayrollCalendar" : payrollCalenderServiceUrl;
-            _services.Configure<BusinessCalendarServiceOptions>(x => x.PayrollCalenderServiceUrl = calendarServiceUrl);
-            _services.AddSingleton<IBusinessCalendarService, BusinessCalendarService>();
+            _services.AddMemoryCache();
+            _services.AddSingleton<BusinessCalendarService>();
+            _services.AddSingleton<IBusinessCalendarService>(x => x.GetRequiredService<BusinessCalendarService>());
+            _services.AddSingleton<IHolidayStrategy>(x => x.GetRequiredService<BusinessCalendarService>());
             return this;
         }
     }
