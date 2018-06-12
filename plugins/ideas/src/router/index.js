@@ -30,7 +30,7 @@ export default new Router({
       component: ViewIdeas,
       props: (route) => ({
         filter: 'mine',
-        newInitiative: Number(route.query.newInitiative),
+        // newInitiative: Number(route.query.newInitiative),
         page: Number(route.query.page),
         pageSize: Number(route.query.pageSize),
         contains: route.query.contains

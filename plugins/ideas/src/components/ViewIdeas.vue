@@ -24,6 +24,7 @@
         <div class="center-children" v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
           <divi-button class="md-accent" @click.native="infiniteHandler">Load more</divi-button>
         </div>
+        <div style="padding: 50px;"></div>
         <md-snackbar v-if="newInitiative" md-position="center" :md-duration="Infinity" :md-active.sync="showSnackbar" md-persistent>
           <span>Initiative successfully submitted!</span>
           <md-button class="md-accent" @click="showSnackbar = false">Close</md-button>
@@ -48,7 +49,6 @@ export default {
   props: {
     filter: String,
     contains: String,
-    newInitiative: Number,
     page: Number,
     pageSize: Number
   },
@@ -60,7 +60,8 @@ export default {
     initiativeFunction: null,
     isLast: false,
     isLoading: true,
-    showSnackbar: false
+    showSnackbar: false,
+    newInitiative: null
   }),
   components: {
     Initiative,
@@ -94,6 +95,32 @@ export default {
           this.requestAPI(this.dataPage, this.dataPageSize, this.contains)
         }
       }, 1000)
+    },
+    getParamName (name) {
+      var url = window.location.search.substring(1) // get rid of "?" in querystring
+      var qArray = url.split('&')
+      for (var i = 0; i < qArray.length; i++) {
+        var pArr = qArray[i].split('=')
+        if (pArr[0] === 'parentUrl') {
+          var arr = pArr[1]
+          // Lots of string manipulation to extract the params
+          arr = arr.replace(/%3A/g, ':')
+          arr = arr.replace(/%2F/g, '/')
+          arr = arr.replace(/%3D/g, '=')
+          arr = arr.replace(/%3F/g, '?')
+          arr = arr.replace(/%26/g, '&')
+          arr = arr.split('?')
+          if (arr.length > 1) {
+            arr = arr[1].split('&')
+            for (var j = 0; j < arr.length; j++) {
+              var params = arr[j].split('=')
+              if (params[0] === name) {
+                return params[1]
+              }
+            }
+          }
+        }
+      }
     }
   },
   created () {
@@ -120,10 +147,11 @@ export default {
 
     // this.requestAPI(this.dataPage, this.dataPageSize, this.contains)
     this.requestAPI(this.dataPage, this.dataPageSize, this.contains).then((response) => {
-      if (!isNaN(this.newInitiative)) {
+      if (this.newInitiative) {
         this.showSnackbar = true
       }
     })
+    this.newInitiative = parseInt(this.getParamName('newInitiative'))
   }
 }
 </script>

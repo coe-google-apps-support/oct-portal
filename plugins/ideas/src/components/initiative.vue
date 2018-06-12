@@ -191,8 +191,8 @@ export default {
 .tada {
   -webkit-animation-name: tada;
   animation-name: tada;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
+  -webkit-animation-duration: 1.8s;
+  animation-duration: 1.8s;
 }
 
 .title {
