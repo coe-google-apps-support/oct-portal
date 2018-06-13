@@ -43,9 +43,9 @@ namespace CoE.Ideas.Remedy.Watcher
 
             // configure application specific logging
 #if DEBUG
-            services.ConfigureLogging(Configuration, "Remedy WO Creator", useSqlServer: true);
+            services.ConfigureLogging(Configuration, "Remedy WO Watcher", useSqlServer: true);
 #else
-            services.ConfigureLogging(Configuration, "Remedy WO Creator");
+            services.ConfigureLogging(Configuration, "Remedy WO Watcher");
 #endif
 
             services.AddRemoteInitiativeConfiguration(Configuration["IdeasApi"],
