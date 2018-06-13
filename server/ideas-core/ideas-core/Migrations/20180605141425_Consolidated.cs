@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CoE.Ideas.Core.Migrations
 {
+    [ExcludeFromCodeCoverage]
     public partial class Consolidated : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
