@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using CoE.Ideas.Core.ServiceBus;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CoE.Ideas.Core.Tests
 {
@@ -43,16 +44,29 @@ namespace CoE.Ideas.Core.Tests
                 .CreatedHandlers.Add((e, token) => { newInitiativeMessages.Add(e); return Task.CompletedTask; });
 
             var initiativeRepository = serviceProvider.GetRequiredService<IInitiativeRepository>();
-            var newInitiative = await initiativeRepository.AddInitiativeAsync(Initiative.Create(
+
+            // create a basic initiative
+            var newInitiative = Initiative.Create(
                  title: "Test Idea",
                  description: "Test creating initiatives",
-                 ownerPersonId: 1
-             ));
+                 ownerPersonId: 1,
+                 businessContactId: 2
+             );
 
-            newInitiative.Should().NotBeNull();
-            newInitiative.Title.Should().Be("Test Idea");
+            // add some supporting documents
+            newInitiative.AddSupportingDocument(
+                SupportingDocument.Create("My Document", "www.edmonton.ca", SupportingDocumentsType.BusinessCases));
+            newInitiative.AddSupportingDocument(
+                SupportingDocument.Create("Document2", "github.com", SupportingDocumentsType.Other));
 
-            newInitiativeMessages.Should().ContainSingle();
+            var newInitiative2 = await initiativeRepository.AddInitiativeAsync(newInitiative);
+
+            newInitiative2.Should().NotBeNull();
+            newInitiative2.Title.Should().Be("Test Idea");
+            newInitiative2.SupportingDocuments.Count().Should().Be(2);
+
+            newInitiativeMessages.Count().Should().Be(1);
         }
+
     }
 }
