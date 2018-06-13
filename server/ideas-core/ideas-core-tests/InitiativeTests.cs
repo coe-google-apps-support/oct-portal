@@ -59,6 +59,9 @@ namespace CoE.Ideas.Core.Tests
             newInitiative.AddSupportingDocument(
                 SupportingDocument.Create("Document2", "github.com", SupportingDocumentsType.Other));
 
+            // add some stakeholders
+            newInitiative.AddStakeholder(3, StakeholderType.BusinessContact);
+
             var newInitiative2 = await initiativeRepository.AddInitiativeAsync(newInitiative);
 
             newInitiative2.Should().NotBeNull();
