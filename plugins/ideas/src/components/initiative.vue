@@ -1,5 +1,5 @@
 <template>
-  <md-card class="card hvr-float" :class="{ 'first-card' : isNewIdea }">
+  <md-card md-with-hover @click.native="openUrl" class="card hvr-float" :class="{ 'first-card' : isNewIdea }">
     <md-card-media-cover>
       <md-card-media md-ratio="16:9">
         <img class="cardImage" :src="getImage()" alt="Skyscraper">
