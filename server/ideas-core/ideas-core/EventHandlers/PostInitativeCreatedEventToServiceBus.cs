@@ -1,6 +1,7 @@
 ﻿using CoE.Ideas.Core.Events;
 using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.Services;
+using CoE.Ideas.Shared.Security;
 using EnsureThat;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -16,23 +17,23 @@ namespace CoE.Ideas.Core.EventHandlers
     {
         public PostInitativeCreatedEventToServiceBus(Serilog.ILogger logger,
             IInitiativeRepository initiativeRepository,
-            IHttpContextAccessor httpContextAccessor,
+            ICurrentUserAccessor currentUserAccessor,
             IInitiativeMessageSender initiativeMessageSender)
         {
             EnsureArg.IsNotNull(logger);
             EnsureArg.IsNotNull(initiativeRepository);
-            EnsureArg.IsNotNull(httpContextAccessor);
+            EnsureArg.IsNotNull(currentUserAccessor);
             EnsureArg.IsNotNull(initiativeMessageSender);
 
             _logger = logger;
             _initiativeRepository = initiativeRepository;
-            _httpContextAccessor = httpContextAccessor;
+            _currentUserAccessor = currentUserAccessor;
             _initiativeMessageSender = initiativeMessageSender;
         }
 
         private readonly Serilog.ILogger _logger;
         private readonly IInitiativeRepository _initiativeRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICurrentUserAccessor _currentUserAccessor;
         private readonly IInitiativeMessageSender _initiativeMessageSender;
 
         public async Task Handle(InitiativeCreatedDomainEvent notification, CancellationToken cancellationToken)
@@ -52,7 +53,7 @@ namespace CoE.Ideas.Core.EventHandlers
                 await _initiativeMessageSender.SendInitiativeCreatedAsync(new InitiativeCreatedEventArgs()
                 {
                     Initiative = initiative,
-                    Owner = _httpContextAccessor.HttpContext.User,
+                    Owner = _currentUserAccessor.User,
                     SkipEmailNotification = notification.SkipEmailNotification
                 });
             }

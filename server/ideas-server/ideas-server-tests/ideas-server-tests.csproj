@@ -2,10 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <RootNamespace>CoE.Ideas.Server.Tests</RootNamespace>
+    <DebugType>Full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
