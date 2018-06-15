@@ -10,6 +10,9 @@ using AutoMapper;
 using Serilog;
 using CoE.Ideas.Core.Events;
 using MediatR;
+using CoE.Ideas.Shared.Security;
+using DateTimeExtensions.WorkingDays;
+using CoE.Ideas.Core.ServiceBus;
 
 namespace CoE.Ideas.Core.Tests
 {
@@ -42,6 +45,7 @@ namespace CoE.Ideas.Core.Tests
         public TestConfiguration ConfigureBasicServices()
         {
             _services.AddOptions();
+            _services.AddMemoryCache();
             _services.AddMediatR();
 
             // configure application specific logging
@@ -50,7 +54,10 @@ namespace CoE.Ideas.Core.Tests
                 .Enrich.WithProperty("Application", "ideas-core-xtests")
                 .Enrich.WithProperty("Module", "Server")
                 .ReadFrom.Configuration(_configuration)
+                .WriteTo.Console()
                 .CreateLogger());
+
+            _services.AddSingleton<ICurrentUserAccessor, MockCurrentUserAccessor>();
 
             return this;
         }
@@ -71,12 +78,20 @@ namespace CoE.Ideas.Core.Tests
             return this;
         }
 
+        internal TestConfiguration AddInitiativeMessaging()
+        {
+            _services.AddSingleton<SynchronousInitiativeMessageReceiver>();
+            _services.AddSingleton<IInitiativeMessageReceiver>(x => x.GetRequiredService<SynchronousInitiativeMessageReceiver>());
+            _services.AddSingleton<IInitiativeMessageSender, SynchronousInitiativeMessageSender>();
+            return this;
+        }
+
         internal TestConfiguration ConfigureBusinessCalendarService(string payrollCalenderServiceUrl = null)
         {
-            string calendarServiceUrl = string.IsNullOrWhiteSpace(payrollCalenderServiceUrl)
-                ? "http://webapps1.edmonton.ca/CoE.PayrollCalendar.WebApi/api/PayrollCalendar" : payrollCalenderServiceUrl;
-            _services.Configure<BusinessCalendarServiceOptions>(x => x.PayrollCalenderServiceUrl = calendarServiceUrl);
-            _services.AddSingleton<IBusinessCalendarService, BusinessCalendarService>();
+            _services.AddMemoryCache();
+            _services.AddSingleton<BusinessCalendarService>();
+            _services.AddSingleton<IBusinessCalendarService>(x => x.GetRequiredService<BusinessCalendarService>());
+            _services.AddSingleton<IHolidayStrategy>(x => x.GetRequiredService<BusinessCalendarService>());
             return this;
         }
     }

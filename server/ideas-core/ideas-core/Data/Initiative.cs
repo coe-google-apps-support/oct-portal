@@ -212,5 +212,12 @@ namespace CoE.Ideas.Core.Data
             // raise domain event
             AddDomainEvent(new StakeholderAddedDomainEvent(Uid, userId, type));
         }
+
+        public void AddSupportingDocument(SupportingDocument supportingDocument)
+        {
+            SupportingDocuments.Add(supportingDocument);
+
+            // could raise event in future
+        }
     }
 }

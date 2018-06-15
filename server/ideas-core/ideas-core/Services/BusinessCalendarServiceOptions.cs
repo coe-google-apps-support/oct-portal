@@ -6,6 +6,7 @@ namespace CoE.Ideas.Core.Services
 {
     internal class BusinessCalendarServiceOptions
     {
-        public string PayrollCalenderServiceUrl { get; set; }
+        public TimeSpan StartBusinessHoursTime { get; set; } = new TimeSpan(7, 0, 0);
+        public TimeSpan EndBusinessHoursTime { get; set; } = new TimeSpan(17, 0, 0);
     }
 }
