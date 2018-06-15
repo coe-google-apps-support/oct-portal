@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CoE.Ideas.Shared.Migrations
 {
     [DbContext(typeof(ServiceBusEmulatorContext))]
+    [ExcludeFromCodeCoverage]
     partial class ServiceBusEmulatorContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
