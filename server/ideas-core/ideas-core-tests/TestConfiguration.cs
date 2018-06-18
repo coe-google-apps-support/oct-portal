@@ -13,6 +13,7 @@ using MediatR;
 using CoE.Ideas.Shared.Security;
 using DateTimeExtensions.WorkingDays;
 using CoE.Ideas.Core.ServiceBus;
+using EnsureThat;
 
 namespace CoE.Ideas.Core.Tests
 {
@@ -20,16 +21,11 @@ namespace CoE.Ideas.Core.Tests
     {
         public TestConfiguration(IConfigurationRoot configuration)
         {
-            _configuration = configuration ?? throw new ArgumentNullException("configuration");
+            EnsureArg.IsNotNull(configuration);
+            _configuration = configuration;
             _services = new ServiceCollection();
         }
 
-        public TestConfiguration(IConfigurationRoot configuration,
-            IServiceCollection services)
-        {
-            _configuration = configuration ?? throw new ArgumentNullException("configuration");
-            _services = services ?? throw new ArgumentNullException("services");
-        }
 
         private readonly IConfigurationRoot _configuration;
         private readonly IServiceCollection _services;
@@ -81,7 +77,6 @@ namespace CoE.Ideas.Core.Tests
         internal TestConfiguration AddInitiativeMessaging()
         {
             _services.AddSingleton<SynchronousInitiativeMessageReceiver>();
-            _services.AddSingleton<IInitiativeMessageReceiver>(x => x.GetRequiredService<SynchronousInitiativeMessageReceiver>());
             _services.AddSingleton<IInitiativeMessageSender, SynchronousInitiativeMessageSender>();
             return this;
         }
