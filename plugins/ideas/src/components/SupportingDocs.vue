@@ -177,6 +177,18 @@ export default {
 </script>
 
 <style lang="scss">
+
+  @media (max-width: 450px) {
+    .md-empty-state-label {
+      font-size: 14px;
+    }
+    .md-list-item-text {
+      font-size: 12px;
+    }
+    .md-empty-state-description {
+      font-size: 11px;
+    }
+  }
   @import "~vue-material/dist/theme/engine";
 
   .md-menu-content {
