@@ -177,8 +177,37 @@ export default {
 </script>
 
 <style lang="scss">
-
-  @media (max-width: 450px) {
+  @media (min-width: 100px) {
+    .md-empty-state-label {
+      font-size: 11px;
+    }
+    .md-list-item-text {
+      font-size: 12px;
+    }
+    .md-empty-state-description {
+      font-size: 11px;
+    }
+    .md-list-item-content {
+      padding: 0px;
+    }
+    .md-list-item-text {
+      font-size: 9.9px;
+    }
+    .md-button.md-theme-default.md-fab {
+      width: 40px;
+      height: 40px;
+    }
+    .et_pb_button {
+      font-size: 13px!important;
+    }
+    .md-field label {
+      font-size: 12px;
+    }
+    .md-field.md-focused label {
+      font-size: 10.5px;
+    }
+  }
+  @media (min-width: 300px) {
     .md-empty-state-label {
       font-size: 14px;
     }
@@ -187,6 +216,30 @@ export default {
     }
     .md-empty-state-description {
       font-size: 11px;
+    }
+    .md-field.md-focused label {
+      font-size: 10.5px;
+    }
+  }
+
+    @media (min-width: 400px) {
+    .md-empty-state-label {
+      font-size: 26px;
+    }
+    .md-list-item-text {
+      font-size: 16px;
+    }
+    .md-field label {
+      font-size: 16px;
+    }
+    .md-empty-state-description {
+      font-size: 16px;
+    }
+    .md-field.md-focused label {
+      font-size: 13px;
+    }
+    .et_pb_button {
+      font-size: 20px!important;
     }
   }
   @import "~vue-material/dist/theme/engine";
