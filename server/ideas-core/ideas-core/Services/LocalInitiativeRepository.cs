@@ -110,11 +110,14 @@ namespace CoE.Ideas.Core.Services
             return initiative;
         }
      
-        public Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
+        public async Task<Initiative> GetInitiativeByWorkOrderIdAsync(string workOrderId)
         {
-            return _initiativeContext.Initiatives
+            var returnValue = await _initiativeContext.Initiatives
                 .Include(x => x.StatusHistories)
                 .FirstOrDefaultAsync(x => x.WorkOrderId == workOrderId);
+            // inefficient but safe:
+            await _initiativeContext.Entry(returnValue).ReloadAsync();
+            return returnValue;
         }
 
         Task<IDictionary<string, object>> IHealthCheckable.HealthCheckAsync()

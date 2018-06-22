@@ -43,7 +43,7 @@ namespace CoE.Ideas.Core.EventHandlers
                 throw new Exception($"Received new initiave event but couldn't get initiative with id {notification.InitiativeId}");
             }
             else
-                _logger.Information("Posting NewInitiativeCreated event to service bus for Initiative {InitiativeId}", initiative.Id);
+                _logger.Information("Posting StatusChanged event to service bus for Initiative {InitiativeId}", initiative.Id);
 
             await _initiativeMessageSender.SendInitiativeStatusChangedAsync(new InitiativeStatusChangedEventArgs()
             {
