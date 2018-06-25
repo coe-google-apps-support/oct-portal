@@ -1,0 +1,50 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: remedy-sb-listener
+  namespace: int
+  labels:
+    app: remedy-sb-listener
+    technology: dotnetcore
+    tier: backend
+    product: octava
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: remedy-sb-listener
+      technology: dotnetcore
+      tier: backend
+      product: octava
+  template:
+    metadata:
+      labels:
+        app: remedy-sb-listener
+        technology: dotnetcore
+        tier: backend
+        product: octava
+    spec:
+      containers:
+      - name: remedy-sb-listener
+        image: coeoctava.azurecr.io/initiatives-remedy-sblistener:v1.0.3340
+        volumeMounts:
+        - name: secret-volume
+          mountPath: "/etc/secrets"
+          readOnly: true
+      - name: octavadb-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+            "-instances=octavia-189116:us-west1:octavadbint=tcp:3306",
+            "-credential_file=/secrets/cloudsql/credentials.json"]
+        volumeMounts:
+          - name: octavadb-service-account	
+            mountPath: /secrets/cloudsql             
+      imagePullSecrets:
+      - name: acs-access
+      volumes:
+      - name: secret-volume
+        secret:
+          secretName: remedysblistener-config
+      - name: octavadb-service-account
+        secret:
+          secretName: octavadb-service-account                 
