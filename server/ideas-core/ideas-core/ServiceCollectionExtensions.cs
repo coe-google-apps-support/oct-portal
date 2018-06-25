@@ -210,7 +210,7 @@ namespace CoE.Ideas.Core
                 if (useSqlServer)
                 {
                     loggerConfig = loggerConfig
-                        .WriteTo.MSSqlServer(connectionString: "server=initiatives-db;database=CoeIdeas;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;",
+                        .WriteTo.MSSqlServer(connectionString: "server=initiatives-db;database=ServiceBusEmulator;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;",
                             tableName: "Log",
                             autoCreateSqlTable: true
                             , columnOptions: new Serilog.Sinks.MSSqlServer.ColumnOptions()

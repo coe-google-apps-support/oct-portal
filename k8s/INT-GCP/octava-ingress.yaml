@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: octava-ingress
-  namespace: uat
+  namespace: int
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/rewrite-target: "/"
@@ -10,10 +10,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - octavauat.edmonton.ca
+    - octavaint.edmonton.ca
     secretName: production-tls
   rules:
-  - host: octavauat.edmonton.ca
+  - host: octavaint.edmonton.ca
     http:
       paths:
       - path: /plugins/initiatives
@@ -24,7 +24,3 @@ spec:
         backend:
           serviceName: wordpress
           servicePort: 80
-      - path: /util/webhooks
-        backend:
-          serviceName: webhooks-emailer
-          servicePort: 9001

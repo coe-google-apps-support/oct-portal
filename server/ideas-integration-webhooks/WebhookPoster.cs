@@ -4,6 +4,7 @@ using CoE.Ideas.Shared.Extensions;
 using CoE.Ideas.Shared.Security;
 using CoE.Ideas.Shared.WordPress;
 using EnsureThat;
+using Newtonsoft.Json;
 using Serilog.Context;
 using System;
 using System.Collections.Generic;
@@ -57,7 +58,7 @@ namespace CoE.Ideas.Webhooks
                 };
 
                 data?.Invoke(values);
-                var content = new FormUrlEncodedContent(values);
+                var content =  new StringContent(JsonConvert.SerializeObject(values, Formatting.Indented));
 
                 using (var client = new HttpClient())
                 {
