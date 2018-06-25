@@ -1,11 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
     <RootNamespace>CoE.Ideas.Remedy.Tests</RootNamespace>
+    <DebugType>Full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>

@@ -4,6 +4,7 @@ using CoE.Ideas.Core.ServiceBus;
 using CoE.Ideas.Core.Services;
 using CoE.Ideas.Shared;
 using CoE.Ideas.Shared.Extensions;
+using DateTimeExtensions.WorkingDays;
 using EnsureThat;
 using MediatR;
 using Microsoft.Azure.ServiceBus;
@@ -98,15 +99,6 @@ namespace CoE.Ideas.Core
 #endif
 
         public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
-            SynchronousInitiativeMessageReceiver synchronousInitiativeMessageReceiver)
-        {
-            services.AddSingleton<SynchronousInitiativeMessageReceiver>(x => synchronousInitiativeMessageReceiver);
-            services.AddSingleton<IInitiativeMessageReceiver>(x => x.GetRequiredService<SynchronousInitiativeMessageReceiver>());
-            services.AddSingleton<IInitiativeMessageSender, SynchronousInitiativeMessageSender>();
-            return services;
-        }
-
-        public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
             string serviceBusConnectionString = null,
             string serviceBusTopicName = null,
             string serviceBusSubscription = null,
@@ -195,10 +187,8 @@ namespace CoE.Ideas.Core
         public static IServiceCollection AddStatusEtaService(this IServiceCollection services,
             string payrollCalenderServiceUrl = null)
         {
-            string calendarServiceUrl = string.IsNullOrWhiteSpace(payrollCalenderServiceUrl)
-                 ? "http://webapps1.edmonton.ca/CoE.PayrollCalendar.WebApi/api/PayrollCalendar" : payrollCalenderServiceUrl;
-            services.Configure<BusinessCalendarServiceOptions>(x => x.PayrollCalenderServiceUrl = calendarServiceUrl);
-            services.AddSingleton<IBusinessCalendarService, BusinessCalendarService>();
+            services.AddMemoryCache();
+            services.AddSingleton<IBusinessCalendarService, BusinessCalendarService>();           
             services.AddSingleton<IInitiativeStatusEtaService, InitiativeStatusEtaService>();
             return services;
         }
