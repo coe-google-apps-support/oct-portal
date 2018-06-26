@@ -30,6 +30,11 @@ if ($tagIndex -gt 0) {
 
 $od.spec.template.spec.containers[0]["image"] = $imageName
 
+#fix for subfolders
+if ($configFile.Contains("/")) {
+    $configFile = $configFile.Substring($configFile.LastIndexOf("/")+1);
+}
+
 Write-Host ("$configFile" + ":")
 $od.ToString()
 
