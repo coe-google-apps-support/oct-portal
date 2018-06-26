@@ -18,3 +18,5 @@ spec:
       - path: /util/webhook
         backend:
           serviceName: webhooks-emailer
+          servicePort: 9001
+        path: /util/webhook                    
