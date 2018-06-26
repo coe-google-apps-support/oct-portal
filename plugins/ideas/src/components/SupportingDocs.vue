@@ -49,13 +49,13 @@
               <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
             </md-field>
             <md-field class="form-control" :class="getValidationClass('url')">
-              <label for="supdoc-url">Supporting documents or links</label>
+              <label for="supdoc-url">Documents or links</label>
               <md-input name="url" id="supdoc-url" v-model="form.url" />
               <span class="md-error" v-if="!$v.form.url.required">URL is required</span>
               <span class="md-error" v-else-if="!$v.form.url.minlength">Invalid URL</span>
             </md-field>
             <md-field class="form-control" :class="getValidationClass('type')">
-              <label for="supdoc-type">Type of supporting document</label>
+              <label for="supdoc-type">Type</label>
               <md-select name="type" id="supdoc-type" v-model="form.type">
                 <md-option value="BusinessCases">Business Cases</md-option>
                 <md-option value="TechnologyInvestmentForm">Technology Investment Form</md-option>
