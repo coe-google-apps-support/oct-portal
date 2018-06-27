@@ -138,10 +138,6 @@ export default {
   .oct-content-block {
     margin: 14px 0px;
   }
-
-  .oct-min-size {
-    min-width: 400px;
-  }
   
   .sd-headline {
     font-size: 25px;

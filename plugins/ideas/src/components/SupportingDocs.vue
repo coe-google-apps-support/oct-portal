@@ -220,11 +220,15 @@ export default {
     .md-field.md-focused label {
       font-size: 10.5px;
     }
+    .md-button.md-theme-default.md-fab {
+      width: 45px;
+      height: 45px;
+    }
   }
 
     @media (min-width: 400px) {
     .md-empty-state-label {
-      font-size: 26px;
+      font-size: 20px;
     }
     .md-list-item-text {
       font-size: 16px;
@@ -240,6 +244,10 @@ export default {
     }
     .et_pb_button {
       font-size: 20px!important;
+    }
+    .md-button.md-theme-default.md-fab {
+      width: 50px;
+      height: 50px;
     }
   }
   @import "~vue-material/dist/theme/engine";
