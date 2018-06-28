@@ -1,0 +1,62 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: wordpress-backup
+  namespace: production
+spec:
+  schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: wordpress-backup
+            image: coeoctava.azurecr.io/wordpress-backup:v1.0.1
+            env:
+            - name: AZ_COPY_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: AZ_COPY_KEY
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: DB_NAME
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: DB_HOST
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: DB_PASSWORD
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: DB_PORT
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-backup
+                  key: DB_USER
+          - name: octavadb-proxy
+            image: gcr.io/cloudsql-docker/gce-proxy:1.11
+            command: ["/cloud_sql_proxy",
+                "-instances=octavia-189116:us-west1:octavadb=tcp:3306",
+                "-credential_file=/secrets/cloudsql/credentials.json"]
+            volumeMounts:
+              - name: octavadb-service-account	
+                mountPath: /secrets/cloudsql
+                readOnly: true
+          restartPolicy: Never
+          imagePullSecrets:
+          - name: acs-access
+          volumes:
+          - name: octavadb-service-account
+            secret:
+              secretName: octavadb-service-account
