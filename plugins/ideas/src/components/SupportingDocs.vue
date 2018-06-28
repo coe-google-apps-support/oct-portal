@@ -346,4 +346,7 @@ export default {
   .fill-width {
     width: 100%;
   }
+  .md-table-content {
+    overflow: scroll;
+  }
 </style>
