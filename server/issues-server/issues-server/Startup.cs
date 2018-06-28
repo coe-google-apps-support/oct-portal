@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoE.Issues.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,10 @@ namespace CoE.Issues.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLocalIssueConfiguration(
+                Configuration.GetConnectionString("IssueDatabase"),
+                Configuration["WordPress:Url"]);
+
             services.AddMvc();
         }
 
