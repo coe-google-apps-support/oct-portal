@@ -42,5 +42,30 @@ namespace CoE.Issues.Core
 
             return services;
         }
+
+
+#if DEBUG
+        public static void InitializeIssueDatabase(this IServiceProvider serviceProvider)
+        {
+            int retryCount = 0;
+            while (true)
+            {
+                var context = serviceProvider.GetRequiredService<IssueContext>();
+                try
+                {
+
+                    context.Database.Migrate();
+                    break;
+                }
+                catch (Exception)
+                {
+                    if (retryCount++ > 30)
+                        throw;
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+        }
+#endif
+
     }
 }
