@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy-tests", "ideas-integration-remedy\ideas-integration-remedy-tests\ideas-integration-remedy-tests.csproj", "{7B17E7BB-7BE1-4F0C-B719-C84586CDE6CF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "shared-kernel", "shared-kernel\shared-kernel.csproj", "{D84C582F-3BC1-407C-A909-281E475F1CD0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "shared-kernel", "..\shared-kernel\shared-kernel.csproj", "{D84C582F-3BC1-407C-A909-281E475F1CD0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-integration-remedy-sblistener", "ideas-integration-remedy\ideas-integration-remedy-sblistener\ideas-integration-remedy-sblistener.csproj", "{4DAF33B4-B5B3-47DD-8B63-802A93B7312E}"
 EndProject

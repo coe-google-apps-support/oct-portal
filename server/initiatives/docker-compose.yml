@@ -52,7 +52,7 @@ services:
       WORDPRESS_DB_PASSWORD: octavadev
 
   initiatives-vue:
-    image: coeoctava.azurecr.io/initiatives-vue:dev-1.0.3226
+    image: coeoctava.azurecr.io/initiatives-vue:dev-1.0.3444
     ports:
       - "8080:8080"
     restart: always

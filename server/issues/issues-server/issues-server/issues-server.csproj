@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\issues-core\issues-core\issues-core.csproj" />
-    <ProjectReference Include="..\..\shared-kernel\shared-kernel.csproj" />
+    <ProjectReference Include="..\..\..\shared-kernel\shared-kernel.csproj" />
   </ItemGroup>
 
 </Project>

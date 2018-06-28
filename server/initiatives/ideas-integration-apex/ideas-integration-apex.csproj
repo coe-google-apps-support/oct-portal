@@ -17,7 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ideas-core\ideas-core\ideas-core.csproj" />
     <ProjectReference Include="..\ideas-server\ideas-server\ideas-server.csproj" />
-    <ProjectReference Include="..\shared-kernel\shared-kernel.csproj" />
+    <ProjectReference Include="..\..\shared-kernel\shared-kernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>

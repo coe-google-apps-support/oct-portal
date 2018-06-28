@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{F03485
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{32D288E5-5670-4C11-8AEA-C7D8CB85DBFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "shared-kernel", "shared-kernel\shared-kernel.csproj", "{7C341DBD-A996-454E-8FA1-ED545CC59737}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "shared-kernel", "..\shared-kernel\shared-kernel.csproj", "{7C341DBD-A996-454E-8FA1-ED545CC59737}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "issues-core", "issues-core\issues-core\issues-core.csproj", "{1308F013-1090-4037-A935-F9D2033DFBC6}"
 EndProject

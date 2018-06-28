@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-core", "..\ideas-core
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ideas-server-tests", "ideas-server-tests\ideas-server-tests.csproj", "{A7647EBA-F14F-4ADA-A864-3C4050A2EE12}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "shared-kernel", "..\shared-kernel\shared-kernel.csproj", "{0A55B202-F81B-4C18-A9B1-C47159EDCF51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "shared-kernel", "..\..\shared-kernel\shared-kernel.csproj", "{0A55B202-F81B-4C18-A9B1-C47159EDCF51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
