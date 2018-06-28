@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="scroll-fix">
     <div class="full-control md-scrollbar">
       <div class="list">
         <md-list md-expand-single>
@@ -346,7 +346,7 @@ export default {
   .fill-width {
     width: 100%;
   }
-  .md-table-content {
+  .scroll-fix {
     overflow: scroll;
     -webkit-overflow-scrolling: touch
   }
