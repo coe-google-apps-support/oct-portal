@@ -1,8 +1,8 @@
 <template>
-  <div class="scroll-fix">
+  <div>
     <div class="full-control md-scrollbar">
       <div class="list">
-        <md-list md-expand-single>
+        <md-list md-expand-single class="scroll-fix">
           <md-list-item md-expand="true">
             <md-icon>description</md-icon>
             <span class="md-list-item-text">Supporting Documents</span>
