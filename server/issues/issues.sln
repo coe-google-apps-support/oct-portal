@@ -13,9 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{32D288E5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "shared-kernel", "..\shared-kernel\shared-kernel.csproj", "{7C341DBD-A996-454E-8FA1-ED545CC59737}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "issues-core", "issues-core\issues-core\issues-core.csproj", "{1308F013-1090-4037-A935-F9D2033DFBC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "issues-core", "issues-core\issues-core\issues-core.csproj", "{1308F013-1090-4037-A935-F9D2033DFBC6}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C05B4661-416B-4FAD-98C4-8164938F9B73}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C172DDF0-701F-4567-97D0-299B68E51210}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{1308F013-1090-4037-A935-F9D2033DFBC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1308F013-1090-4037-A935-F9D2033DFBC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1308F013-1090-4037-A935-F9D2033DFBC6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C05B4661-416B-4FAD-98C4-8164938F9B73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C05B4661-416B-4FAD-98C4-8164938F9B73}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C05B4661-416B-4FAD-98C4-8164938F9B73}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C05B4661-416B-4FAD-98C4-8164938F9B73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C172DDF0-701F-4567-97D0-299B68E51210}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C172DDF0-701F-4567-97D0-299B68E51210}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C172DDF0-701F-4567-97D0-299B68E51210}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C172DDF0-701F-4567-97D0-299B68E51210}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

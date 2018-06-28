@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  issues-server:
+    image: ${DOCKER_REGISTRY}issuesserver
+    build:
+      context: .
+      dockerfile: issues-server/issues-server/Dockerfile
+
+  initiatives-db:
+    image: coeoctava.azurecr.io/initiatives-db:v1.0.2
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: Y
+      SA_PASSWORD: OctavaDev100!
+      MSSQL_PID: Developer
+
+  wordpress-db:
+    image: coeoctava.azurecr.io/wordpress-db:v1.0.5
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: octavadev
+      MYSQL_DATABASE: octportalwordpress
