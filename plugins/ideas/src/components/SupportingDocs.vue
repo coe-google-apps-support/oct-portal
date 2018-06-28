@@ -348,5 +348,6 @@ export default {
   }
   .md-table-content {
     overflow: scroll;
+    -webkit-overflow-scrolling: touch
   }
 </style>
