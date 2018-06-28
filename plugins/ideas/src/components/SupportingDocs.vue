@@ -2,12 +2,12 @@
   <div>
     <div class="full-control md-scrollbar">
       <div class="list">
-        <md-list md-expand-single class="scroll-fix">
+        <md-list md-expand-single>
           <md-list-item md-expand="true">
             <md-icon>description</md-icon>
             <span class="md-list-item-text">Supporting Documents</span>
             <div class="display-docs md-scrollbar" slot="md-expand">
-              <md-table class="fill-width">
+              <md-table class="fill-width scroll-fix">
                 <md-table-row v-for="(doc, index) in documents" v-bind:key="`document-${index}`">
                   <md-table-cell md-label="Title" md-sort-by="title">{{ doc.title }}</md-table-cell>
                   <md-table-cell md-label="URL" md-sort-by="url">{{ doc.url }}</md-table-cell>
