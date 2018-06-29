@@ -1,4 +1,5 @@
 ﻿using CoE.Issues.Core;
+using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
 using CoE.Ideas.Shared.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,9 +56,9 @@ namespace CoE.Issues.Remedy.Watcher
 
             // Add services to talk to Remedy
             services.Configure<RemedyCheckerOptions>(Configuration.GetSection("Remedy"));
-            services.AddSingleton<New_Port_0PortType, 
-                New_Port_0PortTypeClient>(x => 
-                    new New_Port_0PortTypeClient(new BasicHttpBinding(BasicHttpSecurityMode.None)
+            services.AddSingleton<HPD_IncidentInterface_Create_WSPortTypePortType, 
+                HPD_IncidentInterface_Create_WSPortTypePortTypeClient>(x => 
+                    new HPD_IncidentInterface_Create_WSPortTypePortTypeClient(new BasicHttpBinding(BasicHttpSecurityMode.None)
                     {
                         MaxReceivedMessageSize = 16777216L // 16 MB, default it 65kb
                     },
