@@ -9,5 +9,10 @@ namespace CoE.Issues.Remedy.Watcher
         {
             throw new NotImplementedException();
         }
+
+        public async Task<RemedyPollResult> Poll()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
