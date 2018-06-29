@@ -1,4 +1,5 @@
-﻿using CoE.Ideas.Shared.Extensions;
+﻿using CoE.Issues.Core;
+using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -42,19 +43,9 @@ namespace CoE.Issues.Remedy.Watcher
             services.ConfigureLogging(Configuration, "Remedy WO Watcher");
 #endif
 
-            services.AddRemoteInitiativeConfiguration(Configuration["IssuesApi"],
-                Configuration["WordPress:Url"]);
-
-
-            // Add service to talk to ServiceBus
-            services.AddInitiativeMessaging(Configuration.GetConnectionString("ServiceBus"), 
-                Configuration["Issues:ServiceBusTopic"]);
-
-            services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
-
             // Add services to talk to Remedy
             services.Configure<RemedyCheckerOptions>(Configuration.GetSection("Remedy"));
-            services.AddSingleton<New_Port_0PortType, 
+            services.AddSingleton<New_Port_0PortType,
                 New_Port_0PortTypeClient>(x => 
                     new New_Port_0PortTypeClient(new BasicHttpBinding(BasicHttpSecurityMode.None)
                     {
@@ -64,10 +55,6 @@ namespace CoE.Issues.Remedy.Watcher
             services.AddSingleton<RemedyChecker>();
 
             services.AddSingleton<IRemedyService, RemedyService>();
-
-            services.AddPeopleService(Configuration["PeopleService"]);
-
-            services.AddStatusEtaService();
 
             return services;
         }
