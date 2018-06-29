@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace issues_integration_remedy
+namespace CoE.Issues.Remedy
 {
     class Program
     {

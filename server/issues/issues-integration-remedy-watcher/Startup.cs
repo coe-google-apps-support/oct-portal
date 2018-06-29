@@ -1,4 +1,5 @@
-﻿using CoE.Ideas.Shared.Extensions;
+﻿using CoE.Issues.Core;
+using CoE.Ideas.Shared.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
