@@ -1,4 +1,8 @@
-﻿namespace CoE.Issues.Remedy.Watcher
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace CoE.Issues.Remedy.Watcher
 {
     public class RemedyCheckerOptions
     {
