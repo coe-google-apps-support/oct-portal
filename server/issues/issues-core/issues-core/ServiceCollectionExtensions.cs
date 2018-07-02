@@ -44,42 +44,7 @@ namespace CoE.Issues.Core
             return services;
         }
 
-        public static IServiceCollection ConfigureLogging(this IServiceCollection services,
-    Microsoft.Extensions.Configuration.IConfiguration configuration,
-    string module,
-    bool useSqlServer = false)
-        {
-
-            services.AddSingleton<Serilog.ILogger>(x =>
-            {
-                var loggerConfig = new LoggerConfiguration()
-                    .Enrich.FromLogContext()
-                    .Enrich.WithProperty("Application", "Initiatives")
-                    .Enrich.WithProperty("Module", module)
-                    .ReadFrom.Configuration(configuration);
-                if (useSqlServer)
-                {
-                    loggerConfig = loggerConfig
-                        .WriteTo.MSSqlServer(connectionString: "server=initiatives-db;database=ServiceBusEmulator;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;",
-                            tableName: "Log",
-                            autoCreateSqlTable: true
-                            , columnOptions: new Serilog.Sinks.MSSqlServer.ColumnOptions()
-                            {
-                                AdditionalDataColumns = new System.Data.DataColumn[]
-                                {
-                                    new System.Data.DataColumn("Module", typeof(string)),
-                                    new System.Data.DataColumn("InitiativeId", typeof(int))
-                                }
-                            }
-                        );
-                }
-                return loggerConfig
-                    .CreateLogger();
-            });
-
-            return services;
-        }
-
+       
 #if DEBUG
         public static void InitializeIssueDatabase(this IServiceProvider serviceProvider)
         {
