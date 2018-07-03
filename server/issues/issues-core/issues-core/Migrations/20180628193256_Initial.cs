@@ -25,7 +25,12 @@ namespace CoE.Issues.Core.Migrations
                 {
                     table.PrimaryKey("PK_Issues", x => x.Id);
                 });
-        }
+
+            migrationBuilder.Sql(@"
+INSERT INTO issues.Issues(`Id`, `AssigneeId`, `CreatedDate`, `Description`, `Title`, `Uid`) VALUES(1,2,'2018-07-03', 'testing', 'testing title', 'c6859cb5-3cbe-4483-8b7c-9b4022fa796a');
+");
+        
+    }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
