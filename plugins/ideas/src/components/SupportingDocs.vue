@@ -347,8 +347,7 @@ export default {
     width: 100%;
   }
   .scroll-fix {
-    position: relative;
-    overflow-x: scroll;
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch
   }
 </style>
