@@ -13,7 +13,8 @@ using CoE.Ideas.Shared.Data;
 namespace CoE.Issues.Server.Controllers
 {
     [Produces("application/json")]
-    [Route("api")]
+    //[Route("api")]
+    [Route("api/[controller]")]
     public class IssuesController : Controller
     {
         private readonly IIssueRepository _repository;
