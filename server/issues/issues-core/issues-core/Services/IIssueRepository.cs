@@ -12,8 +12,9 @@ namespace CoE.Issues.Core.Services
         Task<Issue> AddIssueAsync(Issue issue, CancellationToken cancellationToken = default(CancellationToken));
         Task<Issue> UpdateIssueAsync(Issue ssue);
         Task<Issue> GetIssueAsync(Guid id);
-        Task<PagedResultSet<Issue>> GetIssuesAsync(string filter = null,
+        Task<PagedResultSet<IssueInfo>> GetIssuesAsync(string filter = null,
             int page = 1, int pageSize = 20);
+
         Task<Issue> GetIssueAsync(int id);
 
     }

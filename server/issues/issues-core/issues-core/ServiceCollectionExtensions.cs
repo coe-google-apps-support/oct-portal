@@ -28,16 +28,16 @@ namespace CoE.Issues.Core
             switch (optionsLifeTime)
             {
                 case ServiceLifetime.Scoped:
-                    services.AddScoped<IIssueRepository, IssueRepository>();
-                    services.AddScoped<IHealthCheckable, IssueRepository>();
+                    services.AddScoped<IIssueRepository, LocalIssueRepository>();
+                    services.AddScoped<IHealthCheckable, LocalIssueRepository>();
                     break;
                 case ServiceLifetime.Singleton:
-                    services.AddSingleton<IIssueRepository, IssueRepository>();
-                    services.AddSingleton<IHealthCheckable, IssueRepository>();
+                    services.AddSingleton<IIssueRepository, LocalIssueRepository>();
+                    services.AddSingleton<IHealthCheckable, LocalIssueRepository>();
                     break;
                 default:
-                    services.AddTransient<IIssueRepository, IssueRepository>();
-                    services.AddTransient<IHealthCheckable, IssueRepository>();
+                    services.AddTransient<IIssueRepository, LocalIssueRepository>();
+                    services.AddTransient<IHealthCheckable, LocalIssueRepository>();
                     break;
             }
 

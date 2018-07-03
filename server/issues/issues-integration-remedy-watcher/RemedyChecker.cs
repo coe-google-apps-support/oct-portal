@@ -35,7 +35,6 @@ namespace CoE.Issues.Remedy.Watcher
         private const string ResultFilePrefix = "RemedyCheckerLog";
 
         private DateTime lastPollTimeUtc;
-        private object _remedyClient;
 
         private void TryReadLastPollTime()
         {
@@ -137,7 +136,7 @@ namespace CoE.Issues.Remedy.Watcher
 
                 if (lastModifiedDateUtc <= timestampUtc)
                 {
-                    _logger.Warning($"WorkItem { workItem.WorkOrderID } has a last modified date less than or equal to our cutoff time, so ignoring ({ lastModifiedDateUtc } <= { timestampUtc }");
+                    _logger.Warning($"WorkItem { workItem.Web_Incident_ID} has a last modified date less than or equal to our cutoff time, so ignoring ({ lastModifiedDateUtc } <= { timestampUtc }");
                     continue;
                 }
 

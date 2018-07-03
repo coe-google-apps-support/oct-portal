@@ -1,5 +1,4 @@
-﻿using CoE.Ideas.Shared.Data;
-using CoE.Issues.Core.Services;
+﻿using CoE.Issues.Core.Services;
 using CoE.Issues.Server.Models;
 using EnsureThat;
 using Microsoft.AspNetCore.Authorization;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using CoE.Ideas.Shared.Data;
 
 namespace CoE.Issues.Server.Controllers
 {
@@ -30,12 +30,12 @@ namespace CoE.Issues.Server.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetInitiatives([FromQuery]ViewOptions view = ViewOptions.All,
+        public async Task<IActionResult> GetIssues([FromQuery]ViewOptions view = ViewOptions.All,
             [FromQuery]string contains = null,
             [FromQuery]int page = 1,
             [FromQuery]int pageSize = 1000)
         {
-            _logger.Information("Retrieving Initiatives");
+            _logger.Information("Retrieving issues");
 
             if (page < 1)
             {
@@ -48,7 +48,7 @@ namespace CoE.Issues.Server.Controllers
                 return BadRequest(ModelState);
             }
 
-            PagedResultSet<Core.Data.Issue> issuesInfo;
+            PagedResultSet<Core.Data.IssueInfo> issuesInfo;
 
             Stopwatch watch = new Stopwatch();
             watch.Start();
@@ -57,13 +57,13 @@ namespace CoE.Issues.Server.Controllers
                 if (view == ViewOptions.Mine)
                 {
                     throw new NotSupportedException();
-                    //issuesInfo = await _repository.GetInitiativesByStakeholderPersonIdAsync(User.GetPersonId(),
+                    //issuesInfo = await _repository.GetissuesByStakeholderPersonIdAsync(User.GetPersonId(),
                     //    filter: contains, pageNumber: page, pageSize: pageSize);
                 }
                 else
                     issuesInfo = await _repository.GetIssuesAsync(filter: contains, page: page, pageSize: pageSize);
                 watch.Stop();
-                _logger.Information("Retrieved {IssueCount} Initiatives in {ElapsedMilliseconds}ms", issuesInfo.ResultCount, watch.ElapsedMilliseconds);
+                _logger.Information("Retrieved {IssueCount} issues in {ElapsedMilliseconds}ms", issuesInfo.ResultCount, watch.ElapsedMilliseconds);
                 Request.HttpContext.Response.Headers.Add("X-Total-Count", issuesInfo.TotalCount.ToString());
                 Request.HttpContext.Response.Headers.Add("X-Is-Last-Page", issuesInfo.IsLastPage().ToString());
                 return Ok(issuesInfo.Results
@@ -71,7 +71,7 @@ namespace CoE.Issues.Server.Controllers
             }
             catch (Exception err)
             {
-                _logger.Error(err, "Error reading initiatives: {ErrorMessage}", err.Message);
+                _logger.Error(err, "Error reading issues: {ErrorMessage}", err.Message);
                 throw;
             }
         }
