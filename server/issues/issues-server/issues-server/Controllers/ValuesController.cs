@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoE.Issues.Server.Controllers
 {
-    //[Route("api/[controller]")]
+    [Route("api/[controller]")]
     public class ValuesController : Controller
     {
         // GET api/values
