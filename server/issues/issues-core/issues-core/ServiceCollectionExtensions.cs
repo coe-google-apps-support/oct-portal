@@ -47,7 +47,7 @@ namespace CoE.Issues.Core
             return services;
         }
 
-        public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
+        public static IServiceCollection AddIssueMessaging(this IServiceCollection services,
     string serviceBusConnectionString = null,
     string serviceBusTopicName = null,
     string serviceBusSubscription = null)
