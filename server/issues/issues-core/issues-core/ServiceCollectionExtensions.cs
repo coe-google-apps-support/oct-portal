@@ -4,9 +4,12 @@ using CoE.Issues.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Microsoft.Azure.ServiceBus;
+
 using System.Collections.Generic;
 using System.Text;
 using Serilog;
+using CoE.Issues.Core.ServiceBus;
 
 namespace CoE.Issues.Core
 {
@@ -44,7 +47,33 @@ namespace CoE.Issues.Core
             return services;
         }
 
-       
+        public static IServiceCollection AddInitiativeMessaging(this IServiceCollection services,
+    string serviceBusConnectionString = null,
+    string serviceBusTopicName = null,
+    string serviceBusSubscription = null)
+        {
+            services.AddSingleton<ITopicClient, TopicClient>(x =>
+            {
+                return new TopicClient(serviceBusConnectionString, serviceBusTopicName);
+            });
+
+            if (!string.IsNullOrWhiteSpace(serviceBusSubscription))
+            {
+                services.AddSingleton<ISubscriptionClient, SubscriptionClient>(x =>
+                {
+                    return new SubscriptionClient(serviceBusConnectionString, serviceBusTopicName, serviceBusSubscription);
+                });
+            }
+            services.AddSingleton<IMessageSender, ServiceBusMessageSender>();
+            services.AddSingleton<IIssueMessageSender, IssueMessageSender>();
+
+
+
+            return services;
+        }
+
+
+
 #if DEBUG
         public static void InitializeIssueDatabase(this IServiceProvider serviceProvider)
         {
@@ -70,5 +99,6 @@ namespace CoE.Issues.Core
 
     }
 
+    
 
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,7 +25,5 @@ namespace CoE.Issues.Server.Models
 
         [Required]
         public DateTimeOffset CreatedDate { get; set; }
-
-        public string Url { get; set; }
     }
 }
