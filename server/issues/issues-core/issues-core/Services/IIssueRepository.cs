@@ -16,6 +16,5 @@ namespace CoE.Issues.Core.Services
             int page = 1, int pageSize = 20);
 
         Task<Issue> GetIssueAsync(int id);
-
     }
 }

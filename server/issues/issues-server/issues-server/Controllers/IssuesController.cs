@@ -68,7 +68,14 @@ namespace CoE.Issues.Server.Controllers
                 Request.HttpContext.Response.Headers.Add("X-Total-Count", issuesInfo.TotalCount.ToString());
                 Request.HttpContext.Response.Headers.Add("X-Is-Last-Page", issuesInfo.IsLastPage().ToString());
                 return Ok(issuesInfo.Results
-                    .OrderByDescending(x => x.CreatedDate));
+                    .OrderByDescending(x => x.CreatedDate)
+                    .Select(x => new IssueInfo()
+                    {
+                        Id = x.Id,
+                        Description = x.Description,
+                        Title = x.Title,
+                        CreatedDate = x.CreatedDate,
+                    }));
             }
             catch (Exception err)
             {
