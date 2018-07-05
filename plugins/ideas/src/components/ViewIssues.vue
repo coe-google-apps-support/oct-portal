@@ -3,17 +3,17 @@
     <br>
     <transition name="fade">
       <div class="min-height">
-        <div v-if="tickets && tickets.length" class="md-layout md-alignment-top-center">
-          <ticket v-for="ticket in tickets"
-            :key="ticket.id" 
-            :ticket="ticket"
+        <div v-if="issues && issues.length" class="md-layout md-alignment-top-center">
+          <issue v-for="issue in issues"
+            :key="issue.id" 
+            :issue="issue"
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
-          </ticket>
+          </issue>
         </div>
-        <div v-if="tickets.length === 0 && isLoading == false">
+        <div v-if="issues.length === 0 && isLoading == false">
           <md-empty-state
             md-icon="confirmation_number"
-            md-label="No tickets found!"
+            md-label="No issues found!"
             md-description="Oops! We couldn't find anything.">
           </md-empty-state>
         </div>
@@ -23,10 +23,6 @@
         <div class="center-children" v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
           <divi-button class="md-accent" @click.native="infiniteHandler">Load more</divi-button>
         </div>
-        <md-snackbar v-if="newticket" md-position="center" :md-duration="Infinity" :md-active.sync="showSnackbar" md-persistent>
-          <span>ticket successfully submitted!</span>
-          <md-button class="md-accent" @click="showSnackbar = false">Close</md-button>
-        </md-snackbar>
       </div>
     </transition>
     
@@ -39,30 +35,29 @@
 // https://stackoverflow.com/questions/49041787/child-component-doesnt-get-updated-when-props-changes
 // This could be important if we wanted to allow paging from outside an iframe, for example.
 
-import Initiative from '@/components/initiative'
+import Issue from '@/components/Issue'
 import DiviButton from '@/components/divi/DiviButton'
 
 export default {
-  name: 'ViewTickets',
+  name: 'ViewIssues',
   props: {
     filter: String,
     contains: String,
-    newInitiative: Number,
     page: Number,
     pageSize: Number
   },
   data: () => ({
-    ideas: [],
+    issues: [],
     errors: [],
     dataPage: null,
     dataPageSize: null,
-    initiativeFunction: null,
+    issueFunction: null,
     isLast: false,
     isLoading: true,
     showSnackbar: false
   }),
   components: {
-    Initiative,
+    Issue,
     DiviButton
   },
   methods: {
@@ -79,9 +74,9 @@ export default {
     },
     requestAPI (page, pageSize, contains) {
       this.isLoading = true
-      return this.initiativeFunction(page, pageSize, contains).then((response) => {
+      return this.issueFunction(page, pageSize, contains).then((response) => {
         this.checkIsLast(response)
-        this.ideas = this.ideas.concat(response.data)
+        this.issues = this.issues.concat(response.data)
         this.isLoading = false
         return response
       }, (e) => {
@@ -112,20 +107,13 @@ export default {
     } else {
       this.dataPageSize = 20
     }
-    this.ideas.splice(0, this.ideas.length)
-
+    this.issues.splice(0, this.issues.length)
+    console.log(this.dataPage, this.dataPageSize, this.filter)
     if (this.filter === 'mine') {
-      this.initiativeFunction = this.services.ideas.getMyInitiatives
+      this.issueFunction = this.services.issues.getMyIssues
     } else {
-      this.initiativeFunction = this.services.ideas.getIdeas
+      this.issueFunction = this.services.issues.getIssues
     }
-
-    // this.requestAPI(this.dataPage, this.dataPageSize, this.contains)
-    this.requestAPI(this.dataPage, this.dataPageSize, this.contains).then((response) => {
-      if (!isNaN(this.newInitiative)) {
-        this.showSnackbar = true
-      }
-    })
   }
 }
 </script>

@@ -11,5 +11,7 @@ import { HTTP } from '../../HttpCommon'
  * idea.stakeholders
  * idea.stakeholders[0].userName
  */
-let x = class TicketService {
+let x = class IssueService {
 }
+
+export const IssueService = x

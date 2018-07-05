@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import NewIdea from '@/components/NewIdea'
 import ViewIdeas from '@/components/ViewIdeas'
 import ViewInitiative from '@/components/ViewInitiative'
-import ViewTickets from '@/components/ViewTickets'
+import ViewIssues from '@/components/ViewIssues'
 
 Vue.use(Router)
 
@@ -44,9 +44,9 @@ export default new Router({
       props: true
     },
     {
-      path: '/view-tickets',
-      name: 'view-tickets',
-      component: ViewTickets,
+      path: '/view-issues',
+      name: 'view-issues',
+      component: ViewIssues,
       props: true
     }
   ]
