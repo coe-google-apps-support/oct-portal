@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import NewIdea from '@/components/NewIdea'
 import ViewIdeas from '@/components/ViewIdeas'
 import ViewInitiative from '@/components/ViewInitiative'
+import ViewTickets from '@/components/ViewTickets'
 
 Vue.use(Router)
 
