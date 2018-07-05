@@ -21,6 +21,9 @@ namespace CoE.Issues.Remedy.Watcher.Tests
 
             serviceProvider = new TestConfiguration(config)
                 .ConfigureBasicServices()
+                .AddMockIssueRepository()
+                .AddMockRemedyService()
+                .AddRemedyChecker()
                 .BuildServiceProvider();
         }
 
@@ -31,6 +34,7 @@ namespace CoE.Issues.Remedy.Watcher.Tests
         public void PollTest()
         {
             IRemedyChecker checker = serviceProvider.GetRequiredService<IRemedyChecker>();
+            checker.TryReadLastPollTime();
         }
 
     }

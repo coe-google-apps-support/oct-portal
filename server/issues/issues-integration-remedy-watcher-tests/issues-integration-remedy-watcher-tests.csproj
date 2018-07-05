@@ -23,4 +23,19 @@
     <Folder Include="Poll Files\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.test.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Poll Files\RemedyCheckerLog_20180705_153516.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Poll Files\RemedyCheckerLog_20180705_154121.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Poll Files\RemedyCheckerLog_20180705_154833.log">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

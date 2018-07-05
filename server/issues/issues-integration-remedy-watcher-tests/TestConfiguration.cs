@@ -49,10 +49,16 @@ namespace CoE.Issues.Remedy.Watcher.Tests
             return this;
         }
 
+        internal TestConfiguration AddMockRemedyService()
+        {
+            _services.AddSingleton<IRemedyService, MockRemedyService>();
+            return this;
+        }
+
         internal TestConfiguration AddRemedyChecker()
         {
-            _services.AddTransient<RemedyCheckerOptions>();
-            _services.AddSingleton<RemedyChecker>();
+            _services.Configure<RemedyCheckerOptions>(_configuration.GetSection("Remedy"));
+            _services.AddSingleton<IRemedyChecker, RemedyChecker>();
             return this;
         }
     }
