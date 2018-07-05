@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using CoE.Issues.Core.ServiceBus;
+using CoE.Issues.Core.Data;
 
 namespace CoE.Issues.Core.Tests
 {
@@ -53,7 +54,27 @@ namespace CoE.Issues.Core.Tests
             Func<Task> asyncFunction = async () =>
             {
                 await messenger.SendMessageAsync(message, testDict);
-                Console.WriteLine("Looks like it worked?");
+            };
+            asyncFunction.Should().NotThrow<Exception>();
+        }
+
+        [Test]
+        public void CanSendCreateIssueMessage()
+        {
+            var messenger = serviceProvider.GetRequiredService<IIssueMessageSender>();
+            IssueCreatedEventArgs issueEvent = new IssueCreatedEventArgs()
+            {
+                Title = "A test issue",
+                Description = "This is an issue created when running integration tests.",
+                AssigneeEmail = "worker.bee@edmonton.ca",
+                RequestorEmail = "requestor.bee@edmonton.ca",
+                RemedyStatus = "Created",
+                ReferenceId = "INC000123"
+            };
+            
+            Func<Task> asyncFunction = async () =>
+            {
+                await messenger.SendIssueCreatedAsync(issueEvent);
             };
             asyncFunction.Should().NotThrow<Exception>();
         }
