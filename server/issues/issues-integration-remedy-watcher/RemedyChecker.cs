@@ -36,7 +36,7 @@ namespace CoE.Issues.Remedy.Watcher
 
         private DateTime lastPollTimeUtc;
 
-        private void TryReadLastPollTime()
+        public void TryReadLastPollTime()
         {
             bool success = false;
             if (Directory.Exists(_options.TempDirectory))
