@@ -56,6 +56,8 @@ namespace CoE.Issues.Remedy.Watcher
             services.AddSingleton<RemedyChecker>();
 
             services.AddSingleton<IRemedyService, RemedyService>();
+
+            // Add services to talk to ServiceBus
             services.AddIssueMessaging(Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],
                 Configuration["ServiceBus:Subscription"]);
