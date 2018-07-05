@@ -2,10 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-
     <IsPackable>false</IsPackable>
-
-    <RootNamespace>CoE.Issues.Core.Tests</RootNamespace>
+    <RootNamespace>CoE.Issues.Remedy.Watcher.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,13 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\issues-core\issues-core.csproj" />
+    <ProjectReference Include="..\issues-integration-remedy-watcher\issues-integration-remedy-watcher.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="appsettings.test.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Folder Include="Poll Files\" />
   </ItemGroup>
 
 </Project>
