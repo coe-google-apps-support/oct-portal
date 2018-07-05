@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CoE.Issues.Core.ServiceBus
 {
-    internal interface IMessageSender
+    public interface IMessageSender
     {
         Task SendMessageAsync(string label, IDictionary<string, object> properties);
     }

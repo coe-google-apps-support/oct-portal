@@ -48,9 +48,9 @@ namespace CoE.Issues.Core
         }
 
         public static IServiceCollection AddIssueMessaging(this IServiceCollection services,
-    string serviceBusConnectionString = null,
-    string serviceBusTopicName = null,
-    string serviceBusSubscription = null)
+            string serviceBusConnectionString = null,
+            string serviceBusTopicName = null,
+            string serviceBusSubscription = null)
         {
             services.AddSingleton<ITopicClient, TopicClient>(x =>
             {
@@ -66,8 +66,6 @@ namespace CoE.Issues.Core
             }
             services.AddSingleton<IMessageSender, ServiceBusMessageSender>();
             services.AddSingleton<IIssueMessageSender, IssueMessageSender>();
-
-
 
             return services;
         }
