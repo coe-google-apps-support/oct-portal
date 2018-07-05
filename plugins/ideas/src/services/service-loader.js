@@ -11,6 +11,7 @@ import { StubbedTicketService } from './tickets/StubbedTicketService'
 
 let idea
 let user
+let ticket
 
 if (process.env.NODE_ENV === 'development') {
   idea = IdeasService
@@ -38,6 +39,7 @@ const ServiceLoader = {
         }
         this.services.ideas = idea
         this.services.user = user
+        this.services.ticket = ticket
       }
     })
   }

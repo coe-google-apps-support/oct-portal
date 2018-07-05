@@ -4,26 +4,17 @@
     <transition name="fade">
       <div class="min-height">
         <div v-if="tickets && tickets.length" class="md-layout md-alignment-top-center">
-          <initiative v-for="ticket in tickets"
+          <ticket v-for="ticket in tickets"
             :key="ticket.id" 
-            :initiative="ticket"
-            :isNewticket="ticket.id === newInitiative"
+            :ticket="ticket"
             class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
-          </initiative>
+          </ticket>
         </div>
-        <div v-if="tickets.length === 0 && isLoading == false && !filter">
-          <img src="https://octava.blob.core.windows.net/cdn-store/empty-state-coe.png" class="center">
+        <div v-if="tickets.length === 0 && isLoading == false">
           <md-empty-state
-            md-label="No initiatives found!"
+            md-icon="confirmation_number"
+            md-label="No tickets found!"
             md-description="Oops! We couldn't find anything.">
-          </md-empty-state>
-        </div>
-        <div v-if="tickets.length === 0 && isLoading == false && filter === 'mine'">
-          <img src="https://octava.blob.core.windows.net/cdn-store/empty-state-coe.png" class="center">
-          <md-empty-state
-            md-label="You have not made any initiatives!"
-            md-description="Oops! We couldn't find anything.">
-            <md-button v-on:click="openURL('/new-ticket') " class="md-primary md-raised">Create first initiative</md-button>
           </md-empty-state>
         </div>
         <div v-if="isLoading" class="md-layout md-alignment-center-center">
@@ -32,8 +23,8 @@
         <div class="center-children" v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
           <divi-button class="md-accent" @click.native="infiniteHandler">Load more</divi-button>
         </div>
-        <md-snackbar v-if="newInitiative" md-position="center" :md-duration="Infinity" :md-active.sync="showSnackbar" md-persistent>
-          <span>Initiative successfully submitted!</span>
+        <md-snackbar v-if="newticket" md-position="center" :md-duration="Infinity" :md-active.sync="showSnackbar" md-persistent>
+          <span>ticket successfully submitted!</span>
           <md-button class="md-accent" @click="showSnackbar = false">Close</md-button>
         </md-snackbar>
       </div>
@@ -52,7 +43,7 @@ import Initiative from '@/components/initiative'
 import DiviButton from '@/components/divi/DiviButton'
 
 export default {
-  name: 'ViewIdeas',
+  name: 'ViewTickets',
   props: {
     filter: String,
     contains: String,
