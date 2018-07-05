@@ -41,6 +41,12 @@ export default new Router({
       name: 'initiatives',
       component: ViewInitiative,
       props: true
+    },
+    {
+      path: '/view-tickets',
+      name: 'view-tickets',
+      component: ViewTickets,
+      props: true
     }
   ]
 })
