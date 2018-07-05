@@ -225,3 +225,4 @@ server/issues/issues-core/issues-core-tests/appsettings.test.json
 !RemedyCheckerLog_20180705_153516.log
 !RemedyCheckerLog_20180705_154121.log
 !RemedyCheckerLog_20180705_154833.log
+server/issues/issues-integration-remedy-watcher-tests/appsettings.test.json
