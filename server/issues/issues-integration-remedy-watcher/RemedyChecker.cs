@@ -36,7 +36,7 @@ namespace CoE.Issues.Remedy.Watcher
 
         private DateTime lastPollTimeUtc;
 
-        public void TryReadLastPollTime()
+        public DateTime TryReadLastPollTime()
         {
             bool success = false;
             if (Directory.Exists(_options.TempDirectory))
@@ -67,6 +67,8 @@ namespace CoE.Issues.Remedy.Watcher
             }
             if (!success)
                 lastPollTimeUtc = new DateTime(2017, 1, 1); //DateTime.Now.AddDays(-3);
+
+            return lastPollTimeUtc;
         }
 
         public async Task<RemedyPollResult> Poll()
