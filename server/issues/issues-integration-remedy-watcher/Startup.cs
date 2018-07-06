@@ -53,7 +53,7 @@ namespace CoE.Issues.Remedy.Watcher
                         MaxReceivedMessageSize = 16777216L // 16 MB, default it 65kb
                     },
                     new EndpointAddress(Configuration["Remedy:ApiUrl"])));
-            services.AddSingleton<RemedyChecker>();
+            services.AddSingleton<IRemedyChecker, RemedyChecker>();
 
             services.AddSingleton<IRemedyService, RemedyService>();
 
@@ -67,7 +67,7 @@ namespace CoE.Issues.Remedy.Watcher
 
         public async Task Start()
         {
-            var checker = ServiceProvider.GetRequiredService<RemedyChecker>();
+            var checker = ServiceProvider.GetRequiredService<IRemedyChecker>();
             await checker.Poll();
         }
 
