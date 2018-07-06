@@ -1,19 +1,35 @@
-﻿using NUnit.Framework;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using FluentAssertions;
+using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
+using System.Collections.Generic;
 using Moq;
 using CoE.Issues.Core.ServiceBus;
 using Microsoft.Extensions.Options;
 
 namespace CoE.Issues.Remedy.Watcher.Tests
 {
-    public class RemedyCheckerTests
+    public class RemedyWatcherIntegration
     {
         [SetUp]
         public void Setup()
         {
+            IEnumerable<OutputMapping1GetListValues> returnValue = new OutputMapping1GetListValues[1] 
+            {
+                new OutputMapping1GetListValues()
+                {
+                    Description = "This is a real long description."
+                }
+            };
+
             Mock<IRemedyService> mockRemedyService = new Mock<IRemedyService>();
+            mockRemedyService.Setup(remedyService =>
+                    remedyService.GetRemedyChangedWorkItems(It.IsAny<DateTime>())
+                ).Returns(Task.FromResult(returnValue));
             remedyService = mockRemedyService.Object;
 
             Mock<IIssueMessageSender> issueMock = new Mock<IIssueMessageSender>();
@@ -42,19 +58,10 @@ namespace CoE.Issues.Remedy.Watcher.Tests
         private IOptions<RemedyCheckerOptions> remedyOptions;
 
         [Test]
-        public void GetPollTimeTest()
+        public async Task GetChanges()
         {
             IRemedyChecker checker = new RemedyChecker(remedyService, issueMessageSender, logger, remedyOptions);
-            DateTime actualTime = DateTimeOffset.Parse("2018-06-08T12:53:03-06:00").UtcDateTime;
-            DateTime recentFile = checker.TryReadLastPollTime();
-            recentFile.Should().Be(actualTime);
-        }
-        
-        [Test]
-        public async Task LogsRemedyServiceErrorsTest()
-        {
-            IRemedyChecker checker = new RemedyChecker(remedyService, issueMessageSender, logger, remedyOptions);
-            RemedyPollResult result = await checker.PollAsync(DateTime.Now);
+            await checker.Poll();
         }
     }
 }
