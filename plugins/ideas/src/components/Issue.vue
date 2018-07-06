@@ -22,7 +22,7 @@
     </div>
     <br>
     <div class="description-text">Status: {{ issue.status }}</div>
-    <md-progress-bar v-if="issue.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
+    <!-- <md-progress-bar v-if="issue.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar> -->
   </md-card>
 </template>
 <script>

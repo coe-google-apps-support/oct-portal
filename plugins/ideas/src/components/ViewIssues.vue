@@ -122,6 +122,8 @@ export default {
     }, (e) => {
       this.errors.push(e)
     })
+    this.isLoading = false
+    this.isLast = true
   }
 }
 </script>
