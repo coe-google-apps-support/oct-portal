@@ -8,5 +8,7 @@
         public string RequestorEmail { get; set; }
         public string RemedyStatus { get; set; }
         public string ReferenceId { get; set; }
+        public object Issue { get; set; }
+        public object Owner { get; set; }
     }
 }

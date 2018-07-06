@@ -83,5 +83,8 @@ namespace CoE.Issues.Core.Data
         /// </remarks>
         public int? AssigneeId { get; private set; }
 
+        public string IncidentId { get; private set; }
+
+
     }
 }
