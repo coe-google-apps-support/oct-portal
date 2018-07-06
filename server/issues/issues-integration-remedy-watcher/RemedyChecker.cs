@@ -1,4 +1,4 @@
-﻿using CoE.Issues.Core.Services;
+﻿using CoE.Issues.Core.ServiceBus;
 using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -13,10 +13,12 @@ namespace CoE.Issues.Remedy.Watcher
     public class RemedyChecker : IRemedyChecker
     {
         public RemedyChecker(IRemedyService remedyService,
+            IIssueMessageSender issueMessageSender,
             Serilog.ILogger logger,
             IOptions<RemedyCheckerOptions> options)
         {
             _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
+            _issueMessageSender = issueMessageSender ?? throw new ArgumentNullException("issueMessageSender");
             _logger = logger ?? throw new ArgumentException("logger");
 
             if (options == null || options.Value == null)
@@ -25,6 +27,7 @@ namespace CoE.Issues.Remedy.Watcher
         }
 
         private readonly IRemedyService _remedyService;
+        private readonly IIssueMessageSender _issueMessageSender;
         private readonly Serilog.ILogger _logger;
         private RemedyCheckerOptions _options;
 
@@ -94,7 +97,7 @@ namespace CoE.Issues.Remedy.Watcher
                 }
                 if (workItemsChanged != null && workItemsChanged.Any())
                 {
-                    ProcessWorkItemsChanged(workItemsChanged, result, fromUtc);
+                    await ProcessWorkItemsChanged(workItemsChanged, result, fromUtc);
                 }
                 result.EndTimeUtc = result.RecordsProcesed.Any()
                     ? result.RecordsProcesed.Max(x => x.Last_Modified_Date)
@@ -118,7 +121,7 @@ namespace CoE.Issues.Remedy.Watcher
             }
         }
 
-        private void ProcessWorkItemsChanged(IEnumerable<OutputMapping1GetListValues> workItemsChanged,
+        private async Task ProcessWorkItemsChanged(IEnumerable<OutputMapping1GetListValues> workItemsChanged,
             RemedyPollResult result, DateTime timestampUtc)
         {
             Stopwatch watch = new Stopwatch();
@@ -139,6 +142,14 @@ namespace CoE.Issues.Remedy.Watcher
                 }
 
                 Exception error = null;
+                try
+                {
+                    await TryProcessIssue(workItem);
+                }
+                catch (Exception err)
+                {
+                    error = err;
+                }
 
                 if (error == null)
                 {
@@ -157,6 +168,38 @@ namespace CoE.Issues.Remedy.Watcher
             TimeSpan avg = count > 0 ? watch.Elapsed / count : TimeSpan.Zero;
             _logger.Information($"Processed { count } work item changes in { watch.Elapsed }. Average = { avg.TotalMilliseconds }ms/record ");
         }
-    }
 
+        /// <summary>
+        /// Tries to process Remedy's output mapping so it fits into an IssueCreatedEventArgs object.
+        /// TODO: we need to convert the Assignee 3+3 to an email so Octava can use it
+        /// </summary>
+        /// <param name="workItem">The generated workItem object. This is generated from a SOAP interface.</param>
+        /// <returns>An async task that resolves with the IssueCreatedEventArgs.</returns>
+        protected virtual async Task<IssueCreatedEventArgs> TryProcessIssue(OutputMapping1GetListValues workItem)
+        {
+            try
+            {
+                // Note the ToUniversalTime on the Last_Modified_Date:
+                // this works because this service runs in the same time zone as Remedy.
+                var args = new IssueCreatedEventArgs()
+                {
+                    Title = workItem.Short_Description,
+                    Description = workItem.Description,
+                    AssigneeEmail = workItem.Assignee_Login_ID,
+                    RequestorEmail = workItem.Submitter,
+                    RemedyStatus = workItem.Status.ToString(),
+                    ReferenceId = workItem.Entry_ID
+                };
+                await _issueMessageSender.SendIssueCreatedAsync(args);
+                return args;
+            }
+            catch (Exception e)
+            {
+                Guid correlationId = Guid.NewGuid();
+                _logger.Error(e, $"Unable to process work item changed (correlationId {correlationId}): {e.Message}");
+                _logger.Debug($"Work item change that caused processing error (correlationId {correlationId}): { workItem }");
+                throw;
+            }
+        }
+    }
 }

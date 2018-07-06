@@ -9,5 +9,6 @@ namespace CoE.Issues.Remedy.Watcher
     {
         Task<RemedyPollResult> PollAsync(DateTime fromUtc);
         DateTime TryReadLastPollTime();
+        Task<RemedyPollResult> Poll();
     }
 }
