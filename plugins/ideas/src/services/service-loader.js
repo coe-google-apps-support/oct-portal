@@ -39,7 +39,7 @@ const ServiceLoader = {
         }
         this.services.ideas = idea
         this.services.user = user
-        this.services.issue = issue
+        this.services.issues = issue
       }
     })
   }

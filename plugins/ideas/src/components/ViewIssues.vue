@@ -108,11 +108,11 @@ export default {
       this.dataPageSize = 20
     }
     this.issues.splice(0, this.issues.length)
-    console.log(this.dataPage, this.dataPageSize, this.filter)
     if (this.filter === 'mine') {
       this.issueFunction = this.services.issues.getMyIssues
     } else {
-      this.issueFunction = this.services.issues.getIssues
+      this.issues = this.services.issues.getIssues()
+      console.log(this.issues)
     }
   }
 }
