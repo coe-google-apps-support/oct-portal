@@ -47,7 +47,11 @@ export default new Router({
       path: '/view-issues',
       name: 'view-issues',
       component: ViewIssues,
-      props: true
+      props: (route) => ({
+        page: Number(route.query.page),
+        pageSize: Number(route.query.pageSize),
+        contains: route.query.contains
+      })
     }
   ]
 })

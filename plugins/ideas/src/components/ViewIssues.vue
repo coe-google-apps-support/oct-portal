@@ -111,9 +111,17 @@ export default {
     if (this.filter === 'mine') {
       this.issueFunction = this.services.issues.getMyIssues
     } else {
-      this.issues = this.services.issues.getIssues()
-      console.log(this.issues)
+      this.issueFunction = this.services.issues.getMyIssues
     }
+    this.issueFunction().then((response) => {
+      this.issues = response.data
+      console.log(this.issues)
+      for (let i = 0; i < this.issues.length; i++) {
+        this.issues[i].isLoading = false
+      }
+    }, (e) => {
+      this.errors.push(e)
+    })
   }
 }
 </script>
