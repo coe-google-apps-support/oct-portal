@@ -26,17 +26,14 @@ namespace CoE.Issues.Remedy.Watcher.Tests
                 }
             };
 
-            Mock<IRemedyService> mockRemedyService = new Mock<IRemedyService>();
+            mockRemedyService = new Mock<IRemedyService>();
             mockRemedyService.Setup(remedyService =>
                     remedyService.GetRemedyChangedWorkItems(It.IsAny<DateTime>())
                 ).Returns(Task.FromResult(returnValue));
-            remedyService = mockRemedyService.Object;
 
-            Mock<IIssueMessageSender> issueMock = new Mock<IIssueMessageSender>();
-            issueMessageSender = issueMock.Object;
+            mockIssueMessageSender = new Mock<IIssueMessageSender>();
 
-            Mock<Serilog.ILogger> loggerMock = new Mock<Serilog.ILogger>();
-            logger = loggerMock.Object;
+            mockLogger = new Mock<Serilog.ILogger>();
 
             RemedyCheckerOptions options = new RemedyCheckerOptions()
             {
@@ -47,10 +44,14 @@ namespace CoE.Issues.Remedy.Watcher.Tests
                 TempDirectory = "./Poll Files"
             };
 
-            Mock<IOptions<RemedyCheckerOptions>> optionsMock = new Mock<IOptions<RemedyCheckerOptions>>();
-            optionsMock.Setup(opt => opt.Value).Returns(options);
-            remedyOptions = optionsMock.Object;
+            mockOptions = new Mock<IOptions<RemedyCheckerOptions>>();
+            mockOptions.Setup(opt => opt.Value).Returns(options);
         }
+
+        private Mock<IRemedyService> mockRemedyService;
+        private Mock<IIssueMessageSender> mockIssueMessageSender;
+        private Mock<Serilog.ILogger> mockLogger;
+        private Mock<IOptions<RemedyCheckerOptions>> mockOptions;
 
         private IRemedyService remedyService;
         private IIssueMessageSender issueMessageSender;
@@ -58,10 +59,16 @@ namespace CoE.Issues.Remedy.Watcher.Tests
         private IOptions<RemedyCheckerOptions> remedyOptions;
 
         [Test]
-        public async Task GetChanges()
+        public async Task PollMocked()
         {
-            IRemedyChecker checker = new RemedyChecker(remedyService, issueMessageSender, logger, remedyOptions);
+            IRemedyChecker checker = new RemedyChecker(mockRemedyService.Object, mockIssueMessageSender.Object, mockLogger.Object, mockOptions.Object);
             await checker.Poll();
+        }
+
+        [Test]
+        public async Task SendIssueToServiceBus()
+        {
+            throw new NotImplementedException();
         }
     }
 }
