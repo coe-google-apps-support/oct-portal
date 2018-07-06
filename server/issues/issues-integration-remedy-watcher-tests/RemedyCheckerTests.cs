@@ -29,13 +29,13 @@ namespace CoE.Issues.Remedy.Watcher.Tests
 
         private static ServiceProvider serviceProvider;
 
-
         [Test]
-        public void PollTest()
+        public void GetPollTimeTest()
         {
             IRemedyChecker checker = serviceProvider.GetRequiredService<IRemedyChecker>();
-            checker.TryReadLastPollTime();
+            DateTime actualTime = DateTimeOffset.Parse("2018-06-08T12:53:03-06:00").UtcDateTime;
+            DateTime recentFile = checker.TryReadLastPollTime();
+            recentFile.Should().Be(actualTime);
         }
-
     }
 }
