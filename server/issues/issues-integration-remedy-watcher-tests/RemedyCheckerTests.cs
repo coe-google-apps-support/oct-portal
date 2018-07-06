@@ -21,7 +21,6 @@ namespace CoE.Issues.Remedy.Watcher.Tests
 
             serviceProvider = new TestConfiguration(config)
                 .ConfigureBasicServices()
-                .AddMockIssueRepository()
                 .AddMockRemedyService()
                 .AddRemedyChecker()
                 .BuildServiceProvider();

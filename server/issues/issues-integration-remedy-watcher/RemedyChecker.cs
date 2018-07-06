@@ -13,12 +13,10 @@ namespace CoE.Issues.Remedy.Watcher
     public class RemedyChecker : IRemedyChecker
     {
         public RemedyChecker(IRemedyService remedyService,
-            IIssueRepository issueRepository,
             Serilog.ILogger logger,
             IOptions<RemedyCheckerOptions> options)
         {
             _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
-            _inissueRepository = issueRepository ?? throw new ArgumentNullException("issueRepository");
             _logger = logger ?? throw new ArgumentException("logger");
 
             if (options == null || options.Value == null)
@@ -26,9 +24,7 @@ namespace CoE.Issues.Remedy.Watcher
             _options = options.Value;
         }
 
-
         private readonly IRemedyService _remedyService;
-        private readonly IIssueRepository _inissueRepository;
         private readonly Serilog.ILogger _logger;
         private RemedyCheckerOptions _options;
 
