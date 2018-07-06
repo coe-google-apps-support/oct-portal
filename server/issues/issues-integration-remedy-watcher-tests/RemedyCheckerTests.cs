@@ -37,5 +37,14 @@ namespace CoE.Issues.Remedy.Watcher.Tests
             DateTime recentFile = checker.TryReadLastPollTime();
             recentFile.Should().Be(actualTime);
         }
+        
+        [Test]
+        public async Task LogsRemedyServiceErrorsTest()
+        {
+            IRemedyChecker checker = serviceProvider.GetRequiredService<IRemedyChecker>();
+            RemedyPollResult result = await checker.PollAsync(DateTime.Now);
+            // Our mocked remedey service throws an exception, so it should show here.
+            result.ProcessErrors.Should().NotBeEmpty();
+        }
     }
 }
