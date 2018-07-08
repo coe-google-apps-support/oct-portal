@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using CoE.Issues.Core.ServiceBus;
 using CoE.Issues.Core.Data;
+using System.Threading;
 
 namespace CoE.Issues.Core.Tests
 {
@@ -77,6 +78,21 @@ namespace CoE.Issues.Core.Tests
                 await messenger.SendIssueCreatedAsync(issueEvent);
             };
             asyncFunction.Should().NotThrow<Exception>();
+        }
+
+        [Test]
+        public void CanReceiveCreateIssueMessage()
+        {
+            var autoEvent = new AutoResetEvent(false);
+            var messenger = serviceProvider.GetRequiredService<IIssueMessageReceiver>();
+
+            messenger.ReceiveMessages(issueCreatedHandler: (IssueCreatedEventArgs args, CancellationToken token) =>
+            {
+                var desc = args.Description;
+                autoEvent.Set();
+                return Task.FromResult<bool>(true);                
+            });
+            autoEvent.WaitOne();
         }
     }
 }
