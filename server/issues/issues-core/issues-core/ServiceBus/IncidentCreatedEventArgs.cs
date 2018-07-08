@@ -6,7 +6,7 @@ namespace CoE.Issues.Core.ServiceBus
 {
     public class IncidentCreatedEventArgs: IssueCreatedEventArgs
     {
-        public string IncidentId { get; set; }
+        //public string? IncidentId { get; set; }
         public DateTime? EtaUtc { get; set; }
     }
 }

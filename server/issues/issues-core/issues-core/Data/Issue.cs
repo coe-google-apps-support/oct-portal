@@ -21,8 +21,8 @@ namespace CoE.Issues.Core.Data
         public static Issue Create(
             string title, 
             string description,
-            int ownerPersonId = -1,
-            string referenceId = ""
+            int ownerPersonId = -1
+            //string referenceId = ""
             )
         {
             Ensure.String.IsNotNullOrWhiteSpace(title, nameof(title));
@@ -73,8 +73,8 @@ namespace CoE.Issues.Core.Data
         /// <summary>
         /// The reference id from another system (currently Remedy).
         /// </summary>
-        public string ReferenceId { get; private set; }
-
+        //public string ReferenceId { get; private set; }
+    
         /// <summary>
         /// The person currently assigned to the issue.
         /// </summary>
@@ -83,7 +83,7 @@ namespace CoE.Issues.Core.Data
         /// </remarks>
         public int? AssigneeId { get; private set; }
 
-        public string IncidentId { get; private set; }
+        //public string IncidentId { get; private set; }
 
 
     }

@@ -6,7 +6,7 @@ namespace CoE.Issues.Core.ServiceBus
 {
     public class IncidentUpdatedEventArgs
     {
-        public string IncidentId { get; set; }
+        //public string IncidentId { get; set; }
         public DateTime UpdatedDateUtc { get; set; }
         public string UpdatedStatus { get; set; }
         public string AssigneeEmail { get; set; }
