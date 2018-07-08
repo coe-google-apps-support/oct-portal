@@ -65,6 +65,7 @@ namespace CoE.Issues.Core
                 });
             }
             services.AddSingleton<IMessageSender, ServiceBusMessageSender>();
+            services.AddSingleton<IMessageReceiver, ServiceBusMessageReceiver>();
             services.AddSingleton<IIssueMessageSender, IssueMessageSender>();
 
             return services;
