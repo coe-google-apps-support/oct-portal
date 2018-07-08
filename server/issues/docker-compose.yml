@@ -31,3 +31,10 @@ services:
       context: .
       dockerfile: issues-integration-remedy/Dockerfile
 
+
+  issues-integration-remedy-watcher:
+    image: ${DOCKER_REGISTRY}issuesintegrationremedywatcher
+    build:
+      context: .
+      dockerfile: issues-integration-remedy-watcher/Dockerfile
+
