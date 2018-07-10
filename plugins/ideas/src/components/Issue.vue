@@ -24,8 +24,8 @@
         <img src="https://media.forgecdn.net/avatars/124/768/636424778749237239.jpeg" alt="Avatar">
         <md-tooltip md-direction="right">Someone's name</md-tooltip>
       </md-avatar>
+      <button v-tooltip="{ content: 'test123' }">Hey</button>
     </div>
-
     <md-progress-bar v-if="issue.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
 </template>
@@ -91,7 +91,26 @@ export default {
 .card:hover .cardImage {
   filter: blur(1.5px);
 }
+.tooltip {
+  &.popover {
+    $color: #f9f9f9;
 
+  .popover-inner {
+    background: $color;
+    color: black;
+    padding: 24px;
+    border-radius: 5px;
+    box-shadow: 0 5px 30px rgba(black, .1);
+  }
+
+  .popover-arrow {
+    border-color: $color;
+  }
+  }
+}
+.tooltip-arrow {
+  z-index: 200;
+}
 .oct-cover {
   position: absolute;
   width: 100%;
