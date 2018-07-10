@@ -71,6 +71,11 @@ namespace CoE.Issues.Core.Data
         public ICollection<Stakeholder> Stakeholders { get; private set; }
 
         /// <summary>
+        /// The current status of the issue.
+        /// </summary>
+        public IssueStatus Status { get; private set; }
+
+        /// <summary>
         /// The reference id from another system (currently Remedy).
         /// </summary>
         //public string ReferenceId { get; private set; }
