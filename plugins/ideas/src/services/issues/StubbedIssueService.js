@@ -2,7 +2,7 @@ const fakeIssues = {
   data: [{
     'id': 0,
     'title': 'Ticket 1',
-    'description': 'My laptop broke!',
+    'description': 'My laptop broke! Nothing I do works, everything is broken.. help please please. I\'ve got work to do and I cannot do anything until this laptop is fixed oh dear...',
     'date': 'May 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
     'status': 'Submitted'
   },
@@ -79,7 +79,7 @@ let x = class StubbedIssueService {
    */
   static getMyIssues (page, pageSize, contains) {
     let myIssues = { data: null }
-    myIssues.data = [fakeIssues.data[0], fakeIssues.data[1], fakeIssues.data[2]]
+    myIssues.data = [fakeIssues.data[0], fakeIssues.data[1], fakeIssues.data[2], fakeIssues.data[3]]
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {

@@ -1,28 +1,32 @@
 <template>
-  <md-card class="card hvr-float md-with-hover">
+  <md-card class="card md-with-hover">
     <md-card-header>
-        <md-card-header-text class="title-container">
-        <div class="filler"></div>
-        <div class="md-title title">{{ issue.title }}</div>            
-        </md-card-header-text>
+      <md-toolbar md-elevation="1">
+        <span class="md-title"> {{ issue.title }}</span>
+      </md-toolbar>
     </md-card-header>
-    <div class="card-secondary-info">
-      <div class="description-container">
-        <div class ="description-text">{{ issue.description }}</div>
+    <div>
+      <div class="card-secondary-info">
+        <div class="description-container">
+          <div class ="description-text">{{ issue.description }}</div>
+        </div>
+        <div>
+          Status: {{ issue.status }}
+          <md-progress-bar md-mode="determinate" :md-value="amount"></md-progress-bar>
+        </div>
+        <div class="date-text md-subhead">{{ issue.date | formatDate }}</div>
       </div>
-      <div class="date-text md-subhead">{{ issue.date | formatDate }}</div>
     </div>
     <md-divider></md-divider>
-    <div>
+    <div class="card-secondary-info">
       Assigned to:
       <md-avatar>
         <img src="https://media.forgecdn.net/avatars/124/768/636424778749237239.jpeg" alt="Avatar">
         <md-tooltip md-direction="right">Someone's name</md-tooltip>
       </md-avatar>
     </div>
-    <br>
-    <div class="description-text">Status: {{ issue.status }}</div>
-    <!-- <md-progress-bar v-if="issue.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar> -->
+
+    <md-progress-bar v-if="issue.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
 </template>
 <script>
@@ -48,10 +52,22 @@ export default {
     },
     formatDate
   },
+  data: () => ({
+    amount: 0
+  }),
   methods: {
-    testMethod () {
-      console.log('YAY')
+    progressBar () {
+      if (this.issue.status === 'Submitted') {
+        this.amount = 33
+      } else if (this.issue.status === 'In Review') {
+        this.amount = 66
+      } else if (this.issue.status === 'Completed') {
+        this.amount = 100
+      }
     }
+  },
+  created () {
+    this.progressBar()
   }
 }
 </script>
