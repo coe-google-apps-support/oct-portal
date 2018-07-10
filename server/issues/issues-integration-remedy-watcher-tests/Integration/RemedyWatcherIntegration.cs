@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Moq;
 using CoE.Issues.Core.ServiceBus;
 using Microsoft.Extensions.Options;
+using AutoMapper;
 
 namespace CoE.Issues.Remedy.Watcher.Tests
 {
@@ -46,6 +47,12 @@ namespace CoE.Issues.Remedy.Watcher.Tests
 
             mockOptions = new Mock<IOptions<RemedyCheckerOptions>>();
             mockOptions.Setup(opt => opt.Value).Returns(options);
+
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile<RemedyIssueMappingProfile>();
+            });
+            mapper = Mapper.Instance;
         }
 
         private Mock<IRemedyService> mockRemedyService;
@@ -55,13 +62,14 @@ namespace CoE.Issues.Remedy.Watcher.Tests
 
         private IRemedyService remedyService;
         private IIssueMessageSender issueMessageSender;
+        private IMapper mapper;
         private Serilog.ILogger logger;
         private IOptions<RemedyCheckerOptions> remedyOptions;
 
         [Test]
         public async Task PollMocked()
         {
-            IRemedyChecker checker = new RemedyChecker(mockRemedyService.Object, mockIssueMessageSender.Object, mockLogger.Object, mockOptions.Object);
+            IRemedyChecker checker = new RemedyChecker(mockRemedyService.Object, mockIssueMessageSender.Object, mapper, mockLogger.Object, mockOptions.Object);
             await checker.Poll();
         }
 

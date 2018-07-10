@@ -1,4 +1,6 @@
-﻿namespace CoE.Issues.Core.ServiceBus
+﻿using CoE.Issues.Core.Data;
+
+namespace CoE.Issues.Core.ServiceBus
 {
     public class IssueCreatedEventArgs
     {
@@ -8,7 +10,5 @@
         public string RequestorEmail { get; set; }
         public string RemedyStatus { get; set; }
         public string ReferenceId { get; set; }
-        public object Issue { get; set; }
-        public object Owner { get; set; }
     }
 }

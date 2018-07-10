@@ -1,4 +1,5 @@
-﻿using CoE.Ideas.Shared.Extensions;
+﻿using AutoMapper;
+using CoE.Ideas.Shared.Extensions;
 using CoE.Issues.Core;
 using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
 using Microsoft.Extensions.Configuration;
@@ -67,6 +68,9 @@ namespace CoE.Issues.Remedy.Watcher
             services.AddIssueMessaging(Configuration["ServiceBus:ConnectionString"],
                 Configuration["ServiceBus:TopicName"],
                 Configuration["ServiceBus:Subscription"]);
+
+            // configure automapper
+            services.AddAutoMapper();
 
             return services;
         }

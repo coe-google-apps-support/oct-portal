@@ -1,4 +1,6 @@
-﻿using CoE.Issues.Core.ServiceBus;
+﻿using AutoMapper;
+using CoE.Issues.Core.Data;
+using CoE.Issues.Core.ServiceBus;
 using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -14,11 +16,13 @@ namespace CoE.Issues.Remedy.Watcher
     {
         public RemedyChecker(IRemedyService remedyService,
             IIssueMessageSender issueMessageSender,
+            IMapper mapper,
             Serilog.ILogger logger,
             IOptions<RemedyCheckerOptions> options)
         {
             _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
             _issueMessageSender = issueMessageSender ?? throw new ArgumentNullException("issueMessageSender");
+            _mapper = mapper ?? throw new ArgumentNullException("mapper");
             _logger = logger ?? throw new ArgumentException("logger");
 
             if (options == null || options.Value == null)
@@ -28,6 +32,7 @@ namespace CoE.Issues.Remedy.Watcher
 
         private readonly IRemedyService _remedyService;
         private readonly IIssueMessageSender _issueMessageSender;
+        private readonly IMapper _mapper;
         private readonly Serilog.ILogger _logger;
         private RemedyCheckerOptions _options;
 
@@ -179,17 +184,9 @@ namespace CoE.Issues.Remedy.Watcher
         {
             try
             {
-                // Note the ToUniversalTime on the Last_Modified_Date:
-                // this works because this service runs in the same time zone as Remedy.
-                var args = new IssueCreatedEventArgs()
-                {
-                    Title = workItem.Short_Description,
-                    Description = workItem.Description,
-                    AssigneeEmail = workItem.Assignee_Login_ID,
-                    RequestorEmail = workItem.Submitter,
-                    RemedyStatus = workItem.Status.ToString(),
-                    ReferenceId = workItem.Entry_ID
-                };
+                // convert Remedy object to IssueCreatedEventArgs
+                var args = _mapper.Map<OutputMapping1GetListValues, IssueCreatedEventArgs>(workItem);
+
                 await _issueMessageSender.SendIssueCreatedAsync(args);
                 return args;
             }
