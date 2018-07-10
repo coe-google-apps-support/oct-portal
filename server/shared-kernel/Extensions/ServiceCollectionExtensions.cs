@@ -186,6 +186,14 @@ namespace CoE.Ideas.Shared.Extensions
             return services;
         }
 
+        public static void EnableWcfLogging(this IServiceCollection services, System.ServiceModel.Description.ServiceEndpoint endpoint, ILogger logger)
+        {
+            EnsureArg.IsNotNull(endpoint);
+            EnsureArg.IsNotNull(logger);
+            endpoint.EndpointBehaviors.Add(new CoE.Shared.Diagnostics.WcfMessageInspectorEndpointBehavior(logger));
+        }
+
+
 #if DEBUG
         public static void InitiativeServiceBusEmlatorDatabase(this IServiceProvider serviceProvider)
         {
@@ -225,6 +233,7 @@ namespace CoE.Ideas.Shared.Extensions
             }
 
         }
+
 #endif
     }
 }

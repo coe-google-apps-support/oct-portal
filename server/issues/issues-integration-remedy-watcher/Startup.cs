@@ -47,12 +47,18 @@ namespace CoE.Issues.Remedy.Watcher
             // Add services to talk to Remedy
             services.Configure<RemedyCheckerOptions>(Configuration.GetSection("Remedy"));
             services.AddSingleton<New_Port_0PortType,
-                New_Port_0PortTypeClient>(x => 
-                    new New_Port_0PortTypeClient(new BasicHttpBinding(BasicHttpSecurityMode.None)
+                New_Port_0PortTypeClient>(x =>
+                {
+                    var returnValue = new New_Port_0PortTypeClient(new BasicHttpBinding(BasicHttpSecurityMode.None)
                     {
-                        MaxReceivedMessageSize = 16777216L // 16 MB, default it 65kb
+                        MaxReceivedMessageSize = 1073741824L, // 1 GB, default it 65kb
+                        ReceiveTimeout = TimeSpan.FromMinutes(10),
+                        SendTimeout = TimeSpan.FromMinutes(10)
                     },
-                    new EndpointAddress(Configuration["Remedy:ApiUrl"])));
+                        new EndpointAddress(Configuration["Remedy:ApiUrl"]));
+                    services.EnableWcfLogging(returnValue.Endpoint, x.GetRequiredService<Serilog.ILogger>());
+                    return returnValue;
+                });
             services.AddSingleton<IRemedyChecker, RemedyChecker>();
 
             services.AddSingleton<IRemedyService, RemedyService>();

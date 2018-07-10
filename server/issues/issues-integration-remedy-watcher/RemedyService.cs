@@ -43,7 +43,7 @@ namespace CoE.Issues.Remedy.Watcher
                     timeZone = "?"
                 };
 
-                var remedyResponse = await _remedyClient.New_Get_Operation_0Async(
+                var remedyResponse =  _remedyClient.New_Get_Operation_0(
                     new New_Get_Operation_0Request(
                         authInfo,
                         _options.TemplateName,
