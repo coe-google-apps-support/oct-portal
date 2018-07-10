@@ -21,4 +21,10 @@
     <ProjectReference Include="..\..\shared-kernel\shared-kernel.csproj" />
     <ProjectReference Include="..\issues-core\issues-core\issues-core.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

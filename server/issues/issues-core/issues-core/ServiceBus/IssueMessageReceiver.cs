@@ -1,5 +1,6 @@
 ﻿using CoE.Ideas.Shared.ServiceBus;
 using EnsureThat;
+using Microsoft.Azure.ServiceBus;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CoE.Issues.Core.ServiceBus
 {
-    internal class IssueMessageReceiver : IIssueMessgeReceiver
+     internal abstract class IssueMessageReceiver : IIssueMessageReceiver
     {
 
         public IssueMessageReceiver(IMessageReceiver messageReceiver,
@@ -24,9 +25,10 @@ namespace CoE.Issues.Core.ServiceBus
 
 
         public void ReceiveMessages(Func<IssueCreatedEventArgs, CancellationToken, Task> issueCreatedHandler = null,
-            Microsoft.Azure.ServiceBus.MessageHandlerOptions options = null)
+            Func<IncidentCreatedEventArgs, CancellationToken, Task> incidentCreatedHandler = null,
+            MessageHandlerOptions options = null)
         {
-            var messageHandlerOptions = options ?? new Microsoft.Azure.ServiceBus.MessageHandlerOptions(OnDefaultError);
+            var messageHandlerOptions = options ?? new MessageHandlerOptions(OnDefaultError);
             _messageReceiver.RegisterMessageHandler(async (msg, token) =>
             {
                 _logger.Information("Received service bus message {MessageId}: {Label}", msg.Id.ToString(), msg.Label);
@@ -51,7 +53,7 @@ namespace CoE.Issues.Core.ServiceBus
             }, messageHandlerOptions);
         }
 
-        private async Task ReceiveInitiativeCreated(Message msg, CancellationToken token, Func<IssueCreatedEventArgs, CancellationToken, Task> issueCreatedHandler)
+        private async Task ReceiveInitiativeCreated(Ideas.Shared.ServiceBus.Message msg, CancellationToken token, Func<IssueCreatedEventArgs, CancellationToken, Task> issueCreatedHandler)
         {
             // TODO: add logging and error handling
             var args = new IssueCreatedEventArgs()

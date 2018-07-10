@@ -23,7 +23,7 @@ namespace CoE.Issues.Remedy.SbListener
             System.Threading.Thread.Sleep(30);
 
             // TODO: eliminate the need to ask for IIdeaServiceBusReceiver to make sure we're listening
-            // var listener = serviceProvider.GetRequiredService<RemedyItemUpdatedIdeaListener>();
+            var listener = serviceProvider.GetRequiredService<RemedyIssueCreatedListener>();
 
         }
 
@@ -67,7 +67,7 @@ namespace CoE.Issues.Remedy.SbListener
                     Configuration["ServiceBus:TopicName"],
                     Configuration["ServiceBus:Subscription"]);
 
-            //services.AddSingleton<RemedyItemUpdatedIdeaListener>();
+            services.AddSingleton <RemedyIssueCreatedListener> ();
 
             services.AddAutoMapper();
 

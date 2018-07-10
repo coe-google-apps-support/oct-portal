@@ -38,3 +38,10 @@ services:
       context: .
       dockerfile: issues-integration-remedy-watcher/Dockerfile
 
+
+  issues-integration-remedy-sblistener:
+    image: ${DOCKER_REGISTRY}issuesintegrationremedysblistener
+    build:
+      context: .
+      dockerfile: issues-integration-remedy-sblistener/Dockerfile
+

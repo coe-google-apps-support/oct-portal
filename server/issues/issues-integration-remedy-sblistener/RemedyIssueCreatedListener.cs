@@ -7,22 +7,38 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Serilog.Context;
 
 namespace CoE.Issues.Remedy.SbListener
 {
     public class RemedyIssueCreatedListener
     {
-        public RemedyIssueCreatedListener(IIssueRepository issueRepository)
+        public RemedyIssueCreatedListener(
+            IIssueMessageReceiver issueMessageReceiver,
+            IIssueRepository issueRepository,
+            Serilog.ILogger logger)
         {
             EnsureArg.IsNotNull(issueRepository);
-            _issueRepository = issueRepository;
+            EnsureArg.IsNotNull(issueMessageReceiver);
+            EnsureArg.IsNotNull(logger);
+            _issueRepository = issueRepository ?? throw new ArgumentException("issueRepository");
+            _issueMessageReceiver = issueMessageReceiver?? throw new ArgumentException("issueMessageReceiver");
+            _logger = logger ?? throw new ArgumentException("logger");
+
+            issueMessageReceiver.ReceiveMessages(
+                incidentCreatedHandler: OnIssueCreated);
+
         }
 
         private readonly IIssueRepository _issueRepository;
+        private readonly Serilog.ILogger _logger;
+        private readonly IIssueMessageReceiver _issueMessageReceiver;
+
 
         protected virtual async Task OnIssueCreated(IssueCreatedEventArgs args, CancellationToken token)
         {
             // TODO: add logging and exception handling
+            _logger.Information("entering the sblistener");
 
             var issue = Issue.Create(args.Title, args.Description);
 
@@ -33,3 +49,4 @@ namespace CoE.Issues.Remedy.SbListener
         }
     }
 }
+
