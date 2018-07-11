@@ -7,6 +7,6 @@ namespace CoE.Issues.Remedy.Watcher
 {
     public interface IRemedyService
     {
-        Task<IEnumerable<OutputMapping1GetListValues>> GetRemedyChangedWorkItems(DateTime fromUtc);
+        IEnumerable<OutputMapping1GetListValues> GetRemedyChangedWorkItems(DateTime fromUtc);
     }
 }

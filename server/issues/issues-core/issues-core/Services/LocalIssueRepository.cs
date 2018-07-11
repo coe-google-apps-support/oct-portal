@@ -46,9 +46,16 @@ namespace CoE.Issues.Core.Services
             EnsureArg.IsNotNull(issue);
 
             _logger.Debug("Adding to Ideas database");
-            _issueContext.Issues.Add(issue);
-            await _issueContext.SaveChangesAsync(cancellationToken);
-
+            try
+            {
+                _issueContext.Issues.Add(issue);
+                await _issueContext.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err, "Unable to add issue to database: {ErrorMessage}", err.Message);
+                throw;
+            }
             return issue;
         }
 

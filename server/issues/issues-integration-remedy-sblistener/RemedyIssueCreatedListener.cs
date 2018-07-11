@@ -26,7 +26,7 @@ namespace CoE.Issues.Remedy.SbListener
             _logger = logger ?? throw new ArgumentException("logger");
 
             issueMessageReceiver.ReceiveMessages(
-                incidentCreatedHandler: OnIssueCreated);
+                issueCreatedHandler: OnIssueCreated);
 
         }
 

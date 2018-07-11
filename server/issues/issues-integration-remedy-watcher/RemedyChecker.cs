@@ -94,7 +94,7 @@ namespace CoE.Issues.Remedy.Watcher
                 IEnumerable<OutputMapping1GetListValues> workItemsChanged = null;
                 try
                 {
-                    workItemsChanged = await _remedyService.GetRemedyChangedWorkItems(fromUtc);
+                    workItemsChanged = _remedyService.GetRemedyChangedWorkItems(fromUtc);
                 }
                 catch (Exception err)
                 {

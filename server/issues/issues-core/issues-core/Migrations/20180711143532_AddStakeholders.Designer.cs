@@ -11,9 +11,10 @@ using System;
 namespace CoE.Issues.Core.Migrations
 {
     [DbContext(typeof(IssueContext))]
-    partial class IssueContextModelSnapshot : ModelSnapshot
+    [Migration("20180711143532_AddStakeholders")]
+    partial class AddStakeholders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

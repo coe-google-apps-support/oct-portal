@@ -25,7 +25,6 @@ namespace CoE.Issues.Core.ServiceBus
 
 
         public void ReceiveMessages(Func<IssueCreatedEventArgs, CancellationToken, Task> issueCreatedHandler = null,
-            Func<IncidentCreatedEventArgs, CancellationToken, Task> incidentCreatedHandler = null,
             MessageHandlerOptions options = null)
         {
             var messageHandlerOptions = options ?? new MessageHandlerOptions(OnDefaultError);

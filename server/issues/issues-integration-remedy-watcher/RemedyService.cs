@@ -27,7 +27,7 @@ namespace CoE.Issues.Remedy.Watcher
         private Serilog.ILogger _logger;
         private RemedyCheckerOptions _options;
 
-        public async Task<IEnumerable<OutputMapping1GetListValues>> GetRemedyChangedWorkItems(DateTime fromUtc)
+        public IEnumerable<OutputMapping1GetListValues> GetRemedyChangedWorkItems(DateTime fromUtc)
         {
             Stopwatch watch = new Stopwatch();
             watch.Start();

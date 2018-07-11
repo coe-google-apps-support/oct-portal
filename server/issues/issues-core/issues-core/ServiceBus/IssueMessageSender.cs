@@ -46,11 +46,6 @@ namespace CoE.Issues.Core.ServiceBus
         }
 
 
-        public Task SendIssueIncidentCreatedAsync(IncidentCreatedEventArgs args)
-        {
-            throw new NotImplementedException();
-        }
-
         internal static void SetIssue(Issue issue, IDictionary<string, object> dictionary)
         {
             dictionary["Issue"] = JsonConvert.SerializeObject(issue);

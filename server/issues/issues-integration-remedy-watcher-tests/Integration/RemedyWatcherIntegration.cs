@@ -30,7 +30,7 @@ namespace CoE.Issues.Remedy.Watcher.Tests
             mockRemedyService = new Mock<IRemedyService>();
             mockRemedyService.Setup(remedyService =>
                     remedyService.GetRemedyChangedWorkItems(It.IsAny<DateTime>())
-                ).Returns(Task.FromResult(returnValue));
+                ).Returns(returnValue);
 
             mockIssueMessageSender = new Mock<IIssueMessageSender>();
 
