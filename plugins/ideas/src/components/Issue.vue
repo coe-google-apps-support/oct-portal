@@ -11,7 +11,7 @@
           <div class ="description-text">{{ issue.description }}</div>
         </div>
         <div>
-          Status: {{ issue.status }}
+          Status: {{ issue.remedyStatus }}
           <md-progress-bar md-mode="determinate" :md-value="amount"></md-progress-bar>
         </div>
         <div class="date-text md-subhead">{{ issue.date | formatDate }}</div>
@@ -20,11 +20,24 @@
     <md-divider></md-divider>
     <div class="card-secondary-info">
       Assigned to:
-      <md-avatar>
-        <img src="https://media.forgecdn.net/avatars/124/768/636424778749237239.jpeg" alt="Avatar">
-        <md-tooltip md-direction="right">Someone's name</md-tooltip>
-      </md-avatar>
-      <button v-tooltip="{ content: 'test123' }">Hey</button>
+      <v-popover
+        :placement="placement"
+        :offset="offset"
+        :auto-hide="false">
+        <md-avatar class="tooltip-inner popover-inner">
+          <img src="https://media.forgecdn.net/avatars/124/768/636424778749237239.jpeg" alt="Avatar">
+          <md-tooltip md-direction="right">Someone's name</md-tooltip>
+        </md-avatar>
+
+    <template slot="popover">
+      <input v-model="tooltipContent" placeholder="Tooltip content" />
+      <p>
+        {{ tooltipContent }}
+      </p>
+
+      <a v-close-popover>Close</a>
+    </template>
+  </v-popover>
     </div>
     <md-progress-bar v-if="issue.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
@@ -53,7 +66,10 @@ export default {
     formatDate
   },
   data: () => ({
-    amount: 0
+    amount: 0,
+    tooltipContent: 'test123',
+    placement: 'top-center',
+    offset: 10
   }),
   methods: {
     progressBar () {
@@ -91,26 +107,7 @@ export default {
 .card:hover .cardImage {
   filter: blur(1.5px);
 }
-.tooltip {
-  &.popover {
-    $color: #f9f9f9;
 
-  .popover-inner {
-    background: $color;
-    color: black;
-    padding: 24px;
-    border-radius: 5px;
-    box-shadow: 0 5px 30px rgba(black, .1);
-  }
-
-  .popover-arrow {
-    border-color: $color;
-  }
-  }
-}
-.tooltip-arrow {
-  z-index: 200;
-}
 .oct-cover {
   position: absolute;
   width: 100%;
@@ -199,4 +196,111 @@ export default {
   transform: translateY(-8px);
 }
 
+.tooltip {
+  display: block !important;
+  z-index: 199;
+  .tooltip-inner {
+    background: black;
+    color: white;
+    border-radius: 16px;
+    padding: 5px 10px 4px;
+  }
+  .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+    border-color: black;
+    z-index: 1;
+  }
+  [x-placement^="top"] {
+    margin-bottom: 5px;
+    .tooltip-arrow {
+      border-width: 5px 5px 0 5px;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      bottom: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+  [x-placement^="bottom"] {
+    margin-top: 5px;
+    .tooltip-arrow {
+      border-width: 0 5px 5px 5px;
+      border-left-color: transparent !important;
+      border-right-color: transparent !important;
+      border-top-color: transparent !important;
+      top: -5px;
+      left: calc(50% - 5px);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+  [x-placement^="right"] {
+    margin-left: 5px;
+    .tooltip-arrow {
+      border-width: 5px 5px 5px 0;
+      border-left-color: transparent !important;
+      border-top-color: transparent !important;
+      border-bottom-color: transparent !important;
+      left: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+  [x-placement^="left"] {
+    margin-right: 5px;
+    .tooltip-arrow {
+      border-width: 5px 0 5px 5px;
+      border-top-color: transparent !important;
+      border-right-color: transparent !important;
+      border-bottom-color: transparent !important;
+      right: -5px;
+      top: calc(50% - 5px);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+  [aria-hidden='true'] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .15s, visibility .15s;
+  }
+  [aria-hidden='false'] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .15s;
+  }
+  .info {
+    $color: rgba(#004499, .9);
+    .tooltip-inner {
+      background: $color;
+      color: white;
+      padding: 24px;
+      border-radius: 5px;
+      box-shadow: 0 5px 30px rgba(black, .1);
+    }
+    .tooltip-arrow {
+      border-color: $color;
+    }
+  }
+  .popover {
+    $color: #f9f9f9;
+    .popover-inner {
+      background: $color;
+      color: black;
+      padding: 24px;
+      border-radius: 5px;
+      box-shadow: 0 5px 30px rgba(black, .1);
+    }
+    .popover-arrow {
+      border-color: $color;
+    }
+  }
+}
 </style>

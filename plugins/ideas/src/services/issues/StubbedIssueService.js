@@ -3,29 +3,37 @@ const fakeIssues = {
     'id': 0,
     'title': 'Ticket 1',
     'description': 'My laptop broke! Nothing I do works, everything is broken.. help please please. I\'ve got work to do and I cannot do anything until this laptop is fixed oh dear...',
+    'assigneeEmail': 'bobthebuilder@edmonton.ca',
+    'requestorName': 'Phil',
     'date': 'May 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'status': 'Submitted'
+    'remedyStatus': 'Submitted'
   },
   {
     'id': 1,
     'title': 'Ticket 2',
     'description': 'I didn\'t get paid!',
+    'assigneeEmail': 'bobthebuilder@edmonton.ca',
+    'requestorName': 'Lauren',
     'date': 'June 23 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'status': 'In Review'
+    'remedyStatus': 'In Review'
   },
   {
     'id': 2,
     'title': 'Ticket 3',
     'description': 'New monitor for computer.',
+    'assigneeEmail': 'bobthebuilder@edmonton.ca',
+    'requestorName': 'Dora',
     'date': 'March 15 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'status': 'Completed'
+    'remedyStatus': 'Completed'
   },
   {
     'id': 3,
     'title': 'Ticket 4',
     'description': 'Weird smell in building.',
+    'assigneeEmail': 'bobthebuilder@edmonton.ca',
+    'requestorName': 'Josh',
     'date': 'July 3 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'status': 'In Review'
+    'remedyStatus': 'In Review'
   }
   ]
 }
