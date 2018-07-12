@@ -3,6 +3,7 @@ using EnsureThat;
 using Microsoft.Azure.ServiceBus;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace CoE.Issues.Core.ServiceBus
                 case IssueMessageSender.ISSUE_CREATED:
                     {
                         if (issueCreatedHandler != null)
-                            await ReceiveInitiativeCreated(msg, token, issueCreatedHandler);
+                            await ReceiveIssueCreated(msg, token, issueCreatedHandler);
                         else
                             await _messageReceiver.CompleteAsync(msg.LockToken);
                         break;
@@ -52,24 +53,26 @@ namespace CoE.Issues.Core.ServiceBus
             }, messageHandlerOptions);
         }
 
-        private async Task ReceiveInitiativeCreated(Ideas.Shared.ServiceBus.Message msg, CancellationToken token, Func<IssueCreatedEventArgs, CancellationToken, Task> issueCreatedHandler)
+        private async Task ReceiveIssueCreated(Ideas.Shared.ServiceBus.Message msg, CancellationToken token, Func<IssueCreatedEventArgs, CancellationToken, Task> issueCreatedHandler)
         {
+
             // TODO: add logging and error handling
             var args = new IssueCreatedEventArgs()
             {
                 Title = msg.MessageProperties["Title"] as string,
                 Description = msg.MessageProperties["Description"] as string,
                 RemedyStatus = msg.MessageProperties["RemedyStatus"] as string,
-                RequestorEmail = msg.MessageProperties["RequestorEmail"] as string,
+                RequestorName = msg.MessageProperties["RequestorName"] as string,
                 ReferenceId = msg.MessageProperties["ReferenceId"] as string,
-                AssigneeEmail = msg.MessageProperties["AssigneeEmail"] as string
-            };
+                AssigneeEmail = msg.MessageProperties["AssigneeEmail"] as string,
+                CreatedDate = DateTime.Parse(msg.MessageProperties["CreatedDate"].ToString())
+        };
 
             // call the handler registered for this event
             await issueCreatedHandler(args, token);
         }
 
-        protected virtual Task OnDefaultError(Microsoft.Azure.ServiceBus.ExceptionReceivedEventArgs err)
+        protected virtual Task OnDefaultError(ExceptionReceivedEventArgs err)
         {
             _logger.Error(err.Exception, "Error receiving message: {ErrorMessage}", err.Exception.Message);
             return Task.CompletedTask;

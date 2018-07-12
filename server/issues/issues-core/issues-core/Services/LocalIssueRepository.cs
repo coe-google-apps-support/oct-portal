@@ -90,7 +90,8 @@ namespace CoE.Issues.Core.Services
             if (!string.IsNullOrWhiteSpace(filter))
             {
                 returnValue = returnValue
-                    .Where(x => x.Title.Contains(filter) || x.Description.Contains(filter));
+                    .Where(x => x.Title.Contains(filter) || x.Description.Contains(filter) || x.AssigneeEmail.Contains(filter) || x.RequestorName.Contains(filter) || x.ReferenceId.Contains(filter) || x.RemedyStatus.Contains(filter) );
+                    
             }
 
             return returnValue

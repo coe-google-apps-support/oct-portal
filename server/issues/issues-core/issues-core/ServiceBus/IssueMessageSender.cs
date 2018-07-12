@@ -39,7 +39,7 @@ namespace CoE.Issues.Core.ServiceBus
             userProperties["Title"] = args.Title;
             userProperties["Description"] = args.Description;
             userProperties["RemedyStatus"] = args.RemedyStatus;
-            userProperties["RequestorEmail"] = args.RequestorEmail;
+            userProperties["RequestorName"] = args.RequestorName;
             userProperties["ReferenceId"] = args.ReferenceId;
             userProperties["AssigneeEmail"] = args.AssigneeEmail;
             return _messageSender.SendMessageAsync(ISSUE_CREATED, userProperties);

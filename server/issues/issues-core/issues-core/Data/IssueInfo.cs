@@ -25,16 +25,27 @@ namespace CoE.Issues.Core.Data
         public string Description { get; private set; }
 
         [Required]
-        public DateTimeOffset CreatedDate { get; private set; }
+        public DateTime CreatedDate { get; private set; }
 
-        internal static IssueInfo Create(Issue initiative)
+        public string AssigneeEmail { get; private set; }
+        public string RequestorName { get; private set; }
+        public string RemedyStatus { get; private set; }
+        public string ReferenceId { get; private set; }
+
+        internal static IssueInfo Create(Issue issue)
         {
             return new IssueInfo()
             {
-                Id = initiative.Id,
-                Title = initiative.Title,
-                Description = initiative.Description,
-                CreatedDate = initiative.CreatedDate
+                Id = issue.Id,
+                Title = issue.Title,
+                Description = issue.Description,
+                CreatedDate = issue.CreatedDate,
+                AssigneeEmail = issue.AssigneeEmail,
+                RequestorName = issue.RequestorName,
+                RemedyStatus = issue.RemedyStatus,
+                ReferenceId = issue.ReferenceId
+
+
             };
         }
 

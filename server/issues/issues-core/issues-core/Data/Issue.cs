@@ -63,7 +63,7 @@ namespace CoE.Issues.Core.Data
         /// <summary>
         /// The date this issue was created.
         /// </summary>
-        public DateTimeOffset CreatedDate { get; private set; }
+        public DateTime CreatedDate { get;  set; }
 
         /// <summary>
         /// The people that have some stake in the idea, will always include the owner
@@ -83,7 +83,12 @@ namespace CoE.Issues.Core.Data
         /// </remarks>
         public int? AssigneeId { get; private set; }
 
-        //public string IncidentId { get; private set; }
+        public string AssigneeEmail { get; set; }
+        public string RequestorName { get; set; }
+        public string RemedyStatus { get; set; }
+        public string ReferenceId { get; set; }
+        
+
 
 
     }

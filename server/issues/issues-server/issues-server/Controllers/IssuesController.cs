@@ -13,7 +13,6 @@ using CoE.Ideas.Shared.Data;
 namespace CoE.Issues.Server.Controllers
 {
     [Produces("application/json")]
-    //[Route("api")]
     [Route("api/[controller]")]
     public class IssuesController : Controller
     {
@@ -75,6 +74,10 @@ namespace CoE.Issues.Server.Controllers
                         Description = x.Description,
                         Title = x.Title,
                         CreatedDate = x.CreatedDate,
+                        AssigneeEmail = x.AssigneeEmail,
+                        RequestorName = x.RequestorName,
+                        RemedyStatus = x.RemedyStatus,
+                        ReferenceId = x.ReferenceId,
                     }));
             }
             catch (Exception err)

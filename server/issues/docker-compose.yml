@@ -7,15 +7,6 @@ services:
       context: .
       dockerfile: issues-server/issues-server/Dockerfile
 
-  initiatives-db:
-    image: coeoctava.azurecr.io/initiatives-db:v1.0.2
-    ports:
-      - "1433:1433"
-    environment:
-      ACCEPT_EULA: Y
-      SA_PASSWORD: OctavaDev100!
-      MSSQL_PID: Developer
-
   wordpress-db:
     image: coeoctava.azurecr.io/wordpress-db:v1.0.5
     restart: always
@@ -44,4 +35,3 @@ services:
     build:
       context: .
       dockerfile: issues-integration-remedy-sblistener/Dockerfile
-

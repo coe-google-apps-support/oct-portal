@@ -73,10 +73,5 @@ namespace CoE.Issues.Remedy.Watcher.Tests
             await checker.Poll();
         }
 
-        [Test]
-        public async Task SendIssueToServiceBus()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
