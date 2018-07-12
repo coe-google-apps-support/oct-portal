@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using CoE.Ideas.Shared.People;
 using CoE.Issues.Core.Data;
+using CoE.Issues.Core.Remedy;
 using CoE.Issues.Core.ServiceBus;
 using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
+using CoE.Ideas.Shared.Extensions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
@@ -14,14 +17,17 @@ namespace CoE.Issues.Remedy.Watcher
 {
     public class RemedyChecker : IRemedyChecker
     {
-        public RemedyChecker(IRemedyService remedyService,
+        public RemedyChecker(
             IIssueMessageSender issueMessageSender,
+            IRemedyChangedReceiver remedyChangedReceiver,
+            IPeopleService peopleService,
             IMapper mapper,
             Serilog.ILogger logger,
             IOptions<RemedyCheckerOptions> options)
         {
-            _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
             _issueMessageSender = issueMessageSender ?? throw new ArgumentNullException("issueMessageSender");
+            _remedyChangedReceiver = remedyChangedReceiver ?? throw new ArgumentNullException("remedyChangedReceiver");
+            _peopleService = peopleService ?? throw new ArgumentException("peopleService");
             _mapper = mapper ?? throw new ArgumentNullException("mapper");
             _logger = logger ?? throw new ArgumentException("logger");
 
@@ -30,8 +36,9 @@ namespace CoE.Issues.Remedy.Watcher
             _options = options.Value;
         }
 
-        private readonly IRemedyService _remedyService;
         private readonly IIssueMessageSender _issueMessageSender;
+        private readonly IRemedyChangedReceiver _remedyChangedReceiver;
+        private readonly IPeopleService _peopleService;
         private readonly IMapper _mapper;
         private readonly Serilog.ILogger _logger;
         private RemedyCheckerOptions _options;
@@ -75,43 +82,43 @@ namespace CoE.Issues.Remedy.Watcher
             return lastPollTimeUtc;
         }
 
-        public async Task<RemedyPollResult> Poll()
+        public RemedyPollResult Poll()
         {
             TryReadLastPollTime();
             _logger.Information("Using last poll time of {PollTime}", lastPollTimeUtc);
 
-            var result = await PollAsync(lastPollTimeUtc);
+            var result = PollFromDate(lastPollTimeUtc);
             SaveResult(result);
             return result;
         }
 
-        public async Task<RemedyPollResult> PollAsync(DateTime fromUtc)
+        public RemedyPollResult PollFromDate(DateTime fromUtc)
         {
+            Stopwatch watch = new Stopwatch();
+
+            var result = new RemedyPollResult(fromUtc);
+
+            _remedyChangedReceiver.ReceiveChanges(fromUtc, async(incident, token) =>
             {
-                Stopwatch watch = new Stopwatch();
+                // send incident to service bus so the sblistener can deal with it
+                await TryProcessIssue(incident);
 
-                var result = new RemedyPollResult(fromUtc);
-                IEnumerable<OutputMapping1GetListValues> workItemsChanged = null;
-                try
-                {
-                    workItemsChanged = _remedyService.GetRemedyChangedWorkItems(fromUtc);
-                }
-                catch (Exception err)
-                {
-                    result.ProcessErrors.Add(new ProcessError() { ErrorMessage = err.Message });
-                }
-                if (workItemsChanged != null && workItemsChanged.Any())
-                {
-                    await ProcessWorkItemsChanged(workItemsChanged, result, fromUtc);
-                }
-                result.EndTimeUtc = result.RecordsProcesed.Any()
-                    ? result.RecordsProcesed.Max(x => x.Last_Modified_Date)
-                    : lastPollTimeUtc;
+                result.RecordsProcesed.Add(incident);
+            });
 
-                _logger.Information($"Finished Polling Remedy in { watch.Elapsed.TotalSeconds}s");
-
-                return result;
+            if (result.RecordsProcesed.Any())
+            {
+                long maxLastModifiedDate = result.RecordsProcesed.Max(x => x.LAST_MODIFIED_DATE);
+                result.EndTimeUtc = maxLastModifiedDate.ToUnixTimestamp();
             }
+            else
+            {
+                result.EndTimeUtc = lastPollTimeUtc;
+            }
+
+            _logger.Information($"Finished Polling Remedy in { watch.Elapsed.TotalSeconds}s");
+
+            return result;
 
         }
        
@@ -126,66 +133,31 @@ namespace CoE.Issues.Remedy.Watcher
             }
         }
 
-        private async Task ProcessWorkItemsChanged(IEnumerable<OutputMapping1GetListValues> workItemsChanged,
-            RemedyPollResult result, DateTime timestampUtc)
-        {
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-
-            int count = 0;
-            foreach (var workItem in workItemsChanged)
-            {
-                _logger.Information("Processing workItemChanged for id {InstanceId}", workItem.InstanceId);
-
-                // We can do the next line because this service will always be in the same time zone as Remedy
-                DateTime lastModifiedDateUtc = workItem.Last_Modified_Date.ToUniversalTime();
-
-                if (lastModifiedDateUtc <= timestampUtc)
-                {
-                    _logger.Warning($"WorkItem { workItem.Web_Incident_ID} has a last modified date less than or equal to our cutoff time, so ignoring ({ lastModifiedDateUtc } <= { timestampUtc }");
-                    continue;
-                }
-
-                Exception error = null;
-                try
-                {
-                    await TryProcessIssue(workItem);
-                }
-                catch (Exception err)
-                {
-                    error = err;
-                }
-
-                if (error == null)
-                {
-                    result.RecordsProcesed.Add(workItem);
-                }
-                else
-                {
-                    result.ProcessErrors.Add(new ProcessError()
-                    {
-                        WorkItem = workItem,
-                        ErrorMessage = error.Message
-                    });
-                }
-                count++;
-            }
-            TimeSpan avg = count > 0 ? watch.Elapsed / count : TimeSpan.Zero;
-            _logger.Information($"Processed { count } work item changes in { watch.Elapsed }. Average = { avg.TotalMilliseconds }ms/record ");
-        }
-
         /// <summary>
         /// Tries to process Remedy's output mapping so it fits into an IssueCreatedEventArgs object.
         /// TODO: we need to convert the Assignee 3+3 to an email so Octava can use it
         /// </summary>
         /// <param name="workItem">The generated workItem object. This is generated from a SOAP interface.</param>
         /// <returns>An async task that resolves with the IssueCreatedEventArgs.</returns>
-        protected virtual async Task<IssueCreatedEventArgs> TryProcessIssue(OutputMapping1GetListValues workItem)
+        protected virtual async Task<IssueCreatedEventArgs> TryProcessIssue(Incident issue)
         {
             try
             {
-                // convert Remedy object to IssueCreatedEventArgs
-                var args = _mapper.Map<OutputMapping1GetListValues, IssueCreatedEventArgs>(workItem);
+                var args = new IssueCreatedEventArgs
+                {
+                    Incident = issue
+                };
+
+                //TODO: add the users' info
+
+                if (!string.IsNullOrWhiteSpace(issue.SUBMITTER))
+                    args.Submitter = await GetPersonData(issue.SUBMITTER);
+                if (!string.IsNullOrWhiteSpace(issue.ASSIGNEE_LOGIN_ID))
+                    args.Assignee = await GetPersonData(issue.ASSIGNEE_LOGIN_ID);
+                if (!string.IsNullOrWhiteSpace(issue.CUSTOMER_LOGIN_ID))
+                    args.Assignee = await GetPersonData(issue.CUSTOMER_LOGIN_ID);
+
+
 
                 await _issueMessageSender.SendIssueCreatedAsync(args);
                 return args;
@@ -194,8 +166,22 @@ namespace CoE.Issues.Remedy.Watcher
             {
                 Guid correlationId = Guid.NewGuid();
                 _logger.Error(e, $"Unable to process work item changed (correlationId {correlationId}): {e.Message}");
-                _logger.Debug($"Work item change that caused processing error (correlationId {correlationId}): { workItem }");
+                _logger.Debug($"Work item change that caused processing error (correlationId {correlationId}): { issue }");
                 throw;
+            }
+        }
+
+        private async Task<PersonData> GetPersonData(string user3and3)
+        {
+            try
+            {
+                return await _peopleService.GetPersonAsync(user3and3);
+            }
+            catch (Exception err)
+            {
+                // log and eat the exception
+                _logger.Error(err, "Unable to get person info for user {user3and3}", user3and3);
+                return null;
             }
         }
     }

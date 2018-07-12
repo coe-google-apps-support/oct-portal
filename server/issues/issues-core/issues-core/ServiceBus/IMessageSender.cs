@@ -7,6 +7,6 @@ namespace CoE.Issues.Core.ServiceBus
 {
     public interface IMessageSender
     {
-        Task SendMessageAsync(string label, IDictionary<string, object> properties);
+        Task SendMessageAsync(string label, object value);
     }
 }

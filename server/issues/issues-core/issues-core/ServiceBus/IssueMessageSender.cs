@@ -34,21 +34,7 @@ namespace CoE.Issues.Core.ServiceBus
                 throw new ArgumentNullException("args");
 
             _logger.Information("Posting IssueCreated event to service bus.");
-
-            var userProperties = new Dictionary<string, object>();
-            userProperties["Title"] = args.Title;
-            userProperties["Description"] = args.Description;
-            userProperties["RemedyStatus"] = args.RemedyStatus;
-            userProperties["RequestorName"] = args.RequestorName;
-            userProperties["ReferenceId"] = args.ReferenceId;
-            userProperties["AssigneeEmail"] = args.AssigneeEmail;
-            return _messageSender.SendMessageAsync(ISSUE_CREATED, userProperties);
-        }
-
-
-        internal static void SetIssue(Issue issue, IDictionary<string, object> dictionary)
-        {
-            dictionary["Issue"] = JsonConvert.SerializeObject(issue);
+            return _messageSender.SendMessageAsync(ISSUE_CREATED, args);
         }
     }
 }

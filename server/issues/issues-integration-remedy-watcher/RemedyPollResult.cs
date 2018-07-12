@@ -1,4 +1,5 @@
-﻿using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
+﻿using CoE.Issues.Core.Remedy;
+using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,7 @@ namespace CoE.Issues.Remedy.Watcher
     {
         public RemedyPollResult()
         {
-            RecordsProcesed = new List<OutputMapping1GetListValues>();
+            RecordsProcesed = new List<Incident>();
             ProcessErrors = new List<ProcessError>();
             StartTimeUtc = DateTime.Now.ToUniversalTime();
         }
@@ -23,7 +24,7 @@ namespace CoE.Issues.Remedy.Watcher
         public DateTime StartTimeUtc { get; set; }
         public DateTime StartLastModifiedTimeUtc { get; set; }
         public DateTime EndTimeUtc { get; set; }
-        public ICollection<OutputMapping1GetListValues> RecordsProcesed { get; set; }
+        public ICollection<Incident> RecordsProcesed { get; set; }
         public ICollection<ProcessError> ProcessErrors { get; set; }
     }
 }

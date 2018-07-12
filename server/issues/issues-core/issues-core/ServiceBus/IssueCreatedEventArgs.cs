@@ -1,20 +1,16 @@
-﻿using CoE.Issues.Core.Data;
+﻿using CoE.Ideas.Shared.People;
+using CoE.Issues.Core.Data;
+using CoE.Issues.Core.Remedy;
 using System;
 
 namespace CoE.Issues.Core.ServiceBus
 {
     public class IssueCreatedEventArgs
     {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string RemedyStatus { get; set; }
-        public string RequestorName { get; set; }
-        public string ReferenceId { get; set; }
+        public Incident Incident { get; set; }
 
-        public string AssigneeEmail { get; set; }
-        public DateTime CreatedDate { get; set; }
-
-
-
+        public PersonData Assignee { get; set; }
+        public PersonData Submitter { get; set; }
+        public PersonData Customer { get; set; }
     }
 }

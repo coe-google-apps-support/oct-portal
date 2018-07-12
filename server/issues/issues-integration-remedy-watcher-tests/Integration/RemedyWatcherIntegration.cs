@@ -11,6 +11,7 @@ using Moq;
 using CoE.Issues.Core.ServiceBus;
 using Microsoft.Extensions.Options;
 using AutoMapper;
+using CoE.Ideas.Shared.People;
 
 namespace CoE.Issues.Remedy.Watcher.Tests
 {
@@ -34,6 +35,9 @@ namespace CoE.Issues.Remedy.Watcher.Tests
 
             mockIssueMessageSender = new Mock<IIssueMessageSender>();
 
+            mockRemedyChangedReceiver = new Mock<IRemedyChangedReceiver>();
+            mockPeopleService = new Mock<IPeopleService>();
+
             mockLogger = new Mock<Serilog.ILogger>();
 
             RemedyCheckerOptions options = new RemedyCheckerOptions()
@@ -50,27 +54,31 @@ namespace CoE.Issues.Remedy.Watcher.Tests
 
             Mapper.Initialize(cfg =>
             {
-                cfg.AddProfile<RemedyIssueMappingProfile>();
+                //cfg.AddProfile<RemedyIssueMappingProfile>();
             });
             mapper = Mapper.Instance;
         }
 
         private Mock<IRemedyService> mockRemedyService;
         private Mock<IIssueMessageSender> mockIssueMessageSender;
+        private Mock<IRemedyChangedReceiver> mockRemedyChangedReceiver;
+        private Mock<IPeopleService> mockPeopleService;
         private Mock<Serilog.ILogger> mockLogger;
         private Mock<IOptions<RemedyCheckerOptions>> mockOptions;
 
-        private IRemedyService remedyService;
-        private IIssueMessageSender issueMessageSender;
         private IMapper mapper;
-        private Serilog.ILogger logger;
-        private IOptions<RemedyCheckerOptions> remedyOptions;
 
         [Test]
-        public async Task PollMocked()
+        public void PollMocked()
         {
-            IRemedyChecker checker = new RemedyChecker(mockRemedyService.Object, mockIssueMessageSender.Object, mapper, mockLogger.Object, mockOptions.Object);
-            await checker.Poll();
+            IRemedyChecker checker = new RemedyChecker(
+                mockIssueMessageSender.Object, 
+                mockRemedyChangedReceiver.Object,
+                mockPeopleService.Object,
+                mapper,
+                mockLogger.Object, 
+                mockOptions.Object);
+            checker.Poll();
         }
 
     }

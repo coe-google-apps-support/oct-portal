@@ -16,6 +16,12 @@ namespace CoE.Ideas.Shared.Extensions
                 return Convert.ToInt64(dateTime.Subtract(epoch).TotalSeconds);
         }
 
+        public static DateTime ToUnixTimestamp(this long theDate)
+        {
+            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            return epoch.AddSeconds(theDate);
+        }
+
         /// <summary>
         /// Returns string like "Tomorrow at 11:37 AM", or "27 minutes ago"
         /// </summary>

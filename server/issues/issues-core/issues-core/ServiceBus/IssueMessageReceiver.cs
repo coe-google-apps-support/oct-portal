@@ -57,16 +57,7 @@ namespace CoE.Issues.Core.ServiceBus
         {
 
             // TODO: add logging and error handling
-            var args = new IssueCreatedEventArgs()
-            {
-                Title = msg.MessageProperties["Title"] as string,
-                Description = msg.MessageProperties["Description"] as string,
-                RemedyStatus = msg.MessageProperties["RemedyStatus"] as string,
-                RequestorName = msg.MessageProperties["RequestorName"] as string,
-                ReferenceId = msg.MessageProperties["ReferenceId"] as string,
-                AssigneeEmail = msg.MessageProperties["AssigneeEmail"] as string,
-                CreatedDate = DateTime.Parse(msg.MessageProperties["CreatedDate"].ToString())
-        };
+            var args = msg.Value as IssueCreatedEventArgs;
 
             // call the handler registered for this event
             await issueCreatedHandler(args, token);

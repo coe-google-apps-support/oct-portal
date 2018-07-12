@@ -25,7 +25,7 @@ namespace CoE.Issues.Remedy.Watchers
             {
                 try
                 {
-                    startup.Start().GetAwaiter().GetResult();
+                    startup.Start();
                 }
                 catch (Exception e)
                 {

@@ -1,0 +1,11 @@
+﻿REME12D1.GOV.EDMONTON.AB.CA =
+ (DESCRIPTION =
+   (ADDRESS_LIST =
+     (ADDRESS = (PROTOCOL = TCP)(HOST = sentra-z.gov.edmonton.ab.ca)(PORT = 1521))
+   )
+   (CONNECT_DATA =
+     (SERVER = DEDICATED)
+     (SERVICE_NAME = reme12d1.gov.edmonton.ab.ca)
+     (UR = A)
+   )
+ )

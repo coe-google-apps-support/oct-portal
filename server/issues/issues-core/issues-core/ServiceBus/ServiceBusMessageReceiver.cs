@@ -45,7 +45,7 @@ namespace CoE.Issues.Core.ServiceBus
             {
                 _logger.Debug("Received service bus message {MessageId}: {Label}", msg.MessageId, msg.Label);
 
-                // transofrm msg to Message
+                // transform msg to Message
                 var messageDto = new Ideas.Shared.ServiceBus.Message()
                 {
                     Id = Guid.Parse(msg.MessageId),
@@ -54,6 +54,17 @@ namespace CoE.Issues.Core.ServiceBus
                     CreatedDateUtc = msg.SystemProperties.EnqueuedTimeUtc,
                     LockToken = msg.SystemProperties.LockToken
                 };
+                if (msg.Body != null)
+                {
+                    // deserialize the same way it was serialized
+                    using (var ms = new System.IO.MemoryStream())
+                    {
+                        var bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                        ms.Write(msg.Body, 0, msg.Body.Length);
+                        ms.Seek(0, System.IO.SeekOrigin.Begin);
+                        messageDto.Value = bf.Deserialize(ms);
+                    }
+                }
                 await handler(messageDto, token);
             }, messageHandlerOptions);
         }

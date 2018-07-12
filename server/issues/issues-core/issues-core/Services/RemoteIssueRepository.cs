@@ -160,7 +160,8 @@ namespace CoE.Issues.Core.Services
 
 
 
-        public Task<Issue> UpdateIssueAsync(Issue issue)
+        public Task<Issue> UpdateIssueAsync(Issue issue,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             throw new NotSupportedException();
         }

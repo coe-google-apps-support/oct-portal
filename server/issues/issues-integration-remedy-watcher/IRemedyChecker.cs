@@ -7,8 +7,8 @@ namespace CoE.Issues.Remedy.Watcher
 {
     public interface IRemedyChecker
     {
-        Task<RemedyPollResult> PollAsync(DateTime fromUtc);
+        RemedyPollResult PollFromDate(DateTime fromUtc);
         DateTime TryReadLastPollTime();
-        Task<RemedyPollResult> Poll();
+        RemedyPollResult Poll();
     }
 }

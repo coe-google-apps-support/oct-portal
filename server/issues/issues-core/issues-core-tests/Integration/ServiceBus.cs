@@ -42,10 +42,12 @@ namespace CoE.Issues.Core.Tests
         [Test]
         public void CanSendMessage()
         {
-            IDictionary<string, object> testDict = new Dictionary<string, object>();
-            testDict["one"] = "message 1";
-            testDict["two"] = "message 2";
-            testDict["three"] = "message 3";
+            IDictionary<string, object> testDict = new Dictionary<string, object>
+            {
+                ["one"] = "message 1",
+                ["two"] = "message 2",
+                ["three"] = "message 3"
+            };
 
             string message = "message";
 
@@ -62,21 +64,22 @@ namespace CoE.Issues.Core.Tests
         public void CanSendCreateIssueMessage()
         {
             var messenger = serviceProvider.GetRequiredService<IIssueMessageSender>();
-            IssueCreatedEventArgs issueEvent = new IssueCreatedEventArgs()
-            {
-                Title = "A test issue",
-                Description = "This is an issue created when running integration tests.",
-                AssigneeEmail = "worker.bee@edmonton.ca",
-                RequestorName = "requestor.bee",
-                RemedyStatus = "Created",
-                ReferenceId = "INC000123"
-            };
+            throw new NotImplementedException("Need to create issue here");
+            //IssueCreatedEventArgs issueEvent = new IssueCreatedEventArgs()
+            //{
+            //    Title = "A test issue",
+            //    Description = "This is an issue created when running integration tests.",
+            //    AssigneeEmail = "worker.bee@edmonton.ca",
+            //    RequestorName = "requestor.bee",
+            //    RemedyStatus = "Created",
+            //    ReferenceId = "INC000123"
+            //};
             
-            Func<Task> asyncFunction = async () =>
-            {
-                await messenger.SendIssueCreatedAsync(issueEvent);
-            };
-            asyncFunction.Should().NotThrow<Exception>();
+            //Func<Task> asyncFunction = async () =>
+            //{
+            //    await messenger.SendIssueCreatedAsync(issueEvent);
+            //};
+            //asyncFunction.Should().NotThrow<Exception>();
         }
     }
 }

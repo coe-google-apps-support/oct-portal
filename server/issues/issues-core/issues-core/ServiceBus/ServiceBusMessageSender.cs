@@ -20,15 +20,23 @@ namespace CoE.Issues.Core.ServiceBus
             return SendMessageAsync(label, null);
         }
 
-        public Task SendMessageAsync(string label, IDictionary<string, object> properties)
+        public Task SendMessageAsync(string label, object value)
         {
             var msg = new Message()
             {
                 Label = label,
                 MessageId = Guid.NewGuid().ToString()
             };
-            foreach (var p in properties.Keys)
-                msg.UserProperties[p] = properties[p];
+            if (value != null)
+            {
+                // one way to serialize the data
+                var bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                using (var ms = new System.IO.MemoryStream())
+                {
+                    bf.Serialize(ms, value);
+                    msg.Body = ms.ToArray();
+                }
+            }
             return _topicClient.SendAsync(msg);
         }
 

@@ -14,5 +14,7 @@ namespace CoE.Ideas.Shared.ServiceBus
         public IDictionary<string, object> MessageProperties { get; set; }
         public DateTime CreatedDateUtc { get; set; }
         public string LockToken { get; set; }
+        public object Value { get; set; }
     }
+
 }

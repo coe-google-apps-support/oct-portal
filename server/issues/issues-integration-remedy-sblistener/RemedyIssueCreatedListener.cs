@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog.Context;
+using CoE.Ideas.Shared.WordPress;
 
 namespace CoE.Issues.Remedy.SbListener
 {
@@ -16,6 +17,7 @@ namespace CoE.Issues.Remedy.SbListener
         public RemedyIssueCreatedListener(
             IIssueMessageReceiver issueMessageReceiver,
             IIssueRepository issueRepository,
+            IWordPressRepository userRepository,
             Serilog.ILogger logger)
         {
             EnsureArg.IsNotNull(issueRepository);
@@ -27,7 +29,6 @@ namespace CoE.Issues.Remedy.SbListener
 
             issueMessageReceiver.ReceiveMessages(
                 issueCreatedHandler: OnIssueCreated);
-
         }
 
         private readonly IIssueRepository _issueRepository;
@@ -40,12 +41,24 @@ namespace CoE.Issues.Remedy.SbListener
             // TODO: add logging and exception handling
             _logger.Information("entering the sblistener");
 
-            var issue = Issue.Create(args.Title, args.Description);
+            // see if the issue already exists
+            Issue issue = null; // _issueRepository.GetIssueByIncidentId
+            if (issue == null)
+            {
+                issue = Issue.Create(args.Incident.DESCRIPTION, args.Incident.DETAILED_DECRIPTION);
 
-            // fill in any other fields here
+                // fill in any other fields here
+                // save to database
+                await _issueRepository.AddIssueAsync(issue, token);
+            }
+            else
+            {
+                // TODO: update the issue with any relevant updated fields
 
-            // save to database
-            await _issueRepository.AddIssueAsync(issue, token);
+                await _issueRepository.UpdateIssueAsync(issue);
+            }
+
+
         }
     }
 }

@@ -61,8 +61,15 @@ namespace CoE.Issues.Remedy.Watcher
                     return returnValue;
                 });
             services.AddSingleton<IRemedyChecker, RemedyChecker>();
-
             services.AddSingleton<IRemedyService, RemedyService>();
+            services.AddPeopleService(Configuration["PeopleService"]);
+            string remedyDbConnectionString = Configuration.GetConnectionString("Remedy");
+            if (string.IsNullOrWhiteSpace(remedyDbConnectionString))
+                throw new Exception("Expecting connection string to remedy");
+            services.AddSingleton<IRemedyChangedReceiver, RemedyDbReader>(x =>
+            {
+                return new RemedyDbReader(x.GetRequiredService<Serilog.ILogger>(), remedyDbConnectionString);
+            });
 
             // Add services to talk to ServiceBus
             services.AddIssueMessaging(Configuration["ServiceBus:ConnectionString"],
@@ -75,10 +82,10 @@ namespace CoE.Issues.Remedy.Watcher
             return services;
         }
 
-        public async Task Start()
+        public void Start()
         {
             var checker = ServiceProvider.GetRequiredService<IRemedyChecker>();
-            await checker.Poll();
+            checker.Poll();
         }
 
     }

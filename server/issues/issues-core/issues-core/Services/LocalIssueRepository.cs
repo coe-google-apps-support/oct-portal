@@ -106,7 +106,8 @@ namespace CoE.Issues.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<Issue> UpdateIssueAsync(Issue ssue)
+        public Task<Issue> UpdateIssueAsync(Issue issue,
+            CancellationToken cancellationToken = default(CancellationToken))
         {
             throw new NotImplementedException();
         }
