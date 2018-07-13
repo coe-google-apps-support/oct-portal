@@ -67,7 +67,6 @@ namespace CoE.Issues.Core.Tests
                 Title = "A test issue",
                 Description = "This is an issue created when running integration tests.",
                 AssigneeEmail = "worker.bee@edmonton.ca",
-                RequestorName = "requestor.bee",
                 RemedyStatus = "Created",
                 ReferenceId = "INC000123"
             };

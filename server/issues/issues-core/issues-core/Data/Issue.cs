@@ -21,24 +21,34 @@ namespace CoE.Issues.Core.Data
         public static Issue Create(
             string title, 
             string description,
-            int ownerPersonId = -1
-            //string referenceId = ""
+            string referenceId,
+            string remedystatus,
+            string requestorname,
+            string assigneeemail,
+            DateTime createddate,
+            int ownerPersonId
             )
         {
             Ensure.String.IsNotNullOrWhiteSpace(title, nameof(title));
-            Ensure.String.IsNotNullOrWhiteSpace(description, nameof(description));
+
 
             var issue = new Issue(Guid.NewGuid())
             {
                 Title = title,
                 Description = description,
+                ReferenceId= referenceId,
+                RemedyStatus = remedystatus,
+                RequestorName = requestorname,
+                AssigneeEmail = assigneeemail,
+
                 Stakeholders = new List<Stakeholder>()
                 {
                     Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
                 },
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = createddate
             };
-            
+
+
             return issue;
         }
 
@@ -56,8 +66,6 @@ namespace CoE.Issues.Core.Data
         /// <summary>
         /// The long description of the idea, can be HTML formatted
         /// </summary>
-        [Required]
-        [MinLength(3)]
         public string Description { get; private set; }
 
         /// <summary>

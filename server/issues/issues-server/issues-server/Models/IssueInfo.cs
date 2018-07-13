@@ -20,7 +20,6 @@ namespace CoE.Issues.Server.Models
         /// <summary>
         /// The long description of the idea, can be HTML formatted
         /// </summary>
-        [Required]
         public string Description { get; set; }
 
         [Required]

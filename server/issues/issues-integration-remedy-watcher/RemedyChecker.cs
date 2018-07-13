@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CoE.Ideas.Shared.People;
 using CoE.Issues.Core.Data;
 using CoE.Issues.Core.ServiceBus;
 using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
@@ -18,12 +19,15 @@ namespace CoE.Issues.Remedy.Watcher
             IIssueMessageSender issueMessageSender,
             IMapper mapper,
             Serilog.ILogger logger,
+            IPeopleService peopleService,
             IOptions<RemedyCheckerOptions> options)
         {
             _remedyService = remedyService ?? throw new ArgumentNullException("remedyService");
             _issueMessageSender = issueMessageSender ?? throw new ArgumentNullException("issueMessageSender");
             _mapper = mapper ?? throw new ArgumentNullException("mapper");
             _logger = logger ?? throw new ArgumentException("logger");
+            _peopleService = peopleService ?? throw new ArgumentNullException("peopleService");
+
 
             if (options == null || options.Value == null)
                 throw new ArgumentNullException("options");
@@ -33,6 +37,8 @@ namespace CoE.Issues.Remedy.Watcher
         private readonly IRemedyService _remedyService;
         private readonly IIssueMessageSender _issueMessageSender;
         private readonly IMapper _mapper;
+        private readonly IPeopleService _peopleService;
+
         private readonly Serilog.ILogger _logger;
         private RemedyCheckerOptions _options;
 
@@ -182,11 +188,52 @@ namespace CoE.Issues.Remedy.Watcher
         /// <returns>An async task that resolves with the IssueCreatedEventArgs.</returns>
         protected virtual async Task<IssueCreatedEventArgs> TryProcessIssue(OutputMapping1GetListValues workItem)
         {
+
+            string assignee3and3 = workItem.Assignee_Login_ID;
+            string submitter3and3 = workItem.Submitter;
+
+            PersonData assignee = null;
+            PersonData submitter = null;
+
+            if (string.IsNullOrWhiteSpace(assignee3and3))
+            {
+                _logger.Information("Assignee is empty");
+            }
+            else
+            {
+                _logger.Information("Looking up assignee with 3+3 {User3and3}", assignee3and3);
+                try { assignee = await _peopleService.GetPersonAsync(assignee3and3); }
+                catch (Exception err) { _logger.Warning(err, "Unable to get email for Remedy incident Assignee {User3and3}: {ErrorMessage}", assignee3and3, err.Message); }
+            }
+
+            if (string.IsNullOrWhiteSpace(submitter3and3))
+            {
+                _logger.Information("Submitter is empty");
+            }
+            else
+            {
+                _logger.Information("Looking up submitter with 3+3 {User3and3}", submitter3and3);
+                try { submitter = await _peopleService.GetPersonAsync(submitter3and3); }
+                catch (Exception err) { _logger.Warning(err, "Unable to get email for Remedy incident Submitter {User3and3}: {ErrorMessage}", submitter3and3, err.Message); }
+            }
+
+            IssueStatus? newIssueStatus = GetIssueStatusForRemedyStatus(workItem.Status);
+            if (newIssueStatus == null)
+            {
+                _logger.Information("Abondining updated work item because an appropriate IssueStatus could not be determined from the Remedy Status {WorkItemStatus}", workItem.Status);
+                return null;
+            }
+
             try
             {
                 // convert Remedy object to IssueCreatedEventArgs
                 var args = _mapper.Map<OutputMapping1GetListValues, IssueCreatedEventArgs>(workItem);
-
+                args.AssigneeEmail = assignee.Email;
+                args.RequestorEmail = submitter.Email;
+                args.RequestorGivenName = submitter.GivenName;
+                args.RequestorSurnName = submitter.Surname;
+                args.RequestorTelephone = submitter.Telephone;
+                args.RequestorDisplayName = submitter.DisplayName;
                 await _issueMessageSender.SendIssueCreatedAsync(args);
                 return args;
             }
@@ -197,6 +244,35 @@ namespace CoE.Issues.Remedy.Watcher
                 _logger.Debug($"Work item change that caused processing error (correlationId {correlationId}): { workItem }");
                 throw;
             }
+        }
+
+        protected virtual IssueStatus? GetIssueStatusForRemedyStatus(StatusType remedyStatusType)
+        {
+            // here we have the business logic of translating Remedy statuses into our statuses
+            IssueStatus newIdeaStatus;
+            switch (remedyStatusType)
+            {
+                case StatusType.Assigned:
+                    newIdeaStatus = IssueStatus.Submit;
+                    break;
+                case StatusType.Cancelled:
+                    newIdeaStatus = IssueStatus.Cancelled;
+                    break;
+                case StatusType.Pending:
+                    newIdeaStatus = IssueStatus.Review;
+                    break;
+                case StatusType.InProgress:
+                    newIdeaStatus = IssueStatus.Collaborate;
+                    break;
+                case StatusType.Resolved:
+                    newIdeaStatus = IssueStatus.Deliver;
+                    break;
+                case StatusType.Closed:
+       
+                default:
+                    return null; // no change
+            }
+            return newIdeaStatus;
         }
     }
 }

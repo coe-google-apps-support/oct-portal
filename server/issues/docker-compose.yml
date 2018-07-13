@@ -35,3 +35,11 @@ services:
     build:
       context: .
       dockerfile: issues-integration-remedy-sblistener/Dockerfile
+
+  initiatives-vue:
+    image: coeoctava.azurecr.io/initiatives-vue:dev-1.0.0
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - ./plugins/ideas/:/app   

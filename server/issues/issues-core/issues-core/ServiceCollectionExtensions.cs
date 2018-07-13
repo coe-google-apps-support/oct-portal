@@ -11,6 +11,7 @@ using System.Text;
 using Serilog;
 using CoE.Issues.Core.ServiceBus;
 using System.Linq;
+using CoE.Ideas.Shared.People;
 
 namespace CoE.Issues.Core
 {
@@ -44,6 +45,10 @@ namespace CoE.Issues.Core
                     services.AddTransient<IHealthCheckable, LocalIssueRepository>();
                     break;
             }
+
+
+            services.AddScoped<IPersonRepository, PersonRepository>();
+
 
             return services;
         }
@@ -97,7 +102,6 @@ namespace CoE.Issues.Core
 
             return services;
         }
-
 
 
 #if DEBUG

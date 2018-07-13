@@ -14,7 +14,8 @@ namespace CoE.Issues.Core.Services
         Task<Issue> GetIssueAsync(Guid id);
         Task<PagedResultSet<IssueInfo>> GetIssuesAsync(string filter = null,
             int page = 1, int pageSize = 20);
-
+        Task<PagedResultSet<IssueInfo>> GetIssuesByStakeholderPersonIdAsync(int personId,
+    string filter = null, int pageNumber = 1, int pageSize = 20);
         Task<Issue> GetIssueAsync(int id);
     }
 }

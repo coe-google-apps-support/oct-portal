@@ -66,7 +66,7 @@ namespace CoE.Issues.Remedy
 
             services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
 
-            services.AddPeopleService();
+            //services.AddPeopleService();
 
 
             services.AddSingleton<New_Port_0PortType>(x =>

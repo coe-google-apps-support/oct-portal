@@ -86,7 +86,33 @@ namespace CoE.Issues.Core.Services
                 return JsonConvert.DeserializeObject<Issue>(ideaString, settings);
             });
         }
+        public async Task<PagedResultSet<IssueInfo>> GetIssuesByStakeholderPersonIdAsync(int personId, string filter, int pageNumber, int pageSize)
+        {
+            return await ExecuteAsync(async client =>
+            {
+                var response = await client.GetAsync($"?View=Mine");
+                if (response.IsSuccessStatusCode)
+                {
+                    var ideaString = await response.Content.ReadAsStringAsync();
 
+                    string totalCountString = response.Headers.GetValues("X-Total-Count").FirstOrDefault();
+                    int totalCount = 0;
+                    if (!string.IsNullOrWhiteSpace(totalCountString))
+                        int.TryParse(totalCountString, out totalCount);
+
+                    var contractResolver = new IssueContractResolver();
+                    var settings = new JsonSerializerSettings() { ContractResolver = contractResolver };
+                    var returnValues = JsonConvert.DeserializeObject<IEnumerable<IssueInfo>>(ideaString, settings).ToList();
+                    return PagedResultSet.Create(returnValues, pageNumber, pageSize, totalCount);
+                }
+                else
+                {
+                    var ex = new InvalidOperationException($"Response from remote webservice did not indicate success ({response.StatusCode})");
+                    ex.Data["HttpResponse"] = response;
+                    throw ex;
+                }
+            });
+        }
         public async Task<PagedResultSet<IssueInfo>> GetIssuesAsync(string filter, int pageNumber, int pageSize)
         {
             return await ExecuteAsync(async client =>

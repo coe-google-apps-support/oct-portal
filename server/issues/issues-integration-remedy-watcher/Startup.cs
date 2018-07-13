@@ -72,6 +72,8 @@ namespace CoE.Issues.Remedy.Watcher
             // configure automapper
             services.AddAutoMapper();
 
+            services.AddPeopleService(Configuration["PeopleService"]);
+
             return services;
         }
 

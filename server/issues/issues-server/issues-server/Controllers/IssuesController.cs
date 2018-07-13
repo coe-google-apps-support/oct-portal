@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CoE.Ideas.Shared.Data;
+using CoE.Ideas.Shared.Security;
 
 namespace CoE.Issues.Server.Controllers
 {
@@ -56,9 +57,8 @@ namespace CoE.Issues.Server.Controllers
             {
                 if (view == ViewOptions.Mine)
                 {
-                    throw new NotSupportedException();
-                    //issuesInfo = await _repository.GetissuesByStakeholderPersonIdAsync(User.GetPersonId(),
-                    //    filter: contains, pageNumber: page, pageSize: pageSize);
+                    issuesInfo = await _repository.GetIssuesByStakeholderPersonIdAsync(User.GetPersonId(),
+                        filter: contains, pageNumber: page, pageSize: pageSize);
                 }
                 else
                     issuesInfo = await _repository.GetIssuesAsync(filter: contains, page: page, pageSize: pageSize);

@@ -111,6 +111,17 @@ namespace CoE.Issues.Core.Services
             throw new NotImplementedException();
         }
 
+        public async Task<PagedResultSet<IssueInfo>> GetIssuesByStakeholderPersonIdAsync(int personId,
+   string filter, int pageNumber, int pageSize)
+        {
+            var query = _issueContext.Issues
+                    .Where(x => x.Stakeholders.Any(y => y.PersonId == personId));
+
+            var Issues = CreateIssueInfoQuery(query, filter);
+
+            return await PagedResultSet.Create(Issues, pageNumber, pageSize);
+        }
+
         internal class IssueContractResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)

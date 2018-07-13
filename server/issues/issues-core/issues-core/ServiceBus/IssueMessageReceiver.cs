@@ -1,4 +1,6 @@
-﻿using CoE.Ideas.Shared.ServiceBus;
+﻿using CoE.Ideas.Shared.People;
+using CoE.Ideas.Shared.ServiceBus;
+using CoE.Issues.Core.Data;
 using EnsureThat;
 using Microsoft.Azure.ServiceBus;
 using System;
@@ -57,16 +59,28 @@ namespace CoE.Issues.Core.ServiceBus
         {
 
             // TODO: add logging and error handling
-            var args = new IssueCreatedEventArgs()
-            {
-                Title = msg.MessageProperties["Title"] as string,
-                Description = msg.MessageProperties["Description"] as string,
-                RemedyStatus = msg.MessageProperties["RemedyStatus"] as string,
-                RequestorName = msg.MessageProperties["RequestorName"] as string,
-                ReferenceId = msg.MessageProperties["ReferenceId"] as string,
-                AssigneeEmail = msg.MessageProperties["AssigneeEmail"] as string,
-                CreatedDate = DateTime.Parse(msg.MessageProperties["CreatedDate"].ToString())
-        };
+            var args = new IssueCreatedEventArgs();
+            //    {
+            //        Title = msg.MessageProperties["Title"] as string,
+            //        //Description = msg.MessageProperties["Description"] as string,
+            //        RemedyStatus = msg.MessageProperties["RemedyStatus"] as string,
+            //        RequestorName = msg.MessageProperties["RequestorName"] as string,
+            //        RequestorName = msg.MessageProperties["RequestorName"] as string,
+            //        ReferenceId = msg.MessageProperties["ReferenceId"] as string,
+            //        AssigneeEmail = msg.MessageProperties["AssigneeEmail"] as string,
+            //        CreatedDate = DateTime.Parse(msg.MessageProperties["CreatedDate"].ToString())
+            //};
+            if (msg.MessageProperties.ContainsKey("Title")) args.Title = msg.MessageProperties["Title"] as string;
+            if (msg.MessageProperties.ContainsKey("Description")) args.Description = msg.MessageProperties["Description"] as string;
+            if (msg.MessageProperties.ContainsKey("RemedyStatus")) args.RemedyStatus = msg.MessageProperties["RemedyStatus"] as string;
+            if (msg.MessageProperties.ContainsKey("ReferenceId")) args.ReferenceId = msg.MessageProperties["ReferenceId"] as string;
+            if (msg.MessageProperties.ContainsKey("AssigneeEmail")) args.AssigneeEmail = msg.MessageProperties["AssigneeEmail"] as string;
+            if (msg.MessageProperties.ContainsKey("RequestorEmail")) args.RequestorEmail = msg.MessageProperties["RequestorEmail"] as string;
+            if (msg.MessageProperties.ContainsKey("RequestorTelephone")) args.RequestorTelephone = msg.MessageProperties["RequestorTelephone"] as string;
+            if (msg.MessageProperties.ContainsKey("RequestorGivenName")) args.RequestorGivenName = msg.MessageProperties["RequestorGivenName"] as string;
+            if (msg.MessageProperties.ContainsKey("RequestorSurnName")) args.RequestorSurnName = msg.MessageProperties["RequestorSurnName"] as string;
+            if (msg.MessageProperties.ContainsKey("RequestorDisplayName")) args.RequestorDisplayName = msg.MessageProperties["RequestorDisplayName"] as string;
+
 
             // call the handler registered for this event
             await issueCreatedHandler(args, token);
