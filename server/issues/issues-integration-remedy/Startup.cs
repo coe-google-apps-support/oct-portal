@@ -66,12 +66,12 @@ namespace CoE.Issues.Remedy
 
             services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
 
-            //services.AddPeopleService();
+            services.AddPeopleService();
 
 
-            services.AddSingleton<New_Port_0PortType>(x =>
+            services.AddSingleton<HPD_IncidentInterface_Create_WSPortTypePortType>(x =>
             {
-                return new New_Port_0PortTypeClient(
+                return new HPD_IncidentInterface_Create_WSPortTypePortTypeClient(
                     new BasicHttpBinding(BasicHttpSecurityMode.None),
                     new EndpointAddress(Configuration["Remedy:ApiUrl"]));
             });

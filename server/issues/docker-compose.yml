@@ -43,3 +43,17 @@ services:
     restart: always
     volumes:
       - ./plugins/ideas/:/app   
+
+  wordpress:
+    depends_on: 
+      - wordpress-db
+    image: coeoctava.azurecr.io/wordpress:v1.0.3
+    ports:
+      - "8000:80"
+      - "9000:9000"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: wordpress-db:3306
+      WORDPRESS_DB_NAME: octportalwordpress
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: octavadev
