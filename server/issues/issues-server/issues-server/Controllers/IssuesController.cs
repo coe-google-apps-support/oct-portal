@@ -71,7 +71,7 @@ namespace CoE.Issues.Server.Controllers
                 Request.HttpContext.Response.Headers.Add("X-Is-Last-Page", issuesInfo.IsLastPage().ToString());
                 return Ok(issuesInfo.Results
                     .OrderByDescending(x => x.CreatedDate)
-                    .Select(x => new IssueInfo()
+                    .Select(x => new Models.IssueInfo()
                     {
                         Id = x.Id,
                         Description = x.Description,
@@ -115,7 +115,7 @@ namespace CoE.Issues.Server.Controllers
             {
                 int personId = User.GetPersonId();
 
-                newIssue = Issue.Create(issueData.Title, issueData.Description, personId, skipEmailNotification: skipEmailNotification);
+                newIssue = Issue.Create(issueData.Title, issueData.Description, "-1","-1", "-1", "-1", DateTime.Now, -1);
 
                 newIssue = await _repository.AddIssueAsync(newIssue);
 
