@@ -15,6 +15,8 @@ namespace CoE.Issues.Server.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
+
+    //[Route("api")]
     public class IssuesController : Controller
     {
         private readonly IIssueRepository _repository;
