@@ -25,7 +25,7 @@ namespace CoE.Issues.Remedy
         private readonly Serilog.ILogger _logger;
 
 
-        public virtual async Task<string> PostNewissueAsync(Issue issue, PersonData personData, Uri issueUrl)
+        public virtual async Task<string> PostNewissueAsync(Issue issue, PersonData personData)
         {
             try
             {
@@ -42,8 +42,8 @@ namespace CoE.Issues.Remedy
                     Notes: "Customer Name: " + personData.Surname + " " + personData.GivenName + '\n' +
                                  "Customer Email: " + personData.Email + '\n' +
                                  "Customer Phone Number: " + personData.Telephone + '\n' +
-                                 "issue's Description: " + issue.Description + '\n' +
-                                 "issue's URL: " + issueUrl,
+                                 "issue's Description: " + issue.Description,
+                                
                     Work_Info_Type: Work_Info_TypeType.General,
                     Customer_Company: _options.LocationCompany,
                     Categorization_Tier_1: _options.CategorizationTier1,

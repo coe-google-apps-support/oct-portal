@@ -9,7 +9,7 @@ namespace CoE.Issues.Remedy
 {
     public interface IRemedyService
     {
-        Task<string> PostNewissueAsync(Issue issue, PersonData personData, Uri initiativeUrl);
+        Task<string> PostNewissueAsync(Issue issue, PersonData personData);
 
     }
 }
