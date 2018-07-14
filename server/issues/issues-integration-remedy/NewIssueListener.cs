@@ -51,7 +51,7 @@ namespace CoE.Issues.Remedy
             return Task.CompletedTask;
         }
 
-        protected virtual async Task OnNewIssue(IssueNewCreatedEventArgs e, CancellationToken token)
+        protected virtual async Task OnNewIssue(IssueCreatedEventArgs e, CancellationToken token)
         {
             var Issue = e.Issue;
             var owner = e.Owner;

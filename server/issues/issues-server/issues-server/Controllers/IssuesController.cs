@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CoE.Ideas.Shared.Data;
 using CoE.Ideas.Shared.Security;
+using CoE.Issues.Core.Data;
 
 namespace CoE.Issues.Server.Controllers
 {
@@ -88,6 +89,53 @@ namespace CoE.Issues.Server.Controllers
                 throw;
             }
         }
+
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> PostIssue([FromBody] AddIssueDto issueData, bool skipEmailNotification = false)
+        {
+            EnsureArg.IsNotNull(issueData);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.Warning("Unable to create Issue because model state is not valid: {ModelState}", ModelState);
+                return BadRequest(ModelState);
+            }
+
+            EnsureArg.IsNotNull(issueData.Title);
+            EnsureArg.IsNotNull(issueData.Description);
+
+
+            _logger.Information("Creating new Issue");
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            Issue newIssue = null;
+            try
+            {
+                int personId = User.GetPersonId();
+
+                newIssue = Issue.Create(issueData.Title, issueData.Description, personId, skipEmailNotification: skipEmailNotification);
+
+                newIssue = await _repository.AddIssueAsync(newIssue);
+
+                watch.Stop();
+                _logger.Information("Created Issue in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
+                return CreatedAtAction("GetIdea", new { id = newIssue.Id }, newIssue);
+            }
+            catch (Exception err)
+            {
+                Guid correlationId = Guid.NewGuid();
+                _logger.Error(err, "Unable to save new Issue {Issue} to repository. CorrelationId: {CorrelationId}", newIssue, correlationId);
+#if DEBUG
+                return base.StatusCode(500, $"Unable to save idea to repository. Error: { err }");
+#else
+                return base.StatusCode(500, $"Unable to save idea to repository. CorrelationId: { correlationId }");
+# endif
+            }
+
+        }
+
 
     }
 }
