@@ -25,46 +25,46 @@ namespace CoE.Issues.Remedy
         private readonly Serilog.ILogger _logger;
 
 
-        public virtual async Task<string> PostNewissueAsync(Issue issue, PersonData personData)
-        {
-            try
-            {
-                var request = new HelpDesk_Submit_ServiceRequest(
-                    AuthenticationInfo: new AuthenticationInfo()
-                    {
-                        userName = _options.ServiceUserName,
-                        password = _options.ServicePassword
-                    },
-                    Customer_Company: _options.CustomerCompany,
-                    Login_ID: _options.CustomerLoginId,
-                    Action: _options.Z1D_Action,
-                    Summary: issue.Title,
-                    Notes: "Customer Name: " + personData.Surname + " " + personData.GivenName + '\n' +
-                                 "Customer Email: " + personData.Email + '\n' +
-                                 "Customer Phone Number: " + personData.Telephone + '\n' +
-                                 "issue's Description: " + issue.Description,
+//        public virtual async Task<string> PostNewissueAsync(Issue issue, PersonData personData)
+//        {
+//            try
+//            {
+//                var request = new HelpDesk_Submit_ServiceRequest(
+//                    AuthenticationInfo: new AuthenticationInfo()
+//                    {
+//                        userName = _options.ServiceUserName,
+//                        password = _options.ServicePassword
+//                    },
+//                    Customer_Company: _options.CustomerCompany,
+//                    Login_ID: _options.CustomerLoginId,
+//                    Action: _options.Z1D_Action,
+//                    Summary: issue.Title,
+//                    Notes: "Customer Name: " + personData.Surname + " " + personData.GivenName + '\n' +
+//                                 "Customer Email: " + personData.Email + '\n' +
+//                                 "Customer Phone Number: " + personData.Telephone + '\n' +
+//                                 "issue's Description: " + issue.Description,
                                 
-                    Work_Info_Type: Work_Info_TypeType.General,
-                    Customer_Company: _options.LocationCompany,
-                    Categorization_Tier_1: _options.CategorizationTier1,
-                    Categorization_Tier_2: _options.CategorizationTier2,
-                    Categorization_Tier_3: _options.CategorizationTier3,
-                    TemplateID: _options.TemplateId,
-                    Direct_Contact_First_Name: _options.CustomerFirstName,
-                    Direct_Contact_Last_Name: _options.CustomerLastName);
+//                    Work_Info_Type: Work_Info_TypeType.General,
+//                    Customer_Company: _options.LocationCompany,
+//                    Categorization_Tier_1: _options.CategorizationTier1,
+//                    Categorization_Tier_2: _options.CategorizationTier2,
+//                    Categorization_Tier_3: _options.CategorizationTier3,
+//                    TemplateID: _options.TemplateId,
+//                    Direct_Contact_First_Name: _options.CustomerFirstName,
+//                    Direct_Contact_Last_Name: _options.CustomerLastName);
 
-                var response = await _remedyClient.HelpDesk_Submit_ServiceAsync(request);
-                return response.Incident_Number;
-            }
-            catch (Exception err)
-            {
-                _logger.Error(err, "Unable to create incident in Remedy for issue { issueId }: { ErrorMessage} ", issue.Id, err.Message);
-                throw;
-            }
-        }
+//                var response = await _remedyClient.HelpDesk_Submit_ServiceAsync(request);
+//                return response.Incident_Number;
+//            }
+//            catch (Exception err)
+//            {
+//                _logger.Error(err, "Unable to create incident in Remedy for issue { issueId }: { ErrorMessage} ", issue.Id, err.Message);
+//                throw;
+//            }
+//        }
 
-    }
-}
+//    }
+//}
 
 
                     //string assigned_group, 

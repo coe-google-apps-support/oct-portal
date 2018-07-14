@@ -69,8 +69,8 @@ namespace CoE.Issues.Remedy.Watcher.Tests
         [Test]
         public async Task PollMocked()
         {
-            IRemedyChecker checker = new RemedyChecker(mockRemedyService.Object, mockIssueMessageSender.Object, mapper, mockLogger.Object, mockOptions.Object);
-            await checker.Poll();
+            //IRemedyChecker checker = new RemedyChecker(mockRemedyService.Object, mockIssueMessageSender.Object, mapper, mockLogger.Object, mockOptions.Object);
+            //await checker.Poll();
         }
 
     }
