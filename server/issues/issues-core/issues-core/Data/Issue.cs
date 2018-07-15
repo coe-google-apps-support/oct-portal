@@ -14,7 +14,7 @@ namespace CoE.Issues.Core.Data
             Uid = uid;
         }
 
-        private Issue() : base() // required for EF
+        public Issue() : base() // required for EF
         {
         }
 

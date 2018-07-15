@@ -55,5 +55,10 @@ namespace CoE.Issues.Core.ServiceBus
         {
             dictionary["Issue"] = JsonConvert.SerializeObject(issue);
         }
+
+        public Task SendNewIssueCreatedAsync(IssueNewCreatedEventArgs args)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -51,41 +51,42 @@ namespace CoE.Issues.Remedy
             return Task.CompletedTask;
         }
 
-        protected virtual async Task OnNewIssue(IssueCreatedEventArgs e, CancellationToken token)
+        protected virtual async Task OnNewIssue(IssueCreatedEventArgs issueData, CancellationToken token)
         {
-            var Issue = e.Issue;
-            var owner = e.Owner;
-            using (LogContext.PushProperty("IssueId", Issue.Id))
+            var newIssue = Issue.Create(issueData.Title, issueData.Description, "-1", "-1", "-1", "-1", DateTime.Now, -1);
+            
+
+            var newOwner = ClaimsPrincipal.Current;
+            using (LogContext.PushProperty("IssueId", newIssue.Id))
             {
-                _logger.Information("Begin OnNewIssue for Issue {IssueId}", Issue.Id);
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
                 PersonData personData;
                 try
                 {
-                    personData = await GetPersonData(owner.GetEmail());
+                    personData = await GetPersonData(newOwner.GetEmail());
                 }
                 catch (Exception err)
                 {
-                    _logger.Error(err, "Unable to get PersonData for {IssueId} from {EmailAddress}: {ErrorMessage}", Issue.Id, owner.GetEmail(), err.Message);
+                    _logger.Error(err, "Unable to get PersonData for {IssueId} from {EmailAddress}: {ErrorMessage}", newIssue.Id, newOwner.GetEmail(), err.Message);
                     throw;
                 }
 
                 string IncidentId;
                 try
                 {
-                    IncidentId = await CreateIncident(Issue, personData);
+                    IncidentId = await CreateIncident(newIssue, personData);
                 }
                 catch (Exception err)
                 {
-                    _logger.Error(err, "Unable to get create a Incident for Issue {IssueId} from {EmailAddress}: {ErrorMessage}", Issue.Id, owner.GetEmail(), err.Message);
+                    _logger.Error(err, "Unable to get create a Incident for Issue {IssueId} from {EmailAddress}: {ErrorMessage}", newIssue.Id, newOwner.GetEmail(), err.Message);
                     throw;
                 }
 
 
-                await SendIncidentCreatedMessage(Issue, owner, IncidentId);
-                _logger.Information("Processed OnNewIssue for Issue {IssueId} in {ElapsedMilliseconds}ms", Issue.Id, watch.ElapsedMilliseconds);
+                await SendIncidentCreatedMessage(newIssue, newOwner, IncidentId);
+                _logger.Information("Processed OnNewIssue for Issue {IssueId} in {ElapsedMilliseconds}ms", newIssue.Id, watch.ElapsedMilliseconds);
 
             }
         }
@@ -125,7 +126,7 @@ namespace CoE.Issues.Remedy
             Stopwatch watch = new Stopwatch();
             watch.Start();
 
-            await _IssueMessageSender.SendIssueCreatedAsync(
+            await _IssueMessageSender.SendNewIssueCreatedAsync(
                 new IssueNewCreatedEventArgs()
                 {
                     Issue = issue,
