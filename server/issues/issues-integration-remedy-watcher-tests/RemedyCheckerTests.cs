@@ -57,9 +57,9 @@ namespace CoE.Issues.Remedy.Watcher.Tests
             //DateTime recentFile = checker.TryReadLastPollTime();
            // recentFile.Should().Be(actualTime);
         }
-        
+
         [Test]
-        public async Task LogsRemedyServiceErrorsTest()
+        public void LogsRemedyServiceErrorsTest()
         {
             //IRemedyChecker checker = new RemedyChecker(remedyService, issueMessageSender, mapper, logger, remedyOptions);
             //RemedyPollResult result = await checker.PollAsync(DateTime.Now);
