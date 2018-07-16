@@ -194,10 +194,11 @@ namespace CoE.Issues.Remedy.Watcher
 
             PersonData assignee = null;
             PersonData submitter = null;
+            string assigneeGroup = workItem.Owner_Group;
 
             if (string.IsNullOrWhiteSpace(assignee3and3))
             {
-                _logger.Information("Assignee is empty");
+                _logger.Information("Assignee is empty, using assignee group");
             }
             else
             {
@@ -205,7 +206,7 @@ namespace CoE.Issues.Remedy.Watcher
                 try { assignee = await _peopleService.GetPersonAsync(assignee3and3); }
                 catch (Exception err) {
                     assignee = null;
-                    _logger.Warning(err, "Unable to get email for Remedy incident Assignee {User3and3}: {ErrorMessage}", assignee3and3, err.Message); }
+                    _logger.Warning(err, "Unable to get email for Remedy incident Assignee {User3and3}: {ErrorMessage}, using assignee group", assignee3and3, err.Message); }
             }
 
 
@@ -236,6 +237,10 @@ namespace CoE.Issues.Remedy.Watcher
                 if (assignee != null)
                 {
                     args.AssigneeEmail = assignee.Email;
+                }
+                else
+                {
+                    args.AssigneeEmail = assigneeGroup;
                 }
                 if (submitter != null)
                 {

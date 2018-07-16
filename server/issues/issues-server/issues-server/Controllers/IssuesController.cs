@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using CoE.Ideas.Shared.Data;
 using CoE.Ideas.Shared.Security;
 using CoE.Issues.Core.Data;
+using Serilog.Context;
 
 namespace CoE.Issues.Server.Controllers
 {
@@ -121,7 +122,7 @@ namespace CoE.Issues.Server.Controllers
 
                 watch.Stop();
                 _logger.Information("Created Issue in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
-                return CreatedAtAction("GetIdea", new { id = newIssue.Id }, newIssue);
+                return CreatedAtAction("GetIssue", new { id = newIssue.Id }, newIssue);
             }
             catch (Exception err)
             {
@@ -135,6 +136,71 @@ namespace CoE.Issues.Server.Controllers
             }
 
         }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetIssue([FromRoute] string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                ModelState.AddModelError("id", "id cannot be empty");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                if (!int.TryParse(id, out int initiativeId))
+                {
+                    _logger.Error($"id must be an integer if type is InitiativeKey, got { id }");
+                    ModelState.AddModelError("id", "id must be an integer if type is InitiativeKey");
+                    return BadRequest(ModelState);
+                }
+                else
+                {
+                    return await GetIssueByInitiativeId(initiativeId);
+                }
+            }
+        }
+
+        private async Task<IActionResult> GetIssueByInitiativeId(int id)
+        {
+            Stopwatch watch = new Stopwatch();
+            watch.Start();
+            try
+            {
+                return await ValidateAndGetIssue(id, initiative =>
+                {
+                    return Task.FromResult((IActionResult)Ok(initiative));
+                });
+            }
+            finally
+            {
+                watch.Stop();
+                _logger.Information("Retrieved initiative {InitiativeId} in {ElapsedMilliseconds}ms", id, watch.ElapsedMilliseconds);
+            };
+        }
+
+
+        private async Task<IActionResult> ValidateAndGetIssue(int id, Func<Issue, Task<IActionResult>> callback)
+        {
+            using (LogContext.PushProperty("InitiativeId", id))
+            {
+                _logger.Information("Retrieving initiative {InitiativeId}", id);
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.Warning("Unable to get initiative {InitiativeId} because model state is not valid");
+                    return BadRequest(ModelState);
+                }
+
+                var initiative = await _repository.GetIssueAsync(id);
+
+                if (initiative == null)
+                    return NotFound();
+
+                return await callback(initiative);
+            }
+        }
+
 
 
     }
