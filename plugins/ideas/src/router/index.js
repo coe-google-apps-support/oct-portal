@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import NewIdea from '@/components/NewIdea'
 import ViewIdeas from '@/components/ViewIdeas'
 import ViewInitiative from '@/components/ViewInitiative'
+import ViewIssues from '@/components/ViewIssues'
 
 Vue.use(Router)
 
@@ -41,6 +42,16 @@ export default new Router({
       name: 'initiatives',
       component: ViewInitiative,
       props: true
+    },
+    {
+      path: '/view-issues',
+      name: 'view-issues',
+      component: ViewIssues,
+      props: (route) => ({
+        page: Number(route.query.page),
+        pageSize: Number(route.query.pageSize),
+        contains: route.query.contains
+      })
     }
   ]
 })
