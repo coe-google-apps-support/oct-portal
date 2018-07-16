@@ -19,7 +19,7 @@
     </div>
     <md-divider></md-divider>
     <div class="card-secondary-info" style="text-align:center;">
-      Assigned to:
+      <div class="md-body-2">Assigned to</div>
       <v-popover
         :placement="placement"
         :offset="offset"
