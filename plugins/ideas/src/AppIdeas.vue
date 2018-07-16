@@ -29,7 +29,15 @@ export default {
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
   }
-
+  .review-off .md-progress-bar-fill {
+    background-color: var(--status-review) !important;
+  }
+  .complete-off .md-progress-bar-fill {
+    background-color: var(--status-complete) !important;
+  }
+  .submit-off .md-progress-bar-fill {
+    background-color: var(--status-submit) !important;
+  }
   .tooltip {
     display: block !important;
     z-index: 10000;

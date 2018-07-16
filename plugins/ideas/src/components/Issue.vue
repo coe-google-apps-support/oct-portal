@@ -121,15 +121,15 @@ export default {
 }
 
 .review-off {
-  background-color: var(--status-review-off);
+  background-color: var(--status-review-off) !important;
 }
 
 .submit-off {
-  background-color: var(--status-submit-off);
+  background-color: var(--status-submit-off) !important;
 }
 
 .complete-off {
-  background-color: var(--status-complete-off);
+  background-color: var(--status-complete-off) !important;
 }
 
 .oct-cover {
