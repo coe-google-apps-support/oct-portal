@@ -10,7 +10,7 @@ services:
       dockerfile: issues-server/issues-server/Dockerfile
 
   ideas-server:
-    image: coeoctava.azurecr.io/initiatives-webapi:dev-1.0.3456
+    image: coeoctava.azurecr.io/initiatives-webapi:v1.0.3462
     depends_on: 
       - wordpress-db
 
