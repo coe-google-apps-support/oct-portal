@@ -12,19 +12,19 @@
         </div>
         <div>
           Status: {{ issue.remedyStatus }}
-          <md-progress-bar md-mode="determinate" :md-value="amount"></md-progress-bar>
+          <md-progress-bar :class="{ 'submit-off':step1, 'review-off':step3, 'lightgreen':step2, 'complete-off':step4 }" md-mode="determinate" :md-value="amount"></md-progress-bar>
         </div>
         <div class="date-text md-subhead">{{ issue.date | formatDate }}</div>
       </div>
     </div>
     <md-divider></md-divider>
-    <div class="card-secondary-info">
+    <div class="card-secondary-info" style="text-align:center;">
       Assigned to:
       <v-popover
         :placement="placement"
         :offset="offset"
         :auto-hide="true">
-        <md-avatar class="md-alignment-center-center tooltip-target">
+        <md-avatar class="tooltip-target">
           <img src="https://media.forgecdn.net/avatars/124/768/636424778749237239.jpeg" alt="Avatar">
         </md-avatar>
 
@@ -34,8 +34,8 @@
           </md-avatar>
           <br>
           <div style="text-align:center;">
-            <div class="card-secondary-info">{{ issue.assigneeEmail | formatName }}</div>
-            <div class="card-secondary-info">{{ issue.assigneeEmail }}</div>
+            <div class="card-secondary-info md-title">{{ issue.assigneeEmail | formatName }}</div>
+            <div class="card-secondary-info md-subheading">{{ issue.assigneeEmail }}</div>
             <md-button class="md-accent md-raised" v-close-popover>Close</md-button>
           </div>
         </template>
@@ -76,16 +76,23 @@ export default {
     amount: 0,
     tooltipContent: 'test123',
     placement: 'top-center',
-    offset: 5
+    offset: 5,
+    step1: false,
+    step2: false,
+    step3: false,
+    step4: false
   }),
   methods: {
     progressBar () {
       if (this.issue.remedyStatus === 'Submitted') {
         this.amount = 33
+        this.step1 = true
       } else if (this.issue.remedyStatus === 'In Review') {
         this.amount = 66
+        this.step3 = true
       } else if (this.issue.remedyStatus === 'Completed') {
         this.amount = 100
+        this.step4 = true
       }
     }
   },
@@ -111,6 +118,18 @@ export default {
 .center1 {
   position: relative;
   left: 35%;
+}
+
+.review-off {
+  background-color: var(--status-review-off);
+}
+
+.submit-off {
+  background-color: var(--status-submit-off);
+}
+
+.complete-off {
+  background-color: var(--status-complete-off);
 }
 
 .oct-cover {
