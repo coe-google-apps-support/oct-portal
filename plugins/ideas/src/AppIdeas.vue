@@ -29,14 +29,19 @@ export default {
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
   }
+  .trigger {
+    position: relative;
+    left: 43%;
+  }
   .tooltip {
     display: block !important;
     z-index: 10000;
     .tooltip-inner {
-      background: black;
-      color: white;
-      border-radius: 16px;
-      padding: 5px 10px 4px;
+      background: #f9f9f9;
+      color: #000;
+      padding: 24px;
+      border-radius: 5px;
+      box-shadow: 0 5px 30px rgba(0,0,0,.1);
     }
     .tooltip-arrow {
       width: 0;
@@ -44,7 +49,7 @@ export default {
       border-style: solid;
       position: absolute;
       margin: 5px;
-      border-color: black;
+      border-color: #f9f9f9;
       z-index: 1;
     }
     &[x-placement^="top"] {

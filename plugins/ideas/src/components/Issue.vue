@@ -24,17 +24,20 @@
         :placement="placement"
         :offset="offset"
         :auto-hide="true">
-        <md-avatar class="tooltip-target">
+        <md-avatar class="md-alignment-center-center tooltip-target">
           <img src="https://media.forgecdn.net/avatars/124/768/636424778749237239.jpeg" alt="Avatar">
         </md-avatar>
 
         <template slot="popover">
-          <input class="tooltip-content" v-model="tooltipContent"/>
-          <p>
-            {{ tooltipContent }}
-          </p>
-
-          <button v-close-popover>Close</button>
+          <md-avatar class="center1 md-avatar-icon md-large">
+            <img src="https://media.forgecdn.net/avatars/124/768/636424778749237239.jpeg" alt="Avatar">
+          </md-avatar>
+          <br>
+          <div style="text-align:center;">
+            <div class="card-secondary-info">{{ issue.assigneeEmail | formatName }}</div>
+            <div class="card-secondary-info">{{ issue.assigneeEmail }}</div>
+            <md-button class="md-accent md-raised" v-close-popover>Close</md-button>
+          </div>
         </template>
       </v-popover>
     </div>
@@ -62,13 +65,18 @@ export default {
         return str.slice(0, MAX_LENGTH) + '...'
       }
     },
-    formatDate
+    formatDate,
+    formatName: function (value) {
+      const name = value.substring(0, value.lastIndexOf('@'))
+      const fullName = name.split('.')
+      return fullName[0].charAt(0).toUpperCase() + fullName[0].slice(1) + ' ' + fullName[1].charAt(0).toUpperCase() + fullName[1].slice(1)
+    }
   },
   data: () => ({
     amount: 0,
     tooltipContent: 'test123',
     placement: 'top-center',
-    offset: 0
+    offset: 5
   }),
   methods: {
     progressBar () {
@@ -98,6 +106,11 @@ export default {
 
 .description-container {
   height: 3.6em;
+}
+
+.center1 {
+  position: relative;
+  left: 35%;
 }
 
 .oct-cover {
