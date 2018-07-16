@@ -203,8 +203,11 @@ namespace CoE.Issues.Remedy.Watcher
             {
                 _logger.Information("Looking up assignee with 3+3 {User3and3}", assignee3and3);
                 try { assignee = await _peopleService.GetPersonAsync(assignee3and3); }
-                catch (Exception err) { _logger.Warning(err, "Unable to get email for Remedy incident Assignee {User3and3}: {ErrorMessage}", assignee3and3, err.Message); }
+                catch (Exception err) {
+                    assignee = null;
+                    _logger.Warning(err, "Unable to get email for Remedy incident Assignee {User3and3}: {ErrorMessage}", assignee3and3, err.Message); }
             }
+
 
             if (string.IsNullOrWhiteSpace(submitter3and3))
             {
@@ -214,7 +217,9 @@ namespace CoE.Issues.Remedy.Watcher
             {
                 _logger.Information("Looking up submitter with 3+3 {User3and3}", submitter3and3);
                 try { submitter = await _peopleService.GetPersonAsync(submitter3and3); }
-                catch (Exception err) { _logger.Warning(err, "Unable to get email for Remedy incident Submitter {User3and3}: {ErrorMessage}", submitter3and3, err.Message); }
+                catch (Exception err) {
+                    submitter = null;
+                    _logger.Warning(err, "Unable to get email for Remedy incident Submitter {User3and3}: {ErrorMessage}", submitter3and3, err.Message); }
             }
 
             IssueStatus? newIssueStatus = GetIssueStatusForRemedyStatus(workItem.Status);
@@ -228,12 +233,18 @@ namespace CoE.Issues.Remedy.Watcher
             {
                 // convert Remedy object to IssueCreatedEventArgs
                 var args = _mapper.Map<OutputMapping1GetListValues, IssueCreatedEventArgs>(workItem);
-                args.AssigneeEmail = assignee.Email;
-                args.RequestorEmail = submitter.Email;
-                args.RequestorGivenName = submitter.GivenName;
-                args.RequestorSurnName = submitter.Surname;
-                args.RequestorTelephone = submitter.Telephone;
-                args.RequestorDisplayName = submitter.DisplayName;
+                if (assignee != null)
+                {
+                    args.AssigneeEmail = assignee.Email;
+                }
+                if (submitter != null)
+                {
+                    args.RequestorEmail = submitter.Email;
+                    args.RequestorGivenName = submitter.GivenName;
+                    args.RequestorSurnName = submitter.Surname;
+                    args.RequestorTelephone = submitter.Telephone;
+                    args.RequestorDisplayName = submitter.DisplayName;
+                }
                 await _issueMessageSender.SendIssueCreatedAsync(args);
                 return args;
             }
