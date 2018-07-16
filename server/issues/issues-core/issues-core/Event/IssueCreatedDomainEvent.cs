@@ -12,9 +12,9 @@ namespace CoE.Issues.Core.Event
         public Guid IssueId { get; private set; }
         public int OwnerPeronId { get; private set; }
 
-        internal IssueCreatedDomainEvent(Guid IssueId, int ownerPersonId)
+        internal IssueCreatedDomainEvent(Guid issueid, int ownerPersonId)
         {
-            IssueId = IssueId;
+            IssueId = issueid;
             OwnerPeronId = ownerPersonId;
         }
     }
