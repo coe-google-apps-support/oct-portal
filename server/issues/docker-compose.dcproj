@@ -5,7 +5,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>c172ddf0-701f-4567-97d0-299b68e51210</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/api/issues</DockerServiceUrl>
+    <DockerServiceUrl>http://localhost/</DockerServiceUrl>
     <DockerServiceName>issues-server</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
