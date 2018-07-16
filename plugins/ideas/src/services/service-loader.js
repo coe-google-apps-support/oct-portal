@@ -6,14 +6,17 @@
 import { IdeasService } from './ideas/IdeasService'
 import { UserService } from './user/UserService'
 // import { StubbedIdeasService } from './ideas/StubbedIdeasService'
-// import { StubbedUserService } from './user/StubbedUserService'
+import { StubbedUserService } from './user/StubbedUserService'
+import { StubbedIssueService } from './issues/StubbedIssueService'
 
 let idea
 let user
+let issue
 
 if (process.env.NODE_ENV === 'development') {
   idea = IdeasService
-  user = UserService
+  user = StubbedUserService
+  issue = StubbedIssueService
 } else if (process.env.NODE_ENV === 'production') {
   idea = IdeasService
   user = UserService
@@ -36,6 +39,7 @@ const ServiceLoader = {
         }
         this.services.ideas = idea
         this.services.user = user
+        this.services.issues = issue
       }
     })
   }
