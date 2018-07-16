@@ -116,7 +116,7 @@ namespace CoE.Issues.Server.Controllers
             {
                 int personId = User.GetPersonId();
 
-                newIssue = Issue.Create(issueData.Title, issueData.Description, "-1","-1", "-1", "-1", DateTime.Now, -1);
+                newIssue = Issue.Create(issueData.Title, issueData.Description,  personId);
 
                 newIssue = await _repository.AddIssueAsync(newIssue);
 

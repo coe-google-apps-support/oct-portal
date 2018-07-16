@@ -1,4 +1,5 @@
-﻿using CoE.Ideas.Shared.Data;
+﻿using CoE.Issues.Core.Event;
+using CoE.Ideas.Shared.Data;
 using EnsureThat;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,31 @@ namespace CoE.Issues.Core.Data
 
         public Issue() : base() // required for EF
         {
+
+        }
+        public static Issue Create(
+        string title,
+        string description,
+        int ownerPersonId)
+        {
+            Ensure.String.IsNotNullOrWhiteSpace(title, nameof(title));
+
+
+            var issue = new Issue(Guid.NewGuid())
+            {
+                Title = title,
+                Description = description,
+                Stakeholders = new List<Stakeholder>()
+                {
+                    Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
+                },
+                CreatedDate = DateTime.UtcNow
+            };
+
+
+            issue.AddDomainEvent(new IssueCreatedDomainEvent(issue.Uid, ownerPersonId));
+
+            return issue;
         }
 
         public static Issue Create(
@@ -48,6 +74,7 @@ namespace CoE.Issues.Core.Data
                 CreatedDate = createddate
             };
 
+            
 
             return issue;
         }

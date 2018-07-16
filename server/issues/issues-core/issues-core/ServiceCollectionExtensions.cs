@@ -12,6 +12,8 @@ using Serilog;
 using CoE.Issues.Core.ServiceBus;
 using System.Linq;
 using CoE.Ideas.Shared.People;
+using MediatR;
+using CoE.Ideas.Shared.Data;
 
 namespace CoE.Issues.Core
 {
@@ -47,6 +49,8 @@ namespace CoE.Issues.Core
             }
 
 
+            services.AddMediatR();
+            services.AddScoped<DomainEvents>();
             services.AddScoped<IPersonRepository, PersonRepository>();
 
 

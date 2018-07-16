@@ -59,7 +59,9 @@ namespace CoE.Issues.Core.Services
             return issue;
         }
 
-    public async Task<Issue> GetIssueAsync(Guid id)
+        
+
+        public async Task<Issue> GetIssueAsync(Guid id)
         {
             var returnValue = await _issueContext.Issues
                 .SingleOrDefaultAsync(x => x.Uid == id);

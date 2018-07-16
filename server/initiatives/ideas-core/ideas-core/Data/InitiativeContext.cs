@@ -20,13 +20,13 @@ namespace CoE.Ideas.Core.Data
         public InitiativeContext(
             DbContextOptions<InitiativeContext> options,
             Serilog.ILogger logger,
-            DomainEvents domainEvents) : base(options)
+            Events.DomainEvents domainEvents) : base(options)
         {
             _domainEvents = domainEvents;
             _logger = logger;
         }
 
-        private readonly DomainEvents _domainEvents;
+        private readonly Events.DomainEvents _domainEvents;
         private readonly Serilog.ILogger _logger;
 
         public DbSet<Initiative> Initiatives { get; set; }

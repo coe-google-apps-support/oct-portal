@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CoE.Ideas.Shared.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CoE.Issues.Core.Data
 {
-    internal class IssueContext : DbContext
+    internal class IssueContext : EventDbContext
 #if DEBUG
      , Microsoft.EntityFrameworkCore.Design.IDesignTimeDbContextFactory<IssueContext>
 #endif
@@ -14,7 +15,9 @@ namespace CoE.Issues.Core.Data
         #region Constructors and constants
         public IssueContext(
             DbContextOptions<IssueContext> options,
-            Serilog.ILogger logger) : base(options)
+            Serilog.ILogger logger,
+            DomainEvents domainEvents
+            ) : base(options, logger, domainEvents)
         {
             _logger = logger;
         }
@@ -39,7 +42,7 @@ namespace CoE.Issues.Core.Data
             var builder = new DbContextOptionsBuilder<IssueContext>();
             builder.UseMySql("server=127.0.0.1;uid=root;pwd=octavadev;database=issues");
 
-            return new IssueContext(builder.Options, null);
+            return new IssueContext(builder.Options, null, null);
         }
 #endif
 
