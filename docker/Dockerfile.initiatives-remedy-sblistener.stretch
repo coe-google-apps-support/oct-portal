@@ -11,15 +11,15 @@ FROM microsoft/dotnet:2.0-sdk-stretch AS builder
 ARG Configuration=Release
 WORKDIR /usr/src/coe-initiatives-remedy-sblistener
 COPY ./server .
-WORKDIR /usr/src/coe-initiatives-remedy-sblistener/ideas-integration-remedy/ideas-integration-remedy-sblistener
+WORKDIR /usr/src/coe-initiatives-remedy-sblistener/initiatives/ideas-integration-remedy/ideas-integration-remedy-sblistener
 RUN dotnet publish
-WORKDIR /usr/src/coe-initiatives-remedy-sblistener/ideas-integration-remedy/ideas-integration-remedy-sblistener/bin/$Configuration/netcoreapp2.0
+WORKDIR /usr/src/coe-initiatives-remedy-sblistener/initiatives/ideas-integration-remedy/ideas-integration-remedy-sblistener/bin/$Configuration/netcoreapp2.0
 
 
 FROM microsoft/dotnet:2.0-runtime-stretch
 ARG Configuration=Release
 WORKDIR /app
-COPY --from=builder /usr/src/coe-initiatives-remedy-sblistener/ideas-integration-remedy/ideas-integration-remedy-sblistener/bin/$Configuration/netcoreapp2.0/publish  .
+COPY --from=builder /usr/src/coe-initiatives-remedy-sblistener/initiatives/ideas-integration-remedy/ideas-integration-remedy-sblistener/bin/$Configuration/netcoreapp2.0/publish  .
 
 # Move our run time scripts into our image
 COPY ./docker/scripts/remedy-sblistener-entrypoint.sh /usr/local/bin/
