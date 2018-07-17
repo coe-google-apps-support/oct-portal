@@ -32,8 +32,11 @@ export default {
   .review-off .md-progress-bar-fill {
     background-color: var(--status-review) !important;
   }
-  .complete-off .md-progress-bar-fill {
-    background-color: var(--status-complete) !important;
+  .collaborate-off .md-progress-bar-fill {
+    background-color: var(--status-collaborate) !important;
+  }
+  .deliver-off .md-progress-bar-fill {
+    background-color: var(--status-deliver) !important;
   }
   .submit-off .md-progress-bar-fill {
     background-color: var(--status-submit) !important;
