@@ -52,6 +52,17 @@ const fakeIssues = {
     'requestorName': 'Dora',
     'date': 'March 15 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
     'remedyStatus': 'Completed'
+  },
+  {
+    'id':6,
+    'title':'Wireless Mobile Device Performance Issue (Smartphone, Cell Phone, Cellular Modem, Aircard, SIM Card)',
+    'description':'Remedy UAT Testing - Midteir Upgrade\n\nOnsite Contact Name:\nOnsite Contact Number:\n\nAlternate Contact Name:\nAlternate Contact Number:\n\nService Address (Building, Floor, Address):\n\nVendor Account Number:\n\nCost Center:\nCost Center Owner:\n\nPlease provide which device type, make and model you are having issues with: (Aircard Non-Integrated, Cellular Modem, Cellular Phone, Smartphone, SIM Card)\n\n\n\nEnd User of Device:\nEnd User Contact Number:\n\nPhone number(s) having the issue:\n\nWorkstation serial number(s) (Aircrds Only):\n\nNumber of users affected:\n\nDate issue started to occur:\n\nIs this a re-occurring issue? (Yes\\No)  If yes, please provide details of past occurrences.\n\n\n\nIf this is for a repair, please indicate preferred dealer (Wireless City, Clearwest Solutions,or Alberta Mobility)\n\n\n\n\nPlease provide detailed information regarding the issue that is occurring. (Broken Screen, Not Receiving Calls, Battery Issue, Cannot access voicemail).',
+    'createdDate':'2018-07-12T20:07:25',
+    'assigneeEmail':'Linda.Hart@edmonton.ca',
+    'assigneeGroup':'Telecom',
+    'requestorName':'Linda Hart',
+    'remedyStatus':'Pending',
+    'referenceId':'INC000000192853'
   }
   ]
 }
