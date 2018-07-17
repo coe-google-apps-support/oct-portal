@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 var x = axios.create({
-  baseURL: process.env.ISSUES_API,
+  baseURL: process.env.IDEAS_API,
   headers: {
     AuthorizationEncrypted: 'true'
   }
@@ -11,11 +11,11 @@ x.setUserInfo = function (userInfo) {
   axios.defaults.headers.common['Authorization'] = 'Bearer ' + (userInfo || {}).auth
 }
 
-x.setIssuesApi = function (api) {
+x.setIdeaApi = function (api) {
   if (api) {
     x.baseURL = api
   } else {
-    axios.defaults.baseURL = process.env.ISSUES_API
+    axios.defaults.baseURL = process.env.IDEAS_API
   }
 }
 
