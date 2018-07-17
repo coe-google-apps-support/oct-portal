@@ -111,7 +111,7 @@ export default {
     if (this.filter === 'mine') {
       this.issueFunction = this.services.issues.getMyIssues
     } else {
-      this.issueFunction = this.services.issues.getMyIssues
+      this.issueFunction = this.services.issues.getIssues
     }
     this.issueFunction().then((response) => {
       this.issues = response.data
