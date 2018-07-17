@@ -5,9 +5,10 @@
 // Services
 import { IdeasService } from './ideas/IdeasService'
 import { UserService } from './user/UserService'
+import { IssueService } from './issues/IssueService'
 // import { StubbedIdeasService } from './ideas/StubbedIdeasService'
-import { StubbedUserService } from './user/StubbedUserService'
-import { StubbedIssueService } from './issues/StubbedIssueService'
+// import { StubbedUserService } from './user/StubbedUserService'
+// import { StubbedIssueService } from './issues/StubbedIssueService'
 
 let idea
 let user
@@ -15,8 +16,8 @@ let issue
 
 if (process.env.NODE_ENV === 'development') {
   idea = IdeasService
-  user = StubbedUserService
-  issue = StubbedIssueService
+  user = UserService
+  issue = IssueService
 } else if (process.env.NODE_ENV === 'production') {
   idea = IdeasService
   user = UserService
