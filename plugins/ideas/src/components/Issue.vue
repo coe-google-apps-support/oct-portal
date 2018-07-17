@@ -57,14 +57,6 @@ export default {
     DiviButton
   },
   filters: {
-    truncate (str) {
-      const MAX_LENGTH = 300
-      if (str.length < MAX_LENGTH) {
-        return str
-      } else {
-        return str.slice(0, MAX_LENGTH) + '...'
-      }
-    },
     formatDate,
     formatName: function (value) {
       const name = value.substring(0, value.lastIndexOf('@'))
