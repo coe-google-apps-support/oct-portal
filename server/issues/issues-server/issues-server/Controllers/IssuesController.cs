@@ -77,7 +77,7 @@ namespace CoE.Issues.Server.Controllers
                         Id = x.Id,
                         Description = x.Description,
                         Title = x.Title,
-                        CreatedDate = x.CreatedDate,
+                        CreatedDate = ConvertTimeToAlberta(x.CreatedDate),
                         AssigneeEmail = x.AssigneeEmail,
                         AssigneeGroup = x.AssigneeGroup,
                         RequestorName = x.RequestorName,
@@ -200,6 +200,23 @@ namespace CoE.Issues.Server.Controllers
 
                 return await callback(initiative);
             }
+        }
+
+
+        public DateTime ConvertTimeToAlberta(DateTime utctime)
+        {
+            TimeZoneInfo albertaTimeZone;
+            try { albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton"); }
+            catch (TimeZoneNotFoundException)
+            {
+                _logger.Error("Unable to find Mountain Standard Time zone");
+                throw;
+            }
+            var nowAlberta = TimeZoneInfo.ConvertTimeFromUtc(utctime, albertaTimeZone);
+
+            return nowAlberta;
+
+
         }
 
 

@@ -72,7 +72,7 @@ namespace CoE.Issues.Core.ServiceBus
             if (msg.MessageProperties.ContainsKey("RequestorSurnName")) args.RequestorSurnName = msg.MessageProperties["RequestorSurnName"] as string;
             if (msg.MessageProperties.ContainsKey("RequestorDisplayName")) args.RequestorDisplayName = msg.MessageProperties["RequestorDisplayName"] as string;
             var createdDate = await GetMessageProperty<DateTime>(msg, propertyName: nameof(IssueCreatedEventArgs.CreatedDate));
-            args.CreatedDate = ConvertTimeToAlberta(createdDate.Item);
+            args.CreatedDate = createdDate.Item;
 
 
 
@@ -148,21 +148,7 @@ namespace CoE.Issues.Core.ServiceBus
             public bool WasMessageDeadLettered { get; private set; }
         }
 
-        public DateTime ConvertTimeToAlberta(DateTime utctime)
-        {
-            TimeZoneInfo albertaTimeZone;
-            try { albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton"); }
-            catch (TimeZoneNotFoundException)
-            {
-                _logger.Error("Unable to find Mountain Standard Time zone");
-                throw;
-            }
-            var nowAlberta = TimeZoneInfo.ConvertTimeFromUtc(utctime, albertaTimeZone);
 
-            return nowAlberta;
-
-
-        }
 
         
 
