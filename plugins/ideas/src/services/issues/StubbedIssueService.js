@@ -1,7 +1,7 @@
 const fakeIssues = {
   data: [{
     'id': 0,
-    'title': 'Ticket 1',
+    'title': 'Ticket 1 laptop oh no loptop noooo',
     'description': 'My laptop broke! Nothing I do works, everything is broken.. help please please. I\'ve got work to do and I cannot do anything until this laptop is fixed oh dear...',
     'assigneeEmail': 'harry.potter@edmonton.ca',
     'requestorName': 'Phil',
@@ -34,6 +34,24 @@ const fakeIssues = {
     'requestorName': 'Josh',
     'date': 'July 3 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
     'remedyStatus': 'In Review'
+  },
+  {
+    'id': 4,
+    'title': 'Ticket 3',
+    'description': 'New monitor for computer.',
+    'assigneeEmail': 'ron.weasley@edmonton.ca',
+    'requestorName': 'Dora',
+    'date': 'March 15 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
+    'remedyStatus': 'Completed'
+  },
+  {
+    'id': 5,
+    'title': 'Ticket 3',
+    'description': 'New monitor for computer.',
+    'assigneeEmail': 'ron.weasley@edmonton.ca',
+    'requestorName': 'Dora',
+    'date': 'March 15 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
+    'remedyStatus': 'Completed'
   }
   ]
 }
@@ -87,7 +105,7 @@ let x = class StubbedIssueService {
    */
   static getMyIssues (page, pageSize, contains) {
     let myIssues = { data: null }
-    myIssues.data = [fakeIssues.data[0], fakeIssues.data[1], fakeIssues.data[2], fakeIssues.data[3]]
+    myIssues.data = [fakeIssues.data[0], fakeIssues.data[1], fakeIssues.data[2], fakeIssues.data[3], fakeIssues.data[4], fakeIssues.data[5]]
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {
