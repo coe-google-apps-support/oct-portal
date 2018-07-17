@@ -79,6 +79,7 @@ namespace CoE.Issues.Server.Controllers
                         Title = x.Title,
                         CreatedDate = x.CreatedDate,
                         AssigneeEmail = x.AssigneeEmail,
+                        AssigneeGroup = x.AssigneeGroup,
                         RequestorName = x.RequestorName,
                         RemedyStatus = x.RemedyStatus,
                         ReferenceId = x.ReferenceId,

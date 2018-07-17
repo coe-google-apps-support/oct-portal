@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CoE.Ideas.Shared.ServiceBus;
 using CoE.Issues.Core.Data;
 using EnsureThat;
 using Newtonsoft.Json;
@@ -43,10 +44,12 @@ namespace CoE.Issues.Core.ServiceBus
             userProperties["RequestorSurnName"] = args.RequestorSurnName;
             userProperties["RequestorDisplayName"] = args.RequestorDisplayName;
             userProperties["RequestorTelephone"] = args.RequestorTelephone;
+            userProperties["RequestorEmail"] = args.RequestorEmail;
             userProperties["ReferenceId"] = args.ReferenceId;
             userProperties["AssigneeEmail"] = args.AssigneeEmail;
-            userProperties["RequestorEmail"] = args.RequestorEmail;
+            userProperties["AssigneeGroup"] = args.AssigneeGroup;
             userProperties["CreatedDate"] = args.CreatedDate;
+           
 
             return _messageSender.SendMessageAsync(ISSUE_CREATED, userProperties);
         }
@@ -61,5 +64,7 @@ namespace CoE.Issues.Core.ServiceBus
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

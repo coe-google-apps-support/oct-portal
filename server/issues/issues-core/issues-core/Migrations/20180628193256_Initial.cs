@@ -15,7 +15,6 @@ namespace CoE.Issues.Core.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AssigneeId = table.Column<int>(nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Title = table.Column<string>(maxLength: 255, nullable: false),

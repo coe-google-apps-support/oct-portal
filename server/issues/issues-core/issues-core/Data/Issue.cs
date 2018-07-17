@@ -51,6 +51,7 @@ namespace CoE.Issues.Core.Data
             string remedystatus,
             string requestorname,
             string assigneeemail,
+            string assigneegroup,
             DateTime createddate,
             int ownerPersonId
             )
@@ -66,6 +67,7 @@ namespace CoE.Issues.Core.Data
                 RemedyStatus = remedystatus,
                 RequestorName = requestorname,
                 AssigneeEmail = assigneeemail,
+                AssigneeGroup = assigneegroup,
 
                 Stakeholders = new List<Stakeholder>()
                 {
@@ -95,30 +97,13 @@ namespace CoE.Issues.Core.Data
         /// </summary>
         public string Description { get; private set; }
 
-        /// <summary>
-        /// The date this issue was created.
-        /// </summary>
         public DateTime CreatedDate { get;  set; }
 
-        /// <summary>
-        /// The people that have some stake in the idea, will always include the owner
-        /// </summary>
         public ICollection<Stakeholder> Stakeholders { get; private set; }
 
-        /// <summary>
-        /// The reference id from another system (currently Remedy).
-        /// </summary>
-        //public string ReferenceId { get; private set; }
-    
-        /// <summary>
-        /// The person currently assigned to the issue.
-        /// </summary>
-        /// <remarks>
-        /// Can be null
-        /// </remarks>
-        public int? AssigneeId { get; private set; }
-
         public string AssigneeEmail { get; set; }
+        public string AssigneeGroup { get; set; }
+
         public string RequestorName { get; set; }
         public string RemedyStatus { get; set; }
         public string ReferenceId { get; set; }

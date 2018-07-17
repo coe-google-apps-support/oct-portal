@@ -23,9 +23,10 @@ namespace CoE.Issues.Server.Models
         public string Description { get; set; }
 
         [Required]
-        public DateTimeOffset CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         public string AssigneeEmail { get; set; }
+        public string AssigneeGroup { get; set; }
         public string RequestorName { get; set; }
         public string RemedyStatus { get; set; }
         public string ReferenceId { get; set; }

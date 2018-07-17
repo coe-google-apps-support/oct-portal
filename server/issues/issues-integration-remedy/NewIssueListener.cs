@@ -53,7 +53,7 @@ namespace CoE.Issues.Remedy
 
         protected virtual async Task OnNewIssue(IssueCreatedEventArgs issueData, CancellationToken token)
         {
-            var newIssue = Issue.Create(issueData.Title, issueData.Description, "-1", "-1", "-1", "-1", DateTime.Now, -1);
+            var newIssue = Issue.Create(issueData.Title, issueData.Description, -1);
             
 
             var newOwner = ClaimsPrincipal.Current;

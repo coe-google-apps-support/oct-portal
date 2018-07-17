@@ -28,6 +28,7 @@ namespace CoE.Issues.Core.Data
         public DateTime CreatedDate { get; private set; }
 
         public string AssigneeEmail { get; private set; }
+        public string AssigneeGroup { get; private set; }
         public string RequestorName { get; private set; }
         public string RemedyStatus { get; private set; }
         public string ReferenceId { get; private set; }
@@ -41,6 +42,7 @@ namespace CoE.Issues.Core.Data
                 Description = issue.Description,
                 CreatedDate = issue.CreatedDate,
                 AssigneeEmail = issue.AssigneeEmail,
+                AssigneeGroup = issue.AssigneeGroup,
                 RequestorName = issue.RequestorName,
                 RemedyStatus = issue.RemedyStatus,
                 ReferenceId = issue.ReferenceId

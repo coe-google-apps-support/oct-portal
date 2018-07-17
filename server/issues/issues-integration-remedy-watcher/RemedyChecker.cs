@@ -191,14 +191,14 @@ namespace CoE.Issues.Remedy.Watcher
 
             string assignee3and3 = workItem.Assignee_Login_ID;
             string submitter3and3 = workItem.Submitter;
+            string assigneeGroup = workItem.Owner_Group;
 
             PersonData assignee = null;
             PersonData submitter = null;
-            string assigneeGroup = workItem.Owner_Group;
 
             if (string.IsNullOrWhiteSpace(assignee3and3))
             {
-                _logger.Information("Assignee is empty, using assignee group");
+                _logger.Information("Assignee is empty");
             }
             else
             {
@@ -234,14 +234,12 @@ namespace CoE.Issues.Remedy.Watcher
             {
                 // convert Remedy object to IssueCreatedEventArgs
                 var args = _mapper.Map<OutputMapping1GetListValues, IssueCreatedEventArgs>(workItem);
+                args.AssigneeGroup = assigneeGroup;
                 if (assignee != null)
                 {
                     args.AssigneeEmail = assignee.Email;
                 }
-                else
-                {
-                    args.AssigneeEmail = assigneeGroup;
-                }
+
                 if (submitter != null)
                 {
                     args.RequestorEmail = submitter.Email;
@@ -268,8 +266,11 @@ namespace CoE.Issues.Remedy.Watcher
             IssueStatus newIdeaStatus;
             switch (remedyStatusType)
             {
-                case StatusType.Assigned:
+                case StatusType.New:
                     newIdeaStatus = IssueStatus.Submit;
+                    break;
+                case StatusType.Assigned:
+                    newIdeaStatus = IssueStatus.Collaborate;
                     break;
                 case StatusType.Cancelled:
                     newIdeaStatus = IssueStatus.Cancelled;

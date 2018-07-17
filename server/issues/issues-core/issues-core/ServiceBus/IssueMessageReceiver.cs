@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace CoE.Issues.Core.ServiceBus
 {
-     internal abstract class IssueMessageReceiver : IIssueMessageReceiver
+    internal abstract class IssueMessageReceiver : IIssueMessageReceiver
     {
 
         public IssueMessageReceiver(IMessageReceiver messageReceiver,
@@ -36,16 +36,16 @@ namespace CoE.Issues.Core.ServiceBus
                 _logger.Information("Received service bus message {MessageId}: {Label}", msg.Id.ToString(), msg.Label);
 
 
-            switch (msg.Label)
-            {
-                case IssueMessageSender.ISSUE_CREATED:
-                    {
-                        if (issueCreatedHandler != null)
-                            await ReceiveIssueCreated(msg, token, issueCreatedHandler);
-                        else
-                            await _messageReceiver.CompleteAsync(msg.LockToken);
-                        break;
-                    }
+                switch (msg.Label)
+                {
+                    case IssueMessageSender.ISSUE_CREATED:
+                        {
+                            if (issueCreatedHandler != null)
+                                await ReceiveIssueCreated(msg, token, issueCreatedHandler);
+                            else
+                                await _messageReceiver.CompleteAsync(msg.LockToken);
+                            break;
+                        }
                     default:
                         {
                             await _messageReceiver.DeadLetterAsync(msg.LockToken, $"Unknown message type: { msg.Label }");
@@ -65,14 +65,16 @@ namespace CoE.Issues.Core.ServiceBus
             if (msg.MessageProperties.ContainsKey("RemedyStatus")) args.RemedyStatus = msg.MessageProperties["RemedyStatus"] as string;
             if (msg.MessageProperties.ContainsKey("ReferenceId")) args.ReferenceId = msg.MessageProperties["ReferenceId"] as string;
             if (msg.MessageProperties.ContainsKey("AssigneeEmail")) args.AssigneeEmail = msg.MessageProperties["AssigneeEmail"] as string;
+            if (msg.MessageProperties.ContainsKey("AssigneeGroup")) args.AssigneeGroup = msg.MessageProperties["AssigneeGroup"] as string;
             if (msg.MessageProperties.ContainsKey("RequestorEmail")) args.RequestorEmail = msg.MessageProperties["RequestorEmail"] as string;
             if (msg.MessageProperties.ContainsKey("RequestorTelephone")) args.RequestorTelephone = msg.MessageProperties["RequestorTelephone"] as string;
             if (msg.MessageProperties.ContainsKey("RequestorGivenName")) args.RequestorGivenName = msg.MessageProperties["RequestorGivenName"] as string;
             if (msg.MessageProperties.ContainsKey("RequestorSurnName")) args.RequestorSurnName = msg.MessageProperties["RequestorSurnName"] as string;
             if (msg.MessageProperties.ContainsKey("RequestorDisplayName")) args.RequestorDisplayName = msg.MessageProperties["RequestorDisplayName"] as string;
-            //if (msg.MessageProperties.ContainsKey("CreatedDate")) args.CreatedDate = msg.MessageProperties["CreatedDate"] as DateTime;
+            var createdDate = await GetMessageProperty<DateTime>(msg, propertyName: nameof(IssueCreatedEventArgs.CreatedDate));
+            args.CreatedDate = ConvertTimeToAlberta(createdDate.Item);
 
-            
+
 
             // call the handler registered for this event
             await issueCreatedHandler(args, token);
@@ -83,6 +85,89 @@ namespace CoE.Issues.Core.ServiceBus
             _logger.Error(err.Exception, "Error receiving message: {ErrorMessage}", err.Exception.Message);
             return Task.CompletedTask;
         }
+
+        protected virtual async Task<GetItemResult<T>> GetMessageProperty<T>(Ideas.Shared.ServiceBus.Message message, string propertyName, bool allowNull = false)
+        {
+            if (message == null)
+                throw new ArgumentNullException("msg");
+
+            var result = new GetItemResult<T>();
+            if (!message.MessageProperties.ContainsKey(propertyName))
+            {
+                string errorMessage = $"{ propertyName } not found in message";
+                result.SetMessageDeadLettered(errorMessage);
+                await _messageReceiver.DeadLetterAsync(message.LockToken, errorMessage);
+            }
+            else
+            {
+                object propertyObj = message.MessageProperties[propertyName];
+                if (propertyObj == null)
+                {
+                    if (!allowNull)
+                    {
+                        string errorMessage = $"{ propertyName } was null";
+                        _logger.Error("{PropertyName} was empty in Service Bus message", propertyName);
+                        result.SetMessageDeadLettered(errorMessage);
+                        await _messageReceiver.DeadLetterAsync(message.LockToken, errorMessage);
+                    }
+                    // else return null (or default) and don't dead letter
+                }
+                else
+                {
+                    try
+                    {
+                        result.Item = (T)propertyObj;
+                    }
+                    catch (Exception)
+                    {
+                        string errorMessage = $"{ propertyName } was not of type { typeof(T).FullName }";
+                        _logger.Error("{PropertyName} had value {Value}, which was not of the expected type '{Type}", propertyName, propertyObj, typeof(T).FullName);
+                        result.SetMessageDeadLettered(errorMessage);
+                        await _messageReceiver.DeadLetterAsync(message.LockToken, errorMessage);
+                    }
+                }
+            }
+
+            return result;
+        }
+        public class GetItemResult<T>
+        {
+            public GetItemResult()
+            {
+                errorsList = new List<string>();
+                WasMessageDeadLettered = false; // until set by SetMessageDeadLettered()
+            }
+            public T Item { get; set; }
+            private IList<string> errorsList;
+            public IEnumerable<string> Errors { get { return errorsList; } }
+            public void SetMessageDeadLettered(string reason)
+            {
+                WasMessageDeadLettered = true;
+                errorsList.Add(reason);
+            }
+            public bool WasMessageDeadLettered { get; private set; }
+        }
+
+        public DateTime ConvertTimeToAlberta(DateTime utctime)
+        {
+            TimeZoneInfo albertaTimeZone;
+            try { albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton"); }
+            catch (TimeZoneNotFoundException)
+            {
+                _logger.Error("Unable to find Mountain Standard Time zone");
+                throw;
+            }
+            var nowAlberta = TimeZoneInfo.ConvertTimeFromUtc(utctime, albertaTimeZone);
+
+            return nowAlberta;
+
+
+        }
+
+        
+
+
+       
 
 
     }

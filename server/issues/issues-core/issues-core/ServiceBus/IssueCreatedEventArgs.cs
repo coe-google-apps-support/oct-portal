@@ -16,6 +16,7 @@ namespace CoE.Issues.Core.ServiceBus
         public string ReferenceId { get; set; }
         public string RequestorDisplayName { get; set; }
         public string AssigneeEmail { get; set; }
+        public string AssigneeGroup { get; set; }
         public DateTime CreatedDate { get; set; }
 
 
