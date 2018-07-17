@@ -32,7 +32,7 @@ COPY --from=issues-web /usr/src/coe-issues/plugins/issues-build/ ./wwwroot
 EXPOSE 5000
 
 # Move our run time scripts into our image
-COPY ./docker/scripts/webapi-entrypoint.sh /usr/local/bin/webapi-entrypoint.sh
-RUN chmod +x /usr/local/bin/webapi-entrypoint.sh
+COPY ./docker/scripts/issues-webapi-entrypoint.sh /usr/local/bin/issues-webapi-entrypoint.sh
+RUN chmod +x /usr/local/bin/issues-webapi-entrypoint.sh
 
-CMD /bin/bash /usr/local/bin/webapi-entrypoint.sh
+CMD /bin/bash /usr/local/bin/issues-webapi-entrypoint.sh
