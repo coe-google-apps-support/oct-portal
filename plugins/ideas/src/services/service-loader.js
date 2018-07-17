@@ -21,12 +21,15 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.NODE_ENV === 'production') {
   idea = IdeasService
   user = UserService
+  issue = IssueService
 } else if (process.env.NODE_ENV === 'integration') {
   idea = IdeasService
   user = UserService
+  issue = IssueService
 } else if (process.env.NODE_ENV === 'local') {
   idea = IdeasService
   user = UserService
+  issue = IssueService
 } else {
   throw new Error(`Unknown environment: ${process.env.NODE_ENV}`)
 }

@@ -13,7 +13,7 @@ import { HTTP } from '../../HttpCommon'
  */
 let x = class IssueService {
   static getIssues (page, pageSize, contains) {
-    return HTTP.get('', {
+    return HTTP.get('/plugins/issues/api', {
       params: {
         page,
         pageSize,
@@ -23,7 +23,7 @@ let x = class IssueService {
   }
 
   static getMyIssues (page, pageSize, contains) {
-    return HTTP.get('', {
+    return HTTP.get('/plugins/issues/api', {
       params: {
         view: 'Mine',
         page,
@@ -34,7 +34,7 @@ let x = class IssueService {
   }
 
   static getIssueByID (id) {
-    return HTTP.get(`/${id}`).then((response) => {
+    return HTTP.get(`/plugins/issues/api/${id}`).then((response) => {
       return response.data
     }, (err) => {
       console.error(`Failed at route /${id}`)
@@ -43,7 +43,7 @@ let x = class IssueService {
   }
 
   static createIssue (title, description) {
-    return HTTP.post('', {
+    return HTTP.post('/plugins/issues/api', {
       title,
       description
     })
