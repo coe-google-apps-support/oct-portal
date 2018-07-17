@@ -20,7 +20,7 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with an array of ideas.
    */
   static getIdeas (page, pageSize, contains) {
-    return HTTP.get('/plugins/initiatives/api', {
+    return HTTP.get('', {
       params: {
         page,
         pageSize,
@@ -37,7 +37,7 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with an array of my initiatives.
    */
   static getMyInitiatives (page, pageSize, contains) {
-    return HTTP.get('/plugins/initiatives/api', {
+    return HTTP.get('', {
       params: {
         view: 'Mine',
         page,
@@ -53,7 +53,7 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with an initiative.
    */
   static getInitiative (id) {
-    return HTTP.get(`/plugins/initiatives/api/${id}`).then((response) => {
+    return HTTP.get(`${id}`).then((response) => {
       return response.data
     }, (err) => {
       console.error(`Failed at route /${id}`)
@@ -67,7 +67,7 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with an initiative.
    */
   static getInitiativeBySlug (slug) {
-    return HTTP.get(`/plugins/initiatives/api/${slug}?type=slug`).then((response) => {
+    return HTTP.get(`${slug}?type=slug`).then((response) => {
       return response.data
     }, (err) => {
       console.error(`Failed at route /${slug}?type=slug`)
@@ -81,7 +81,7 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with an initiatives steps.
    */
   static getInitiativeSteps (id) {
-    return HTTP.get(`/plugins/initiatives/api/${id}/steps`).then((response) => {
+    return HTTP.get(`${id}/steps`).then((response) => {
       if (response.data) {
         return response.data
       } else {
@@ -101,7 +101,7 @@ let x = class IdeasService {
    * @param {string} type The type of the supporting document.
    */
   static createSupportingDoc (id, title, url, type) {
-    return HTTP.post(`/plugins/initiatives/api/${id}/supportingdocuments`, {
+    return HTTP.post(`${id}/supportingdocuments`, {
       title,
       url,
       type
@@ -113,7 +113,7 @@ let x = class IdeasService {
    * @returns {Promise} Resolved with the supporting document(s).
    */
   static getSupportingDoc (id) {
-    return HTTP.get(`/plugins/initiatives/api/${id}/supportingdocuments`).catch((err) => {
+    return HTTP.get(`${id}/supportingdocuments`).catch((err) => {
       console.error(`Failed at route /${id}/supportingdocuments`)
       console.error(err)
     })
@@ -129,7 +129,7 @@ let x = class IdeasService {
    * @param {Date} expectedTargetDate When should this be delivered?
    */
   static createInitiative (title, description, supportingDocuments, businessSponsorEmail, hasBudget, expectedTargetDate) {
-    return HTTP.post('/plugins/initiatives/api/', {
+    return HTTP.post('', {
       title,
       description,
       supportingDocuments,
@@ -145,7 +145,7 @@ let x = class IdeasService {
    * @return {Promise} A Promise that resolves with the information of the assignee.
    */
   static getAssignee (id) {
-    return HTTP.get(`/plugins/initiatives/api/${id}/assignee`).then((assignee) => {
+    return HTTP.get(`${id}/assignee`).then((assignee) => {
       return assignee
     }, (issue) => {
       if (issue.response && issue.response.status === 404) {
@@ -163,7 +163,7 @@ let x = class IdeasService {
    * @return {Promise} A Promise that resolves with the resources.
    */
   static getResources (id) {
-    return HTTP.get(`/plugins/initiatives/api/${id}/resources`).then((response) => {
+    return HTTP.get(`${id}/resources`).then((response) => {
       console.log(response)
       return response.data
     }, (issue) => {
@@ -182,7 +182,7 @@ let x = class IdeasService {
    * @return {Promise} A promise resolved with the updated initiative.
    */
   static updateInitiative (initiative) {
-    return HTTP.put(`/plugins/initiatives/api/${initiative.id}`, initiative)
+    return HTTP.put(`${initiative.id}`, initiative)
   }
 
   /**
@@ -192,7 +192,7 @@ let x = class IdeasService {
    * @return {Promise} A promise resolved with the url if successful.
    */
   static updateBusinessCase (id, url) {
-    return HTTP.put(`/plugins/initiatives/api/${id}/businessCase`, {
+    return HTTP.put(`${id}/businessCase`, {
       businessCaseUrl: url
     })
   }
@@ -204,7 +204,7 @@ let x = class IdeasService {
    * @return {Promise} A promise resolved with the url if successful.
    */
   static updateInvestmentForm (id, url) {
-    return HTTP.put(`/plugins/initiatives/api/${id}/investmentForm`, {
+    return HTTP.put(`${id}/investmentForm`, {
       investmentRequestFormUrl: url
     })
   }
@@ -217,7 +217,7 @@ let x = class IdeasService {
    * @return {Promise} A promise resolved if the operation was successful.
    */
   static updateStatusDescription (id, stepId, newDescription) {
-    return HTTP.put(`/plugins/initiatives/api/${id}/statusDescription`, { stepId, newDescription }).then(() => {
+    return HTTP.put(`${id}/statusDescription`, { stepId, newDescription }).then(() => {
       console.log('Success')
     }, (err) => {
       console.error(`Failed at route ${id}/statusDescription`)
