@@ -85,15 +85,7 @@ namespace CoE.Ideas.Shared.Extensions
             return _gc.GetWeekOfYear(time, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
         }
 
-        public static DateTime ConvertTimeToAlberta(DateTime utctime)
-        {
-            TimeZoneInfo albertaTimeZone;
-            albertaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("America/Edmonton"); 
-            var nowAlberta = TimeZoneInfo.ConvertTimeFromUtc(utctime, albertaTimeZone);
-            return nowAlberta;
 
-
-        }
 
 
     }
