@@ -1,5 +1,5 @@
 <template>
-  <md-card class="card md-with-hover">
+  <md-card class="md-with-hover">
     <md-card-header>
       <md-toolbar md-elevation="1">
         <span class="md-title"> {{ issue.title }}</span>
@@ -7,13 +7,11 @@
     </md-card-header>
     <div>
       <div class="card-secondary-info">
-        <div class="description-container">
-          <div class ="description-text">{{ issue.description }}</div>
-        </div>
-        <div>
-          Status: {{ issue.remedyStatus }}
-          <md-progress-bar :class="{ 'submit-off':step1, 'review-off':step3, 'lightgreen':step2, 'complete-off':step4 }" md-mode="determinate" :md-value="amount"></md-progress-bar>
-        </div>
+        <div class ="description-text">{{ issue.description }}</div>
+      <div>
+        Status: <a class="md-body-2">{{ issue.remedyStatus }}</a>
+        <md-progress-bar :class="{ 'submit-off':step1, 'review-off':step3, 'lightgreen':step2, 'complete-off':step4 }" md-mode="determinate" :md-value="amount"></md-progress-bar>
+      </div>
         <div class="date-text md-subhead">{{ issue.date | formatDate }}</div>
       </div>
     </div>
@@ -100,7 +98,8 @@ export default {
 
 .description-text {
   position: relative;
-  @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: #fafafa);
+  // @include multiLineEllipsis($lineHeight: 1.2em, $lineCount: 3, $bgColor: #fafafa);
+  word-wrap: break-word;
 }
 
 .description-container {
