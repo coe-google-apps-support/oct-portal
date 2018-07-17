@@ -16,7 +16,7 @@ using Serilog.Context;
 namespace CoE.Issues.Server.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api")]
 
     //[Route("api")]
     public class IssuesController : Controller

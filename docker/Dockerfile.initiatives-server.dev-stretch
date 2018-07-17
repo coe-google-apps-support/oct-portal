@@ -20,9 +20,9 @@ VOLUME /app
 
 WORKDIR /app
 COPY ./server/shared-kernel ./shared-kernel
-COPY ./server/ideas-core/ideas-core ./ideas-core/ideas-core
-COPY ./server/ideas-server/ideas-server ./ideas-server/ideas-server
-WORKDIR /app/ideas-server/ideas-server
+COPY ./server/initiatives/ideas-core/ideas-core ./initiatives/ideas-core/ideas-core
+COPY ./server/initiatives/ideas-server/ideas-server ./initiatives/ideas-server/ideas-server
+WORKDIR /app/initiatives/ideas-server/ideas-server
 
 RUN dotnet restore
 RUN dotnet build

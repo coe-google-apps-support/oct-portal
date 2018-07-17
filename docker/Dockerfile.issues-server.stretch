@@ -1,0 +1,38 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t coeoctava.azurecr.io/issues-webapi:latest -t coeoctava.azurecr.io/issues-webapi:stretch -f docker/Dockerfile.issues-server.stretch .
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker push coeoctava.azurecr.io/issues-webapi:stretch
+# docker push coeoctava.azurecr.io/issues-webapi:latest
+
+FROM microsoft/aspnetcore-build:2.0-stretch AS issues-server
+ARG Configuration=Release
+WORKDIR /usr/src/coe-issues/web
+COPY server .
+WORKDIR /usr/src/coe-issues/web/issues/issues-server/issues-server
+RUN dotnet publish --configuration $Configuration
+WORKDIR /usr/src/coe-issues/web/issues/issues-server/issues-server/bin/$Configuration/netcoreapp2.0
+
+
+FROM node:9.10 AS issues-web
+WORKDIR /usr/src/coe-issues/plugins/issues
+COPY /plugins/ideas .
+RUN npm install
+RUN npm rebuild node-sass # fix for running linux on Windows Docker, doesn't hurt for straight linux either
+RUN npm run build -- /usr/src/coe-issues/plugins/issues-build
+
+
+FROM microsoft/aspnetcore:2.0-stretch
+ARG Configuration=Release
+WORKDIR /app
+COPY --from=issues-server /usr/src/coe-issues/web/issues/issues-server/issues-server/bin/$Configuration/netcoreapp2.0/publish  .
+COPY --from=issues-web /usr/src/coe-issues/plugins/issues-build/ ./wwwroot
+
+EXPOSE 5000
+
+# Move our run time scripts into our image
+COPY ./docker/scripts/issues-webapi-entrypoint.sh /usr/local/bin/issues-webapi-entrypoint.sh
+RUN chmod +x /usr/local/bin/issues-webapi-entrypoint.sh
+
+CMD /bin/bash /usr/local/bin/issues-webapi-entrypoint.sh
