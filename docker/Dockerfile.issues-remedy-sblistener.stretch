@@ -1,0 +1,28 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t coeoctava.azurecr.io/issues-remedy-sblistener:stretch -t coeoctava.azurecr.io/issues-remedy-sblistener:latest -f docker/Dockerfile.issues-remedy-sblistener.stretch .
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker tag coeoctava.azurecr.io/issues-remedy-sblistener:latest coeoctava.azurecr.io/issues-remedy-sblistener:v1.0.x
+# docker push coeoctava.azurecr.io/issues-remedy-sblistener:stretch
+# docker push coeoctava.azurecr.io/issues-remedy-sblistener:latest
+
+FROM microsoft/dotnet:2.0-sdk-stretch AS builder
+ARG Configuration=Release
+WORKDIR /usr/src/coe-issues-remedy-sblistener
+COPY ./server .
+WORKDIR /usr/src/coe-issues-remedy-sblistener/issues/issues-integration-remedy-sblistener
+RUN dotnet publish
+WORKDIR /usr/src/coe-issues-remedy-sblistener/issues/issues-integration-remedy-sblistener/bin/$Configuration/netcoreapp2.0
+
+
+FROM microsoft/dotnet:2.0-runtime-stretch
+ARG Configuration=Release
+WORKDIR /app
+COPY --from=builder /usr/src/coe-issues-remedy-sblistener/issues/issues-integration-remedy-sblistener/bin/$Configuration/netcoreapp2.0/publish  .
+
+# Move our run time scripts into our image
+COPY ./docker/scripts/issues-remedy-sblistener-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/issues-remedy-sblistener-entrypoint.sh
+
+CMD /bin/bash /usr/local/bin/issues-remedy-sblistener-entrypoint.sh
