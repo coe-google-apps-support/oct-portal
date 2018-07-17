@@ -8,7 +8,7 @@
 # And to push to the CoE Azure Repo (requires credentials):
 # docker push coeoctava.azurecr.io/initiatives-vue:vs-1.0.0
 
-FROM node:9.10 AS initiatives-web
+FROM node:9.10
 
 WORKDIR /app
 ADD ./plugins/ideas .
