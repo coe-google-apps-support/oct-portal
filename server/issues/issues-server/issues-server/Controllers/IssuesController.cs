@@ -15,7 +15,7 @@ using CoE.Issues.Core.Data;
 namespace CoE.Issues.Server.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api")]
 
     //[Route("api")]
     public class IssuesController : Controller

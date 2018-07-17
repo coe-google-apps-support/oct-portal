@@ -10,7 +10,7 @@ services:
       dockerfile: issues-server/issues-server/Dockerfile
 
   ideas-server:
-    image: coeoctava.azurecr.io/initiatives-webapi:v1.0.3462
+    image: coeoctava.azurecr.io/initiatives-webapi:dev-1.0.3463
     depends_on: 
       - wordpress-db
 
@@ -44,7 +44,7 @@ services:
       dockerfile: issues-integration-remedy-sblistener/Dockerfile
 
   initiatives-vue:
-    image: coeoctava.azurecr.io/initiatives-vue:dev-1.0.3456
+    image: coeoctava.azurecr.io/initiatives-vue:dev-1.0.3463
     ports:
       - "8080:8080"
     restart: always
@@ -70,7 +70,7 @@ services:
       - wordpress
       - issues-server
       - initiatives-vue
-    image: coeoctava.azurecr.io/nginx:v1.0.3455
+    image: coeoctava.azurecr.io/nginx:v1.0.3463
     restart: always
     ports:
       - "80:80"
