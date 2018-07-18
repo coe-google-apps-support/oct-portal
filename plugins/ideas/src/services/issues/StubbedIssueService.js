@@ -3,7 +3,6 @@ const fakeIssues = {
     'referenceId': 'INC000000192901',
     'title': 'Ticket 1 laptop oh no loptop noooo',
     'description': 'My laptop broke! Nothing I do works, everything is broken.. help please please. I\'ve got work to do and I cannot do anything until this laptop is fixed oh dear...',
-    'assigneeEmail': 'harry.potter@edmonton.ca',
     'requestorName': 'Phil',
     'createdDate': 'May 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
     'remedyStatus': 'New'
