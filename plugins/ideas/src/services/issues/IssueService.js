@@ -12,16 +12,6 @@ import { HTTP } from '../../HttpCommon'
  * idea.stakeholders[0].userName
  */
 let x = class IssueService {
-  static getIssues (page, pageSize, contains) {
-    return HTTP.get('/plugins/issues/api', {
-      params: {
-        page,
-        pageSize,
-        contains
-      }
-    })
-  }
-
   static getMyIssues (page, pageSize, contains) {
     return HTTP.get('/plugins/issues/api', {
       params: {

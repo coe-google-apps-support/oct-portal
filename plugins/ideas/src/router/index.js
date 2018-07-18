@@ -44,21 +44,10 @@ export default new Router({
       props: true
     },
     {
-      path: '/view-issues',
-      name: 'view-issues',
-      component: ViewIssues,
-      props: (route) => ({
-        page: Number(route.query.page),
-        pageSize: Number(route.query.pageSize),
-        contains: route.query.contains
-      })
-    },
-    {
       path: '/my-issues',
       name: 'my-issues',
       component: ViewIssues,
       props: (route) => ({
-        filter: 'mine',
         page: Number(route.query.page),
         pageSize: Number(route.query.pageSize),
         contains: route.query.contains

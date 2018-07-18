@@ -41,7 +41,6 @@ import DiviButton from '@/components/divi/DiviButton'
 export default {
   name: 'ViewIssues',
   props: {
-    filter: String,
     contains: String,
     page: Number,
     pageSize: Number
@@ -108,20 +107,8 @@ export default {
       this.dataPageSize = 20
     }
     this.issues.splice(0, this.issues.length)
-    if (this.filter === 'mine') {
-      this.issueFunction = this.services.issues.getMyIssues
-    } else {
-      this.issueFunction = this.services.issues.getIssues
-    }
-    this.issueFunction().then((response) => {
-      this.issues = response.data
-      console.log(this.issues)
-      for (let i = 0; i < this.issues.length; i++) {
-        this.issues[i].isLoading = false
-      }
-    }, (e) => {
-      this.errors.push(e)
-    })
+    this.issueFunction = this.services.issues.getMyIssues
+    this.requestAPI(this.dataPage, this.dataPageSize, '')
     this.isLoading = false
     this.isLast = true
   }

@@ -88,35 +88,11 @@ let x = class StubbedIssueService {
    * @param {String} contains A search string to apply.
    * @returns {Promise} Resolved with an array of ideas.
    */
-  static getIssues (page, pageSize, contains) {
-    let issues = { data: [] }
-
-    // TODO Use array.splice to make this cool.
-    for (let i = (page - 1) * pageSize; i < page * pageSize && i < fakeIssues.data.length; i++) {
-      if (contains && (fakeIssues.data[i].title + fakeIssues.data[i].description).indexOf(contains) !== -1) {
-        issues.data.push(fakeIssues.data[i])
-      } else if (!contains) {
-        issues.data.push(fakeIssues.data[i])
-      }
-    }
-
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(issues)
-      }, QUERY_TIMEOUT)
-    })
-  }
-
-  /**
-   * Returns a Promise that resolves with a list of ideas.
-   * @param {Number} page The 1-indexed page number.
-   * @param {Number} pageSize The number of results to return.
-   * @param {String} contains A search string to apply.
-   * @returns {Promise} Resolved with an array of ideas.
-   */
   static getMyIssues (page, pageSize, contains) {
     let myIssues = { data: null }
     myIssues.data = [fakeIssues.data[0], fakeIssues.data[1], fakeIssues.data[2], fakeIssues.data[3], fakeIssues.data[4], fakeIssues.data[5]]
+    myIssues.headers = []
+    myIssues.headers['x-is-last-page'] = 'True'
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {
