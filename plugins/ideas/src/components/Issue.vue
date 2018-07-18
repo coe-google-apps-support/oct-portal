@@ -1,5 +1,5 @@
 <template>
-  <md-card class="md-with-hover">
+  <md-card :class="statusClass(issue.remedyStatus) + ' md-with-hover color-corner '">
     <md-card-header>
       <span class="md-title"> {{ issue.title }}</span>
     </md-card-header>
@@ -8,7 +8,7 @@
         <div class ="description-text">{{ issue.description }}</div>
         <div>
           Status: <a class="md-body-2">{{ issue.remedyStatus | displayStatus }}</a>
-          <md-progress-bar :class="issue.remedyStatus | statusClass" md-mode="determinate" 
+          <md-progress-bar md-mode="determinate" 
             :md-value="issue.remedyStatus | statusAmount"></md-progress-bar>
         </div>
         <div class="info-line">
@@ -61,7 +61,6 @@ export default {
     formatDate,
     displayStatus,
     statusAmount,
-    statusClass,
     formatName: function (value) {
       const name = value.substring(0, value.lastIndexOf('@'))
       const fullName = name.split('.')
@@ -87,6 +86,7 @@ export default {
     //    Deliver = 6,
   }),
   methods: {
+    statusClass,
     progressBar () {
       if (this.issue.remedyStatus === 'Cancelled') {
         this.amount = 100
@@ -118,6 +118,17 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import '../mixins.scss';
+
+.color-corner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-width: 30px;
+  border-style: solid;
+}
 
 .info-line {
   display: flex;
