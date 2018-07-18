@@ -484,7 +484,7 @@ let x = class StubbedIdeasService {
       }, QUERY_TIMEOUT)
     })
   }
-  
+
   static getSupportingDoc (id) {
     let supportingDocs = { data: null }
     supportingDocs.data = [fakeIdeas.data[0].supportingDoc, fakeIdeas.data[1].supportingDoc, fakeIdeas.data[2].supportingDoc]
