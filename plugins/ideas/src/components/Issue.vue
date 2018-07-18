@@ -25,12 +25,12 @@
         :offset="offset"
         :auto-hide="true">
         <md-avatar class="tooltip-target">
-          <img src="https://media.forgecdn.net/avatars/124/768/636424778749237239.jpeg" alt="Avatar">
+          <img src="https://i.imgur.com/FD51R30.png" alt="Avatar">
         </md-avatar>
 
         <template slot="popover">
           <md-avatar class="center1 md-avatar-icon md-large">
-            <img src="https://media.forgecdn.net/avatars/124/768/636424778749237239.jpeg" alt="Avatar">
+            <img src="https://i.imgur.com/FD51R30.png" alt="Avatar">
           </md-avatar>
           <br>
           <div style="text-align:center;">
