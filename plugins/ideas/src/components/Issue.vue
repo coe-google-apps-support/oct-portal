@@ -1,18 +1,20 @@
 <template>
   <md-card class="md-with-hover">
     <md-card-header>
-      <md-toolbar md-elevation="1">
-        <span class="md-title"> {{ issue.title }}</span>
-      </md-toolbar>
+      <span class="md-title"> {{ issue.title }}</span>
     </md-card-header>
     <div>
       <div class="card-secondary-info">
         <div class ="description-text">{{ issue.description }}</div>
-      <div>
-        Status: <a class="md-body-2">{{ issue.remedyStatus }}</a>
-        <md-progress-bar :class="{ 'submit-off':step1, 'review-off':step3, 'collaborate-off':step2, 'deliver-off':step4 }" md-mode="determinate" :md-value="amount"></md-progress-bar>
-      </div>
-        <div class="date-text md-subhead">{{ issue.date | formatDate }}</div>
+        <div>
+          Status: <a class="md-body-2">{{ issue.remedyStatus | displayStatus }}</a>
+          <md-progress-bar :class="issue.remedyStatus | statusClass" md-mode="determinate" 
+            :md-value="issue.remedyStatus | statusAmount"></md-progress-bar>
+        </div>
+        <div class="info-line">
+          <div class="md-subhead">{{ issue.referenceId }}</div>
+          <div class="date-text md-subhead">{{ issue.createdDate | formatDate }}</div>
+        </div>
       </div>
     </div>
     <md-divider></md-divider>
@@ -45,6 +47,7 @@
 <script>
 import formatDate from '@/utils/format-date-since'
 import DiviButton from '@/components/divi/DiviButton'
+import { displayStatus, statusAmount, statusClass } from '@/data/issue-status.js'
 
 export default {
   name: 'Issue',
@@ -56,6 +59,9 @@ export default {
   },
   filters: {
     formatDate,
+    displayStatus,
+    statusAmount,
+    statusClass,
     formatName: function (value) {
       const name = value.substring(0, value.lastIndexOf('@'))
       const fullName = name.split('.')
@@ -112,6 +118,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import '../mixins.scss';
+
+.info-line {
+  display: flex;
+}
+
+.info-line > * {
+  flex-grow: 1;
+}
 
 .description-text {
   position: relative;

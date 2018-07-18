@@ -29,18 +29,58 @@ export default {
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
   }
-  .review-off .md-progress-bar-fill {
-    background-color: var(--status-review) !important;
+
+  // Issue Status background colors
+
+  .issue-new.md-progress-bar {
+    background-color: var(--status-new-alt) !important;
   }
-  .collaborate-off .md-progress-bar-fill {
-    background-color: var(--status-collaborate) !important;
+  .issue-new .md-progress-bar-fill {
+    background-color: var(--status-new) !important;
   }
-  .deliver-off .md-progress-bar-fill {
-    background-color: var(--status-deliver) !important;
+
+  .issue-assigned .md-progress-bar-fill {
+    background-color: var(--status-assigned) !important;
   }
-  .submit-off .md-progress-bar-fill {
-    background-color: var(--status-submit) !important;
+  .issue-assigned.md-progress-bar {
+    background-color: var(--status-assigned-alt) !important;
   }
+
+  .issue-inprogress .md-progress-bar-fill {
+    background-color: var(--status-inprogress) !important;
+  }
+  .issue-inprogress.md-progress-bar {
+    background-color: var(--status-inprogress-alt) !important;
+  }
+
+  .issue-resolved .md-progress-bar-fill {
+    background-color: var(--status-resolved) !important;
+  }
+  .issue-resolved.md-progress-bar {
+    background-color: var(--status-resolved-alt) !important;
+  }
+
+  .issue-closed .md-progress-bar-fill {
+    background-color: var(--status-closed) !important;
+  }
+  .issue-closed.md-progress-bar {
+    background-color: var(--status-closed-alt) !important;
+  }
+
+  .issue-cancelled .md-progress-bar-fill {
+    background-color: var(--status-cancelled) !important;
+  }
+  .issue-cancelled.md-progress-bar {
+    background-color: var(--status-cancelled-alt) !important;
+  }
+
+  .issue-pending .md-progress-bar-fill {
+    background-color: var(--status-pending) !important;
+  }
+  .issue-pending.md-progress-bar {
+    background-color: var(--status-pending-alt) !important;
+  }
+
   .tooltip {
     display: block !important;
     z-index: 10000;
