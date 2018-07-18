@@ -1,31 +1,25 @@
 <template>
   <div>
-    <br>
-    <transition name="fade">
-      <div class="min-height">
-        <div v-if="issues && issues.length" class="md-layout md-alignment-top-center">
-          <issue v-for="issue in issues"
-            :key="issue.id" 
-            :issue="issue"
-            class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
-          </issue>
-        </div>
-        <div v-if="issues.length === 0 && isLoading == false">
-          <md-empty-state
-            md-icon="confirmation_number"
-            md-label="No issues found!"
-            md-description="Oops! We couldn't find anything.">
-          </md-empty-state>
-        </div>
-        <div v-if="isLoading" class="md-layout md-alignment-center-center">
-          <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
-        </div>
-        <div class="center-children" v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
-          <divi-button class="md-accent" @click.native="infiniteHandler">Load more</divi-button>
-        </div>
-      </div>
-    </transition>
-    
+    <auto-responsive v-bind="gridOptions" v-if="issues && issues.length">
+      <issue v-for="issue in issues"
+        :key="issue.id" 
+        :issue="issue"
+        class="issue">
+      </issue>
+    </auto-responsive>
+    <div v-if="issues.length === 0 && isLoading == false">
+      <md-empty-state
+        md-icon="confirmation_number"
+        md-label="No issues found!"
+        md-description="Oops! We couldn't find anything.">
+      </md-empty-state>
+    </div>
+    <div v-if="isLoading" class="md-layout md-alignment-center-center">
+      <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+    </div>
+    <div class="center-children" v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
+      <divi-button class="md-accent" @click.native="infiniteHandler">Load more</divi-button>
+    </div>
   </div>    
 </template>
 
@@ -54,7 +48,15 @@ export default {
     issueFunction: null,
     isLast: false,
     isLoading: true,
-    showSnackbar: false
+    showSnackbar: false,
+    gridOptions: {
+      itemMargin: 10,
+      containerWidth: document.body.clientWidth,
+      containerHeight: document.body.clientHeight,
+      itemClassName: 'issue',
+      gridWidth: 100,
+      transitionDuration: '.5'
+    }
   }),
   components: {
     Issue,
@@ -94,7 +96,7 @@ export default {
     }
   },
   created () {
-    console.log('created')
+    console.log(document.body.clientWidth)
     // I couldn't get prop defaults to play nicely so I went with this.
     // TODO figure out better defaults props/data
     if (this.page) {
@@ -111,11 +113,10 @@ export default {
     if (this.filter === 'mine') {
       this.issueFunction = this.services.issues.getMyIssues
     } else {
-      this.issueFunction = this.services.issues.getIssues
+      this.issueFunction = this.services.issues.getMyIssues
     }
     this.issueFunction().then((response) => {
       this.issues = response.data
-      console.log(this.issues)
       for (let i = 0; i < this.issues.length; i++) {
         this.issues[i].isLoading = false
       }
@@ -136,6 +137,10 @@ export default {
     z-index: 9!important;
   }
 
+  .issue {
+    width: 300px;
+    height: 500px;
+  }
   .center {
     display: block;
     margin-left: auto;

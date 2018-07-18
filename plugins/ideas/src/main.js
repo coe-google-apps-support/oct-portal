@@ -7,11 +7,13 @@ import VueMaterial from 'vue-material'
 import 'vue-material/dist/vue-material.min.css'
 import ServiceLoader from './services/service-loader.js'
 import VTooltip from 'v-tooltip'
+import AutoResponsive from 'autoresponsive-vue'
 
 Vue.config.productionTip = false
 Vue.use(VueMaterial)
 Vue.use(ServiceLoader)
 Vue.use(VTooltip)
+Vue.use(AutoResponsive)
 
 /* eslint-disable no-new */
 new Vue({
