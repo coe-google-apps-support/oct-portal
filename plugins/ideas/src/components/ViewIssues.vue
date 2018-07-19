@@ -1,12 +1,23 @@
 <template>
   <div>
-    <auto-responsive v-bind="gridOptions" v-if="issues && issues.length">
-      <issue v-for="issue in issues"
-        :key="issue.id" 
-        :issue="issue"
-        class="issue">
-      </issue>
-    </auto-responsive>
+    <waterfall :line-gap="200" :watch="items" line="v">
+      <waterfall-slot
+        v-for="(item, index) in items"
+        :width="item.width"
+        :height="item.height"
+        :order="index"
+        :key="item.id">
+        <test
+        :item="item" 
+        :key="index">
+        </test> 
+        <!-- <issue v-for="issue in issues"
+          :key="issue.id" 
+          :issue="issue"
+          >
+        </issue> -->
+      </waterfall-slot>
+    </waterfall>
     <div v-if="issues.length === 0 && isLoading == false">
       <md-empty-state
         md-icon="confirmation_number"
@@ -20,7 +31,7 @@
     <div class="center-children" v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
       <divi-button class="md-accent" @click.native="infiniteHandler">Load more</divi-button>
     </div>
-  </div>    
+  </div>   
 </template>
 
 <script>
@@ -30,7 +41,10 @@
 // This could be important if we wanted to allow paging from outside an iframe, for example.
 
 import Issue from '@/components/Issue'
+import test from '@/components/test'
 import DiviButton from '@/components/divi/DiviButton'
+import Waterfall from 'vue-waterfall/lib/waterfall'
+import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
 
 export default {
   name: 'ViewIssues',
@@ -49,18 +63,49 @@ export default {
     isLast: false,
     isLoading: true,
     showSnackbar: false,
-    gridOptions: {
-      itemMargin: 10,
-      containerWidth: document.body.clientWidth,
-      containerHeight: document.body.clientHeight,
-      itemClassName: 'issue',
-      gridWidth: 100,
-      transitionDuration: '.5'
-    }
+    width: 4000,
+    height: 4000,
+    items: [
+      {
+        'id': 1,
+        'height': 100,
+        'width': 200},
+      {
+        'id': 2,
+        'height': 100,
+        'width': 400},
+      {
+        'id': 3,
+        'height': 100,
+        'width': 100},
+      {
+        'id': 4,
+        'height': 200,
+        'width': 400},
+      {
+        'id': 5,
+        'height': 300,
+        'width': 300},
+      {
+        'id': 6,
+        'height': 400,
+        'width': 500},
+      {
+        'id': 7,
+        'height': 600,
+        'width': 700},
+      {
+        'id': 8,
+        'height': 600,
+        'width': 200}
+    ]
   }),
   components: {
     Issue,
-    DiviButton
+    DiviButton,
+    Waterfall,
+    WaterfallSlot,
+    test
   },
   methods: {
     openURL (url) {
@@ -96,7 +141,7 @@ export default {
     }
   },
   created () {
-    console.log(document.body.clientWidth)
+    console.log('created')
     // I couldn't get prop defaults to play nicely so I went with this.
     // TODO figure out better defaults props/data
     if (this.page) {
@@ -117,6 +162,7 @@ export default {
     }
     this.issueFunction().then((response) => {
       this.issues = response.data
+      console.log(this.issues)
       for (let i = 0; i < this.issues.length; i++) {
         this.issues[i].isLoading = false
       }
@@ -137,10 +183,6 @@ export default {
     z-index: 9!important;
   }
 
-  .issue {
-    width: 300px;
-    height: 500px;
-  }
   .center {
     display: block;
     margin-left: auto;

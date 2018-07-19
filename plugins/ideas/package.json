@@ -24,11 +24,11 @@
     "vue-infinite-loading": "^2.3.1",
     "vue-material": "1.0.0-beta-7",
     "vue-router": "^3.0.1",
+    "vue-waterfall": "^1.0.6",
     "vuelidate": "^0.6.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
-    "autoresponsive-vue": "^1.0.22",
     "babel-core": "^6.22.1",
     "babel-eslint": "^7.1.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
