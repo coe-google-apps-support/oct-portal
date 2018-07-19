@@ -29,7 +29,8 @@ namespace CoE.Issues.Remedy.SbListener
             _logger = logger ?? throw new ArgumentException("logger");
             _userRepository = userRepository;
             issueMessageReceiver.ReceiveMessages(
-                issueCreatedHandler: OnIssueCreated);
+                issueCreatedHandler: OnIssueCreated,
+                issueUpdateHandler: OnIssueUpdated);
 
         }
 
@@ -64,23 +65,82 @@ namespace CoE.Issues.Remedy.SbListener
 
                 int ownerPersonId = userId.GetValueOrDefault();
 
+                Issue oldIssue = null;
+                oldIssue = await GetIssueByIncidentId(args.ReferenceId);
+                if (oldIssue != null)
+                {
+                    _logger.Information("Found Issue {IssueId} in database, old status {IssueStatus}, new status {newIssueStatus}", args.ReferenceId, oldIssue.RemedyStatus, args.RemedyStatus );
+                    await _issueRepository.DeleteIssueAsync(oldIssue, token);
+                }
+
                 try
                 {
-                    var issue = Issue.Create(args.Title, args.Description, args.ReferenceId, args.RemedyStatus, args.RequestorDisplayName, args.AssigneeEmail,args.AssigneeGroup, args.CreatedDate, ownerPersonId);
-                    _logger.Information("Saving Issue {IssueId} to database", args.ReferenceId);
-                    await _issueRepository.AddIssueAsync(issue, token);
+                        var issue = Issue.Create(args.Title, args.Description, args.ReferenceId, args.RemedyStatus, args.RequestorDisplayName, args.AssigneeEmail, args.AssigneeGroup, args.CreatedDate, ownerPersonId);
+                        _logger.Information("Saving Issue {IssueId} to database", args.ReferenceId);
+                        await _issueRepository.AddIssueAsync(issue, token);
 
-                }
-                catch (Exception err)
-                {
-                    _logger.Error(err, "Unable to set work item id to Issue. Will retry later. Error was: {ErrorMessage}",
-                        err.Message);
-                    throw;
-                }
+                    }
+                    catch (Exception err)
+                    {
+                        _logger.Error(err, "Unable to set work item id to Issue. Will retry later. Error was: {ErrorMessage}",
+                            err.Message);
+                        throw;
+                    }
+          
+
             }
 
 
         }
+
+        protected virtual async Task<Issue> OnIssueUpdated(IncidentUpdatedEventArgs args, CancellationToken token)
+        {
+            if (args == null)
+                throw new ArgumentNullException("args");
+            if (string.IsNullOrWhiteSpace(args.IncidentId))
+                throw new ArgumentException("IncidentId cannot be empty");
+            if (string.IsNullOrWhiteSpace(args.UpdatedStatus))
+                throw new ArgumentException("UpdatedStatus cannot be empty");
+
+            using (LogContext.PushProperty("IncidentId", args.IncidentId))
+            {
+                Issue idea = await GetIssueByIncidentId(args.IncidentId);
+
+                if (idea == null)
+                    _logger.Warning("Remedy message received for WorkItemId {IncidentId} but could not find an associated issue", args.IncidentId);
+                else
+                {
+                    using (LogContext.PushProperty("IssueId", idea.Id))
+                    {
+                        var workOrderStatus = Enum.Parse<IssueStatus>(args.UpdatedStatus);
+
+                        bool anyChange = UpdateIssueAssignee(idea, args.AssigneeEmail, args.AssigneeDisplayName);
+                        anyChange = UpdateIssueWithNewIncidentStatus(idea, workOrderStatus, args.UpdatedDateUtc) || anyChange;
+                        if (anyChange)
+                            await _issueRepository.UpdateIssueAsync(idea);
+                    }
+                }
+
+                return idea;
+            }
+        }
+
+        protected async Task<Issue> GetIssueByIncidentId(string incidentId)
+        {
+            Issue idea = null;
+            try
+            {
+                idea = await _issueRepository.GetIssueByIncidentIdAsync(incidentId);
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err, "Received WorkItem change notification from Remedy for item with Id {WorkOrderId} but got the following error when looking it up in the Idea repository: {ErrorMessage}",
+                    incidentId, err.Message);
+                idea = null;
+            }
+            return idea;
+        }
+
 
         private async Task<int?> GetOrCreateUserIdAsync(string email, string givenname, string surnname, string telephone)
         {
@@ -111,6 +171,40 @@ namespace CoE.Issues.Remedy.SbListener
             }
 
             return userId;
+        }
+
+
+        private bool UpdateIssueAssignee(Issue issue, string assigneeEmail, string assigneeDisplayName)
+        {
+
+
+            if (issue.AssigneeEmail != assigneeEmail)
+            {
+                _logger.Information("Updating assignee from id " + issue.AssigneeEmail + " to {AssigneeId}", assigneeEmail);
+                issue.AssigneeEmail = assigneeEmail;
+                return true;
+            }
+            else
+            {
+                _logger.Information("Not updating assignee because the AssigneeId has not changed ({AssigneeId})", assigneeEmail);
+                return false;
+            }
+        }
+
+        protected bool UpdateIssueWithNewIncidentStatus(Issue issue, IssueStatus newIdeaStatus, DateTime workOrderLastModifiedUtc)
+        {
+            if (issue.RemedyStatus != newIdeaStatus.ToString())
+            {
+                _logger.Information("Updating status of issue {InitiativeId} from {FromInitiativeStatus} to {ToIdeaStatus} because Remedy was updated on {LastModifiedDateUtc}",
+                    issue.Id, issue.RemedyStatus, newIdeaStatus, workOrderLastModifiedUtc);
+                issue.RemedyStatus = newIdeaStatus.ToString();
+                return true;
+            }
+            else
+            {
+                _logger.Information("Not updating status because it has not changed from: {Status}", issue.RemedyStatus);
+                return false;
+            }
         }
 
 

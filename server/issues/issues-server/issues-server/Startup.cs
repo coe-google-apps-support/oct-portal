@@ -53,8 +53,12 @@ namespace CoE.Issues.Server
                 services.AddWordPressSecurity(Configuration.GetSection("WordPress"));
             }
 
-            services.AddIssueMessaging(Configuration.GetConnectionString("IdeaServiceBus"),
-                Configuration["Ideas:ServiceBusTopic"]);
+            services.AddIssueMessaging(Configuration["ServiceBus:ConnectionString"],
+                Configuration["ServiceBus:TopicName"],
+                Configuration["ServiceBus:Subscription"]);
+
+            //services.AddIssueMessaging(Configuration.GetConnectionString("IdeaServiceBus"),
+            //    Configuration["Ideas:ServiceBusTopic"]);
 
             services.AddMvc().AddJsonOptions(options => {
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

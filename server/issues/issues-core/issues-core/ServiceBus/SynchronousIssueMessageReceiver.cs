@@ -4,8 +4,7 @@ using System.Text;
 
 namespace CoE.Issues.Core.ServiceBus
 {
-    public class IssueNewCreatedEventArgs : IncidentUpdatedEventArgs
+    public class SynchronousIssueMessageReceiver
     {
-        public string IncidentId { get; set; }
     }
 }

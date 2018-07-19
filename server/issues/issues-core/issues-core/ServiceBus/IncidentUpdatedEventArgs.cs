@@ -1,16 +1,18 @@
-﻿using CoE.Issues.Core.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Security.Claims;
-
 
 namespace CoE.Issues.Core.ServiceBus
 {
     public class IncidentUpdatedEventArgs
-    {
 
-        public Issue Issue { get; set; }
-        public ClaimsPrincipal Owner { get; set; }
+    {
+        public string IncidentId { get; set; }
+        public DateTime UpdatedDateUtc { get; set; }
+        public string UpdatedStatus { get; set; }
+        public string AssigneeEmail { get; set; }
+        public string AssigneeDisplayName { get; set; }
+        public string RemedyStatus { get; set; }
+
     }
 }

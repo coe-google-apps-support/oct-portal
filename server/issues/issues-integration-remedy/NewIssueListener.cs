@@ -36,7 +36,7 @@ namespace CoE.Issues.Remedy
             _logger = logger ?? throw new ArgumentNullException("logger");
 
             _logger.Information("Starting messsage pump for New Issues");
-            IssueMessageReceiver.ReceiveMessages(issueCreatedHandler: OnNewIssue);
+            IssueMessageReceiver.ReceiveMessages(newissueCreatedHandler: OnNewIssue);
         }
 
         private readonly IIssueMessageReceiver _IssueMessageReceiver;
@@ -51,12 +51,11 @@ namespace CoE.Issues.Remedy
             return Task.CompletedTask;
         }
 
-        protected virtual async Task OnNewIssue(IssueCreatedEventArgs issueData, CancellationToken token)
+        protected virtual async Task OnNewIssue(NewIssueCreatedEventArgs issueData, CancellationToken token)
         {
-            var newIssue = Issue.Create(issueData.Title, issueData.Description, -1);
-            
+            var newIssue = issueData.Issue;
+            var newOwner = issueData.Owner;
 
-            var newOwner = ClaimsPrincipal.Current;
             using (LogContext.PushProperty("IssueId", newIssue.Id))
             {
                 Stopwatch watch = new Stopwatch();
@@ -127,7 +126,7 @@ namespace CoE.Issues.Remedy
             watch.Start();
 
             await _IssueMessageSender.SendNewIssueCreatedAsync(
-                new IssueNewCreatedEventArgs()
+                new NewIssueCreatedEventArgs()
                 {
                     Issue = issue,
                     Owner = owner,

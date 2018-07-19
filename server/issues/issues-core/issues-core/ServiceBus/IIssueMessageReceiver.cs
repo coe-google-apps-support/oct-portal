@@ -10,6 +10,8 @@ namespace CoE.Issues.Core.ServiceBus
     {
         void ReceiveMessages(
             Func<IssueCreatedEventArgs, CancellationToken, Task> issueCreatedHandler = null,
+            Func<NewIssueCreatedEventArgs, CancellationToken, Task> newissueCreatedHandler = null,
+            Func<IncidentUpdatedEventArgs, CancellationToken, Task> issueUpdateHandler = null,
             MessageHandlerOptions options = null
             );
     }

@@ -10,6 +10,9 @@ namespace CoE.Issues.Core.Services
     public interface IIssueRepository
     {
         Task<Issue> AddIssueAsync(Issue issue, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Issue> DeleteIssueAsync(Issue issue, CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<Issue> GetIssueByIncidentIdAsync(string incidentId);
         Task<Issue> UpdateIssueAsync(Issue ssue);
         Task<Issue> GetIssueAsync(Guid id);
         Task<PagedResultSet<IssueInfo>> GetIssuesAsync(string filter = null,

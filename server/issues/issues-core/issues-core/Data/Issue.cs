@@ -39,7 +39,7 @@ namespace CoE.Issues.Core.Data
             };
 
 
-            issue.AddDomainEvent(new IssueCreatedDomainEvent(issue.Uid, ownerPersonId));
+            issue.AddDomainEvent(new IssueNewCreatedDomainEvent(issue.Uid, ownerPersonId));
 
             return issue;
         }
@@ -107,9 +107,6 @@ namespace CoE.Issues.Core.Data
         public string RequestorName { get; set; }
         public string RemedyStatus { get; set; }
         public string ReferenceId { get; set; }
-        
-
-
 
     }
 }
