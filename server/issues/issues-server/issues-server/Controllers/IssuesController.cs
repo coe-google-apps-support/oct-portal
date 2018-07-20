@@ -59,13 +59,16 @@ namespace CoE.Issues.Server.Controllers
             watch.Start();
             try
             {
-                if (view == ViewOptions.Mine)
-                {
-                    issuesInfo = await _repository.GetIssuesByStakeholderPersonIdAsync(User.GetPersonId(),
-                        filter: contains, pageNumber: page, pageSize: pageSize);
-                }
-                else
-                    issuesInfo = await _repository.GetIssuesAsync(filter: contains, page: page, pageSize: pageSize);
+                issuesInfo = await _repository.GetIssuesByStakeholderPersonIdAsync(User.GetPersonId(),
+                    filter: contains, pageNumber: page, pageSize: pageSize);
+                //if (view == ViewOptions.Mine)
+                //{
+                //    issuesInfo = await _repository.GetIssuesByStakeholderPersonIdAsync(User.GetPersonId(),
+                //        filter: contains, pageNumber: page, pageSize: pageSize);
+                //}
+                //else
+
+                //    issuesInfo = await _repository.GetIssuesAsync(filter: contains, page: page, pageSize: pageSize);
                 watch.Stop();
                 _logger.Information("Retrieved {IssueCount} issues in {ElapsedMilliseconds}ms", issuesInfo.ResultCount, watch.ElapsedMilliseconds);
                 Request.HttpContext.Response.Headers.Add("X-Total-Count", issuesInfo.TotalCount.ToString());

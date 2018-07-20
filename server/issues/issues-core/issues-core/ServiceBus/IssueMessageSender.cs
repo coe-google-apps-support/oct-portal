@@ -28,7 +28,6 @@ namespace CoE.Issues.Core.ServiceBus
 
         internal const string ISSUE_CREATED = "Issue Created";
         internal const string New_ISSUE_CREATED = "New Issue Created";
-        internal const string INCIDENT_CREATED = "Incident Created";
 
         public Task SendIssueCreatedAsync(IssueCreatedEventArgs args)
         {
