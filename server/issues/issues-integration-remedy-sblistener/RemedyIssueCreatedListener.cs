@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog.Context;
-using CoE.Ideas.Shared.People;
 using System.Diagnostics;
+using CoE.Ideas.Shared.People;
 
 namespace CoE.Issues.Remedy.SbListener
 {
@@ -29,8 +29,7 @@ namespace CoE.Issues.Remedy.SbListener
             _logger = logger ?? throw new ArgumentException("logger");
             _userRepository = userRepository;
             issueMessageReceiver.ReceiveMessages(
-                issueCreatedHandler: OnIssueCreated,
-                issueUpdateHandler: OnIssueUpdated);
+                issueCreatedHandler: OnIssueCreated);
 
         }
 
@@ -93,52 +92,21 @@ namespace CoE.Issues.Remedy.SbListener
 
         }
 
-        protected virtual async Task<Issue> OnIssueUpdated(IncidentUpdatedEventArgs args, CancellationToken token)
-        {
-            if (args == null)
-                throw new ArgumentNullException("args");
-            if (string.IsNullOrWhiteSpace(args.IncidentId))
-                throw new ArgumentException("IncidentId cannot be empty");
-            if (string.IsNullOrWhiteSpace(args.UpdatedStatus))
-                throw new ArgumentException("UpdatedStatus cannot be empty");
-
-            using (LogContext.PushProperty("IncidentId", args.IncidentId))
-            {
-                Issue idea = await GetIssueByIncidentId(args.IncidentId);
-
-                if (idea == null)
-                    _logger.Warning("Remedy message received for WorkItemId {IncidentId} but could not find an associated issue", args.IncidentId);
-                else
-                {
-                    using (LogContext.PushProperty("IssueId", idea.Id))
-                    {
-                        var workOrderStatus = Enum.Parse<IssueStatus>(args.UpdatedStatus);
-
-                        bool anyChange = UpdateIssueAssignee(idea, args.AssigneeEmail, args.AssigneeDisplayName);
-                        anyChange = UpdateIssueWithNewIncidentStatus(idea, workOrderStatus, args.UpdatedDateUtc) || anyChange;
-                        if (anyChange)
-                            await _issueRepository.UpdateIssueAsync(idea);
-                    }
-                }
-
-                return idea;
-            }
-        }
-
+        
         protected async Task<Issue> GetIssueByIncidentId(string incidentId)
         {
-            Issue idea = null;
+            Issue issue = null;
             try
             {
-                idea = await _issueRepository.GetIssueByIncidentIdAsync(incidentId);
+                issue = await _issueRepository.GetIssueByIncidentIdAsync(incidentId);
             }
             catch (Exception err)
             {
-                _logger.Error(err, "Received WorkItem change notification from Remedy for item with Id {WorkOrderId} but got the following error when looking it up in the Idea repository: {ErrorMessage}",
+                _logger.Error(err, "Received WorkItem change notification from Remedy for item with Id {WorkOrderId} but got the following error when looking it up in the issue repository: {ErrorMessage}",
                     incidentId, err.Message);
-                idea = null;
+                issue = null;
             }
-            return idea;
+            return issue;
         }
 
 
@@ -172,41 +140,6 @@ namespace CoE.Issues.Remedy.SbListener
 
             return userId;
         }
-
-
-        private bool UpdateIssueAssignee(Issue issue, string assigneeEmail, string assigneeDisplayName)
-        {
-
-
-            if (issue.AssigneeEmail != assigneeEmail)
-            {
-                _logger.Information("Updating assignee from id " + issue.AssigneeEmail + " to {AssigneeId}", assigneeEmail);
-                issue.AssigneeEmail = assigneeEmail;
-                return true;
-            }
-            else
-            {
-                _logger.Information("Not updating assignee because the AssigneeId has not changed ({AssigneeId})", assigneeEmail);
-                return false;
-            }
-        }
-
-        protected bool UpdateIssueWithNewIncidentStatus(Issue issue, IssueStatus newIdeaStatus, DateTime workOrderLastModifiedUtc)
-        {
-            if (issue.RemedyStatus != newIdeaStatus.ToString())
-            {
-                _logger.Information("Updating status of issue {InitiativeId} from {FromInitiativeStatus} to {ToIdeaStatus} because Remedy was updated on {LastModifiedDateUtc}",
-                    issue.Id, issue.RemedyStatus, newIdeaStatus, workOrderLastModifiedUtc);
-                issue.RemedyStatus = newIdeaStatus.ToString();
-                return true;
-            }
-            else
-            {
-                _logger.Information("Not updating status because it has not changed from: {Status}", issue.RemedyStatus);
-                return false;
-            }
-        }
-
 
     }
 }
