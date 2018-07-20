@@ -1,16 +1,13 @@
 <template>
   <div>
-    <waterfall :line-gap="200" :watch="items" line="v">
+    <waterfall :line-gap="500" :watch="items" line="v" align="center" fixed-height="false">
       <waterfall-slot
         v-for="(item, index) in items"
         :width="item.width"
         :height="item.height"
         :order="index"
         :key="item.id">
-        <test
-        :item="item" 
-        :key="index">
-        </test> 
+        <test class="md-layout md-alignment-top-center" :item="item"></test>
         <!-- <issue v-for="issue in issues"
           :key="issue.id" 
           :issue="issue"
@@ -63,40 +60,60 @@ export default {
     isLast: false,
     isLoading: true,
     showSnackbar: false,
-    width: 4000,
-    height: 4000,
     items: [
       {
         'id': 1,
+        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
         'height': 100,
         'width': 200},
       {
         'id': 2,
+        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
         'height': 100,
-        'width': 400},
+        'width': 200},
       {
         'id': 3,
+        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
         'height': 100,
-        'width': 100},
+        'width': 200},
       {
         'id': 4,
-        'height': 200,
-        'width': 400},
+        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
+        'height': 100,
+        'width': 200},
       {
         'id': 5,
+        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
+        'height': 100,
+        'width': 200},
+      {
+        'id': 6,
+        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
+        'height': 100,
+        'width': 200},
+      {
+        'id': 7,
+        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
         'height': 300,
         'width': 300},
       {
-        'id': 6,
-        'height': 400,
-        'width': 500},
-      {
-        'id': 7,
-        'height': 600,
-        'width': 700},
-      {
         'id': 8,
-        'height': 600,
+        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
+        'height': 600},
+      {
+        'id': 9,
+        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
+        'height': 100,
+        'width': 200},
+      {
+        'id': 10,
+        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
+        'height': 100,
+        'width': 200},
+      {
+        'id': 11,
+        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
+        'height': 100,
         'width': 200}
     ]
   }),
@@ -162,7 +179,7 @@ export default {
     }
     this.issueFunction().then((response) => {
       this.issues = response.data
-      console.log(this.issues)
+      // console.log(this.issues)
       for (let i = 0; i < this.issues.length; i++) {
         this.issues[i].isLoading = false
       }
@@ -196,4 +213,5 @@ export default {
     display: flex;
     justify-content: center;
   }
+
 </style>

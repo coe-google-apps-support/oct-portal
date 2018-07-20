@@ -1,5 +1,8 @@
 <template>
-  <div class="item">{{ item.id }}</div>
+  <div>
+    <md-card class="item wf-transition">{{ item.id }} {{ item.description }}
+    </md-card>
+  </div>
 </template>
 <script>
 // import formatDate from '@/utils/format-date-since'
@@ -35,7 +38,7 @@ export default {
     left: 5px;
     right: 5px;
     bottom: 5px;
-    border: 5px solid black;
+    // border: 5px solid black;
   }
   .item:after {
     content: attr(index);
