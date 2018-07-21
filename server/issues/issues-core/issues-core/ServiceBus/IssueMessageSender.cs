@@ -49,7 +49,8 @@ namespace CoE.Issues.Core.ServiceBus
             userProperties["AssigneeEmail"] = args.AssigneeEmail;
             userProperties["AssigneeGroup"] = args.AssigneeGroup;
             userProperties["CreatedDate"] = args.CreatedDate;
-           
+            userProperties["Urgency"] = args.Urgency;
+
 
             return _messageSender.SendMessageAsync(ISSUE_CREATED, userProperties);
         }

@@ -119,7 +119,13 @@ namespace CoE.Issues.Core.Services
             if (!string.IsNullOrWhiteSpace(filter))
             {
                 returnValue = returnValue
-                    .Where(x => x.Title.Contains(filter) || x.Description.Contains(filter) || x.AssigneeEmail.Contains(filter) || x.RequestorName.Contains(filter) || x.ReferenceId.Contains(filter) || x.RemedyStatus.Contains(filter) );
+                    .Where(x => x.Title.Contains(filter) 
+                    || x.Description.Contains(filter) 
+                    || x.AssigneeEmail.Contains(filter) 
+                    || x.RequestorName.Contains(filter) 
+                    || x.ReferenceId.Contains(filter) 
+                    || x.RemedyStatus.Contains(filter)
+                    || x.Urgency.Contains(filter));
                     
             }
 
@@ -146,10 +152,9 @@ namespace CoE.Issues.Core.Services
         public async Task<PagedResultSet<IssueInfo>> GetIssuesByStakeholderPersonIdAsync(int personId,
    string filter, int pageNumber, int pageSize)
         {
-            //TODO: remove test person id
-            int a = 156;
+
             var query = _issueContext.Issues
-                    .Where(x => x.Stakeholders.Any(y => y.PersonId == a));
+                    .Where(x => x.Stakeholders.Any(y => y.PersonId == personId));
 
             var Issues = CreateIssueInfoQuery(query, filter);
 

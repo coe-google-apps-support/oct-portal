@@ -74,7 +74,7 @@ namespace CoE.Issues.Remedy.SbListener
 
                 try
                 {
-                        var issue = Issue.Create(args.Title, args.Description, args.ReferenceId, args.RemedyStatus, args.RequestorDisplayName, args.AssigneeEmail, args.AssigneeGroup, args.CreatedDate, ownerPersonId);
+                        var issue = Issue.Create(args.Title, args.Description, args.ReferenceId, args.RemedyStatus, args.RequestorDisplayName, args.AssigneeEmail, args.AssigneeGroup, args.CreatedDate, args.Urgency, ownerPersonId);
                         _logger.Information("Saving Issue {IssueId} to database", args.ReferenceId);
                         await _issueRepository.AddIssueAsync(issue, token);
 

@@ -27,6 +27,7 @@ namespace CoE.Issues.Core.Data
             string assigneeemail,
             string assigneegroup,
             DateTime createddate,
+            string urgency,
             int ownerPersonId
             )
         {
@@ -37,11 +38,12 @@ namespace CoE.Issues.Core.Data
             {
                 Title = title,
                 Description = description,
-                ReferenceId= referenceId,
+                ReferenceId = referenceId,
                 RemedyStatus = remedystatus,
                 RequestorName = requestorname,
                 AssigneeEmail = assigneeemail,
                 AssigneeGroup = assigneegroup,
+                Urgency = urgency,
 
                 Stakeholders = new List<Stakeholder>()
                 {
@@ -81,6 +83,7 @@ namespace CoE.Issues.Core.Data
         public string RequestorName { get; set; }
         public string RemedyStatus { get; set; }
         public string ReferenceId { get; set; }
+        public string Urgency { get; set; }
 
     }
 }

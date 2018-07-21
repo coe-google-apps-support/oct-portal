@@ -16,6 +16,7 @@ namespace CoE.Issues.Remedy.Watcher
             map.ForMember(issue => issue.RemedyStatus, opt => opt.MapFrom(r => r.Status));
             map.ForMember(issue => issue.ReferenceId, opt => opt.MapFrom(r => r.Incident_Number));
             map.ForMember(issue => issue.CreatedDate, opt => opt.MapFrom(r => r.Last_Modified_Date));
+            map.ForMember(issue => issue.Urgency, opt => opt.MapFrom(r => r.Urgency));
 
             //TODO: map the rest of the properties and add more properties to issue
         }
