@@ -190,7 +190,7 @@ namespace CoE.Issues.Remedy.Watcher
         {
 
             string assignee3and3 = workItem.Assignee_Login_ID;
-            string submitter3and3 = workItem.Submitter;
+            string submitter3and3 = workItem.Direct_Contact_Corporate_ID;
             string assigneeGroup = workItem.Owner_Group;
 
             PersonData assignee = null;
