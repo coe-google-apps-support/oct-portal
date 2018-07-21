@@ -285,7 +285,9 @@ namespace CoE.Issues.Remedy.Watcher
                     newIdeaStatus = IssueStatus.Deliver;
                     break;
                 case StatusType.Closed:
-       
+                    newIdeaStatus = IssueStatus.Closed;
+                    break;
+
                 default:
                     return null; // no change
             }

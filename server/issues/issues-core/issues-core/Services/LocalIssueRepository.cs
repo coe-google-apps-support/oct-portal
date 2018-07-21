@@ -146,7 +146,8 @@ namespace CoE.Issues.Core.Services
         public async Task<PagedResultSet<IssueInfo>> GetIssuesByStakeholderPersonIdAsync(int personId,
    string filter, int pageNumber, int pageSize)
         {
-            int a = 159;
+            //TODO: remove test person id
+            int a = 156;
             var query = _issueContext.Issues
                     .Where(x => x.Stakeholders.Any(y => y.PersonId == a));
 
