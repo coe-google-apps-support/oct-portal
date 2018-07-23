@@ -86,6 +86,7 @@ namespace CoE.Issues.Server.Controllers
                         RequestorName = x.RequestorName,
                         RemedyStatus = x.RemedyStatus,
                         ReferenceId = x.ReferenceId,
+                        Urgency = x.Urgency,
                     }));
             }
             catch (Exception err)

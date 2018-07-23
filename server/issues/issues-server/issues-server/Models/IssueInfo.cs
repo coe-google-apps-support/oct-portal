@@ -30,5 +30,6 @@ namespace CoE.Issues.Server.Models
         public string RequestorName { get; set; }
         public string RemedyStatus { get; set; }
         public string ReferenceId { get; set; }
+        public string Urgency { get; set; }
     }
 }
