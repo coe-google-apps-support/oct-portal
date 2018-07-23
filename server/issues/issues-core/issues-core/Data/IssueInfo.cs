@@ -32,6 +32,7 @@ namespace CoE.Issues.Core.Data
         public string RequestorName { get; private set; }
         public string RemedyStatus { get; private set; }
         public string ReferenceId { get; private set; }
+        public string Urgency { get; private set; }
 
         internal static IssueInfo Create(Issue issue)
         {
@@ -45,7 +46,8 @@ namespace CoE.Issues.Core.Data
                 AssigneeGroup = issue.AssigneeGroup,
                 RequestorName = issue.RequestorName,
                 RemedyStatus = issue.RemedyStatus,
-                ReferenceId = issue.ReferenceId
+                ReferenceId = issue.ReferenceId,
+                Urgency = issue.Urgency
 
 
             };
