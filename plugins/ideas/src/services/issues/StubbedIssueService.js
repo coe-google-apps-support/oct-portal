@@ -56,7 +56,8 @@ const fakeIssues = {
     'requestorName': 'Dora',
     'createdDate': 'March 15 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
     'remedyStatus': 'Resolved',
-    'urgency': 'Low'
+    'urgency': 'Low',
+    'assigneeGroup': 'Bob'
   },
   {
     'referenceId': 'INC000000192853',
@@ -84,7 +85,7 @@ let x = class StubbedIssueService {
    */
   static getMyIssues (page, pageSize, contains) {
     let myIssues = { data: null }
-    myIssues.data = [fakeIssues.data[0], fakeIssues.data[1], fakeIssues.data[2], fakeIssues.data[3], fakeIssues.data[4], fakeIssues.data[5]]
+    myIssues.data = [fakeIssues.data[0], fakeIssues.data[1], fakeIssues.data[2], fakeIssues.data[3], fakeIssues.data[4], fakeIssues.data[5], fakeIssues.data[6]]
     myIssues.headers = []
     myIssues.headers['x-is-last-page'] = 'True'
 
