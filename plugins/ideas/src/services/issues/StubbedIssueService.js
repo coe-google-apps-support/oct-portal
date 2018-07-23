@@ -47,7 +47,7 @@ const fakeIssues = {
   {
     'id': 5,
     'title': 'Ticket 3',
-    'description': 'New monitor for computer.',
+    'description': 'My laptop broke! Nothing I do works, everything is broken.. help please please. I\'ve got work to do and I cannot do anything until this laptop is fixed oh dear...',
     'assigneeEmail': 'ron.weasley@edmonton.ca',
     'requestorName': 'Dora',
     'date': 'March 15 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
