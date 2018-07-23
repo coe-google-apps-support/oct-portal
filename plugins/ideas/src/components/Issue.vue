@@ -68,49 +68,15 @@ export default {
     }
   },
   data: () => ({
-    amount: 0,
-    tooltipContent: 'test123',
     placement: 'top-center',
     offset: 5,
     stepCancel: false,
-    stepInitiate: false,
-    step1: false,
-    step2: false,
-    step3: false,
-    step4: false
-    //    Cancelled = 1,
-    //    Initiate = 2,
-    //    Submit = 3,
-    //    Review = 4,
-    //    Collaborate = 5,
-    //    Deliver = 6,
+    stepInitiate: false
   }),
   methods: {
-    statusClass,
-    progressBar () {
-      if (this.issue.remedyStatus === 'Cancelled') {
-        this.amount = 100
-        this.stepCancel = true
-      } else if (this.issue.remedyStatus === 'Initiate') {
-        this.amount = 20
-        this.Initiate = true
-      } else if (this.issue.remedyStatus === 'Submit') {
-        this.amount = 25
-        this.step1 = true
-      } else if (this.issue.remedyStatus === 'Review') {
-        this.amount = 50
-        this.step2 = true
-      } else if (this.issue.remedyStatus === 'Collaborate') {
-        this.amount = 75
-        this.step3 = true
-      } else if (this.issue.remedyStatus === 'Deliver') {
-        this.amount = 100
-        this.step4 = true
-      }
-    }
+    statusClass
   },
   created () {
-    this.progressBar()
   }
 }
 </script>
@@ -126,7 +92,7 @@ export default {
   right: 0;
   width: 0;
   height: 0;
-  border-width: 30px;
+  border-width: 20px;
   border-style: solid;
 }
 
