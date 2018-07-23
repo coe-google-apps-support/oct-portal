@@ -76,7 +76,7 @@ namespace CoE.Issues.Remedy.Watcher
                 }
             }
             if (!success)
-                lastPollTimeUtc = new DateTime(2018, 7, 20); //DateTime.Now.AddDays(-3);
+                lastPollTimeUtc = new DateTime(2018, 7, 10); //DateTime.Now.AddDays(-3);
 
             return lastPollTimeUtc;
         }
@@ -190,13 +190,13 @@ namespace CoE.Issues.Remedy.Watcher
         {
 
             string assignee3and3 = workItem.Assignee_Login_ID;
-            string submitter3and3 = workItem.Corporate_ID;
+            string submitter3and3 = workItem.Direct_Contact_Corporate_ID;
             string assigneeGroup = workItem.Owner_Group;
 
             PersonData assignee = null;
             PersonData submitter = null;
 
-            if (assignee3and3 == null)
+            if (string.IsNullOrWhiteSpace(assignee3and3))
             {
                 _logger.Information("Assignee is empty");
             }
@@ -210,7 +210,7 @@ namespace CoE.Issues.Remedy.Watcher
             }
 
 
-            if (submitter3and3 == null)
+            if (string.IsNullOrWhiteSpace(submitter3and3))
             {
                 _logger.Information("Submitter is empty");
             }
@@ -223,15 +223,15 @@ namespace CoE.Issues.Remedy.Watcher
                     _logger.Warning(err, "Unable to get email for Remedy incident Submitter {User3and3}: {ErrorMessage}", submitter3and3, err.Message); }
             }
 
-            //IssueStatus? newIssueStatus = GetIssueStatusForRemedyStatus(workItem.Status);
-            //if (newIssueStatus == null)
-            //{
-            //    _logger.Information("Abondining updated work item because an appropriate IssueStatus could not be determined from the Remedy Status {WorkItemStatus}", workItem.Status);
-            //    return null;
-            //}
+            IssueStatus? newIssueStatus = GetIssueStatusForRemedyStatus(workItem.Status);
+            if (newIssueStatus == null)
+            {
+                _logger.Information("Abondining updated work item because an appropriate IssueStatus could not be determined from the Remedy Status {WorkItemStatus}", workItem.Status);
+                return null;
+            }
 
             IssueUrgency? newIssueUrgency = GetIssueUrgencyForRemedyStatus(workItem.Urgency);
-            if (newIssueUrgency == null)
+            if (newIssueStatus == null)
             {
                 _logger.Information("Abondining updated work item because an appropriate IssueStatus could not be determined from the Remedy Status {WorkItemStatus}", workItem.Status);
                 return null;
