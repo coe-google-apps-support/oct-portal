@@ -5,6 +5,7 @@
     </md-card-header>
     <div>
       <div class="card-secondary-info">
+        <div class="md-body-2">Urgency: {{ issue.urgency }}</div>
         <div class ="description-text">{{ issue.description }}</div>
         <div>
           Status: <a class="md-body-2">{{ issue.remedyStatus | displayStatus }}</a>
