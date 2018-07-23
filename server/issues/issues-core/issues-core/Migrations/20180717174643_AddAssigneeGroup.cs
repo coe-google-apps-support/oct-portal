@@ -18,6 +18,11 @@ namespace CoE.Issues.Core.Migrations
                 name: "AssigneeGroup",
                 table: "Issues",
                 nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Urgency",
+                table: "Issues",
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

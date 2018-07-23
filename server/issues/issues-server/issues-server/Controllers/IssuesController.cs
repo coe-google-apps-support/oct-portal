@@ -59,13 +59,16 @@ namespace CoE.Issues.Server.Controllers
             watch.Start();
             try
             {
-                if (view == ViewOptions.Mine)
-                {
-                    issuesInfo = await _repository.GetIssuesByStakeholderPersonIdAsync(User.GetPersonId(),
-                        filter: contains, pageNumber: page, pageSize: pageSize);
-                }
-                else
-                    issuesInfo = await _repository.GetIssuesAsync(filter: contains, page: page, pageSize: pageSize);
+                issuesInfo = await _repository.GetIssuesByStakeholderPersonIdAsync(User.GetPersonId(),
+                    filter: contains, pageNumber: page, pageSize: pageSize);
+                //if (view == ViewOptions.Mine)
+                //{
+                //    issuesInfo = await _repository.GetIssuesByStakeholderPersonIdAsync(User.GetPersonId(),
+                //        filter: contains, pageNumber: page, pageSize: pageSize);
+                //}
+                //else
+
+                //    issuesInfo = await _repository.GetIssuesAsync(filter: contains, page: page, pageSize: pageSize);
                 watch.Stop();
                 _logger.Information("Retrieved {IssueCount} issues in {ElapsedMilliseconds}ms", issuesInfo.ResultCount, watch.ElapsedMilliseconds);
                 Request.HttpContext.Response.Headers.Add("X-Total-Count", issuesInfo.TotalCount.ToString());
@@ -92,51 +95,6 @@ namespace CoE.Issues.Server.Controllers
             }
         }
 
-
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> PostIssue([FromBody] AddIssueDto issueData, bool skipEmailNotification = false)
-        {
-            EnsureArg.IsNotNull(issueData);
-
-            if (!ModelState.IsValid)
-            {
-                _logger.Warning("Unable to create Issue because model state is not valid: {ModelState}", ModelState);
-                return BadRequest(ModelState);
-            }
-
-            EnsureArg.IsNotNull(issueData.Title);
-            EnsureArg.IsNotNull(issueData.Description);
-
-
-            _logger.Information("Creating new Issue");
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-            Issue newIssue = null;
-            try
-            {
-                int personId = User.GetPersonId();
-
-                newIssue = Issue.Create(issueData.Title, issueData.Description,  personId);
-
-                newIssue = await _repository.AddIssueAsync(newIssue);
-
-                watch.Stop();
-                _logger.Information("Created Issue in {ElapsedMilliseconds}ms", watch.ElapsedMilliseconds);
-                return CreatedAtAction("GetIssue", new { id = newIssue.Id }, newIssue);
-            }
-            catch (Exception err)
-            {
-                Guid correlationId = Guid.NewGuid();
-                _logger.Error(err, "Unable to save new Issue {Issue} to repository. CorrelationId: {CorrelationId}", newIssue, correlationId);
-#if DEBUG
-                return base.StatusCode(500, $"Unable to save idea to repository. Error: { err }");
-#else
-                return base.StatusCode(500, $"Unable to save idea to repository. CorrelationId: { correlationId }");
-# endif
-            }
-
-        }
 
         [HttpGet("{id}")]
         [Authorize]

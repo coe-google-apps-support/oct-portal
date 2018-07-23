@@ -190,7 +190,7 @@ namespace CoE.Issues.Remedy.Watcher
         {
 
             string assignee3and3 = workItem.Assignee_Login_ID;
-            string submitter3and3 = workItem.Submitter;
+            string submitter3and3 = workItem.Direct_Contact_Corporate_ID;
             string assigneeGroup = workItem.Owner_Group;
 
             PersonData assignee = null;
@@ -230,11 +230,19 @@ namespace CoE.Issues.Remedy.Watcher
                 return null;
             }
 
+            IssueUrgency? newIssueUrgency = GetIssueUrgencyForRemedyStatus(workItem.Urgency);
+            if (newIssueStatus == null)
+            {
+                _logger.Information("Abondining updated work item because an appropriate IssueStatus could not be determined from the Remedy Status {WorkItemStatus}", workItem.Status);
+                return null;
+            }
+
             try
             {
                 // convert Remedy object to IssueCreatedEventArgs
                 var args = _mapper.Map<OutputMapping1GetListValues, IssueCreatedEventArgs>(workItem);
                 args.AssigneeGroup = assigneeGroup;
+                args.Urgency = newIssueUrgency.ToString();
                 if (assignee != null)
                 {
                     args.AssigneeEmail = assignee.Email;
@@ -285,11 +293,38 @@ namespace CoE.Issues.Remedy.Watcher
                     newIdeaStatus = IssueStatus.Deliver;
                     break;
                 case StatusType.Closed:
-       
+                    newIdeaStatus = IssueStatus.Closed;
+                    break;
+
                 default:
                     return null; // no change
             }
             return newIdeaStatus;
+        }
+        
+        protected virtual IssueUrgency? GetIssueUrgencyForRemedyStatus(UrgencyType? remedyUrgencyType)
+        {
+            // here we have the business logic of translating Remedy statuses into our statuses
+            IssueUrgency newIssueUrgency;
+            switch (remedyUrgencyType)
+            {
+                case UrgencyType.Item1Critical:
+                    newIssueUrgency = IssueUrgency.Critical;
+                    break;
+                case UrgencyType.Item2High:
+                    newIssueUrgency = IssueUrgency.High;
+                    break;
+                case UrgencyType.Item3Medium:
+                    newIssueUrgency = IssueUrgency.Medium;
+                    break;
+                case UrgencyType.Item4Low:
+                    newIssueUrgency = IssueUrgency.Low;
+                    break;
+
+                default:
+                    return null; // no change
+            }
+            return newIssueUrgency;
         }
     }
 }

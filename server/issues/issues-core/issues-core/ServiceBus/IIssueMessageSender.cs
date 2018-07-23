@@ -8,7 +8,7 @@ namespace CoE.Issues.Core.ServiceBus
     public interface IIssueMessageSender
     {
         Task SendIssueCreatedAsync(IssueCreatedEventArgs args);
-        Task SendNewIssueCreatedAsync(IssueNewCreatedEventArgs args);
+        Task SendNewIssueCreatedAsync(NewIssueCreatedEventArgs args);
 
     }
 }

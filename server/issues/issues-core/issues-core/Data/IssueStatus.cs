@@ -12,5 +12,6 @@ namespace CoE.Issues.Core.Data
         Review = 4,
         Collaborate = 5,
         Deliver = 6,
+        Closed = 7,
     }
 }

@@ -44,10 +44,10 @@ namespace CoE.Issues.Core.Services
             CancellationToken cancellationToken = default(CancellationToken))
         {
             EnsureArg.IsNotNull(issue);
-
-            _logger.Debug("Adding to Ideas database");
             try
             {
+
+                _logger.Debug("Adding to Ideas database");
                 _issueContext.Issues.Add(issue);
                 await _issueContext.SaveChangesAsync(cancellationToken);
             }
@@ -60,6 +60,33 @@ namespace CoE.Issues.Core.Services
         }
 
         
+        public async Task<Issue> DeleteIssueAsync(Issue issue,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            EnsureArg.IsNotNull(issue);
+            try
+            {
+
+                _logger.Debug("Adding to Ideas database");
+                _issueContext.Issues.Remove(issue);
+                await _issueContext.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err, "Unable to add issue to database: {ErrorMessage}", err.Message);
+                throw;
+            }
+            return issue;
+        }
+
+        public async Task<Issue> GetIssueByIncidentIdAsync(string incidentId)
+        {
+            var returnValue = await _issueContext.Issues
+                .FirstOrDefaultAsync(x => x.ReferenceId == incidentId);
+            // inefficient but safe:
+            await _issueContext.Entry(returnValue).ReloadAsync();
+            return returnValue;
+        }
 
         public async Task<Issue> GetIssueAsync(Guid id)
         {
@@ -92,7 +119,13 @@ namespace CoE.Issues.Core.Services
             if (!string.IsNullOrWhiteSpace(filter))
             {
                 returnValue = returnValue
-                    .Where(x => x.Title.Contains(filter) || x.Description.Contains(filter) || x.AssigneeEmail.Contains(filter) || x.RequestorName.Contains(filter) || x.ReferenceId.Contains(filter) || x.RemedyStatus.Contains(filter) );
+                    .Where(x => x.Title.Contains(filter) 
+                    || x.Description.Contains(filter) 
+                    || x.AssigneeEmail.Contains(filter) 
+                    || x.RequestorName.Contains(filter) 
+                    || x.ReferenceId.Contains(filter) 
+                    || x.RemedyStatus.Contains(filter)
+                    || x.Urgency.Contains(filter));
                     
             }
 
@@ -108,14 +141,18 @@ namespace CoE.Issues.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<Issue> UpdateIssueAsync(Issue ssue)
+
+        public async Task<Issue> UpdateIssueAsync(Issue issue)
         {
-            throw new NotImplementedException();
+            _issueContext.Entry(issue).State = EntityState.Modified;
+            await _issueContext.SaveChangesAsync();
+            return issue;
         }
 
         public async Task<PagedResultSet<IssueInfo>> GetIssuesByStakeholderPersonIdAsync(int personId,
    string filter, int pageNumber, int pageSize)
         {
+
             var query = _issueContext.Issues
                     .Where(x => x.Stakeholders.Any(y => y.PersonId == personId));
 
@@ -143,6 +180,7 @@ namespace CoE.Issues.Core.Services
 
 
         }
+
 
        
     }

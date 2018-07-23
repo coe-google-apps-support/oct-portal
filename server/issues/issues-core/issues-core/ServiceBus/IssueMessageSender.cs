@@ -27,7 +27,7 @@ namespace CoE.Issues.Core.ServiceBus
         private readonly ILogger _logger;
 
         internal const string ISSUE_CREATED = "Issue Created";
-        internal const string INCIDENT_CREATED = "Incident Created";
+        internal const string New_ISSUE_CREATED = "New Issue Created";
 
         public Task SendIssueCreatedAsync(IssueCreatedEventArgs args)
         {
@@ -49,21 +49,52 @@ namespace CoE.Issues.Core.ServiceBus
             userProperties["AssigneeEmail"] = args.AssigneeEmail;
             userProperties["AssigneeGroup"] = args.AssigneeGroup;
             userProperties["CreatedDate"] = args.CreatedDate;
-           
+            userProperties["Urgency"] = args.Urgency;
+
 
             return _messageSender.SendMessageAsync(ISSUE_CREATED, userProperties);
         }
 
+        public Task SendNewIssueCreatedAsync(NewIssueCreatedEventArgs args)
+        {
+            if (args == null)
+                throw new ArgumentNullException("args");
+            if (args.Issue == null)
+                throw new ArgumentException("Issue cannot be null");
+            if (args.Owner == null)
+                throw new ArgumentException("Owner cannot be null");
+
+            _logger.Information("Posting IssueCreated event to service bus for Issue {IssueId}", args.Issue.Id);
+
+            var userProperties = new Dictionary<string, object>();
+            SetIssue(args.Issue, userProperties);
+            SetOwner(args.Owner, userProperties);
+            return _messageSender.SendMessageAsync(New_ISSUE_CREATED, userProperties);
+        }
 
         internal static void SetIssue(Issue issue, IDictionary<string, object> dictionary)
         {
-            dictionary["Issue"] = JsonConvert.SerializeObject(issue);
+            dictionary["Issue"] = issue.Id;
+        }
+        internal static void SetOwner(ClaimsPrincipal owner, IDictionary<string, object> dictionary)
+        {
+            dictionary["OwnerClaims"] = SerializeUser(owner);
         }
 
-        public Task SendNewIssueCreatedAsync(IssueNewCreatedEventArgs args)
+        internal static void SetWorkOrder(string incidentId,  IDictionary<string, object> dictionary)
         {
-            throw new NotImplementedException();
+            dictionary[nameof(NewIssueCreatedEventArgs.IncidentId)] = incidentId;
         }
+
+        private static string SerializeUser(ClaimsPrincipal claimsPrincipal)
+        {
+            if (claimsPrincipal == null)
+                return string.Empty;
+
+            var claims = claimsPrincipal.Claims.Select(x => new KeyValuePair<string, string>(x.Type, x.Value)).ToArray();
+            return JsonConvert.SerializeObject(claims);
+        }
+
 
 
     }

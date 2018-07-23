@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog.Context;
-using CoE.Ideas.Shared.People;
 using System.Diagnostics;
+using CoE.Ideas.Shared.People;
 
 namespace CoE.Issues.Remedy.SbListener
 {
@@ -64,23 +64,51 @@ namespace CoE.Issues.Remedy.SbListener
 
                 int ownerPersonId = userId.GetValueOrDefault();
 
+                Issue oldIssue = null;
+                oldIssue = await GetIssueByIncidentId(args.ReferenceId);
+                if (oldIssue != null)
+                {
+                    _logger.Information("Found Issue {IssueId} in database, old status {IssueStatus}, new status {newIssueStatus}", args.ReferenceId, oldIssue.RemedyStatus, args.RemedyStatus );
+                    await _issueRepository.DeleteIssueAsync(oldIssue, token);
+                }
+
                 try
                 {
-                    var issue = Issue.Create(args.Title, args.Description, args.ReferenceId, args.RemedyStatus, args.RequestorDisplayName, args.AssigneeEmail,args.AssigneeGroup, args.CreatedDate, ownerPersonId);
-                    _logger.Information("Saving Issue {IssueId} to database", args.ReferenceId);
-                    await _issueRepository.AddIssueAsync(issue, token);
+                        var issue = Issue.Create(args.Title, args.Description, args.ReferenceId, args.RemedyStatus, args.RequestorDisplayName, args.AssigneeEmail, args.AssigneeGroup, args.CreatedDate, args.Urgency, ownerPersonId);
+                        _logger.Information("Saving Issue {IssueId} to database", args.ReferenceId);
+                        await _issueRepository.AddIssueAsync(issue, token);
 
-                }
-                catch (Exception err)
-                {
-                    _logger.Error(err, "Unable to set work item id to Issue. Will retry later. Error was: {ErrorMessage}",
-                        err.Message);
-                    throw;
-                }
+                    }
+                    catch (Exception err)
+                    {
+                        _logger.Error(err, "Unable to set work item id to Issue. Will retry later. Error was: {ErrorMessage}",
+                            err.Message);
+                        throw;
+                    }
+          
+
             }
 
 
         }
+
+        
+        protected async Task<Issue> GetIssueByIncidentId(string incidentId)
+        {
+            Issue issue = null;
+            try
+            {
+                issue = await _issueRepository.GetIssueByIncidentIdAsync(incidentId);
+            }
+            catch (Exception err)
+            {
+                _logger.Error(err, "Received WorkItem change notification from Remedy for item with Id {WorkOrderId} but got the following error when looking it up in the issue repository: {ErrorMessage}",
+                    incidentId, err.Message);
+                issue = null;
+            }
+            return issue;
+        }
+
 
         private async Task<int?> GetOrCreateUserIdAsync(string email, string givenname, string surnname, string telephone)
         {
@@ -112,7 +140,6 @@ namespace CoE.Issues.Remedy.SbListener
 
             return userId;
         }
-
 
     }
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <waterfall :line-gap="400" :watch="issues" line="v" align="center" fixed-height="false">
+    <waterfall :line-gap="350" :watch="issues" line="v" align="center" fixed-height="false">
       <waterfall-slot
         v-for="(issue, index) in issues"
         :width="width"
@@ -47,7 +47,6 @@ import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
 export default {
   name: 'ViewIssues',
   props: {
-    filter: String,
     contains: String,
     page: Number,
     pageSize: Number
@@ -106,7 +105,7 @@ export default {
     },
     changeHeight (addedLines) {
       this.height = this.defaultHeight
-      var addedHeight = addedLines * 13
+      var addedHeight = addedLines * 16
       this.height = this.height + addedHeight
       console.log(this.height)
     }
@@ -126,20 +125,8 @@ export default {
       this.dataPageSize = 20
     }
     this.issues.splice(0, this.issues.length)
-    if (this.filter === 'mine') {
-      this.issueFunction = this.services.issues.getMyIssues
-    } else {
-      this.issueFunction = this.services.issues.getMyIssues
-    }
-    this.issueFunction().then((response) => {
-      this.issues = response.data
-      // console.log(this.issues)
-      for (let i = 0; i < this.issues.length; i++) {
-        this.issues[i].isLoading = false
-      }
-    }, (e) => {
-      this.errors.push(e)
-    })
+    this.issueFunction = this.services.issues.getMyIssues
+    this.requestAPI(this.dataPage, this.dataPageSize, '')
     this.isLoading = false
     this.isLast = true
   }

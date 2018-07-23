@@ -29,18 +29,79 @@ export default {
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
   }
-  .review-off .md-progress-bar-fill {
-    background-color: var(--status-review) !important;
+
+  // Issue Status background colors
+
+  .issue-new .md-progress-bar {
+    background-color: var(--status-new-alt) !important;
   }
-  .collaborate-off .md-progress-bar-fill {
-    background-color: var(--status-collaborate) !important;
+  .issue-new .md-progress-bar-fill {
+    background-color: var(--status-new) !important;
   }
-  .deliver-off .md-progress-bar-fill {
-    background-color: var(--status-deliver) !important;
+  .issue-new.color-corner:after {
+    border-color: var(--status-new) var(--status-new) transparent transparent;
   }
-  .submit-off .md-progress-bar-fill {
-    background-color: var(--status-submit) !important;
+
+  .issue-assigned .md-progress-bar-fill {
+    background-color: var(--status-assigned) !important;
   }
+  .issue-assigned .md-progress-bar {
+    background-color: var(--status-assigned-alt) !important;
+  }
+  .issue-assigned.color-corner:after {
+    border-color: var(--status-assigned) var(--status-assigned) transparent transparent;
+  }
+
+  .issue-inprogress .md-progress-bar-fill {
+    background-color: var(--status-inprogress) !important;
+  }
+  .issue-inprogress .md-progress-bar {
+    background-color: var(--status-inprogress-alt) !important;
+  }
+  .issue-inprogress.color-corner:after {
+    border-color: var(--status-inprogress) var(--status-inprogress) transparent transparent;
+  }
+
+  .issue-resolved .md-progress-bar-fill {
+    background-color: var(--status-resolved) !important;
+  }
+  .issue-resolved .md-progress-bar {
+    background-color: var(--status-resolved-alt) !important;
+  }
+  .issue-resolved.color-corner:after {
+    border-color: var(--status-resolved) var(--status-resolved) transparent transparent;
+  }
+
+  .issue-closed .md-progress-bar-fill {
+    background-color: var(--status-closed) !important;
+  }
+  .issue-closed .md-progress-bar {
+    background-color: var(--status-closed-alt) !important;
+  }
+  .issue-closed.color-corner:after {
+    border-color: var(--status-closed) var(--status-closed) transparent transparent;
+  }
+
+  .issue-cancelled .md-progress-bar-fill {
+    background-color: var(--status-cancelled) !important;
+  }
+  .issue-cancelled .md-progress-bar {
+    background-color: var(--status-cancelled-alt) !important;
+  }
+  .issue-cancelled.color-corner:after {
+    border-color: var(--status-cancelled) var(--status-cancelled) transparent transparent;
+  }
+
+  .issue-pending .md-progress-bar-fill {
+    background-color: var(--status-pending) !important;
+  }
+  .issue-pending .md-progress-bar {
+    background-color: var(--status-pending-alt) !important;
+  }
+  .issue-pending.color-corner:after {
+    border-color: var(--status-pending) var(--status-pending) transparent transparent;
+  }
+
   .tooltip {
     display: block !important;
     z-index: 10000;

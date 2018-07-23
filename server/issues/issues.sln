@@ -19,17 +19,15 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{FE5AD3C0-C4B9-4417-8292-A434B9A1F573}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "issues-integration-remedy", "issues-integration-remedy\issues-integration-remedy.csproj", "{6C42FF98-00C6-4150-9651-E9C5FC15A221}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "issues-server-tests", "issues-server\issues-server-tests\issues-server-tests.csproj", "{D078448C-D07D-4E74-B838-F10AD3B4A9FF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "issues-core-tests", "issues-core\issues-core-tests\issues-core-tests.csproj", "{1880554A-578B-4235-9968-005D76C75A4F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "issues-integration-remedy-watcher", "issues-integration-remedy-watcher\issues-integration-remedy-watcher.csproj", "{B7E452DD-7D47-4802-BCD5-DB74B6598855}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "issues-integration-remedy-sblistener", "issues-integration-remedy-sblistener\issues-integration-remedy-sblistener.csproj", "{8E0A0CBA-4DDC-46AE-8191-7929F04E3259}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "issues-integration-remedy-sblistener", "issues-integration-remedy-sblistener\issues-integration-remedy-sblistener.csproj", "{8E0A0CBA-4DDC-46AE-8191-7929F04E3259}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "issues-integration-remedy-watcher-tests", "issues-integration-remedy-watcher-tests\issues-integration-remedy-watcher-tests.csproj", "{C3DCEE3B-EA92-49AE-BCEB-92124BBDE25F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "issues-integration-remedy-watcher-tests", "issues-integration-remedy-watcher-tests\issues-integration-remedy-watcher-tests.csproj", "{C3DCEE3B-EA92-49AE-BCEB-92124BBDE25F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +51,6 @@ Global
 		{C172DDF0-701F-4567-97D0-299B68E51210}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C172DDF0-701F-4567-97D0-299B68E51210}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C172DDF0-701F-4567-97D0-299B68E51210}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6C42FF98-00C6-4150-9651-E9C5FC15A221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6C42FF98-00C6-4150-9651-E9C5FC15A221}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6C42FF98-00C6-4150-9651-E9C5FC15A221}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6C42FF98-00C6-4150-9651-E9C5FC15A221}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D078448C-D07D-4E74-B838-F10AD3B4A9FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D078448C-D07D-4E74-B838-F10AD3B4A9FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D078448C-D07D-4E74-B838-F10AD3B4A9FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -85,7 +79,6 @@ Global
 		{82336899-CE3F-4FF9-8C74-9B147BD5721E} = {FF7F4E17-F45A-42A5-A361-8551E38FE13F}
 		{7C341DBD-A996-454E-8FA1-ED545CC59737} = {F0348597-A3C5-4AD4-B513-633F74517458}
 		{1308F013-1090-4037-A935-F9D2033DFBC6} = {F0348597-A3C5-4AD4-B513-633F74517458}
-		{6C42FF98-00C6-4150-9651-E9C5FC15A221} = {FE5AD3C0-C4B9-4417-8292-A434B9A1F573}
 		{D078448C-D07D-4E74-B838-F10AD3B4A9FF} = {32D288E5-5670-4C11-8AEA-C7D8CB85DBFC}
 		{1880554A-578B-4235-9968-005D76C75A4F} = {32D288E5-5670-4C11-8AEA-C7D8CB85DBFC}
 		{B7E452DD-7D47-4802-BCD5-DB74B6598855} = {FE5AD3C0-C4B9-4417-8292-A434B9A1F573}

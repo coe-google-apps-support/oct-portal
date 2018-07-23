@@ -20,5 +20,13 @@ namespace CoE.Issues.Core.ServiceBus
 
         private readonly IServiceProvider _serviceProvider;
 
+        protected override IIssueRepository GetIssueRepository(ClaimsPrincipal owner)
+        {
+            // we use to just get the repository once, but in case it's defined as transient we'll 
+            // as the service provider every time
+            // note that "owner" is irrelevant for a local initiative repository
+            return (IIssueRepository)_serviceProvider.GetService(typeof(IIssueRepository));
+        }
+
     }
 }

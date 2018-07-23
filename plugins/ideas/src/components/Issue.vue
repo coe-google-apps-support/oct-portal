@@ -1,34 +1,37 @@
 <template>
-  <md-card class="item md-with-hover" id="mdCardSize">
+  <md-card :class="statusClass(issue.remedyStatus) + ' md-with-hover item color-corner '">
     <md-card-header>
-      <md-toolbar md-elevation="1">
-        <span class="md-title"> {{ issue.title }}</span>
-      </md-toolbar>
+      <span class="md-title"> {{ issue.title }}</span>
     </md-card-header>
     <div>
       <div class="card-secondary-info">
+        <div class="md-body-2">Urgency: {{ issue.urgency }}</div>
         <div class ="description-text">{{ issue.description }}</div>
-      <div>
-        Status: <a class="md-body-2">{{ issue.remedyStatus }}</a>
-        <md-progress-bar :class="{ 'submit-off':step1, 'review-off':step3, 'collaborate-off':step2, 'deliver-off':step4 }" md-mode="determinate" :md-value="amount"></md-progress-bar>
-      </div>
-        <div class="date-text md-subhead">{{ issue.date | formatDate }}</div>
+        <div>
+          Status: <a class="md-body-2">{{ issue.remedyStatus | displayStatus }}</a>
+          <md-progress-bar md-mode="determinate" 
+            :md-value="issue.remedyStatus | statusAmount"></md-progress-bar>
+        </div>
+        <div class="info-line">
+          <div class="md-subhead">{{ issue.referenceId }}</div>
+          <div class="date-text md-subhead">{{ issue.createdDate | formatDate }}</div>
+        </div>
       </div>
     </div>
     <md-divider></md-divider>
-    <div class="card-secondary-info" style="text-align:center;">
+    <div v-if="issue.assigneeEmail" class="card-secondary-info" style="text-align:center;">
       <div class="md-body-2">Assigned to</div>
       <v-popover
         :placement="placement"
         :offset="offset"
         :auto-hide="true">
         <md-avatar class="tooltip-target">
-          <img src="https://media.forgecdn.net/avatars/124/768/636424778749237239.jpeg" alt="Avatar">
+          <img src="https://i.imgur.com/FD51R30.png" alt="Avatar">
         </md-avatar>
 
         <template slot="popover">
           <md-avatar class="center1 md-avatar-icon md-large">
-            <img src="https://media.forgecdn.net/avatars/124/768/636424778749237239.jpeg" alt="Avatar">
+            <img src="https://i.imgur.com/FD51R30.png" alt="Avatar">
           </md-avatar>
           <br>
           <div style="text-align:center;">
@@ -45,6 +48,7 @@
 <script>
 import formatDate from '@/utils/format-date-since'
 import DiviButton from '@/components/divi/DiviButton'
+import { displayStatus, statusAmount, statusClass } from '@/data/issue-status.js'
 
 export default {
   name: 'Issue',
@@ -58,6 +62,8 @@ export default {
   },
   filters: {
     formatDate,
+    displayStatus,
+    statusAmount,
     formatName: function (value) {
       const name = value.substring(0, value.lastIndexOf('@'))
       const fullName = name.split('.')
@@ -65,46 +71,13 @@ export default {
     }
   },
   data: () => ({
-    amount: 0,
-    tooltipContent: 'test123',
     placement: 'top-center',
     offset: 5,
     stepCancel: false,
-    stepInitiate: false,
-    step1: false,
-    step2: false,
-    step3: false,
-    step4: false,
-    height: 0
-    //    Cancelled = 1,
-    //    Initiate = 2,
-    //    Submit = 3,
-    //    Review = 4,
-    //    Collaborate = 5,
-    //    Deliver = 6,
+    stepInitiate: false
   }),
   methods: {
-    progressBar () {
-      if (this.issue.remedyStatus === 'Cancelled') {
-        this.amount = 100
-        this.stepCancel = true
-      } else if (this.issue.remedyStatus === 'Initiate') {
-        this.amount = 20
-        this.Initiate = true
-      } else if (this.issue.remedyStatus === 'Submit') {
-        this.amount = 25
-        this.step1 = true
-      } else if (this.issue.remedyStatus === 'Review') {
-        this.amount = 50
-        this.step2 = true
-      } else if (this.issue.remedyStatus === 'Collaborate') {
-        this.amount = 75
-        this.step3 = true
-      } else if (this.issue.remedyStatus === 'Deliver') {
-        this.amount = 100
-        this.step4 = true
-      }
-    },
+    statusClass,
     changeHeight () {
       // console.log(this.issue.description.length)
       let ratio = this.issue.description.length - 60
@@ -117,7 +90,6 @@ export default {
     }
   },
   created () {
-    this.progressBar()
     if (this.issue.description) {
       this.changeHeight()
     }
@@ -128,6 +100,25 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 @import '../mixins.scss';
+
+.color-corner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-width: 20px;
+  border-style: solid;
+}
+
+.info-line {
+  display: flex;
+}
+
+.info-line > * {
+  flex-grow: 1;
+}
 
 .description-text {
   position: relative;

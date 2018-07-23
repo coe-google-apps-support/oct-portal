@@ -23,12 +23,6 @@ services:
       MYSQL_ROOT_PASSWORD: octavadev
       MYSQL_DATABASE: octportalwordpress
 
-  issues-integration-remedy:
-    image: ${DOCKER_REGISTRY}issuesintegrationremedy
-    build:
-      context: .
-      dockerfile: issues-integration-remedy/Dockerfile
-
 
   issues-integration-remedy-watcher:
     image: ${DOCKER_REGISTRY}issuesintegrationremedywatcher

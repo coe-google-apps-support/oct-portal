@@ -438,6 +438,9 @@ let x = class StubbedIdeasService {
       }
     }
 
+    ideas.headers = []
+    ideas.headers['x-is-last-page'] = 'True'
+
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(ideas)
@@ -455,6 +458,8 @@ let x = class StubbedIdeasService {
   static getMyInitiatives (page, pageSize, contains) {
     let myInitiatives = { data: null }
     myInitiatives.data = [fakeIdeas.data[0], fakeIdeas.data[1], fakeIdeas.data[2]]
+    myInitiatives.headers = []
+    myInitiatives.headers['x-is-last-page'] = 'True'
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {

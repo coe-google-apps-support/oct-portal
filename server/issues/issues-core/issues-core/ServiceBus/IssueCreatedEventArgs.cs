@@ -18,6 +18,7 @@ namespace CoE.Issues.Core.ServiceBus
         public string AssigneeEmail { get; set; }
         public string AssigneeGroup { get; set; }
         public DateTime CreatedDate { get; set; }
+        public string Urgency { get; set; }
 
 
 

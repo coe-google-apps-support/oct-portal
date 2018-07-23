@@ -67,42 +67,20 @@ namespace CoE.Issues.Core
                 return new TopicClient(serviceBusConnectionString, serviceBusTopicName);
             });
 
-            if (string.IsNullOrWhiteSpace(serviceBusConnectionString))
+            if (!string.IsNullOrWhiteSpace(serviceBusSubscription))
             {
-                services.AddScoped<IMessageSender, ServiceBusMessageSender>();
-                services.AddScoped<IMessageReceiver, ServiceBusMessageReceiver>();
-                services.AddScoped<IIssueMessageSender, IssueMessageSender>();
-                // this is how we can determine if we can acces the local database...
-                if (services.Any(x => x.ImplementationType == typeof(LocalIssueRepository)))
-                    services.AddScoped<IIssueMessageReceiver, LocalIssueMessageReceiver>();
-                else
-                    services.AddScoped<IIssueMessageReceiver, LocalIssueMessageReceiver>();
-            }
-            else
-            {
-                services.AddSingleton<ITopicClient, TopicClient>(x =>
+                services.AddSingleton<ISubscriptionClient, SubscriptionClient>(x =>
                 {
-                    return new TopicClient(serviceBusConnectionString, serviceBusTopicName);
+                       return new SubscriptionClient(serviceBusConnectionString, serviceBusTopicName, serviceBusSubscription);
                 });
-
-                if (!string.IsNullOrWhiteSpace(serviceBusSubscription))
-                {
-                    services.AddSingleton<ISubscriptionClient, SubscriptionClient>(x =>
-                    {
-                        return new SubscriptionClient(serviceBusConnectionString, serviceBusTopicName, serviceBusSubscription);
-                    });
-                }
+            }
 
                 services.AddSingleton<IMessageSender, ServiceBusMessageSender>();
                 services.AddSingleton<IMessageReceiver, ServiceBusMessageReceiver>();
                 services.AddSingleton<IIssueMessageSender, IssueMessageSender>();
-                // this is how we can determine if we can acces the local database...
-                if (services.Any(x => x.ImplementationType == typeof(LocalIssueRepository)))
-                    services.AddSingleton<IIssueMessageReceiver, LocalIssueMessageReceiver>();
-                else
-                    services.AddSingleton<IIssueMessageReceiver, LocalIssueMessageReceiver>();
+                services.AddSingleton<IIssueMessageReceiver, LocalIssueMessageReceiver>();
 
-            }
+ 
 
             return services;
         }

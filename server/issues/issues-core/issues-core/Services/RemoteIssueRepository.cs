@@ -191,6 +191,16 @@ namespace CoE.Issues.Core.Services
             throw new NotSupportedException();
         }
 
+        public Task<Issue> GetIssueByIncidentIdAsync(string incidentId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Issue> DeleteIssueAsync(Issue issue, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            throw new NotImplementedException();
+        }
+
         internal class IssueContractResolver : DefaultContractResolver
         {
             protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)

@@ -1,11 +1,15 @@
 ﻿using CoE.Ideas.Shared.People;
+using CoE.Ideas.Shared.Security;
 using CoE.Ideas.Shared.ServiceBus;
 using CoE.Issues.Core.Data;
+using CoE.Issues.Core.Services;
 using EnsureThat;
 using Microsoft.Azure.ServiceBus;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,8 +30,11 @@ namespace CoE.Issues.Core.ServiceBus
         private readonly IMessageReceiver _messageReceiver;
         private readonly Serilog.ILogger _logger;
 
+        protected abstract IIssueRepository GetIssueRepository(ClaimsPrincipal owner);
+
 
         public void ReceiveMessages(Func<IssueCreatedEventArgs, CancellationToken, Task> issueCreatedHandler = null,
+            Func<NewIssueCreatedEventArgs, CancellationToken, Task> newissueCreatedHandler = null,
             MessageHandlerOptions options = null)
         {
             var messageHandlerOptions = options ?? new MessageHandlerOptions(OnDefaultError);
@@ -41,11 +48,15 @@ namespace CoE.Issues.Core.ServiceBus
                     case IssueMessageSender.ISSUE_CREATED:
                         {
                             if (issueCreatedHandler != null)
+                            {
+                                _logger.Information("ISSUE_CREATED");
                                 await ReceiveIssueCreated(msg, token, issueCreatedHandler);
+                            }
                             else
                                 await _messageReceiver.CompleteAsync(msg.LockToken);
                             break;
                         }
+
                     default:
                         {
                             await _messageReceiver.DeadLetterAsync(msg.LockToken, $"Unknown message type: { msg.Label }");
@@ -71,15 +82,24 @@ namespace CoE.Issues.Core.ServiceBus
             if (msg.MessageProperties.ContainsKey("RequestorGivenName")) args.RequestorGivenName = msg.MessageProperties["RequestorGivenName"] as string;
             if (msg.MessageProperties.ContainsKey("RequestorSurnName")) args.RequestorSurnName = msg.MessageProperties["RequestorSurnName"] as string;
             if (msg.MessageProperties.ContainsKey("RequestorDisplayName")) args.RequestorDisplayName = msg.MessageProperties["RequestorDisplayName"] as string;
+            if (msg.MessageProperties.ContainsKey("Urgency")) args.Urgency = msg.MessageProperties["Urgency"] as string;
             var createdDate = await GetMessageProperty<DateTime>(msg, propertyName: nameof(IssueCreatedEventArgs.CreatedDate));
             args.CreatedDate = createdDate.Item;
 
-
-
-            // call the handler registered for this event
             await issueCreatedHandler(args, token);
         }
 
+
+        private async Task<bool> EnsureMessageLabel(Ideas.Shared.ServiceBus.Message message, string label)
+        {
+            if (message.Label == label)
+                return true;
+            else
+            {
+                await _messageReceiver.DeadLetterAsync(message.LockToken, $"Label was unexpected. Expected '{ label }', got '{ message.Label }';");
+                return false;
+            }
+        }
         protected virtual Task OnDefaultError(ExceptionReceivedEventArgs err)
         {
             _logger.Error(err.Exception, "Error receiving message: {ErrorMessage}", err.Exception.Message);
@@ -150,10 +170,21 @@ namespace CoE.Issues.Core.ServiceBus
 
 
 
-        
 
 
-       
+        internal static ClaimsPrincipal CreatePrincipal(string claimsSerialized)
+        {
+            if (!string.IsNullOrWhiteSpace(claimsSerialized))
+            {
+                var claimValues = JsonConvert.DeserializeObject<IEnumerable<KeyValuePair<string, string>>>(claimsSerialized);
+                var claims = claimValues.Select(x => new Claim(x.Key, x.Value));
+                return new ClaimsPrincipal(new ClaimsIdentity(claims));
+            }
+            else
+                return null;
+        }
+
+
 
 
     }

@@ -1,5 +1,4 @@
-﻿using CoE.Issues.Core.Event;
-using CoE.Ideas.Shared.Data;
+﻿using CoE.Ideas.Shared.Data;
 using EnsureThat;
 using System;
 using System.Collections.Generic;
@@ -20,31 +19,6 @@ namespace CoE.Issues.Core.Data
 
         }
         public static Issue Create(
-        string title,
-        string description,
-        int ownerPersonId)
-        {
-            Ensure.String.IsNotNullOrWhiteSpace(title, nameof(title));
-
-
-            var issue = new Issue(Guid.NewGuid())
-            {
-                Title = title,
-                Description = description,
-                Stakeholders = new List<Stakeholder>()
-                {
-                    Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
-                },
-                CreatedDate = DateTime.UtcNow
-            };
-
-
-            issue.AddDomainEvent(new IssueCreatedDomainEvent(issue.Uid, ownerPersonId));
-
-            return issue;
-        }
-
-        public static Issue Create(
             string title, 
             string description,
             string referenceId,
@@ -53,6 +27,7 @@ namespace CoE.Issues.Core.Data
             string assigneeemail,
             string assigneegroup,
             DateTime createddate,
+            string urgency,
             int ownerPersonId
             )
         {
@@ -63,11 +38,12 @@ namespace CoE.Issues.Core.Data
             {
                 Title = title,
                 Description = description,
-                ReferenceId= referenceId,
+                ReferenceId = referenceId,
                 RemedyStatus = remedystatus,
                 RequestorName = requestorname,
                 AssigneeEmail = assigneeemail,
                 AssigneeGroup = assigneegroup,
+                Urgency = urgency,
 
                 Stakeholders = new List<Stakeholder>()
                 {
@@ -107,9 +83,7 @@ namespace CoE.Issues.Core.Data
         public string RequestorName { get; set; }
         public string RemedyStatus { get; set; }
         public string ReferenceId { get; set; }
-        
-
-
+        public string Urgency { get; set; }
 
     }
 }
