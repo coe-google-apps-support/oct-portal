@@ -76,18 +76,18 @@ export default {
     openURL (url) {
       window.open(url, '_top')
     },
-    checkIsLast (response) {
-      var x = response.headers['x-is-last-page']
-      if (x === 'False') {
-        this.isLast = false
-      } else if (x === 'True') {
-        this.isLast = true
-      }
-    },
+    // checkIsLast (response) {
+    //   var x = response.headers['x-is-last-page']
+    //   if (x === 'False') {
+    //     this.isLast = false
+    //   } else if (x === 'True') {
+    //     this.isLast = true
+    //   }
+    // },
     requestAPI (page, pageSize, contains) {
       this.isLoading = true
       return this.issueFunction(page, pageSize, contains).then((response) => {
-        this.checkIsLast(response)
+        // this.checkIsLast(response)
         this.issues = this.issues.concat(response.data)
         this.isLoading = false
         return response
