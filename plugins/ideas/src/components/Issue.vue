@@ -80,19 +80,22 @@ export default {
     statusClass,
     changeHeight () {
       // console.log(this.issue.description.length)
-      let ratio = this.issue.description.length - 60
+      let descSize = this.issue.description.length - 60
+      let titleSize = this.issue.title.length - 28
       let linesNeeded = 1
-      while (ratio > 0) {
+      while (descSize && descSize > 0) {
         linesNeeded += 1
-        ratio = ratio - 60
+        descSize = descSize - 60
+      }
+      while (titleSize > 0) {
+        linesNeeded += 1
+        titleSize = titleSize - 28
       }
       this.$emit('update', linesNeeded)
     }
   },
   created () {
-    if (this.issue.description) {
-      this.changeHeight()
-    }
+    this.changeHeight()
   }
 }
 </script>
@@ -101,16 +104,16 @@ export default {
 <style lang="scss" scoped>
 @import '../mixins.scss';
 
-.color-corner::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-width: 20px;
-  border-style: solid;
-}
+// .color-corner::after {
+//   content: '';
+//   position: absolute;
+//   top: 0;
+//   right: 0;
+//   width: 0;
+//   height: 0;
+//   border-width: 20px;
+//   border-style: solid;
+// }
 
 .info-line {
   display: flex;
