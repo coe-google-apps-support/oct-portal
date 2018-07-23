@@ -1,18 +1,19 @@
 <template>
   <div>
-    <waterfall :line-gap="500" :watch="items" line="v" align="center" fixed-height="false">
+    <waterfall :line-gap="400" :watch="issues" line="v" align="center" :fixed-height="true">
       <waterfall-slot
-        v-for="(item, index) in items"
-        :width="item.width"
-        :height="item.height"
+        v-for="(issue, index) in issues"
+        :width="width"
+        :height="height"
         :order="index"
-        :key="item.id">
-        <test class="md-layout md-alignment-top-center" :item="item"></test>
-        <!-- <issue v-for="issue in issues"
+        :key="issue.id">
+        <!-- <test :item="item"></test> -->
+        <issue
           :key="issue.id" 
           :issue="issue"
+          @update="changeHeight"
           >
-        </issue> -->
+        </issue>
       </waterfall-slot>
     </waterfall>
     <div v-if="issues.length === 0 && isLoading == false">
@@ -60,62 +61,9 @@ export default {
     isLast: false,
     isLoading: true,
     showSnackbar: false,
-    items: [
-      {
-        'id': 1,
-        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
-        'height': 100,
-        'width': 200},
-      {
-        'id': 2,
-        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
-        'height': 100,
-        'width': 200},
-      {
-        'id': 3,
-        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
-        'height': 100,
-        'width': 200},
-      {
-        'id': 4,
-        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
-        'height': 100,
-        'width': 200},
-      {
-        'id': 5,
-        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
-        'height': 100,
-        'width': 200},
-      {
-        'id': 6,
-        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
-        'height': 100,
-        'width': 200},
-      {
-        'id': 7,
-        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
-        'height': 300,
-        'width': 300},
-      {
-        'id': 8,
-        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
-        'height': 600},
-      {
-        'id': 9,
-        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
-        'height': 100,
-        'width': 200},
-      {
-        'id': 10,
-        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
-        'height': 100,
-        'width': 200},
-      {
-        'id': 11,
-        'description': 'akfjahfkjahsfkjahsfjkah sfa kjhfkjashfjkash fajhsfkjashfj ahskfja hsfkjahsf ahjksfh ajksfhjkasfasfhka jsfhjkahs fkjahsfk hasjkf hajksfh kajsfhjka shfjkash',
-        'height': 100,
-        'width': 200}
-    ]
+    width: 150,
+    defaultHeight: 335,
+    height: 0
   }),
   components: {
     Issue,
@@ -155,6 +103,12 @@ export default {
           this.requestAPI(this.dataPage, this.dataPageSize, this.contains)
         }
       }, 1000)
+    },
+    changeHeight (addedLines) {
+      this.height = this.defaultHeight
+      var addedHeight = addedLines * 13
+      this.height = this.height + addedHeight
+      console.log(this.height)
     }
   },
   created () {

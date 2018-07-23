@@ -50,7 +50,7 @@ export default {
   name: 'Issue',
   props: [
     'issue',
-    'height',
+    'parentHeight',
     'width'
   ],
   components: {
@@ -74,7 +74,8 @@ export default {
     step1: false,
     step2: false,
     step3: false,
-    step4: false
+    step4: false,
+    height: 0
     //    Cancelled = 1,
     //    Initiate = 2,
     //    Submit = 3,
@@ -104,11 +105,22 @@ export default {
         this.step4 = true
       }
     },
-    getDimensions () {
+    changeHeight () {
+      // console.log(this.issue.description.length)
+      let ratio = this.issue.description.length - 60
+      let linesNeeded = 1
+      while (ratio > 0) {
+        linesNeeded += 1
+        ratio = ratio - 60
+      }
+      this.$emit('update', linesNeeded)
     }
   },
   created () {
     this.progressBar()
+    if (this.issue.description) {
+      this.changeHeight()
+    }
   }
 }
 </script>
@@ -199,6 +211,7 @@ export default {
 
 .item {
   position: absolute;
+  overflow: hidden;
   top: 10px;
   left: 10px;
   right: 10px;
