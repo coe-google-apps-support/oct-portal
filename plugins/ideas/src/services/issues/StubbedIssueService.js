@@ -4,6 +4,7 @@ const fakeIssues = {
     'title': 'Ticket 1 laptop oh no loptop noooo',
     'description': 'My laptop broke! Nothing I do works, everything is broken.. help please please. I\'ve got work to do and I cannot do anything until this laptop is fixed oh dear...',
     'requestorName': 'Phil',
+    'assigneeGroup': 'Inside Solutions',
     'createdDate': 'May 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
     'remedyStatus': 'New',
     'urgency': 'High'
