@@ -42,6 +42,29 @@
         </template>
       </v-popover>
     </div>
+    <div v-if="issue.assigneeGroup && !issue.assigneeEmail" class="card-secondary-info" style="text-align:center;">
+      <div class="md-body-2">Assigned to</div>
+      <v-popover
+        :placement="placement"
+        :offset="offset"
+        :auto-hide="true">
+        <md-avatar class="tooltip-target">
+          <img src="https://i.imgur.com/FD51R30.png" alt="Avatar">
+        </md-avatar>
+
+        <template slot="popover">
+          <md-avatar class="center1 md-avatar-icon md-large">
+            <img src="https://i.imgur.com/FD51R30.png" alt="Avatar">
+          </md-avatar>
+          <br>
+          <div style="text-align:center;">
+            <div class="card-secondary-info md-title">{{ issue.assigneeGroup }}</div>
+            <div class="card-secondary-info md-subheading">{{ issue.assigneeGroup }}</div>
+            <md-button class="md-accent md-raised" v-close-popover>Close</md-button>
+          </div>
+        </template>
+      </v-popover>
+    </div>
     <md-progress-bar v-if="issue.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
 </template>
