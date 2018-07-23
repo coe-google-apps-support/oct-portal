@@ -5,7 +5,8 @@ const fakeIssues = {
     'description': 'My laptop broke! Nothing I do works, everything is broken.. help please please. I\'ve got work to do and I cannot do anything until this laptop is fixed oh dear...',
     'requestorName': 'Phil',
     'createdDate': 'May 13 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'remedyStatus': 'New'
+    'remedyStatus': 'New',
+    'urgency': 'High'
   },
   {
     'referenceId': 'INC000000192114',
@@ -14,7 +15,8 @@ const fakeIssues = {
     'assigneeEmail': 'severus.snape@edmonton.ca',
     'requestorName': 'Lauren',
     'createdDate': 'June 23 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'remedyStatus': 'Assigned'
+    'remedyStatus': 'Assigned',
+    'urgency': 'Critcal'
   },
   {
     'referenceId': 'INC000000192616',
@@ -23,7 +25,8 @@ const fakeIssues = {
     'assigneeEmail': 'ron.weasley@edmonton.ca',
     'requestorName': 'Dora',
     'createdDate': 'March 15 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'remedyStatus': 'Cancelled'
+    'remedyStatus': 'Cancelled',
+    'urgency': 'Medium'
   },
   {
     'referenceId': 'INC000000192117',
@@ -32,16 +35,18 @@ const fakeIssues = {
     'assigneeEmail': 'albus.dumbledore@edmonton.ca',
     'requestorName': 'Josh',
     'createdDate': 'July 3 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'remedyStatus': 'Pending'
+    'remedyStatus': 'Pending',
+    'urgency': 'Low'
   },
   {
     'referenceId': 'INC000000192465',
     'title': 'Ticket 3',
-    'description': 'New monitor for computer.',
+    'description': 'I am literally dying.',
     'assigneeEmail': 'ron.weasley@edmonton.ca',
     'requestorName': 'Dora',
     'createdDate': 'March 15 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'remedyStatus': 'InProgress'
+    'remedyStatus': 'InProgress',
+    'urgency': 'Critcal'
   },
   {
     'referenceId': 'INC000000192891',
@@ -50,7 +55,8 @@ const fakeIssues = {
     'assigneeEmail': 'ron.weasley@edmonton.ca',
     'requestorName': 'Dora',
     'createdDate': 'March 15 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
-    'remedyStatus': 'Resolved'
+    'remedyStatus': 'Resolved',
+    'urgency': 'Low'
   },
   {
     'referenceId': 'INC000000192853',
@@ -60,7 +66,8 @@ const fakeIssues = {
     'assigneeEmail': 'Linda.Hart@edmonton.ca',
     'assigneeGroup': 'Telecom',
     'requestorName': 'Linda Hart',
-    'remedyStatus': 'InProgress'
+    'remedyStatus': 'InProgress',
+    'urgency': 'High'
   }
   ]
 }
