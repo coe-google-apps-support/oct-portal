@@ -42,7 +42,7 @@
         </template>
       </v-popover>
     </div>
-    <!-- <div v-if="issue.assigneeGroup && !issue.assigneeEmail" class="card-secondary-info" style="text-align:center;">
+    <div v-if="issue.assigneeGroup && !issue.assigneeEmail" class="card-secondary-info" style="text-align:center;">
       <div class="md-body-2">Assigned to</div>
       <v-popover
         :placement="placement"
@@ -64,7 +64,7 @@
           </div>
         </template>
       </v-popover>
-    </div> -->
+    </div>
     <md-progress-bar v-if="issue.isLoading" class="md-accent" md-mode="indeterminate"></md-progress-bar>
   </md-card>
 </template>
