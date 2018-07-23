@@ -59,7 +59,6 @@ namespace CoE.Issues.Server.Controllers
             watch.Start();
             try
             {
-                        filter: contains, pageNumber: page, pageSize: pageSize);
                 issuesInfo = await _repository.GetIssuesByStakeholderPersonIdAsync(User.GetPersonId(),
                     filter: contains, pageNumber: page, pageSize: pageSize);
                 //if (view == ViewOptions.Mine)
