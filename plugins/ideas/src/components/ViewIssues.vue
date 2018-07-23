@@ -1,6 +1,6 @@
 <template>
   <div>
-    <waterfall :line-gap="400" :watch="issues" line="v" align="center" :fixed-height="true">
+    <waterfall :line-gap="400" :watch="issues" line="v" align="center" fixed-height="false">
       <waterfall-slot
         v-for="(issue, index) in issues"
         :width="width"
