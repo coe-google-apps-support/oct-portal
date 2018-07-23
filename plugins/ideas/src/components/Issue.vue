@@ -18,8 +18,8 @@
         </div>
       </div>
     </div>
-    <md-divider></md-divider>
     <div v-if="issue.assigneeEmail" class="card-secondary-info" style="text-align:center;">
+      <md-divider></md-divider>
       <div class="md-body-2">Assigned to</div>
       <v-popover
         :placement="placement"
