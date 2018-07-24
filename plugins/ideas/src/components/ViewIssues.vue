@@ -3,15 +3,14 @@
     <waterfall :line-gap="350" :watch="issues" line="v" align="center" fixed-height="false">
       <waterfall-slot
         v-for="(issue, index) in issues"
-        :width="width"
-        :height="height"
+        :width="350"
+        :height="issue | changeHeight"
         :order="index"
         :key="issue.id">
-        <!-- <test :item="item"></test> -->
+        <!-- <test :item="item"></test>-->
         <issue
           :key="issue.id" 
           :issue="issue"
-          @update="changeHeight"
           >
         </issue>
       </waterfall-slot>
@@ -59,11 +58,24 @@ export default {
     issueFunction: null,
     isLast: false,
     isLoading: true,
-    showSnackbar: false,
-    width: 150,
-    defaultHeight: 335,
-    height: 0
+    showSnackbar: false
   }),
+  filters: {
+    changeHeight: function (value) {
+      let descSize = value.description.length - 60
+      let titleSize = value.title.length - 28
+      let linesNeeded = 1
+      while (descSize && descSize > 0) {
+        linesNeeded += 1
+        descSize = descSize - 60
+      }
+      while (titleSize > 0) {
+        linesNeeded += 1
+        titleSize = titleSize - 28
+      }
+      return 335 + linesNeeded * 18
+    }
+  },
   components: {
     Issue,
     DiviButton,
@@ -102,12 +114,6 @@ export default {
           this.requestAPI(this.dataPage, this.dataPageSize, this.contains)
         }
       }, 1000)
-    },
-    changeHeight (addedLines) {
-      this.height = this.defaultHeight
-      var addedHeight = addedLines * 16
-      this.height = this.height + addedHeight
-      console.log(this.height)
     }
   },
   created () {
@@ -127,7 +133,7 @@ export default {
     this.issues.splice(0, this.issues.length)
     this.issueFunction = this.services.issues.getMyIssues
     this.requestAPI(this.dataPage, this.dataPageSize, '')
-    this.isLoading = false
+    // console.log(this.issues)
     this.isLast = true
   }
 }

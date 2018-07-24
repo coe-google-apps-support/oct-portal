@@ -76,9 +76,7 @@ import { displayStatus, statusAmount, statusClass } from '@/data/issue-status.js
 export default {
   name: 'Issue',
   props: [
-    'issue',
-    'parentHeight',
-    'width'
+    'issue'
   ],
   components: {
     DiviButton
@@ -95,30 +93,13 @@ export default {
   },
   data: () => ({
     placement: 'top-center',
+    issueLayout: [],
     offset: 5,
     stepCancel: false,
     stepInitiate: false
   }),
   methods: {
-    statusClass,
-    changeHeight () {
-      // console.log(this.issue.description.length)
-      let descSize = this.issue.description.length - 60
-      let titleSize = this.issue.title.length - 28
-      let linesNeeded = 1
-      while (descSize && descSize > 0) {
-        linesNeeded += 1
-        descSize = descSize - 60
-      }
-      while (titleSize > 0) {
-        linesNeeded += 1
-        titleSize = titleSize - 28
-      }
-      this.$emit('update', linesNeeded)
-    }
-  },
-  created () {
-    this.changeHeight()
+    statusClass
   }
 }
 </script>
@@ -127,16 +108,18 @@ export default {
 <style lang="scss" scoped>
 @import '../mixins.scss';
 
-// .color-corner::after {
-//   content: '';
-//   position: absolute;
-//   top: 0;
-//   right: 0;
-//   width: 0;
-//   height: 0;
-//   border-width: 20px;
-//   border-style: solid;
-// }
+.color-corner::after {
+  content: '';
+  position: absolute;
+  top: 0 !important;
+  left: auto !important;
+  -webkit-transform: none !important;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-width: 20px;
+  border-style: solid;
+}
 
 .info-line {
   display: flex;
