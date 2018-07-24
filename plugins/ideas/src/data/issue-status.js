@@ -8,16 +8,21 @@ const statusMap = {
   'New': {
     display: 'New',
     class: 'issue-new',
-    amount: 25
+    amount: 5
   },
   'Assigned': {
     display: 'Assigned',
     class: 'issue-assigned',
-    amount: 50
+    amount: 25
   },
   'InProgress': {
     display: 'In Progress',
     class: 'issue-inprogress',
+    amount: 50
+  },
+  'Pending': {
+    display: 'Pending',
+    class: 'issue-pending',
     amount: 75
   },
   'Resolved': {
@@ -29,11 +34,6 @@ const statusMap = {
     display: 'Closed',
     class: 'issue-closed',
     amount: 100
-  },
-  'Pending': {
-    display: 'Pending',
-    class: 'issue-pending',
-    amount: 5
   },
   'Cancelled': {
     display: 'Cancelled',
