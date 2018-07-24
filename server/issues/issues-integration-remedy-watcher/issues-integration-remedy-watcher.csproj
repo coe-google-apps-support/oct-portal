@@ -42,6 +42,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="tmp\" />
+  </ItemGroup>
 
   <PropertyGroup>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
