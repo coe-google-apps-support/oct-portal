@@ -94,6 +94,7 @@ export default {
   },
   created () {
     console.log('created')
+    console.log(this.isLoading)
     // I couldn't get prop defaults to play nicely so I went with this.
     // TODO figure out better defaults props/data
     if (this.page) {
@@ -109,7 +110,7 @@ export default {
     this.issues.splice(0, this.issues.length)
     this.issueFunction = this.services.issues.getMyIssues
     this.requestAPI(this.dataPage, this.dataPageSize, '')
-    this.isLoading = false
+    // this.isLoading = false
     this.isLast = true
   }
 }
