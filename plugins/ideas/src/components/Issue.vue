@@ -93,7 +93,6 @@ export default {
   },
   data: () => ({
     placement: 'top-center',
-    issueLayout: [],
     offset: 5,
     stepCancel: false,
     stepInitiate: false
