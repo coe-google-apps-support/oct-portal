@@ -7,7 +7,6 @@
         :height="issue | changeHeight"
         :order="index"
         :key="issue.id">
-        <!-- <test :item="item"></test>-->
         <issue
           :key="issue.id" 
           :issue="issue"
@@ -38,7 +37,6 @@
 // This could be important if we wanted to allow paging from outside an iframe, for example.
 
 import Issue from '@/components/Issue'
-import test from '@/components/test'
 import DiviButton from '@/components/divi/DiviButton'
 import Waterfall from 'vue-waterfall/lib/waterfall'
 import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
@@ -62,26 +60,46 @@ export default {
   }),
   filters: {
     changeHeight: function (value) {
-      let descSize = value.description.length - 60
-      let titleSize = value.title.length - 28
-      let linesNeeded = 1
-      while (descSize && descSize > 0) {
-        linesNeeded += 1
-        descSize = descSize - 60
+      let descSize
+      let titleSize
+      let descLines
+      let titleLines
+      let initialDescSize
+      if (value.description) {
+        descSize = value.description.length
+        descLines = 1
+        initialDescSize = 6
+      } else {
+        descSize = 0
+        descLines = 0
+        initialDescSize = 0
       }
-      while (titleSize > 0) {
-        linesNeeded += 1
+      if (value.title) {
+        titleSize = value.title.length
+        titleLines = 1
+      } else {
+        titleSize = 0
+        titleLines = 0
+      }
+      while (descSize > 44) {
+        descLines += 1
+        descSize = descSize - 44
+      }
+      while (titleSize > 28) {
+        titleLines += 1
         titleSize = titleSize - 28
       }
-      return 335 + linesNeeded * 18
+      if (descLines === 1) {
+        return 270 + titleLines * 32 + initialDescSize + descLines * 22
+      }
+      return 270 + titleLines * 32 + descLines * 22
     }
   },
   components: {
     Issue,
     DiviButton,
     Waterfall,
-    WaterfallSlot,
-    test
+    WaterfallSlot
   },
   methods: {
     openURL (url) {

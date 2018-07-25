@@ -11,8 +11,8 @@ const fakeIssues = {
   },
   {
     'referenceId': 'INC000000192114',
-    'title': 'Ticket 2',
-    'description': 'I didn\'t get paid!',
+    'title': '',
+    'description': 'Farhad does no go back toFarhad does no go back to school bed does no go back to school because he waMy laptop broke! Nothing I do works, everything ',
     'assigneeEmail': 'severus.snape@edmonton.ca',
     'requestorName': 'Lauren',
     'createdDate': 'June 23 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
@@ -21,8 +21,8 @@ const fakeIssues = {
   },
   {
     'referenceId': 'INC000000192616',
-    'title': 'Ticket 3',
-    'description': 'New monitor for computer.',
+    'title': '',
+    'description': '',
     'assigneeEmail': 'ron.weasley@edmonton.ca',
     'requestorName': 'Dora',
     'createdDate': 'March 15 2018 10:03:03 GMT-0700 (Mountain Standard Time)',
@@ -85,7 +85,7 @@ let x = class StubbedIssueService {
    */
   static getMyIssues (page, pageSize, contains) {
     let myIssues = { data: null }
-    myIssues.data = [fakeIssues.data[0], fakeIssues.data[1], fakeIssues.data[2], fakeIssues.data[3], fakeIssues.data[4], fakeIssues.data[5]]
+    myIssues.data = [fakeIssues.data[0], fakeIssues.data[1], fakeIssues.data[2], fakeIssues.data[3], fakeIssues.data[4], fakeIssues.data[5], fakeIssues.data[6]]
     myIssues.headers = []
     myIssues.headers['x-is-last-page'] = 'True'
 
