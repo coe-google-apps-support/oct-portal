@@ -1,5 +1,5 @@
 <template>
-  <md-card :class="statusClass(issue.remedyStatus) + ' md-with-hover color-corner '">
+  <md-card :class="statusClass(issue.remedyStatus) + ' md-with-hover item color-corner '">
     <md-card-header>
       <span class="md-title"> {{ issue.title }}</span>
     </md-card-header>
@@ -99,8 +99,6 @@ export default {
   }),
   methods: {
     statusClass
-  },
-  created () {
   }
 }
 </script>
@@ -112,7 +110,9 @@ export default {
 .color-corner::after {
   content: '';
   position: absolute;
-  top: 0;
+  top: 0 !important;
+  left: auto !important;
+  -webkit-transform: none !important;
   right: 0;
   width: 0;
   height: 0;
@@ -173,7 +173,7 @@ export default {
 }
 
 .md-card {
-  margin: 12px;
+  // margin: 12px;
   display: inline-block;
   vertical-align: top;
   background-color: #fafafa;
@@ -206,5 +206,31 @@ export default {
 
 .date-text {
   text-align: right;
+}
+
+.item {
+  position: absolute;
+  overflow: hidden;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  // border: 5px solid black;
+}
+.item:after {
+  content: attr(index);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+.wf-transition {
+  transition: opacity .3s ease;
+  -webkit-transition: opacity .3s ease;
+}
+.wf-enter {
+  opacity: 0;
 }
 </style>
