@@ -76,7 +76,7 @@ namespace CoE.Issues.Remedy.Watcher
                 }
             }
             if (!success)
-                lastPollTimeUtc = new DateTime(2018, 7, 23); //DateTime.Now.AddDays(-3);
+                lastPollTimeUtc = new DateTime(2018, 7, 25); //DateTime.Now.AddDays(-3);
 
             return lastPollTimeUtc;
         }
