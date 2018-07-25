@@ -60,26 +60,21 @@ export default {
   }),
   filters: {
     changeHeight: function (value) {
-      let descSize
-      let titleSize
-      let descLines
-      let titleLines
-      let initialDescSize
+      // TODO: Find a better way to dynamically change height.
+      // ie. recognize when the text wraps instead of going by number of characters per line
+      let descSize = 0
+      let titleSize = 0
+      let descLines = 0
+      let titleLines = 0
+      let initialDescSize = 0
       if (value.description) {
         descSize = value.description.length
         descLines = 1
         initialDescSize = 6
-      } else {
-        descSize = 0
-        descLines = 0
-        initialDescSize = 0
       }
       if (value.title) {
         titleSize = value.title.length
         titleLines = 1
-      } else {
-        titleSize = 0
-        titleLines = 0
       }
       while (descSize > 44) {
         descLines += 1
@@ -151,7 +146,6 @@ export default {
     this.issues.splice(0, this.issues.length)
     this.issueFunction = this.services.issues.getMyIssues
     this.requestAPI(this.dataPage, this.dataPageSize, '')
-    // console.log(this.issues)
     this.isLast = true
   }
 }
