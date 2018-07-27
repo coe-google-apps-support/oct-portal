@@ -11,13 +11,13 @@ FROM microsoft/dotnet:2.0-sdk-stretch AS builder
 #ARG Configuration=Debug
 WORKDIR /usr/src/coe-initiatives-remedy
 COPY ./server .
-WORKDIR /usr/src/coe-initiatives-remedy/ideas-integration-remedy/ideas-integration-remedy
+WORKDIR /usr/src/coe-initiatives-remedy/initiatives/ideas-integration-remedy/ideas-integration-remedy
 RUN dotnet publish
 
 FROM microsoft/dotnet:2.0-runtime-stretch
 ARG Configuration=Debug
 WORKDIR /app
-COPY --from=builder /usr/src/coe-initiatives-remedy/ideas-integration-remedy/ideas-integration-remedy/bin/$Configuration/netcoreapp2.0/publish  .
+COPY --from=builder /usr/src/coe-initiatives-remedy/initiatives/ideas-integration-remedy/ideas-integration-remedy/bin/$Configuration/netcoreapp2.0/publish  .
 
 ENTRYPOINT ["dotnet"]
 CMD ["ideas-integration-remedy.dll"]

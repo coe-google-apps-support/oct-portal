@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
+using Serilog;
 
 namespace CoE.Ideas.Shared.Extensions
 {
@@ -135,6 +136,43 @@ namespace CoE.Ideas.Shared.Extensions
             return services;
         }
 
+        public static IServiceCollection ConfigureLogging(this IServiceCollection services,
+    Microsoft.Extensions.Configuration.IConfiguration configuration,
+    string module,
+    bool useSqlServer = false)
+        {
+
+            services.AddSingleton<Serilog.ILogger>(x =>
+            {
+                var loggerConfig = new LoggerConfiguration()
+                    .Enrich.FromLogContext()
+                    .Enrich.WithProperty("Application", "Initiatives")
+                    .Enrich.WithProperty("Module", module)
+                    .ReadFrom.Configuration(configuration);
+                if (useSqlServer)
+                {
+                    loggerConfig = loggerConfig
+                        .WriteTo.MSSqlServer(connectionString: "server=initiatives-db;database=ServiceBusEmulator;User Id=SA;Password=OctavaDev100!;MultipleActiveResultSets=True;",
+                            tableName: "Log",
+                            autoCreateSqlTable: true
+                            , columnOptions: new Serilog.Sinks.MSSqlServer.ColumnOptions()
+                            {
+                                AdditionalDataColumns = new System.Data.DataColumn[]
+                                {
+                                    new System.Data.DataColumn("Module", typeof(string)),
+                                    new System.Data.DataColumn("InitiativeId", typeof(int))
+                                }
+                            }
+                        );
+                }
+                return loggerConfig
+                    .CreateLogger();
+            });
+
+            return services;
+        }
+
+
         public static IServiceCollection AddServiceBusEmulator(this IServiceCollection services,
             string serviceBusConnectionString = null)
         {
@@ -147,6 +185,14 @@ namespace CoE.Ideas.Shared.Extensions
 
             return services;
         }
+
+        public static void EnableWcfLogging(this IServiceCollection services, System.ServiceModel.Description.ServiceEndpoint endpoint, ILogger logger)
+        {
+            EnsureArg.IsNotNull(endpoint);
+            EnsureArg.IsNotNull(logger);
+            endpoint.EndpointBehaviors.Add(new CoE.Shared.Diagnostics.WcfMessageInspectorEndpointBehavior(logger));
+        }
+
 
 #if DEBUG
         public static void InitiativeServiceBusEmlatorDatabase(this IServiceProvider serviceProvider)
@@ -187,6 +233,7 @@ namespace CoE.Ideas.Shared.Extensions
             }
 
         }
+
 #endif
     }
 }

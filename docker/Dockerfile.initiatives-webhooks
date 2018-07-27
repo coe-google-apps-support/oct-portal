@@ -11,13 +11,13 @@ FROM microsoft/dotnet:2.0-sdk-stretch AS builder
 ARG Configuration=Release
 WORKDIR /usr/src/coe-initiatives-webhooks
 COPY ./server .
-WORKDIR /usr/src/coe-initiatives-webhooks/ideas-integration-webhooks
+WORKDIR /usr/src/coe-initiatives-webhooks/initiatives/ideas-integration-webhooks
 RUN dotnet publish
 
 FROM microsoft/dotnet:2.0-runtime-stretch
 ARG Configuration=Release
 WORKDIR /app
-COPY --from=builder /usr/src/coe-initiatives-webhooks/ideas-integration-webhooks/bin/$Configuration/netcoreapp2.0/publish  .
+COPY --from=builder /usr/src/coe-initiatives-webhooks/initiatives/ideas-integration-webhooks/bin/$Configuration/netcoreapp2.0/publish  .
 
 # Move our run time scripts into our image
 COPY ./docker/scripts/webhooks-entrypoint.sh /usr/local/bin/

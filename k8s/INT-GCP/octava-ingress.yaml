@@ -20,6 +20,10 @@ spec:
         backend:
           serviceName: initiatives-webapi
           servicePort: 5000
+      - path: /plugins/issues
+        backend:
+          serviceName: issues-webapi
+          servicePort: 5000
       - path: /
         backend:
           serviceName: wordpress
