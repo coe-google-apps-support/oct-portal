@@ -10,7 +10,7 @@ using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 
-namespace CoE.Issues.Remedy.Watcher
+namespace CoE.Issues.Remedy.WorkOrder.Watcher
 {
     public class Startup
     {
@@ -40,7 +40,7 @@ namespace CoE.Issues.Remedy.Watcher
 
             // configure application specific logging
 #if DEBUG
-            services.ConfigureLogging(Configuration, "Remedy Incident Watcher", useSqlServer: true);
+            services.ConfigureLogging(Configuration, "Remedy WO Watcher", useSqlServer: true);
 #else
             services.ConfigureLogging(Configuration, "Remedy WO Watcher");
 #endif
