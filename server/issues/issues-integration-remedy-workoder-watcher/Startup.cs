@@ -40,7 +40,7 @@ namespace CoE.Issues.Remedy.WorkOrder.Watcher
 
             // configure application specific logging
 #if DEBUG
-            services.ConfigureLogging(Configuration, "Remedy WO Watcher", useSqlServer: true);
+            services.ConfigureLogging(Configuration, "Remedy WorkOrder Watcher", useSqlServer: true);
 #else
             services.ConfigureLogging(Configuration, "Remedy WO Watcher");
 #endif
