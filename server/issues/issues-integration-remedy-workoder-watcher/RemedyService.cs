@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
 using Microsoft.Extensions.Options;
 
-namespace CoE.Issues.Remedy.Watcher
+namespace CoE.Issues.Remedy.WorkOrder.Watcher
 {
     public class RemedyService : IRemedyService
     {
