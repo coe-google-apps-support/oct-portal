@@ -12,6 +12,6 @@ FROM node:9.10
 
 WORKDIR /app
 ADD ./plugins/ideas .
-RUN npm install
+RUN npm install  
 
 CMD npm rebuild node-sass & npm run dev

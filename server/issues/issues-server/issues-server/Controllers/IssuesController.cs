@@ -80,7 +80,7 @@ namespace CoE.Issues.Server.Controllers
                         Id = x.Id,
                         Description = x.Description,
                         Title = x.Title,
-                        CreatedDate = x.CreatedDate,
+                        CreatedDate = ConvertTimeToAlberta(x.CreatedDate),
                         AssigneeEmail = x.AssigneeEmail,
                         AssigneeGroup = x.AssigneeGroup,
                         RequestorName = x.RequestorName,

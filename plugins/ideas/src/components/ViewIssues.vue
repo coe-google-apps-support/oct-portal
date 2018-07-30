@@ -1,32 +1,33 @@
 <template>
   <div>
-    <br>
-    <transition name="fade">
-      <div class="min-height">
-        <div v-if="issues && issues.length" class="md-layout md-alignment-top-center">
-          <issue v-for="issue in issues"
-            :key="issue.id" 
-            :issue="issue"
-            class="md-layout-item md-size-20 md-medium-size-30 md-small-size-100">
-          </issue>
-        </div>
-        <div v-if="issues.length === 0 && isLoading == false">
-          <md-empty-state
-            md-icon="confirmation_number"
-            md-label="No issues found!"
-            md-description="Oops! We couldn't find anything.">
-          </md-empty-state>
-        </div>
-        <div v-if="isLoading" class="md-layout md-alignment-center-center">
-          <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
-        </div>
-        <div class="center-children" v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
-          <divi-button class="md-accent" @click.native="infiniteHandler">Load more</divi-button>
-        </div>
-      </div>
-    </transition>
-    
-  </div>    
+    <waterfall :line-gap="350" :watch="issues" line="v" align="center" fixed-height="false">
+      <waterfall-slot
+        v-for="(issue, index) in issues"
+        :width="350"
+        :height="issue | changeHeight"
+        :order="index"
+        :key="issue.id">
+        <issue
+          :key="issue.id" 
+          :issue="issue"
+          >
+        </issue>
+      </waterfall-slot>
+    </waterfall>
+    <div v-if="issues.length === 0 && isLoading == false">
+      <md-empty-state
+        md-icon="confirmation_number"
+        md-label="No issues found!"
+        md-description="Oops! We couldn't find anything.">
+      </md-empty-state>
+    </div>
+    <div v-if="isLoading" class="md-layout md-alignment-center-center">
+      <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+    </div>
+    <div class="center-children" v-if="!isLoading && !isLast && (!this.$options.propsData.page && !this.$options.propsData.pageSize)">
+      <divi-button class="md-accent" @click.native="infiniteHandler">Load more</divi-button>
+    </div>
+  </div>   
 </template>
 
 <script>
@@ -37,6 +38,8 @@
 
 import Issue from '@/components/Issue'
 import DiviButton from '@/components/divi/DiviButton'
+import Waterfall from 'vue-waterfall/lib/waterfall'
+import WaterfallSlot from 'vue-waterfall/lib/waterfall-slot'
 
 export default {
   name: 'ViewIssues',
@@ -55,26 +58,60 @@ export default {
     isLoading: true,
     showSnackbar: false
   }),
+  filters: {
+    changeHeight: function (value) {
+      // TODO: Find a better way to dynamically change height.
+      // ie. recognize when the text wraps instead of going by number of characters per line
+      let descSize = 0
+      let titleSize = 0
+      let descLines = 0
+      let titleLines = 0
+      let initialDescSize = 0
+      if (value.description) {
+        descSize = value.description.length
+        descLines = 1
+        initialDescSize = 6
+      }
+      if (value.title) {
+        titleSize = value.title.length
+        titleLines = 1
+      }
+      while (descSize > 44) {
+        descLines += 1
+        descSize = descSize - 44
+      }
+      while (titleSize > 28) {
+        titleLines += 1
+        titleSize = titleSize - 28
+      }
+      if (descLines === 1) {
+        return 270 + titleLines * 32 + initialDescSize + descLines * 22
+      }
+      return 270 + titleLines * 32 + descLines * 22
+    }
+  },
   components: {
     Issue,
-    DiviButton
+    DiviButton,
+    Waterfall,
+    WaterfallSlot
   },
   methods: {
     openURL (url) {
       window.open(url, '_top')
     },
-    checkIsLast (response) {
-      var x = response.headers['x-is-last-page']
-      if (x === 'False') {
-        this.isLast = false
-      } else if (x === 'True') {
-        this.isLast = true
-      }
-    },
+    // checkIsLast (response) {
+    //   var x = response.headers['x-is-last-page']
+    //   if (x === 'False') {
+    //     this.isLast = false
+    //   } else if (x === 'True') {
+    //     this.isLast = true
+    //   }
+    // },
     requestAPI (page, pageSize, contains) {
       this.isLoading = true
       return this.issueFunction(page, pageSize, contains).then((response) => {
-        this.checkIsLast(response)
+        // this.checkIsLast(response)
         this.issues = this.issues.concat(response.data)
         this.isLoading = false
         return response
@@ -109,7 +146,6 @@ export default {
     this.issues.splice(0, this.issues.length)
     this.issueFunction = this.services.issues.getMyIssues
     this.requestAPI(this.dataPage, this.dataPageSize, '')
-    this.isLoading = false
     this.isLast = true
   }
 }
@@ -136,4 +172,5 @@ export default {
     display: flex;
     justify-content: center;
   }
+
 </style>

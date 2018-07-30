@@ -23,6 +23,10 @@ namespace CoE.Issues.Core.Migrations
                 name: "Urgency",
                 table: "Issues",
                 nullable: true);
+
+            migrationBuilder.Sql(@"
+ALTER TABLE issues.Issues CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
