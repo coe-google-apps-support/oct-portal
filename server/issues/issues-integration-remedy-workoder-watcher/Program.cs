@@ -1,9 +1,9 @@
 ﻿using System;
-using CoE.Issues.Remedy.Watcher;
 using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+
 namespace CoE.Issues.Remedy.WorkOrder.Watcher
 {
     class Program

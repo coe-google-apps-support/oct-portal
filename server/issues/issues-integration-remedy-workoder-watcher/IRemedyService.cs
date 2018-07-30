@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
+using CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference;
 
-namespace CoE.Issues.Remedy.Watcher
+namespace CoE.Issues.Remedy.WorkOrder.Watcher
 {
     public interface IRemedyService
     {

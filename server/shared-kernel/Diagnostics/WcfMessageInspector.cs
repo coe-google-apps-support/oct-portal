@@ -24,7 +24,7 @@ namespace CoE.Shared.Diagnostics
 
         public object BeforeSendRequest(ref Message request, IClientChannel channel)
         {
-           // _logger.Information("About to send to {Url}: {Body}", channel.RemoteAddress.Uri, request.ToString());
+            //_logger.Information("About to send to {Url}: {Body}", channel.RemoteAddress.Uri, request.ToString());
             return null;
         }
     }

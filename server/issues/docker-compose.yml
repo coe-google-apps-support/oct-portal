@@ -68,3 +68,9 @@ services:
     restart: always
     ports:
       - "80:80"
+  issues-integration-remedy-workoder-watcher:
+    image: ${DOCKER_REGISTRY}issuesintegrationremedyworkoderwatcher
+    build:
+      context: .
+      dockerfile: issues-integration-remedy-workoder-watcher/Dockerfile
+

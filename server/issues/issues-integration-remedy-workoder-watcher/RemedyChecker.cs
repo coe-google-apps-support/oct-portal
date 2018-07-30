@@ -2,7 +2,7 @@
 using CoE.Ideas.Shared.People;
 using CoE.Issues.Core.Data;
 using CoE.Issues.Core.ServiceBus;
-using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
+using CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
@@ -11,7 +11,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-namespace CoE.Issues.Remedy.Watcher
+
+namespace CoE.Issues.Remedy.WorkOrder.Watcher
 {
     public class RemedyChecker : IRemedyChecker
     {
@@ -45,7 +46,6 @@ namespace CoE.Issues.Remedy.Watcher
         private const string ResultFilePrefix = "RemedyCheckerLog";
 
         private DateTime lastPollTimeUtc;
-
         public DateTime TryReadLastPollTime()
         {
             bool success = false;
@@ -80,7 +80,6 @@ namespace CoE.Issues.Remedy.Watcher
 
             return lastPollTimeUtc;
         }
-
         public async Task<RemedyPollResult> Poll()
         {
             TryReadLastPollTime();
@@ -90,6 +89,7 @@ namespace CoE.Issues.Remedy.Watcher
             SaveResult(result);
             return result;
         }
+
 
         public async Task<RemedyPollResult> PollAsync(DateTime fromUtc)
         {
@@ -120,7 +120,6 @@ namespace CoE.Issues.Remedy.Watcher
             }
 
         }
-       
 
         private void SaveResult(RemedyPollResult result)
         {
@@ -131,6 +130,8 @@ namespace CoE.Issues.Remedy.Watcher
                 serializer.Serialize(file, result);
             }
         }
+
+
 
         private async Task ProcessWorkItemsChanged(IEnumerable<OutputMapping1GetListValues> workItemsChanged,
             RemedyPollResult result, DateTime timestampUtc)
@@ -148,14 +149,14 @@ namespace CoE.Issues.Remedy.Watcher
 
                 if (lastModifiedDateUtc <= timestampUtc)
                 {
-                    _logger.Warning($"WorkItem { workItem.Web_Incident_ID} has a last modified date less than or equal to our cutoff time, so ignoring ({ lastModifiedDateUtc } <= { timestampUtc }");
+                    _logger.Warning($"WorkItem { workItem.WorkOrderID } has a last modified date less than or equal to our cutoff time, so ignoring ({ lastModifiedDateUtc } <= { timestampUtc }");
                     continue;
                 }
 
                 Exception error = null;
                 try
                 {
-                    await TryProcessIssue(workItem);
+                    await TryProcessWorkItemChanged(workItem);
                 }
                 catch (Exception err)
                 {
@@ -180,18 +181,24 @@ namespace CoE.Issues.Remedy.Watcher
             _logger.Information($"Processed { count } work item changes in { watch.Elapsed }. Average = { avg.TotalMilliseconds }ms/record ");
         }
 
+
+
+
         /// <summary>
         /// Tries to process Remedy's output mapping so it fits into an IssueCreatedEventArgs object.
         /// TODO: we need to convert the Assignee 3+3 to an email so Octava can use it
         /// </summary>
         /// <param name="workItem">The generated workItem object. This is generated from a SOAP interface.</param>
         /// <returns>An async task that resolves with the IssueCreatedEventArgs.</returns>
-        protected virtual async Task<IssueCreatedEventArgs> TryProcessIssue(OutputMapping1GetListValues workItem)
+        /// 
+       
+
+        protected virtual async Task<IssueCreatedEventArgs> TryProcessWorkItemChanged(OutputMapping1GetListValues workItem)
         {
 
-            string assignee3and3 = workItem.Assignee_Login_ID;
-            string submitter3and3 = workItem.Corporate_ID;
-            string assigneeGroup = workItem.Owner_Group;
+            string assignee3and3 = workItem.ASLOGID;
+            string submitter3and3 = workItem.Requestor_ID;
+            string assigneeGroup = workItem.Assignee_Groups;
 
             PersonData assignee = null;
             PersonData submitter = null;
@@ -204,9 +211,11 @@ namespace CoE.Issues.Remedy.Watcher
             {
                 _logger.Information("Looking up assignee with 3+3 {User3and3}", assignee3and3);
                 try { assignee = await _peopleService.GetPersonAsync(assignee3and3); }
-                catch (Exception err) {
+                catch (Exception err)
+                {
                     assignee = null;
-                    _logger.Warning(err, "Unable to get email for Remedy incident Assignee {User3and3}: {ErrorMessage}, using assignee group", assignee3and3, err.Message); }
+                    _logger.Warning(err, "Unable to get email for Remedy incident Assignee {User3and3}: {ErrorMessage}, using assignee group", assignee3and3, err.Message);
+                }
             }
 
 
@@ -218,23 +227,11 @@ namespace CoE.Issues.Remedy.Watcher
             {
                 _logger.Information("Looking up submitter with 3+3 {User3and3}", submitter3and3);
                 try { submitter = await _peopleService.GetPersonAsync(submitter3and3); }
-                catch (Exception err) {
+                catch (Exception err)
+                {
                     submitter = null;
-                    _logger.Warning(err, "Unable to get email for Remedy incident Submitter {User3and3}: {ErrorMessage}", submitter3and3, err.Message); }
-            }
-
-            //IssueStatus? newIssueStatus = GetIssueStatusForRemedyStatus(workItem.Status);
-            //if (newIssueStatus == null)
-            //{
-            //    _logger.Information("Abondining updated work item because an appropriate IssueStatus could not be determined from the Remedy Status {WorkItemStatus}", workItem.Status);
-            //    return null;
-            //}
-
-            IssueUrgency? newIssueUrgency = GetIssueUrgencyForRemedyStatus(workItem.Urgency);
-            if (newIssueUrgency == null)
-            {
-                _logger.Information("Abondining updated work item because an appropriate IssueStatus could not be determined from the Remedy Status {WorkItemStatus}", workItem.Status);
-                return null;
+                    _logger.Warning(err, "Unable to get email for Remedy incident Submitter {User3and3}: {ErrorMessage}", submitter3and3, err.Message);
+                }
             }
 
             try
@@ -242,7 +239,7 @@ namespace CoE.Issues.Remedy.Watcher
                 // convert Remedy object to IssueCreatedEventArgs
                 var args = _mapper.Map<OutputMapping1GetListValues, IssueCreatedEventArgs>(workItem);
                 args.AssigneeGroup = assigneeGroup;
-                args.Urgency = newIssueUrgency.ToString();
+                args.Urgency = workItem.Priority.ToString();
                 if (assignee != null)
                 {
                     args.AssigneeEmail = assignee.Email;
@@ -268,63 +265,6 @@ namespace CoE.Issues.Remedy.Watcher
             }
         }
 
-        protected virtual IssueStatus? GetIssueStatusForRemedyStatus(StatusType remedyStatusType)
-        {
-            // here we have the business logic of translating Remedy statuses into our statuses
-            IssueStatus newIdeaStatus;
-            switch (remedyStatusType)
-            {
-                case StatusType.New:
-                    newIdeaStatus = IssueStatus.Submit;
-                    break;
-                case StatusType.Assigned:
-                    newIdeaStatus = IssueStatus.Collaborate;
-                    break;
-                case StatusType.Cancelled:
-                    newIdeaStatus = IssueStatus.Cancelled;
-                    break;
-                case StatusType.Pending:
-                    newIdeaStatus = IssueStatus.Review;
-                    break;
-                case StatusType.InProgress:
-                    newIdeaStatus = IssueStatus.Collaborate;
-                    break;
-                case StatusType.Resolved:
-                    newIdeaStatus = IssueStatus.Deliver;
-                    break;
-                case StatusType.Closed:
-                    newIdeaStatus = IssueStatus.Closed;
-                    break;
-
-                default:
-                    return null; // no change
-            }
-            return newIdeaStatus;
-        }
         
-        protected virtual IssueUrgency? GetIssueUrgencyForRemedyStatus(UrgencyType? remedyUrgencyType)
-        {
-            // here we have the business logic of translating Remedy statuses into our statuses
-            IssueUrgency newIssueUrgency;
-            switch (remedyUrgencyType)
-            {
-                case UrgencyType.Item1Critical:
-                    newIssueUrgency = IssueUrgency.Critical;
-                    break;
-                case UrgencyType.Item2High:
-                    newIssueUrgency = IssueUrgency.High;
-                    break;
-                case UrgencyType.Item3Medium:
-                    newIssueUrgency = IssueUrgency.Medium;
-                    break;
-                case UrgencyType.Item4Low:
-                    newIssueUrgency = IssueUrgency.Low;
-                    break;
-
-                default:
-                    return null; // no change
-            }
-            return newIssueUrgency;
-        }
     }
 }

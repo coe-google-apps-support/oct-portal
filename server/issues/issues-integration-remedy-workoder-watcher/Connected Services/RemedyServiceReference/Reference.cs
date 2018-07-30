@@ -8,22 +8,22 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CoE.Ideas.Remedy.Watcher.RemedyServiceReference
+namespace CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference
 {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace="urn:COE_WOI_WorkOrder_Search_Octava", ConfigurationName="CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Port_0PortType")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace="urn:COE_WOI_WorkOrder_Search_Octava", ConfigurationName="CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Port_0PortType")]
     public interface New_Port_0PortType
     {
         
         // CODEGEN: Generating message contract since message New_Get_Operation_0Request has headers
         [System.ServiceModel.OperationContractAttribute(Action="urn:COE_WOI_WorkOrder_Search_Octava/New_Get_Operation_0", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute()]
-        CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Response New_Get_Operation_0(CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Request request);
+        CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Response New_Get_Operation_0(CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Request request);
         
         [System.ServiceModel.OperationContractAttribute(Action="urn:COE_WOI_WorkOrder_Search_Octava/New_Get_Operation_0", ReplyAction="*")]
-        System.Threading.Tasks.Task<CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Response> New_Get_Operation_0Async(CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Request request);
+        System.Threading.Tasks.Task<CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Response> New_Get_Operation_0Async(CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Request request);
     }
     
     /// <remarks/>
@@ -3788,9 +3788,10 @@ namespace CoE.Ideas.Remedy.Watcher.RemedyServiceReference
     {
         
         [System.ServiceModel.MessageHeaderAttribute(Namespace="urn:COE_WOI_WorkOrder_Search_Octava")]
-        public CoE.Ideas.Remedy.Watcher.RemedyServiceReference.AuthenticationInfo AuthenticationInfo;
+        public CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.AuthenticationInfo AuthenticationInfo;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrder_Search_Octava", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
         public string Work_Order_Template_Used;
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrder_Search_Octava", Order=1)]
@@ -3800,7 +3801,7 @@ namespace CoE.Ideas.Remedy.Watcher.RemedyServiceReference
         {
         }
         
-        public New_Get_Operation_0Request(CoE.Ideas.Remedy.Watcher.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Work_Order_Template_Used, string Last_Modified_Date)
+        public New_Get_Operation_0Request(CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Work_Order_Template_Used, string Last_Modified_Date)
         {
             this.AuthenticationInfo = AuthenticationInfo;
             this.Work_Order_Template_Used = Work_Order_Template_Used;
@@ -3817,26 +3818,26 @@ namespace CoE.Ideas.Remedy.Watcher.RemedyServiceReference
         
         [System.ServiceModel.MessageBodyMemberAttribute(Namespace="urn:COE_WOI_WorkOrder_Search_Octava", Order=0)]
         [System.Xml.Serialization.XmlElementAttribute("getListValues")]
-        public CoE.Ideas.Remedy.Watcher.RemedyServiceReference.OutputMapping1GetListValues[] getListValues;
+        public CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.OutputMapping1GetListValues[] getListValues;
         
         public New_Get_Operation_0Response()
         {
         }
         
-        public New_Get_Operation_0Response(CoE.Ideas.Remedy.Watcher.RemedyServiceReference.OutputMapping1GetListValues[] getListValues)
+        public New_Get_Operation_0Response(CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.OutputMapping1GetListValues[] getListValues)
         {
             this.getListValues = getListValues;
         }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public interface New_Port_0PortTypeChannel : CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Port_0PortType, System.ServiceModel.IClientChannel
+    public interface New_Port_0PortTypeChannel : CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Port_0PortType, System.ServiceModel.IClientChannel
     {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    public partial class New_Port_0PortTypeClient : System.ServiceModel.ClientBase<CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Port_0PortType>, CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Port_0PortType
+    public partial class New_Port_0PortTypeClient : System.ServiceModel.ClientBase<CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Port_0PortType>, CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Port_0PortType
     {
         
         public New_Port_0PortTypeClient()
@@ -3864,34 +3865,34 @@ namespace CoE.Ideas.Remedy.Watcher.RemedyServiceReference
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Response CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Port_0PortType.New_Get_Operation_0(CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Request request)
+        CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Response CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Port_0PortType.New_Get_Operation_0(CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Request request)
         {
             return base.Channel.New_Get_Operation_0(request);
         }
         
-        public CoE.Ideas.Remedy.Watcher.RemedyServiceReference.OutputMapping1GetListValues[] New_Get_Operation_0(CoE.Ideas.Remedy.Watcher.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Work_Order_Template_Used, string Last_Modified_Date)
+        public CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.OutputMapping1GetListValues[] New_Get_Operation_0(CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Work_Order_Template_Used, string Last_Modified_Date)
         {
-            CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Request inValue = new CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Request();
+            CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Request inValue = new CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Request();
             inValue.AuthenticationInfo = AuthenticationInfo;
             inValue.Work_Order_Template_Used = Work_Order_Template_Used;
             inValue.Last_Modified_Date = Last_Modified_Date;
-            CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Response retVal = ((CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Port_0PortType)(this)).New_Get_Operation_0(inValue);
+            CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Response retVal = ((CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Port_0PortType)(this)).New_Get_Operation_0(inValue);
             return retVal.getListValues;
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Response> CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Port_0PortType.New_Get_Operation_0Async(CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Request request)
+        System.Threading.Tasks.Task<CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Response> CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Port_0PortType.New_Get_Operation_0Async(CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Request request)
         {
             return base.Channel.New_Get_Operation_0Async(request);
         }
         
-        public System.Threading.Tasks.Task<CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Response> New_Get_Operation_0Async(CoE.Ideas.Remedy.Watcher.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Work_Order_Template_Used, string Last_Modified_Date)
+        public System.Threading.Tasks.Task<CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Response> New_Get_Operation_0Async(CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.AuthenticationInfo AuthenticationInfo, string Work_Order_Template_Used, string Last_Modified_Date)
         {
-            CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Request inValue = new CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Get_Operation_0Request();
+            CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Request inValue = new CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Get_Operation_0Request();
             inValue.AuthenticationInfo = AuthenticationInfo;
             inValue.Work_Order_Template_Used = Work_Order_Template_Used;
             inValue.Last_Modified_Date = Last_Modified_Date;
-            return ((CoE.Ideas.Remedy.Watcher.RemedyServiceReference.New_Port_0PortType)(this)).New_Get_Operation_0Async(inValue);
+            return ((CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference.New_Port_0PortType)(this)).New_Get_Operation_0Async(inValue);
         }
     }
 }

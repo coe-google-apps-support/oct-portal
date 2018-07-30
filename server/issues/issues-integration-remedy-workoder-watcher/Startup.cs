@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CoE.Ideas.Shared.Extensions;
 using CoE.Issues.Core;
-using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
+using CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

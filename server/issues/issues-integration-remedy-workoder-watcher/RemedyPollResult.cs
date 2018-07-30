@@ -1,9 +1,9 @@
-﻿using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
+﻿using CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CoE.Issues.Remedy.Watcher
+namespace CoE.Issues.Remedy.WorkOrder.Watcher
 {
     public class RemedyPollResult
     {
