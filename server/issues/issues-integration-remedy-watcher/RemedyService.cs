@@ -51,7 +51,7 @@ namespace CoE.Issues.Remedy.Watcher
                 int count = 0;
                 if (remedyResponse != null && remedyResponse.getListValues != null)
                     count = remedyResponse.getListValues.Length;
-                _logger.Information($"Remedy returned { count } changed work item records in { watch.Elapsed.TotalMilliseconds }ms");
+                _logger.Information($"Remedy returned { count } incidents records in { watch.Elapsed.TotalMilliseconds }ms");
 
                 return remedyResponse.getListValues;
             }

@@ -76,7 +76,7 @@ namespace CoE.Issues.Remedy.WorkOrder.Watcher
                 }
             }
             if (!success)
-                lastPollTimeUtc = new DateTime(2018, 7, 20); //DateTime.Now.AddDays(-3);
+                lastPollTimeUtc = new DateTime(2018, 7, 31); //DateTime.Now.AddDays(-3);
 
             return lastPollTimeUtc;
         }

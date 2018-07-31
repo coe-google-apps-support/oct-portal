@@ -76,7 +76,7 @@ namespace CoE.Issues.Remedy.Watcher
                 }
             }
             if (!success)
-                lastPollTimeUtc = new DateTime(2018, 7, 20); //DateTime.Now.AddDays(-3);
+                lastPollTimeUtc = new DateTime(2018, 7, 31); //DateTime.Now.AddDays(-3);
 
             return lastPollTimeUtc;
         }
@@ -223,13 +223,6 @@ namespace CoE.Issues.Remedy.Watcher
                     _logger.Warning(err, "Unable to get email for Remedy incident Submitter {User3and3}: {ErrorMessage}", submitter3and3, err.Message); }
             }
 
-            //IssueStatus? newIssueStatus = GetIssueStatusForRemedyStatus(workItem.Status);
-            //if (newIssueStatus == null)
-            //{
-            //    _logger.Information("Abondining updated work item because an appropriate IssueStatus could not be determined from the Remedy Status {WorkItemStatus}", workItem.Status);
-            //    return null;
-            //}
-
             IssueUrgency? newIssueUrgency = GetIssueUrgencyForRemedyStatus(workItem.Urgency);
             if (newIssueUrgency == null)
             {
@@ -268,43 +261,8 @@ namespace CoE.Issues.Remedy.Watcher
             }
         }
 
-        protected virtual IssueStatus? GetIssueStatusForRemedyStatus(StatusType remedyStatusType)
-        {
-            // here we have the business logic of translating Remedy statuses into our statuses
-            IssueStatus newIdeaStatus;
-            switch (remedyStatusType)
-            {
-                case StatusType.New:
-                    newIdeaStatus = IssueStatus.Submit;
-                    break;
-                case StatusType.Assigned:
-                    newIdeaStatus = IssueStatus.Collaborate;
-                    break;
-                case StatusType.Cancelled:
-                    newIdeaStatus = IssueStatus.Cancelled;
-                    break;
-                case StatusType.Pending:
-                    newIdeaStatus = IssueStatus.Review;
-                    break;
-                case StatusType.InProgress:
-                    newIdeaStatus = IssueStatus.Collaborate;
-                    break;
-                case StatusType.Resolved:
-                    newIdeaStatus = IssueStatus.Deliver;
-                    break;
-                case StatusType.Closed:
-                    newIdeaStatus = IssueStatus.Closed;
-                    break;
-
-                default:
-                    return null; // no change
-            }
-            return newIdeaStatus;
-        }
-        
         protected virtual IssueUrgency? GetIssueUrgencyForRemedyStatus(UrgencyType? remedyUrgencyType)
         {
-            // here we have the business logic of translating Remedy statuses into our statuses
             IssueUrgency newIssueUrgency;
             switch (remedyUrgencyType)
             {
