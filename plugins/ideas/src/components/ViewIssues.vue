@@ -87,7 +87,6 @@ export default {
       if (descLines === 1) {
         return 270 + titleLines * 32 + initialDescSize + descLines * 22
       }
-      console.log(titleLines, descLines)
       return 270 + titleLines * 32 + descLines * 22
     }
   },
