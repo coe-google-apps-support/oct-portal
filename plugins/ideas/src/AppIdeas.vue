@@ -102,6 +102,46 @@ export default {
     border-color: var(--status-pending) var(--status-pending) transparent transparent;
   }
 
+  .issue-rejected .md-progress-bar-fill {
+    background-color: var(--status-rejected) !important;
+  }
+  .issue-rejected .md-progress-bar {
+    background-color: var(--status-rejected-alt) !important;
+  }
+  .issue-rejected.color-corner:after {
+    border-color: var(--status-rejected) var(--status-rejected) transparent transparent;
+  }
+
+  .issue-waitingApproval .md-progress-bar-fill {
+    background-color: var(--status-waitingApproval) !important;
+  }
+  .issue-waitingApproval .md-progress-bar {
+    background-color: var(--status-waitingApproval-alt) !important;
+  }
+  .issue-waitingApproval.color-corner:after {
+    border-color: var(--status-waitingApproval) var(--status-waitingApproval) transparent transparent;
+  }
+
+  .issue-planning .md-progress-bar-fill {
+    background-color: var(--status-planning) !important;
+  }
+  .issue-planning .md-progress-bar {
+    background-color: var(--status-planning-alt) !important;
+  }
+  .issue-planning.color-corner:after {
+    border-color: var(--status-planning) var(--status-planning) transparent transparent;
+  }
+
+  .issue-completed .md-progress-bar-fill {
+    background-color: var(--status-completed) !important;
+  }
+  .issue-completed .md-progress-bar {
+    background-color: var(--status-completed-alt) !important;
+  }
+  .issue-completed.color-corner:after {
+    border-color: var(--status-completed) var(--status-completed) transparent transparent;
+  }
+
   .tooltip {
     display: block !important;
     z-index: 10000;

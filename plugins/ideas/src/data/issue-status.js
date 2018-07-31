@@ -39,7 +39,28 @@ const statusMap = {
     display: 'Cancelled',
     class: 'issue-cancelled',
     amount: 5
+  },
+  'Rejected': {
+    display: 'Rejected',
+    class: 'issue-rejected',
+    amount: 5
+  },
+  'WaitingApproval': {
+    display: 'WaitingApproval',
+    class: 'issue-waitingApproval',
+    amount: 80
+  },
+  'Planning': {
+    display: 'Planning',
+    class: 'issue-planning',
+    amount: 85
+  },
+  'Completed': {
+    display: 'Completed',
+    class: 'issue-completed',
+    amount: 95
   }
+
 }
 
 /**
