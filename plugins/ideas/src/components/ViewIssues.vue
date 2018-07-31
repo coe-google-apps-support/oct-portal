@@ -76,17 +76,18 @@ export default {
         titleSize = value.title.length
         titleLines = 1
       }
-      while (descSize > 44) {
+      while (descSize > 46) {
         descLines += 1
-        descSize = descSize - 44
+        descSize = descSize - 46
       }
-      while (titleSize > 28) {
+      while (titleSize > 24.5) {
         titleLines += 1
-        titleSize = titleSize - 28
+        titleSize = titleSize - 24.5
       }
       if (descLines === 1) {
         return 270 + titleLines * 32 + initialDescSize + descLines * 22
       }
+      console.log(titleLines, descLines)
       return 270 + titleLines * 32 + descLines * 22
     }
   },
