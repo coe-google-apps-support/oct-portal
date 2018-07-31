@@ -198,7 +198,7 @@ namespace CoE.Issues.Remedy.WorkOrder.Watcher
 
             string assignee3and3 = workItem.ASLOGID;
             string submitter3and3 = workItem.Requestor_ID;
-            string assigneeGroup = workItem.Assignee_Groups;
+            string assigneeGroup = workItem.Support_Group_Name;
 
             PersonData assignee = null;
             PersonData submitter = null;
