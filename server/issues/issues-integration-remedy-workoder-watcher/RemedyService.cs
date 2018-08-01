@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
-using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
+using CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference;
 using Microsoft.Extensions.Options;
 
-namespace CoE.Issues.Remedy.Watcher
+namespace CoE.Issues.Remedy.WorkOrder.Watcher
 {
     public class RemedyService : IRemedyService
     {
@@ -46,12 +46,12 @@ namespace CoE.Issues.Remedy.Watcher
                 var remedyResponse =  _remedyClient.New_Get_Operation_0(
                     new New_Get_Operation_0Request(
                         authInfo,
-                        _options.TemplateName,
+                       _options.TemplateName,
                         fromUtc.ToString("O"))); // TODO: apply time component - like format "O" or "yyyy-MM-dd"
                 int count = 0;
                 if (remedyResponse != null && remedyResponse.getListValues != null)
                     count = remedyResponse.getListValues.Length;
-                _logger.Information($"Remedy returned { count } incidents records in { watch.Elapsed.TotalMilliseconds }ms");
+                _logger.Information($"Remedy returned { count } changed work item records for workorders in { watch.Elapsed.TotalMilliseconds }ms");
 
                 return remedyResponse.getListValues;
             }

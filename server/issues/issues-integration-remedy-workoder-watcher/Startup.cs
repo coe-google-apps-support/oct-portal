@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CoE.Ideas.Shared.Extensions;
 using CoE.Issues.Core;
-using CoE.Issues.Remedy.Watcher.RemedyServiceReference;
+using CoE.Issues.Remedy.WorkOrder.Watcher.RemedyServiceReference;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -10,7 +10,7 @@ using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
 
-namespace CoE.Issues.Remedy.Watcher
+namespace CoE.Issues.Remedy.WorkOrder.Watcher
 {
     public class Startup
     {
@@ -40,7 +40,7 @@ namespace CoE.Issues.Remedy.Watcher
 
             // configure application specific logging
 #if DEBUG
-            services.ConfigureLogging(Configuration, "Remedy Incident Watcher", useSqlServer: true);
+            services.ConfigureLogging(Configuration, "Remedy WorkOrder Watcher", useSqlServer: true);
 #else
             services.ConfigureLogging(Configuration, "Remedy WO Watcher");
 #endif
