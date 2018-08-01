@@ -1,0 +1,30 @@
+# How to build this image:
+# From the parent folder enter:
+# docker image build -t coeoctava.azurecr.io/issues-webapi:dev-latest -f docker/Dockerfile.issues-server.dev-stretch .
+#
+# And to push to the CoE Azure Repo (requires credentials):
+# docker tag coeoctava.azurecr.io/issues-webapi:dev-latest coeoctava.azurecr.io/issues-webapi:dev-stretch
+# docker push coeoctava.azurecr.io/issues-webapi:dev-stretch
+# docker push coeoctava.azurecr.io/issues-webapi:dev-latest
+
+# developing ASP.NET Core with Docker how to setup:
+# https://www.natemcmaster.com/blog/2017/11/13/dotnet-watch-and-docker/
+
+FROM microsoft/aspnetcore-build:2.0-stretch AS issues-server
+ARG Configuration=Debug
+
+# Required inside Docker, otherwise file-change events may not trigger
+ENV DOTNET_USE_POLLING_FILE_WATCHER 1
+
+VOLUME /app
+
+WORKDIR /app
+COPY ./server/shared-kernel ./shared-kernel
+COPY ./server/issues/issues-core/issues-core ./issues/issues-core/issues-core
+COPY ./server/issues/issues-server/issues-server ./issues/issues-server/issues-server
+WORKDIR /app/issues/issues-server/issues-server
+
+RUN dotnet restore
+RUN dotnet build
+
+ENTRYPOINT dotnet run urls=http://0.0.0.0:80

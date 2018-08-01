@@ -84,5 +84,9 @@ namespace CoE.Ideas.Shared.Extensions
         {
             return _gc.GetWeekOfYear(time, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
         }
+
+
+
+
     }
 }

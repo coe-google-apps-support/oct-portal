@@ -24,3 +24,7 @@ spec:
         backend:
           serviceName: wordpress
           servicePort: 80
+      - path: /util/webhooks
+        backend:
+          serviceName: webhooks-emailer
+          servicePort: 9001
