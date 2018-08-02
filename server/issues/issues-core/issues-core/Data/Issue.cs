@@ -58,6 +58,48 @@ namespace CoE.Issues.Core.Data
         }
 
 
+        public static Issue Create(
+            int id,
+            string title,
+            string description,
+            string referenceId,
+            string remedystatus,
+            string requestorname,
+            string assigneeemail,
+            string assigneegroup,
+            DateTime createddate,
+            string urgency,
+            int ownerPersonId
+            )
+        {
+            Ensure.String.IsNotNullOrWhiteSpace(title, nameof(title));
+
+
+            var issue = new Issue(Guid.NewGuid())
+            {
+                Id = id,
+                Title = title,
+                Description = description,
+                ReferenceId = referenceId,
+                RemedyStatus = remedystatus,
+                RequestorName = requestorname,
+                AssigneeEmail = assigneeemail,
+                AssigneeGroup = assigneegroup,
+                Urgency = urgency,
+
+                Stakeholders = new List<Stakeholder>()
+                {
+                    Stakeholder.Create(ownerPersonId, StakeholderType.Requestor)
+                },
+                CreatedDate = createddate
+            };
+
+
+
+            return issue;
+        }
+
+
         public Guid Uid { get; private set; }
 
         /// <summary>
@@ -67,6 +109,8 @@ namespace CoE.Issues.Core.Data
         [MinLength(3)]
         [MaxLength(255)]
         public string Title { get; private set; }
+
+        public int Id { get; private set; }
 
         /// <summary>
         /// The long description of the idea, can be HTML formatted

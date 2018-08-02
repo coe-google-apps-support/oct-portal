@@ -68,12 +68,32 @@ namespace CoE.Issues.Remedy.SbListener
                 oldIssue = await GetIssueByIncidentId(args.ReferenceId);
                 if (oldIssue != null)
                 {
-                    _logger.Information("Found Issue {IssueId} in database, old status {IssueStatus}, new status {newIssueStatus}", args.ReferenceId, oldIssue.RemedyStatus, args.RemedyStatus );
+                    int oldIssueId;
+                    _logger.Information("Found Issue {IssueId} in database.", args.ReferenceId );
+                    oldIssueId = oldIssue.Id;
                     await _issueRepository.DeleteIssueAsync(oldIssue, token);
+
+                    try
+                    {
+                        var issue = Issue.Create(oldIssueId, args.Title, args.Description, args.ReferenceId, args.RemedyStatus, args.RequestorDisplayName, args.AssigneeEmail, args.AssigneeGroup, args.CreatedDate, args.Urgency, ownerPersonId);
+                        _logger.Information("Updating Issue {IssueId} to database", args.ReferenceId);
+                        await _issueRepository.AddIssueAsync(issue, token);
+
+                    }
+                    catch (Exception err)
+                    {
+                        _logger.Error(err, "Unable to set work item id to Issue. Will retry later. Error was: {ErrorMessage}",
+                            err.Message);
+                        throw;
+                    }
                 }
 
-                try
+
+                else
                 {
+
+                    try
+                    {
                         var issue = Issue.Create(args.Title, args.Description, args.ReferenceId, args.RemedyStatus, args.RequestorDisplayName, args.AssigneeEmail, args.AssigneeGroup, args.CreatedDate, args.Urgency, ownerPersonId);
                         _logger.Information("Saving Issue {IssueId} to database", args.ReferenceId);
                         await _issueRepository.AddIssueAsync(issue, token);
@@ -85,7 +105,7 @@ namespace CoE.Issues.Remedy.SbListener
                             err.Message);
                         throw;
                     }
-          
+                }
 
             }
 
