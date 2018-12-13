@@ -2,13 +2,13 @@
   <div>
     <md-card>
       <md-toolbar class="md-primary">
-        <h3 class="text-padding md-title">Tell us your idea!</h3>
+        <h3 class="text-padding md-title">Tell us your request!</h3>
       </md-toolbar>
       <form novalidate class="md-layout-row md-gutter">
         <div class="form-content">
           <div class="md-flex md-flex-small-100">
             <md-field :class="getValidationClass('title')">
-              <label for="idea-title">What's your technology initiative?</label>
+              <label for="idea-title">What's your request?</label>
               <md-input name="title" id="idea-title" v-model="form.title" />
               <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
               <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
