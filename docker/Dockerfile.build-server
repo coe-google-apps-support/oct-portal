@@ -1,6 +1,6 @@
 # How to build this image:
 # From the parent folder enter:
-# docker image build -t coeoctava.azurecr.io/coe-vsts-agent:v1.0.3 -t coeoctava.azurecr.io/coe-vsts-agent:latest -f ./docker/Dockerfile.build-server ./docker/build-server
+# docker image build -t coeoctava.azurecr.io/coe-vsts-agent:v1.0.5 -t coeoctava.azurecr.io/coe-vsts-agent:latest -f ./docker/Dockerfile.build-server ./docker/build-server
 #
 # How to run this image interactively using PowerShell:
 # docker run -it coeoctava.azurecr.io/coe-vsts-agent:v1.0.0 pwsh
@@ -12,7 +12,7 @@
 FROM alpine/git AS PowerShellModules
 RUN git clone https://github.com/Phil-Factor/PSYaml.git /var/PSYaml
 
-FROM microsoft/vsts-agent:ubuntu-16.04-docker-17.12.0-ce-standard
+FROM microsoft/vsts-agent:ubuntu-16.04-docker-18.06.1-ce-standard
 RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz
 RUN mkdir -p /usr/local/gcloud
 RUN tar -C /usr/local/gcloud -xvf /tmp/google-cloud-sdk.tar.gz
