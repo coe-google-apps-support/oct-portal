@@ -149,7 +149,7 @@ export default {
   @import "../colors.scss";
 
   .md-card {
-    margin: 12px;
+    margin: 2px;
   }
 
   .min-height {

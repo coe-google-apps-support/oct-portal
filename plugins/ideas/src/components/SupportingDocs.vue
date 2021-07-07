@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="full-control">
+    <div class="full-control md-scrollbar">
       <div class="list">
         <md-list md-expand-single>
           <md-list-item md-expand="true">
             <md-icon>description</md-icon>
             <span class="md-list-item-text">Supporting Documents</span>
-            <div class="display-docs" slot="md-expand">
-              <md-table class="fill-width">
+            <div class="display-docs md-scrollbar" slot="md-expand">
+              <md-table class="fill-width scroll-fix">
                 <md-table-row v-for="(doc, index) in documents" v-bind:key="`document-${index}`">
                   <md-table-cell md-label="Title" md-sort-by="title">{{ doc.title }}</md-table-cell>
                   <md-table-cell md-label="URL" md-sort-by="url">{{ doc.url }}</md-table-cell>
@@ -43,19 +43,19 @@
           </div>
           <div class="modal-body">
             <md-field class="form-control" :class="getValidationClass('title')">
-              <label for="supdoc-title">What is the title of your supporting document?</label>
+              <label for="supdoc-title">What is the title?</label>
               <md-input name="title" id="supdoc-title" v-model="form.title" />
               <span class="md-error" v-if="!$v.form.title.required">Title is required</span>
               <span class="md-error" v-else-if="!$v.form.title.minlength">Invalid title</span>
             </md-field>
             <md-field class="form-control" :class="getValidationClass('url')">
-              <label for="supdoc-url">Supporting documents or links - Please enter the URL</label>
+              <label for="supdoc-url">Documents or links</label>
               <md-input name="url" id="supdoc-url" v-model="form.url" />
               <span class="md-error" v-if="!$v.form.url.required">URL is required</span>
               <span class="md-error" v-else-if="!$v.form.url.minlength">Invalid URL</span>
             </md-field>
             <md-field class="form-control" :class="getValidationClass('type')">
-              <label for="supdoc-type">What type of supporting document are you adding?</label>
+              <label for="supdoc-type">Type</label>
               <md-select name="type" id="supdoc-type" v-model="form.type">
                 <md-option value="BusinessCases">Business Cases</md-option>
                 <md-option value="TechnologyInvestmentForm">Technology Investment Form</md-option>
@@ -177,6 +177,79 @@ export default {
 </script>
 
 <style lang="scss">
+  @media (min-width: 100px) {
+    .md-empty-state-label {
+      font-size: 11px;
+    }
+    .md-list-item-text {
+      font-size: 12px;
+    }
+    .md-empty-state-description {
+      font-size: 11px;
+    }
+    .md-list-item-content {
+      padding: 0px;
+    }
+    .md-list-item-text {
+      font-size: 9.9px;
+    }
+    .md-button.md-theme-default.md-fab {
+      width: 40px;
+      height: 40px;
+    }
+    .et_pb_button {
+      font-size: 13px!important;
+    }
+    .md-field label {
+      font-size: 12px;
+    }
+    .md-field.md-focused label {
+      font-size: 10.5px;
+    }
+  }
+  @media (min-width: 300px) {
+    .md-empty-state-label {
+      font-size: 14px;
+    }
+    .md-list-item-text {
+      font-size: 12px;
+    }
+    .md-empty-state-description {
+      font-size: 11px;
+    }
+    .md-field.md-focused label {
+      font-size: 10.5px;
+    }
+    .md-button.md-theme-default.md-fab {
+      width: 45px;
+      height: 45px;
+    }
+  }
+
+    @media (min-width: 400px) {
+    .md-empty-state-label {
+      font-size: 20px;
+    }
+    .md-list-item-text {
+      font-size: 16px;
+    }
+    .md-field label {
+      font-size: 16px;
+    }
+    .md-empty-state-description {
+      font-size: 16px;
+    }
+    .md-field.md-focused label {
+      font-size: 13px;
+    }
+    .et_pb_button {
+      font-size: 20px!important;
+    }
+    .md-button.md-theme-default.md-fab {
+      width: 50px;
+      height: 50px;
+    }
+  }
   @import "~vue-material/dist/theme/engine";
 
   .md-menu-content {
@@ -272,5 +345,9 @@ export default {
 
   .fill-width {
     width: 100%;
+  }
+  .scroll-fix {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch
   }
 </style>

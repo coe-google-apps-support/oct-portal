@@ -1,5 +1,5 @@
 <template>
-  <md-card class="card hvr-float" :class="{ 'first-card' : isNewIdea }">
+  <md-card md-with-hover @click.native="openUrl" class="card hvr-float" :class="{ 'first-card' : isNewIdea }">
     <md-card-media-cover>
       <md-card-media md-ratio="16:9">
         <img class="cardImage" :src="getImage()" alt="Skyscraper">
@@ -116,7 +116,10 @@ export default {
 }
 
 .md-card {
-  margin: 12px;
+  margin-top: 12px;
+  margin-left: 25px;
+  margin-bottom: 12px;
+  border-radius: 20px;
   display: inline-block;
   vertical-align: top;
   background-color: #fafafa;
